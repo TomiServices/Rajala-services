@@ -101,7 +101,7 @@
             margin-top: 140px;
             overflow: hidden;
             position: relative;
-            max-width: 900px;
+            max-width: 700px;
             margin-left: auto; margin-right: auto;
         }
         #carousel {
@@ -115,16 +115,14 @@
             min-width: 100%;
         }
         .carousel-item img {
-            width: 50%;
+            width: 100%;
             height: auto;
             margin: 5px;
             object-fit: cover;
             display: block;
             loading: lazy;
-        }
-        @media (max-width: 768px) {
-            .carousel-item { flex-direction: column; }
-            .carousel-item img { width: 100%; margin: 4px 0; }
+            border-radius: 20px;
+            box-shadow: 0 4px 18px #0003;
         }
         /* Category Boxes Styles */
         .categories-row {
@@ -181,10 +179,11 @@
         }
         section {
             background: #fff;
-            margin: 20px auto;
-            padding: 20px;
+            margin: 30px auto;
+            padding: 24px 18px 18px 18px;
             max-width: 800px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 18px;
         }
         h2, h3, h4 { color: #333; }
         p, li { color: #555; }
@@ -311,24 +310,29 @@
         <a href="#yhteystiedot">Yhteystiedot</a>
     </nav>
 
-    <!-- CAROUSEL -->
+    <!-- CAROUSEL (ONE IMAGE AT A TIME) -->
     <div id="carousel-container">
         <div id="carousel">
             <div class="carousel-item">
                 <img src="FN.png" alt="Kuva 1" loading="lazy">
+            </div>
+            <div class="carousel-item">
                 <img src="FN1.png" alt="Kuva 2" loading="lazy">
             </div>
             <div class="carousel-item">
                 <img src="FN4.png" alt="Kuva 3" loading="lazy">
+            </div>
+            <div class="carousel-item">
                 <img src="FN8.png" alt="Kuva 4" loading="lazy">
             </div>
             <div class="carousel-item">
                 <img src="FN5.png" alt="Kuva 5" loading="lazy">
+            </div>
+            <div class="carousel-item">
                 <img src="FN7.png" alt="Kuva 6" loading="lazy">
             </div>
             <div class="carousel-item">
-                <img src="FN8.png" alt="Kuva 7" loading="lazy">
-                <img src="FN6.png" alt="Kuva 8" loading="lazy">
+                <img src="FN6.png" alt="Kuva 7" loading="lazy">
             </div>
         </div>
     </div>
@@ -344,6 +348,77 @@
         <div class="category-box" style="background-image: url('yhteystiedot.jpg');" onclick="location.href='#yhteystiedot'">Yhteystiedot</div>
     </div>
     <!-- END CATEGORIES -->
+
+    <!-- CATEGORY CONTENT SECTIONS -->
+    <section id="pesupalvelut">
+        <h2>Pesupalvelut</h2>
+        <p>Tarjoamme laadukkaita auton pesupalveluita: käsinpesu, vahaukset, pikapesut ja koneelliset pesut. Käytämme vain laadukkaita aineita ja välineitä, jotka suojaavat autosi pintaa ja tekevät siitä kiiltävän puhtaan.</p>
+        <ul>
+            <li>Käsinpesu</li>
+            <li>Vahaukset</li>
+            <li>Pikapesu</li>
+            <li>Renkaiden pesu</li>
+        </ul>
+    </section>
+    <section id="rengastyot">
+        <h2>Rengastyöt</h2>
+        <p>Kaikki rengastyöt ammattitaidolla: renkaiden vaihdot, tasapainotukset ja korjaukset. Huolehdimme, että renkaasi ovat turvalliset ja oikein asennetut jokaiseen vuodenaikaan.</p>
+        <ul>
+            <li>Renkaiden vaihto</li>
+            <li>Tasapainotus</li>
+            <li>Paikkaukset</li>
+            <li>Uusien renkaiden myynti ja asennus</li>
+        </ul>
+    </section>
+    <section id="sisapuhdistus">
+        <h2>Sisäpuhdistus</h2>
+        <p>Sisäpuhdistuspalvelumme varmistaa raikkaan ja puhtaan auton sisätilat. Imuroimme, pesemme penkit ja matot, pyyhimme pinnat ja puhdistamme ikkunat.</p>
+        <ul>
+            <li>Imurointi</li>
+            <li>Kankaiden ja nahkapenkkien pesu</li>
+            <li>Mattojen pesu</li>
+            <li>Pintojen ja ikkunoiden puhdistus</li>
+        </ul>
+    </section>
+    <section id="kiilloitus">
+        <h2>Kiilloitus</h2>
+        <p>Auton kiilloitus palauttaa maalipinnan kiillon ja poistaa pienet naarmut. Käytämme ammattitason koneita ja aineita, jotta autosi näyttää jälleen uudelta.</p>
+        <ul>
+            <li>Yhden vai useamman vaiheen kiilloitus</li>
+            <li>Naarmujen poisto</li>
+            <li>Vahaus kiilloituksen yhteydessä</li>
+        </ul>
+    </section>
+    <section id="lasikorjaus">
+        <h2>Lasikorjaus</h2>
+        <p>Korjaamme ja vaihdamme autosi tuulilasin nopeasti ja turvallisesti. Pienet kiveniskemät voidaan usein korjata ilman koko lasin vaihtoa.</p>
+        <ul>
+            <li>Tuulilasin korjaus</li>
+            <li>Tuulilasin vaihto</li>
+        </ul>
+    </section>
+    <section id="hinnasto">
+        <h2>Hinnasto</h2>
+        <p>Alta löydät yleisimmät palvelumme ja niiden hinnat. Lopullinen hinta määräytyy työn laajuuden ja auton koon mukaan.</p>
+        <ul>
+            <li>Käsinpesu: alkaen 25 €</li>
+            <li>Sisäpuhdistus: alkaen 49 €</li>
+            <li>Renkaiden vaihto: alkaen 35 €</li>
+            <li>Kiilloitus: alkaen 120 €</li>
+        </ul>
+        <p>Pyydä tarjous erityispalveluista!</p>
+    </section>
+    <section id="yhteystiedot">
+        <h2>Yhteystiedot</h2>
+        <p>Ota yhteyttä ja kysy lisää palveluistamme tai varaa aika!</p>
+        <ul>
+            <li><strong>Puhelin:</strong> 040 1935001</li>
+            <li><strong>Sähköposti:</strong> <a href="mailto:info@fixnero.fi">info@fixnero.fi</a></li>
+            <li><strong>Osoite:</strong> Tiilenvalajantie 6, 02330 Espoo</li>
+            <li><strong>Aukioloajat:</strong> Arkisin 9:00-17:00, viikonloppuisin suljettu</li>
+        </ul>
+    </section>
+    <!-- END CATEGORY CONTENT SECTIONS -->
 
     <!-- BOOKING CALENDAR SECTION (added here) -->
     <div class="ajanvaraus-container" id="ajanvaraus">
@@ -364,9 +439,6 @@
       <div id="error" class="error"></div>
     </div>
     <!-- END BOOKING CALENDAR SECTION -->
-
-    <!-- CONTENT SECTIONS (your original content, unchanged for brevity) -->
-    <!-- ... Place your <section id="pesupalvelut"> ... <section id="yhteystiedot"> here ... -->
 
     <!-- Google Maps -->
     <iframe
@@ -435,14 +507,14 @@
         });
     });
 
-    // Carousel logic (auto-advance every 10s)
+    // Carousel logic (auto-advance every 7s, one image at a time)
     const carousel = document.getElementById('carousel');
     let currentIndex = 0;
     function nextSlide() {
         currentIndex = (currentIndex + 1) % carousel.children.length;
         carousel.style.transform = `translateX(${-currentIndex * 100}%)`;
     }
-    setInterval(nextSlide, 10000);
+    setInterval(nextSlide, 7000);
 
     // Responsive nav close on resize
     window.addEventListener('resize', () => {
