@@ -479,7 +479,8 @@
     </footer>
 
     <!-- FullCalendar JS for booking -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
     <script>
     // Hamburger and nav toggle
     const hamburger = document.querySelector('.hamburger-menu');
@@ -520,7 +521,6 @@
     window.addEventListener('resize', () => {
         if (window.innerWidth > 1279) nav.classList.remove('active');
     });
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.js"></script>
     // Booking calendar logic
     let bookings = []; // in-memory, for demo only
 
