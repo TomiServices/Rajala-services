@@ -523,7 +523,12 @@
     });
     // Booking calendar logic
 <script>
-  let bookings = []; // in-memory, for demo only
+  let bookings = []; // In-memory for demo only
+  let selectedSlot = null;
+
+  function getDateKey(date) {
+    return date.toISOString().split('T')[0]; // "YYYY-MM-DD"
+  }
 
   function getWeekdaySlots(startDate, days = 30) {
     const slots = [];
@@ -546,10 +551,9 @@
     return slots;
   }
 
-  let selectedSlot = null;
   document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
-    let calendar = new FullCalendar.Calendar(calendarEl, {
+    const calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'timeGridWeek',
       locale: 'fi',
       slotMinTime: '09:00:00',
@@ -572,12 +576,14 @@
         const start = info.start;
         const end = info.end;
 
-        if ((end - start) === 60 * 60 * 1000 && start.getHours() >= 9 && start.getHours() < 17 && start.getDay() >= 1 && start.getDay() <= 5) {
-          let sameDayBookings = bookings.filter(b =>
-            new Date(b.start).toDateString() === start.toDateString()
-          ).length;
+        if ((end - start) === 60 * 60 * 1000 &&
+            start.getDay() >= 1 && start.getDay() <= 5 &&
+            start.getHours() >= 9 && start.getHours() < 17) {
 
-          if (sameDayBookings >= 2) {
+          const dateKey = getDateKey(start);
+          const count = bookings.filter(b => getDateKey(b.start) === dateKey).length;
+
+          if (count >= 2) {
             document.getElementById('error').textContent = 'Päivälle voi varata enintään 2 aikaa!';
             showBookingForm(false);
             return;
@@ -585,25 +591,23 @@
 
           selectedSlot = start;
           const aikaTxt = start.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
-            ', klo ' + start.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+                          ', klo ' + start.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+
           document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
           document.getElementById('aika').value = aikaTxt;
           showBookingForm(true);
           document.getElementById('error').textContent = '';
         } else {
-          document.getElementById('error').textContent = 'Valitse vapaa 1h aika maanantaista perjantaihin klo 9–17!';
+          document.getElementById('error').textContent = 'Valitse vapaa 1h aika ma–pe klo 9–17!';
           showBookingForm(false);
         }
       },
       events: function (fetchInfo, successCallback, failureCallback) {
-        let evs = getWeekdaySlots(fetchInfo.start, (fetchInfo.end - fetchInfo.start) / (24 * 60 * 60 * 1000)).map(slot => {
-          const slotStartISO = slot.start.toISOString();
-          const dayKey = slotStartISO.split('T')[0];
-          const count = bookings.filter(b =>
-            new Date(b.start).toISOString().startsWith(dayKey)
-          ).length;
+        const evs = getWeekdaySlots(fetchInfo.start, (fetchInfo.end - fetchInfo.start) / (24 * 60 * 60 * 1000)).map(slot => {
+          const dateKey = getDateKey(slot.start);
+          const count = bookings.filter(b => getDateKey(b.start) === dateKey).length;
+          const isBooked = count >= 2;
 
-          let isBooked = count >= 2;
           return {
             title: isBooked ? 'Varattu' : 'Vapaa',
             start: slot.start.toISOString(),
@@ -615,6 +619,7 @@
         successCallback(evs);
       }
     });
+
     calendar.render();
 
     document.getElementById('bookingForm').onsubmit = function (e) {
@@ -636,16 +641,16 @@
         return;
       }
 
-      // Add to in-memory bookings (as Date object)
+      // Save actual booking
       bookings.push({
         start: new Date(selectedSlot),
         name,
         email,
         phone
       });
+
       calendar.refetchEvents();
 
-      // Actually submit the form to Formspree
       const formData = new FormData(document.getElementById('bookingForm'));
       fetch("https://formspree.io/f/mkgzozbv", {
         method: "POST",
@@ -655,7 +660,7 @@
         .then(response => {
           if (response.ok) {
             document.getElementById('msg').innerHTML =
-              "Varaus onnistui! <br>Saat varausvahvistuksen sähköpostiisi pian.";
+              "Varaus onnistui!<br>Saat vahvistuksen sähköpostiisi.";
             showBookingForm(false);
             document.getElementById('slot-summary').textContent = '';
             document.getElementById('bookingForm').reset();
