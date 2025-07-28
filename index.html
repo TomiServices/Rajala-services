@@ -420,12 +420,12 @@
     </section>
     <!-- END CATEGORY CONTENT SECTIONS -->
 
-    <!-- BOOKING CALENDAR SECTION (added here) -->
+    <!-- BOOKING CALENDAR SECTION -->
     <div class="ajanvaraus-container" id="ajanvaraus">
       <h2>Varaa aika kiillotukseen</h2>
       <div id="calendar"></div>
       <div id="slot-summary"></div>
-      <form class="booking-form" id="bookingForm" action="https://formspree.io/f/mkgzozbv" method="POST" style="display:none;" autocomplete="off">
+      <form class="booking-form" id="bookingForm" style="display:none;" autocomplete="off">
         <input type="hidden" name="aika" id="aika" />
         <label for="name">Nimi</label>
         <input type="text" id="name" name="name" required placeholder="Etunimi Sukunimi" />
@@ -435,7 +435,7 @@
         <input type="tel" id="phone" name="phone" required pattern="[0-9+\-\s]{6,}" placeholder="040 1234567" />
         <button type="submit" class="btn">Vahvista varaus</button>
       </form>
-      <div id="msg"></div>
+      <div id="msg" class="msg"></div>
       <div id="error" class="error"></div>
     </div>
     <!-- END BOOKING CALENDAR SECTION -->
@@ -478,193 +478,223 @@
         </div>
     </footer>
 
-    <!-- FullCalendar JS for booking -->
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
+<!-- FullCalendar JS and Firebase (ESM) -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-    <script>
-    // Hamburger and nav toggle
-    const hamburger = document.querySelector('.hamburger-menu');
-    const nav = document.getElementById('nav');
-    hamburger.addEventListener('click', () => nav.classList.toggle('active'));
-    hamburger.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') nav.classList.toggle('active');
-    });
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // Smooth scroll for all anchor links in nav and footer
-    document.querySelectorAll('nav a, .footer a').forEach(link => {
-        link.addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-            if (href.startsWith('#') && href.length > 1) {
-                const scrollToElement = document.querySelector(href);
-                if (scrollToElement) {
-                    e.preventDefault();
-                    const offset = window.innerWidth <= 1279 ? 0 : 70;
-                    const rect = scrollToElement.getBoundingClientRect();
-                    const scrollTop = window.pageYOffset + rect.top - offset;
-                    window.scrollTo({ top: scrollTop, behavior: 'smooth' });
-                    nav.classList.remove('active'); // Close mobile nav
-                }
-            }
+const firebaseConfig = {
+  apiKey: "AIzaSyC4iGggU7G5CBWGbXgkD0fzDZiERsWPauE",
+  authDomain: "fxnr-web.firebaseapp.com",
+  projectId: "fxnr-web",
+  storageBucket: "fxnr-web.firebasestorage.app",
+  messagingSenderId: "102756894813",
+  appId: "1:102756894813:web:e95668de4a2b28ac8c25b4",
+  measurementId: "G-66J91EPWWN"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let selectedSlot = null;
+
+function getDateKey(date) {
+  return date.toISOString().split('T')[0];
+}
+
+async function fetchBookings() {
+  const snapshot = await getDocs(collection(db, "varaukset"));
+  return snapshot.docs.map(doc => doc.data());
+}
+
+function getWeekdaySlots(startDate, days = 30) {
+  const slots = [];
+  let d = new Date(startDate);
+  d.setHours(9, 0, 0, 0);
+  for (let i = 0; i < days; i++) {
+    if (d.getDay() >= 1 && d.getDay() <= 5) {
+      for (let h = 9; h < 17; h++) {
+        let slot = new Date(d);
+        slot.setHours(h, 0, 0, 0);
+        slots.push({
+          start: new Date(slot),
+          end: new Date(slot.getTime() + 60 * 60 * 1000)
         });
-    });
-
-    // Carousel logic (auto-advance every 7s, one image at a time)
-    const carousel = document.getElementById('carousel');
-    let currentIndex = 0;
-    function nextSlide() {
-        currentIndex = (currentIndex + 1) % carousel.children.length;
-        carousel.style.transform = `translateX(${-currentIndex * 100}%)`;
-    }
-    setInterval(nextSlide, 7000);
-
-    // Responsive nav close on resize
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 1279) nav.classList.remove('active');
-    });
-    // Booking calendar logic
-    let bookings = []; // in-memory, for demo only
-
-    function getWeekdaySlots(startDate, days = 30) {
-      const slots = [];
-      let d = new Date(startDate);
-      d.setHours(9,0,0,0);
-      for (let i = 0; i < days; i++) {
-        if (d.getDay() >= 1 && d.getDay() <= 5) { // Mon-Fri
-          for (let h = 9; h < 17; h++) {
-            let slot = new Date(d);
-            slot.setHours(h,0,0,0);
-            slots.push({
-              start: new Date(slot),
-              end: new Date(slot.getTime() + 60*60*1000)
-            });
-          }
-        }
-        d.setDate(d.getDate() + 1);
-        d.setHours(9,0,0,0);
       }
-      return slots;
     }
+    d.setDate(d.getDate() + 1);
+    d.setHours(9, 0, 0, 0);
+  }
+  return slots;
+}
 
-    let selectedSlot = null;
-    document.addEventListener('DOMContentLoaded', function() {
-      const calendarEl = document.getElementById('calendar');
-      let calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'timeGridWeek',
-        locale: 'fi',
-        slotMinTime: '09:00:00',
-        slotMaxTime: '17:00:00',
-        allDaySlot: false,
-        selectable: true,
-        selectOverlap: false,
-        slotDuration: '01:00:00',
-        expandRows: true,
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: ''
-        },
-        validRange: {
-          start: new Date(),
-          end: new Date(Date.now() + 30*24*60*60*1000)
-        },
-        select: function(info) {
-          // Only allow 1h slots
-          const start = info.start;
-          const end = info.end;
-          if ((end - start) === 60*60*1000 && start.getHours() >=9 && start.getHours() < 17 && start.getDay() >=1 && start.getDay() <=5) {
-            // Check if already booked in this session
-            let already = bookings.some(b =>
-              b.start === start.toISOString()
-            );
-            if (already) {
-              document.getElementById('error').textContent = 'Aika on jo varattu tällä sivulatauksella. Valitse toinen aika!';
-              showBookingForm(false);
-              return;
-            }
-            selectedSlot = start;
-            const aikaTxt = start.toLocaleDateString('fi-FI', {weekday: 'long', day: 'numeric', month: 'numeric'}) +
-              ', klo ' + start.toLocaleTimeString('fi-FI', {hour: '2-digit', minute: '2-digit'});
-            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
-            document.getElementById('aika').value = aikaTxt;
-            showBookingForm(true);
-            document.getElementById('error').textContent = '';
-          } else {
-            document.getElementById('error').textContent = 'Valitse vapaa 1h aika maanantaista perjantaihin klo 9–17!';
-            showBookingForm(false);
-          }
-        },
-        events: function(fetchInfo, successCallback, failureCallback) {
-          // Mark booked slots as busy (just in-memory for current session)
-          let evs = getWeekdaySlots(fetchInfo.start, (fetchInfo.end - fetchInfo.start)/(24*60*60*1000)).map(slot => {
-            const slotStartISO = slot.start.toISOString();
-            let isBooked = bookings.some(b => b.start === slotStartISO);
-            return {
-              title: isBooked ? 'Varattu' : 'Vapaa',
-              start: slot.start.toISOString(),
-              end: slot.end.toISOString(),
-              color: isBooked ? '#ffd2d2' : '#d2ffd2',
-              display: 'background'
-            };
-          });
-          successCallback(evs);
-        }
-      });
-      calendar.render();
+document.addEventListener('DOMContentLoaded', async function () {
+  const calendarEl = document.getElementById('calendar');
+  let bookings = await fetchBookings();
 
-      // On booking submit
-      document.getElementById('bookingForm').onsubmit = function(e) {
-        e.preventDefault();
-        document.getElementById('msg').textContent = '';
+  function isSlotBooked(slot) {
+    return bookings.some(b => b.aika === slot.start.toISOString());
+  }
+
+  function getBookingsCountForDay(date) {
+    const dateKey = getDateKey(date);
+    return bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
+  }
+
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'timeGridWeek',
+    locale: 'fi',
+    slotMinTime: '09:00:00',
+    slotMaxTime: '17:00:00',
+    allDaySlot: false,
+    selectable: true,
+    selectOverlap: false,
+    slotDuration: '01:00:00',
+    expandRows: true,
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: ''
+    },
+    validRange: {
+      start: new Date(),
+      end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+    },
+    select: function (info) {
+      const start = info.start;
+      const end = info.end;
+      const dateKey = getDateKey(start);
+      const count = getBookingsCountForDay(start);
+
+      if (
+        (end - start) === 60 * 60 * 1000 &&
+        start.getHours() >= 9 && start.getHours() < 17 &&
+        start.getDay() >= 1 && start.getDay() <= 5 &&
+        !isSlotBooked({ start }) &&
+        count < 2
+      ) {
+        selectedSlot = start;
+        const aikaTxt = start.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
+          ', klo ' + start.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+        document.getElementById('aika').value = aikaTxt;
+        document.getElementById('bookingForm').style.display = '';
         document.getElementById('error').textContent = '';
-        if (!selectedSlot) {
-          document.getElementById('error').textContent = 'Valitse ensin aika kalenterista!';
-          return;
-        }
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        if (!name || !email || !phone) {
-          document.getElementById('error').textContent = 'Täytä kaikki kentät!';
-          return;
-        }
-
-        // Add to in-memory bookings (for demo only)
-        bookings.push({
-          start: selectedSlot.toISOString(),
-          name, email, phone
-        });
-        calendar.refetchEvents();
-
-        // Actually submit the form to Formspree
-        const formData = new FormData(document.getElementById('bookingForm'));
-        fetch("https://formspree.io/f/mkgzozbv", {
-          method: "POST",
-          body: formData,
-          headers: { 'Accept': 'application/json' }
-        })
-        .then(response => {
-          if (response.ok) {
-            document.getElementById('msg').innerHTML =
-              "Varaus onnistui! <br>Saat varausvahvistuksen sähköpostiisi pian.";
-            showBookingForm(false);
-            document.getElementById('slot-summary').textContent = '';
-            document.getElementById('bookingForm').reset();
-            selectedSlot = null;
-          } else {
-            response.json().then(data => {
-              document.getElementById('error').textContent = data.error || "Varaus epäonnistui. Yritä uudelleen!";
-            });
-          }
-        })
-        .catch(() => {
-          document.getElementById('error').textContent = "Varaus epäonnistui. Yritä uudelleen!";
-        });
-      };
-
-      function showBookingForm(show) {
-        document.getElementById('bookingForm').style.display = show ? '' : 'none';
+      } else if (count >= 2) {
+        document.getElementById('error').textContent = 'Tälle päivälle voi varata enintään 2 aikaa!';
+        document.getElementById('bookingForm').style.display = 'none';
+      } else {
+        document.getElementById('error').textContent = 'Valitse vapaa 1h aika maanantaista perjantaihin klo 9–17!';
+        document.getElementById('bookingForm').style.display = 'none';
       }
+    },
+    events: function (fetchInfo, successCallback) {
+      bookings = bookings || [];
+      const evs = getWeekdaySlots(fetchInfo.start, (fetchInfo.end - fetchInfo.start) / (24 * 60 * 60 * 1000)).map(slot => {
+        const dateKey = getDateKey(slot.start);
+        const sameDayCount = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
+        const isExactMatch = bookings.some(b => new Date(b.aika).toISOString() === slot.start.toISOString());
+        const isBlocked = sameDayCount >= 2;
+
+        return {
+          title: isBlocked ? 'Täynnä' : isExactMatch ? 'Varattu' : 'Vapaa',
+          start: slot.start.toISOString(),
+          end: slot.end.toISOString(),
+          color: isBlocked ? '#f99' : isExactMatch ? '#ffd2d2' : '#d2ffd2',
+          display: 'background'
+        };
+      });
+      successCallback(evs);
+    }
+  });
+
+  calendar.render();
+
+  document.getElementById('bookingForm').onsubmit = async function (e) {
+    e.preventDefault();
+    document.getElementById('msg').textContent = '';
+    document.getElementById('error').textContent = '';
+
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+
+    if (!selectedSlot || !name || !email || !phone) {
+      document.getElementById('error').textContent = 'Täytä kaikki kentät ja valitse aika!';
+      return;
+    }
+
+    // Double-check no more than 2 bookings per day
+    const dateKey = getDateKey(selectedSlot);
+    const count = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
+    if (count >= 2) {
+      document.getElementById('error').textContent = 'Tälle päivälle voi varata enintään 2 aikaa!';
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "varaukset"), {
+        name, email, phone,
+        aika: selectedSlot.toISOString(),
+        timestamp: serverTimestamp()
+      });
+
+      document.getElementById('msg').innerHTML = "Varaus onnistui! <br>Saat varausvahvistuksen sähköpostiisi pian.";
+      document.getElementById('bookingForm').reset();
+      document.getElementById('bookingForm').style.display = 'none';
+      document.getElementById('slot-summary').textContent = '';
+      selectedSlot = null;
+      bookings = await fetchBookings();
+      calendar.refetchEvents();
+    } catch (error) {
+      console.error(error);
+      document.getElementById('error').textContent = 'Varaus epäonnistui. Yritä uudelleen!';
+    }
+  };
+});
+</script>
+
+<script>
+// Hamburger and nav toggle
+const hamburger = document.querySelector('.hamburger-menu');
+const nav = document.getElementById('nav');
+hamburger.addEventListener('click', () => nav.classList.toggle('active'));
+hamburger.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') nav.classList.toggle('active');
+});
+
+// Smooth scroll for all anchor links in nav and footer
+document.querySelectorAll('nav a, .footer a').forEach(link => {
+    link.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href.startsWith('#') && href.length > 1) {
+            const scrollToElement = document.querySelector(href);
+            if (scrollToElement) {
+                e.preventDefault();
+                const offset = window.innerWidth <= 1279 ? 0 : 70;
+                const rect = scrollToElement.getBoundingClientRect();
+                const scrollTop = window.pageYOffset + rect.top - offset;
+                window.scrollTo({ top: scrollTop, behavior: 'smooth' });
+                nav.classList.remove('active'); // Close mobile nav
+            }
+        }
     });
-    </script>
+});
+
+// Carousel logic (auto-advance every 7s, one image at a time)
+const carousel = document.getElementById('carousel');
+let currentIndex = 0;
+function nextSlide() {
+    currentIndex = (currentIndex + 1) % carousel.children.length;
+    carousel.style.transform = `translateX(${-currentIndex * 100}%)`;
+}
+setInterval(nextSlide, 7000);
+
+// Responsive nav close on resize
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 1279) nav.classList.remove('active');
+});
+</script>
 </body>
 </html>
