@@ -590,23 +590,34 @@ document.addEventListener('DOMContentLoaded', async function () {
       }
     },
     events: function (fetchInfo, successCallback) {
-      bookings = bookings || [];
-      const evs = getWeekdaySlots(fetchInfo.start, (fetchInfo.end - fetchInfo.start) / (24 * 60 * 60 * 1000)).map(slot => {
-        const dateKey = getDateKey(slot.start);
-        const sameDayCount = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
-        const isExactMatch = bookings.some(b => new Date(b.aika).toISOString() === slot.start.toISOString());
-        const isBlocked = sameDayCount >= 2;
-
-        return {
-          title: isBlocked ? 'Täynnä' : isExactMatch ? 'Varattu' : 'Vapaa',
-          start: slot.start.toISOString(),
-          end: slot.end.toISOString(),
-          color: isBlocked ? '#f99' : isExactMatch ? '#ffd2d2' : '#d2ffd2',
-          display: 'background'
-        };
+  bookings = bookings || [];
+  const evs = [];
+  for (const slot of getWeekdaySlots(fetchInfo.start, (fetchInfo.end - fetchInfo.start) / (24 * 60 * 60 * 1000))) {
+    const dateKey = getDateKey(slot.start);
+    const sameDayCount = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
+    const isExactMatch = bookings.some(b => new Date(b.aika).toISOString() === slot.start.toISOString());
+    const isBlocked = sameDayCount >= 2;
+    if (isBlocked) {
+      evs.push({
+        title: 'Täynnä',
+        start: slot.start.toISOString(),
+        end: slot.end.toISOString(),
+        color: '#f99',
+        display: 'background'
       });
-      successCallback(evs);
+    } else if (isExactMatch) {
+      evs.push({
+        title: 'Varattu',
+        start: slot.start.toISOString(),
+        end: slot.end.toISOString(),
+        color: '#ffd2d2',
+        display: 'background'
+      });
     }
+    // Do NOT add 'Vapaa' events as background!
+  }
+  successCallback(evs);
+}
   });
 
   calendar.render();
