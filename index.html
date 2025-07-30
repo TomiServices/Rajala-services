@@ -7,6 +7,8 @@
     <link rel="preload" href="FXNR.png" as="image">
     <!-- FullCalendar CSS for booking -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
+    <!-- Google reCAPTCHA v2 -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -96,7 +98,6 @@
             }
             nav a:hover { background: #555; }
         }
-        /* Carousel Styles */
         #carousel-container {
             margin-top: 140px;
             overflow: hidden;
@@ -124,7 +125,6 @@
             border-radius: 20px;
             box-shadow: 0 4px 18px #0003;
         }
-        /* Category Boxes Styles */
         .categories-row {
             display: flex;
             flex-wrap: wrap;
@@ -189,7 +189,6 @@
         p, li { color: #555; }
         ul, ol { padding-left: 20px; }
         strong { color: #333; }
-        /* Booking Section Styles */
         .ajanvaraus-container {
             max-width: 800px;
             margin: 30px auto 20px auto;
@@ -254,7 +253,6 @@
             margin-bottom: 10px;
         }
         .fc-timegrid-slot { cursor: pointer; }
-        /* Footer */
         .footer {
             display: flex;
             flex-wrap: wrap;
@@ -282,7 +280,6 @@
             .footer-section { align-items: center; text-align: center; }
             .logo-container img { width: 80px; }
         }
-        /* Map styles */
         .kartanKehys {
             display: block;
             margin: 25px auto 0 auto;
@@ -309,8 +306,6 @@
         <a href="#hinnasto">Hinnasto</a>
         <a href="#yhteystiedot">Yhteystiedot</a>
     </nav>
-
-    <!-- CAROUSEL (ONE IMAGE AT A TIME) -->
     <div id="carousel-container">
         <div id="carousel">
             <div class="carousel-item">
@@ -336,8 +331,6 @@
             </div>
         </div>
     </div>
-
-    <!-- CATEGORIES ROW (with background images) -->
     <div class="categories-row">
         <div class="category-box" style="background-image: url('pesupalvelut.jpg');" onclick="location.href='#pesupalvelut'">Pesupalvelut</div>
         <div class="category-box" style="background-image: url('rengastyot.jpg');" onclick="location.href='#rengastyot'">Rengastyöt</div>
@@ -347,9 +340,6 @@
         <div class="category-box" style="background-image: url('hinnasto.jpg');" onclick="location.href='#hinnasto'">Hinnasto</div>
         <div class="category-box" style="background-image: url('yhteystiedot.jpg');" onclick="location.href='#yhteystiedot'">Yhteystiedot</div>
     </div>
-    <!-- END CATEGORIES -->
-
-    <!-- CATEGORY CONTENT SECTIONS -->
     <section id="pesupalvelut">
         <h2>Pesupalvelut</h2>
         <p>Tarjoamme laadukkaita auton pesupalveluita: käsinpesu, vahaukset, pikapesut ja koneelliset pesut. Käytämme vain laadukkaita aineita ja välineitä, jotka suojaavat autosi pintaa ja tekevät siitä kiiltävän puhtaan.</p>
@@ -418,9 +408,6 @@
             <li><strong>Aukioloajat:</strong> Arkisin 9:00-17:00, viikonloppuisin suljettu</li>
         </ul>
     </section>
-    <!-- END CATEGORY CONTENT SECTIONS -->
-
-    <!-- BOOKING CALENDAR SECTION -->
     <div class="ajanvaraus-container" id="ajanvaraus">
       <h2>Varaa aika kiillotukseen</h2>
       <div id="calendar"></div>
@@ -432,15 +419,13 @@
         <label for="email">Sähköposti</label>
         <input type="email" id="email" name="email" required placeholder="sinä@email.com" />
         <label for="phone">Puhelinnumero</label>
-        <input type="tel" id="phone" name="phone" required pattern="[0-9+\-\s]{6,}" placeholder="040 1234567" />
+        <input type="tel" id="phone" name="phone" required pattern="^\+358\s?\d{1,3}\s?\d{4,}$" placeholder="+358 401234567" />
+        <div class="g-recaptcha" data-sitekey="6Lcb5pQrAAAAAMFL6-0S0SfLPwpgy4t8N9f1zaGR"></div>
         <button type="submit" class="btn">Vahvista varaus</button>
       </form>
       <div id="msg" class="msg"></div>
       <div id="error" class="error"></div>
     </div>
-    <!-- END BOOKING CALENDAR SECTION -->
-
-    <!-- Google Maps -->
     <iframe
       id="kartta"
       class="kartanKehys"
@@ -451,8 +436,6 @@
       height="450"
       tabindex="0"
       title="Fixnero kartta"></iframe>
-
-    <!-- FOOTER -->
     <footer>
         <div class="footer">
             <div class="logo-container footer-section">
@@ -477,13 +460,11 @@
             </div>
         </div>
     </footer>
-
-<!-- FullCalendar JS and Firebase (ESM) -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyC4iGggU7G5CBWGbXgkD0fzDZiERsWPauE",
   authDomain: "fxnr-web.firebaseapp.com",
@@ -493,21 +474,17 @@ const firebaseConfig = {
   appId: "1:102756894813:web:e95668de4a2b28ac8c25b4",
   measurementId: "G-66J91EPWWN"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
+const functions = getFunctions(app);
 let selectedSlot = null;
-
 function getDateKey(date) {
   return date.toISOString().split('T')[0];
 }
-
 async function fetchBookings() {
   const snapshot = await getDocs(collection(db, "varaukset"));
   return snapshot.docs.map(doc => doc.data());
 }
-
 function getWeekdaySlots(startDate, days = 30) {
   const slots = [];
   let d = new Date(startDate);
@@ -528,20 +505,16 @@ function getWeekdaySlots(startDate, days = 30) {
   }
   return slots;
 }
-
 document.addEventListener('DOMContentLoaded', async function () {
   const calendarEl = document.getElementById('calendar');
   let bookings = await fetchBookings();
-
   function isSlotBooked(slot) {
     return bookings.some(b => b.aika === slot.start.toISOString());
   }
-
   function getBookingsCountForDay(date) {
     const dateKey = getDateKey(date);
     return bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
   }
-
   const calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'timeGridWeek',
     locale: 'fi',
@@ -566,7 +539,6 @@ document.addEventListener('DOMContentLoaded', async function () {
       const end = info.end;
       const dateKey = getDateKey(start);
       const count = getBookingsCountForDay(start);
-
       if (
         (end - start) === 60 * 60 * 1000 &&
         start.getHours() >= 9 && start.getHours() < 17 &&
@@ -590,69 +562,67 @@ document.addEventListener('DOMContentLoaded', async function () {
       }
     },
     events: function (fetchInfo, successCallback) {
-  bookings = bookings || [];
-  const evs = [];
-  for (const slot of getWeekdaySlots(fetchInfo.start, (fetchInfo.end - fetchInfo.start) / (24 * 60 * 60 * 1000))) {
-    const dateKey = getDateKey(slot.start);
-    const sameDayCount = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
-    const isExactMatch = bookings.some(b => new Date(b.aika).toISOString() === slot.start.toISOString());
-    const isBlocked = sameDayCount >= 2;
-    if (isBlocked) {
-      evs.push({
-        title: 'Täynnä',
-        start: slot.start.toISOString(),
-        end: slot.end.toISOString(),
-        color: '#f99',
-        display: 'background'
-      });
-    } else if (isExactMatch) {
-      evs.push({
-        title: 'Varattu',
-        start: slot.start.toISOString(),
-        end: slot.end.toISOString(),
-        color: '#ffd2d2',
-        display: 'background'
-      });
+      bookings = bookings || [];
+      const evs = [];
+      for (const slot of getWeekdaySlots(fetchInfo.start, (fetchInfo.end - fetchInfo.start) / (24 * 60 * 60 * 1000))) {
+        const dateKey = getDateKey(slot.start);
+        const sameDayCount = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
+        const isExactMatch = bookings.some(b => new Date(b.aika).toISOString() === slot.start.toISOString());
+        const isBlocked = sameDayCount >= 2;
+        if (isBlocked) {
+          evs.push({
+            title: 'Täynnä',
+            start: slot.start.toISOString(),
+            end: slot.end.toISOString(),
+            color: '#f99',
+            display: 'background'
+          });
+        } else if (isExactMatch) {
+          evs.push({
+            title: 'Varattu',
+            start: slot.start.toISOString(),
+            end: slot.end.toISOString(),
+            color: '#ffd2d2',
+            display: 'background'
+          });
+        }
+      }
+      successCallback(evs);
     }
-    // Do NOT add 'Vapaa' events as background!
-  }
-  successCallback(evs);
-}
   });
-
   calendar.render();
-
   document.getElementById('bookingForm').onsubmit = async function (e) {
     e.preventDefault();
     document.getElementById('msg').textContent = '';
     document.getElementById('error').textContent = '';
-
     const name = document.getElementById('name').value.trim();
     const email = document.getElementById('email').value.trim();
     const phone = document.getElementById('phone').value.trim();
-
+    const aikaValue = document.getElementById('aika').value;
+    if (!/^\+358\s?\d{1,3}\s?\d{4,}$/.test(phone)) {
+      document.getElementById('error').textContent = 'Syötä puhelinnumero muodossa +358 401234567!';
+      return;
+    }
+    // Google reCAPTCHA validation
+    const recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+      document.getElementById('error').textContent = 'Vahvista että et ole robotti!';
+      return;
+    }
     if (!selectedSlot || !name || !email || !phone) {
       document.getElementById('error').textContent = 'Täytä kaikki kentät ja valitse aika!';
       return;
     }
-
-    // Double-check no more than 2 bookings per day
-    const dateKey = getDateKey(selectedSlot);
-    const count = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
-    if (count >= 2) {
-      document.getElementById('error').textContent = 'Tälle päivälle voi varata enintään 2 aikaa!';
-      return;
-    }
-
     try {
-      await addDoc(collection(db, "varaukset"), {
-        name, email, phone,
-        aika: selectedSlot.toISOString(),
-        timestamp: serverTimestamp()
+      // Call secure Firebase Function (AppCheck & reCAPTCHA server check)
+      const bookSlot = httpsCallable(functions, "yourV1CallableFunction");
+      const result = await bookSlot({
+        name, email, phone, aika: selectedSlot.toISOString(),
+        recaptcha: recaptchaResponse
       });
-
       document.getElementById('msg').innerHTML = "Varaus onnistui! <br>Saat varausvahvistuksen sähköpostiisi pian.";
       document.getElementById('bookingForm').reset();
+      grecaptcha.reset();
       document.getElementById('bookingForm').style.display = 'none';
       document.getElementById('slot-summary').textContent = '';
       selectedSlot = null;
@@ -660,12 +630,11 @@ document.addEventListener('DOMContentLoaded', async function () {
       calendar.refetchEvents();
     } catch (error) {
       console.error(error);
-      document.getElementById('error').textContent = 'Varaus epäonnistui. Yritä uudelleen!';
+      document.getElementById('error').textContent = error.message || 'Varaus epäonnistui. Yritä uudelleen!';
     }
   };
 });
 </script>
-
 <script>
 // Hamburger and nav toggle
 const hamburger = document.querySelector('.hamburger-menu');
@@ -674,7 +643,6 @@ hamburger.addEventListener('click', () => nav.classList.toggle('active'));
 hamburger.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') nav.classList.toggle('active');
 });
-
 // Smooth scroll for all anchor links in nav and footer
 document.querySelectorAll('nav a, .footer a').forEach(link => {
     link.addEventListener('click', function(e) {
@@ -692,7 +660,6 @@ document.querySelectorAll('nav a, .footer a').forEach(link => {
         }
     });
 });
-
 // Carousel logic (auto-advance every 7s, one image at a time)
 const carousel = document.getElementById('carousel');
 let currentIndex = 0;
@@ -701,7 +668,6 @@ function nextSlide() {
     carousel.style.transform = `translateX(${-currentIndex * 100}%)`;
 }
 setInterval(nextSlide, 7000);
-
 // Responsive nav close on resize
 window.addEventListener('resize', () => {
     if (window.innerWidth > 1279) nav.classList.remove('active');
