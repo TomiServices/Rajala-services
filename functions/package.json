@@ -4,9 +4,17 @@
   "dependencies": {
     "axios": "^1.5.0",
     "firebase-admin": "^13.4.0",
-    "firebase-functions": "^4.6.1"
+    "firebase-functions": "^6.4.0"
   },
   "engines": {
     "node": "18"
-  }
+  },
+  "version": "1.0.0",
+  "main": "index.js.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
