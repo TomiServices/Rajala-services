@@ -10,7 +10,6 @@
     <!-- Google reCAPTCHA v2 -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
-        /* --- your full original CSS pasted here, unchanged --- */
         body {
             font-family: Arial, sans-serif;
             background: #f4f4f4;
@@ -463,176 +462,177 @@
     </footer>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 <script type="module">
-// NOTE: No Firebase config in HTML for security. Use server endpoints instead.
-
-// Calendar booking logic (ready for backend API, e.g. Firebase Function)
-document.addEventListener('DOMContentLoaded', function () {
-    const calendarEl = document.getElementById('calendar');
-    let selectedSlot = null;
-
-    // Example: Fetch bookings from your backend API (replace URL)
-    async function fetchBookings() {
-        const response = await fetch('/api/bookings');
-        return response.ok ? await response.json() : [];
-    }
-
-    function getDateKey(date) {
-        return date.toISOString().split('T')[0];
-    }
-    function getWeekdaySlots(startDate, days = 30) {
-        const slots = [];
-        let d = new Date(startDate);
-        d.setHours(9, 0, 0, 0);
-        for (let i = 0; i < days; i++) {
-            if (d.getDay() >= 1 && d.getDay() <= 5) {
-                for (let h = 9; h < 17; h++) {
-                    let slot = new Date(d);
-                    slot.setHours(h, 0, 0, 0);
-                    slots.push({
-                        start: new Date(slot),
-                        end: new Date(slot.getTime() + 60 * 60 * 1000)
-                    });
-                }
-            }
-            d.setDate(d.getDate() + 1);
-            d.setHours(9, 0, 0, 0);
-        }
-        return slots;
-    }
-    fetchBookings().then(bookings => {
-        function isSlotBooked(slot) {
-            return bookings.some(b => b.aika === slot.start.toISOString());
-        }
-        function getBookingsCountForDay(date) {
-            const dateKey = getDateKey(date);
-            return bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
-        }
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'timeGridWeek',
-            locale: 'fi',
-            slotMinTime: '09:00:00',
-            slotMaxTime: '17:00:00',
-            allDaySlot: false,
-            selectable: true,
-            selectOverlap: false,
-            slotDuration: '01:00:00',
-            expandRows: true,
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: ''
-            },
-            validRange: {
-                start: new Date(),
-                end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-            },
-            select: function (info) {
-                const start = info.start;
-                const end = info.end;
-                const dateKey = getDateKey(start);
-                const count = getBookingsCountForDay(start);
-                if (
-                    (end - start) === 60 * 60 * 1000 &&
-                    start.getHours() >= 9 && start.getHours() < 17 &&
-                    start.getDay() >= 1 && start.getDay() <= 5 &&
-                    !isSlotBooked({ start }) &&
-                    count < 2
-                ) {
-                    selectedSlot = start;
-                    const aikaTxt = start.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
-                        ', klo ' + start.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
-                    document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
-                    document.getElementById('aika').value = aikaTxt;
-                    document.getElementById('bookingForm').style.display = '';
-                    document.getElementById('error').textContent = '';
-                } else if (count >= 2) {
-                    document.getElementById('error').textContent = 'Tälle päivälle voi varata enintään 2 aikaa!';
-                    document.getElementById('bookingForm').style.display = 'none';
-                } else {
-                    document.getElementById('error').textContent = 'Valitse vapaa 1h aika maanantaista perjantaihin klo 9–17!';
-                    document.getElementById('bookingForm').style.display = 'none';
-                }
-            },
-            events: function (fetchInfo, successCallback) {
-                const evs = [];
-                for (const slot of getWeekdaySlots(fetchInfo.start, (fetchInfo.end - fetchInfo.start) / (24 * 60 * 60 * 1000))) {
-                    const dateKey = getDateKey(slot.start);
-                    const sameDayCount = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
-                    const isExactMatch = bookings.some(b => new Date(b.aika).toISOString() === slot.start.toISOString());
-                    const isBlocked = sameDayCount >= 2;
-                    if (isBlocked) {
-                        evs.push({
-                            title: 'Täynnä',
-                            start: slot.start.toISOString(),
-                            end: slot.end.toISOString(),
-                            color: '#f99',
-                            display: 'background'
-                        });
-                    } else if (isExactMatch) {
-                        evs.push({
-                            title: 'Varattu',
-                            start: slot.start.toISOString(),
-                            end: slot.end.toISOString(),
-                            color: '#ffd2d2',
-                            display: 'background'
-                        });
-                    }
-                }
-                successCallback(evs);
-            }
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyC4iGggU7G5CBWGbXgkD0fzDZiERsWPauE",
+  authDomain: "fxnr-web.firebaseapp.com",
+  projectId: "fxnr-web",
+  storageBucket: "fxnr-web.firebasestorage.app",
+  messagingSenderId: "102756894813",
+  appId: "1:102756894813:web:e95668de4a2b28ac8c25b4",
+  measurementId: "G-66J91EPWWN"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const functions = getFunctions(app);
+let selectedSlot = null;
+function getDateKey(date) {
+  return date.toISOString().split('T')[0];
+}
+async function fetchBookings() {
+  const snapshot = await getDocs(collection(db, "varaukset"));
+  return snapshot.docs.map(doc => doc.data());
+}
+function getWeekdaySlots(startDate, days = 30) {
+  const slots = [];
+  let d = new Date(startDate);
+  d.setHours(9, 0, 0, 0);
+  for (let i = 0; i < days; i++) {
+    if (d.getDay() >= 1 && d.getDay() <= 5) {
+      for (let h = 9; h < 17; h++) {
+        let slot = new Date(d);
+        slot.setHours(h, 0, 0, 0);
+        slots.push({
+          start: new Date(slot),
+          end: new Date(slot.getTime() + 60 * 60 * 1000)
         });
-        calendar.render();
-        document.getElementById('bookingForm').onsubmit = async function (e) {
-            e.preventDefault();
-            document.getElementById('msg').textContent = '';
-            document.getElementById('error').textContent = '';
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const aikaValue = document.getElementById('aika').value;
-            if (!/^\+358\s?\d{1,3}\s?\d{4,}$/.test(phone)) {
-                document.getElementById('error').textContent = 'Syötä puhelinnumero muodossa +358 401234567!';
-                return;
-            }
-            const recaptchaResponse = grecaptcha.getResponse();
-            if (!recaptchaResponse) {
-                document.getElementById('error').textContent = 'Vahvista että et ole robotti!';
-                return;
-            }
-            if (!selectedSlot || !name || !email || !phone) {
-                document.getElementById('error').textContent = 'Täytä kaikki kentät ja valitse aika!';
-                return;
-            }
-            try {
-                // Send booking to backend API (replace URL)
-                const res = await fetch('/api/book', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name, email, phone,
-                        aika: selectedSlot.toISOString(),
-                        recaptcha: recaptchaResponse
-                    })
-                });
-                if (res.ok) {
-                    document.getElementById('msg').innerHTML = "Varaus onnistui! <br>Saat varausvahvistuksen sähköpostiisi pian.";
-                    document.getElementById('bookingForm').reset();
-                    grecaptcha.reset();
-                    document.getElementById('bookingForm').style.display = 'none';
-                    document.getElementById('slot-summary').textContent = '';
-                    selectedSlot = null;
-                    bookings = await fetchBookings();
-                    calendar.refetchEvents();
-                } else {
-                    const err = await res.json();
-                    throw new Error(err.message || 'Varaus epäonnistui. Yritä uudelleen!');
-                }
-            } catch (error) {
-                console.error(error);
-                document.getElementById('error').textContent = error.message || 'Varaus epäonnistui. Yritä uudelleen!';
-            }
-        };
-    });
+      }
+    }
+    d.setDate(d.getDate() + 1);
+    d.setHours(9, 0, 0, 0);
+  }
+  return slots;
+}
+document.addEventListener('DOMContentLoaded', async function () {
+  const calendarEl = document.getElementById('calendar');
+  let bookings = await fetchBookings();
+  function isSlotBooked(slot) {
+    return bookings.some(b => b.aika === slot.start.toISOString());
+  }
+  function getBookingsCountForDay(date) {
+    const dateKey = getDateKey(date);
+    return bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
+  }
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'timeGridWeek',
+    locale: 'fi',
+    slotMinTime: '09:00:00',
+    slotMaxTime: '17:00:00',
+    allDaySlot: false,
+    selectable: true,
+    selectOverlap: false,
+    slotDuration: '01:00:00',
+    expandRows: true,
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: ''
+    },
+    validRange: {
+      start: new Date(),
+      end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+    },
+    select: function (info) {
+      const start = info.start;
+      const end = info.end;
+      const dateKey = getDateKey(start);
+      const count = getBookingsCountForDay(start);
+      if (
+        (end - start) === 60 * 60 * 1000 &&
+        start.getHours() >= 9 && start.getHours() < 17 &&
+        start.getDay() >= 1 && start.getDay() <= 5 &&
+        !isSlotBooked({ start }) &&
+        count < 2
+      ) {
+        selectedSlot = start;
+        const aikaTxt = start.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
+          ', klo ' + start.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+        document.getElementById('aika').value = aikaTxt;
+        document.getElementById('bookingForm').style.display = '';
+        document.getElementById('error').textContent = '';
+      } else if (count >= 2) {
+        document.getElementById('error').textContent = 'Tälle päivälle voi varata enintään 2 aikaa!';
+        document.getElementById('bookingForm').style.display = 'none';
+      } else {
+        document.getElementById('error').textContent = 'Valitse vapaa 1h aika maanantaista perjantaihin klo 9–17!';
+        document.getElementById('bookingForm').style.display = 'none';
+      }
+    },
+    events: function (fetchInfo, successCallback) {
+      bookings = bookings || [];
+      const evs = [];
+      for (const slot of getWeekdaySlots(fetchInfo.start, (fetchInfo.end - fetchInfo.start) / (24 * 60 * 60 * 1000))) {
+        const dateKey = getDateKey(slot.start);
+        const sameDayCount = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
+        const isExactMatch = bookings.some(b => new Date(b.aika).toISOString() === slot.start.toISOString());
+        const isBlocked = sameDayCount >= 2;
+        if (isBlocked) {
+          evs.push({
+            title: 'Täynnä',
+            start: slot.start.toISOString(),
+            end: slot.end.toISOString(),
+            color: '#f99',
+            display: 'background'
+          });
+        } else if (isExactMatch) {
+          evs.push({
+            title: 'Varattu',
+            start: slot.start.toISOString(),
+            end: slot.end.toISOString(),
+            color: '#ffd2d2',
+            display: 'background'
+          });
+        }
+      }
+      successCallback(evs);
+    }
+  });
+  calendar.render();
+  document.getElementById('bookingForm').onsubmit = async function (e) {
+    e.preventDefault();
+    document.getElementById('msg').textContent = '';
+    document.getElementById('error').textContent = '';
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const aikaValue = document.getElementById('aika').value;
+    if (!/^\+358\s?\d{1,3}\s?\d{4,}$/.test(phone)) {
+      document.getElementById('error').textContent = 'Syötä puhelinnumero muodossa +358 401234567!';
+      return;
+    }
+    // Google reCAPTCHA validation
+    const recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+      document.getElementById('error').textContent = 'Vahvista että et ole robotti!';
+      return;
+    }
+    if (!selectedSlot || !name || !email || !phone) {
+      document.getElementById('error').textContent = 'Täytä kaikki kentät ja valitse aika!';
+      return;
+    }
+    try {
+      // Call secure Firebase Function (AppCheck & reCAPTCHA server check)
+      const bookSlot = httpsCallable(functions, "yourV1CallableFunction");
+      const result = await bookSlot({
+        name, email, phone, aika: selectedSlot.toISOString(),
+        recaptcha: recaptchaResponse
+      });
+      document.getElementById('msg').innerHTML = "Varaus onnistui! <br>Saat varausvahvistuksen sähköpostiisi pian.";
+      document.getElementById('bookingForm').reset();
+      grecaptcha.reset();
+      document.getElementById('bookingForm').style.display = 'none';
+      document.getElementById('slot-summary').textContent = '';
+      selectedSlot = null;
+      bookings = await fetchBookings();
+      calendar.refetchEvents();
+    } catch (error) {
+      console.error(error);
+      document.getElementById('error').textContent = error.message || 'Varaus epäonnistui. Yritä uudelleen!';
+    }
+  };
 });
 </script>
 <script>
