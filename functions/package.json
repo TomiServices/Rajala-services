@@ -7,7 +7,7 @@
     "firebase-functions": "^6.4.0"
   },
   "engines": {
-    "node": "18"
+    "node": "20"
   },
   "version": "1.0.0",
   "main": "index.js.js",
