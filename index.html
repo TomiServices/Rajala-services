@@ -605,7 +605,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             try {
                 // Send booking to backend API (replace URL)
-                const res = await fetch('/api/book', {
+                const res = await fetch('https://us-central1-fxnr-web.cloudfunctions.net/book', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
