@@ -7,7 +7,10 @@ exports.book = functions.https.onRequest((req, res) => {
         return res.status(405).json({ error: "Method not allowed" });
     }
     const { name, email, phone, aika } = req.body;
-    // Save booking to Firestore (add validation if needed)
+    // Basic validation
+    if (!name || !email || !phone || !aika) {
+        return res.status(400).json({ error: "Missing required fields" });
+    }
     admin.firestore().collection("varaukset").add({
         name, email, phone, aika,
         timestamp: admin.firestore.FieldValue.serverTimestamp()
