@@ -470,9 +470,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
     let selectedSlot = null;
 
-    // Example: Fetch bookings from your backend API (replace URL)
+    // FIXED: Fetch bookings from your backend Firebase Function
     async function fetchBookings() {
-        const response = await fetch('/api/bookings');
+        const response = await fetch('https://us-central1-fxnr-web.cloudfunctions.net/bookings');
         return response.ok ? await response.json() : [];
     }
 
@@ -604,7 +604,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             try {
-                // Send booking to backend API (replace URL)
+                // FIXED: Send booking to backend Firebase Function
                 const res = await fetch('https://us-central1-fxnr-web.cloudfunctions.net/book', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
