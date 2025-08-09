@@ -351,6 +351,44 @@
                 background-color: rgba(0, 123, 255, 0.1);
             }
         }
+        
+        /* Fix mobile selection highlighting - ensure only individual cells are highlighted */
+        @media (max-width: 768px) {
+            /* Override any row-wide selection styles */
+            .fc-timegrid-slot-lane .fc-highlight {
+                /* Constrain highlight to individual cell boundaries */
+                width: auto !important;
+                left: 0 !important;
+                right: 0 !important;
+            }
+            
+            /* Ensure selection highlight is contained within cell */
+            .fc-highlight {
+                border-radius: 4px;
+                opacity: 0.8;
+                /* Prevent highlight from bleeding across cells */
+                overflow: hidden;
+                box-sizing: border-box;
+            }
+            
+            /* Force single-cell selection boundaries */
+            .fc-timegrid-slot {
+                overflow: hidden;
+                border: 1px solid transparent;
+            }
+            
+            .fc-timegrid-slot.fc-highlight,
+            .fc-timegrid-slot:has(.fc-highlight) {
+                border-color: rgba(0, 123, 255, 0.3);
+                background-color: rgba(0, 123, 255, 0.1) !important;
+            }
+            
+            /* Prevent selection from expanding beyond single cell on touch */
+            .fc-timegrid-slot-lane {
+                position: relative;
+                overflow: hidden;
+            }
+        }
         .footer {
             display: flex;
             flex-wrap: wrap;
@@ -745,8 +783,19 @@ document.addEventListener('DOMContentLoaded', function () {
             selectLongPressDelay: 300,
             longPressDelay: 300,
             eventLongPressDelay: 300,
+            // Mobile selection constraints - prevent row-wide selection
+            selectConstraint: {
+                start: '09:00',
+                end: '17:00',
+                daysOfWeek: [1, 2, 3, 4, 5] // Mon-Fri only
+            },
+            snapDuration: '01:00:00', // Snap selections to 1-hour intervals
+            selectMinDistance: 10, // Minimum distance for touch selection (prevents accidental selections)
             selectAllow: function(selectInfo) {
-                return true; // Allow all valid selections
+                // Enforce single-cell selection: only allow exactly 1-hour slots
+                const duration = selectInfo.end - selectInfo.start;
+                const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
+                return duration === oneHour;
             },
             // Better mobile responsiveness
             aspectRatio: window.innerWidth < 768 ? 1.2 : 1.35,
@@ -764,10 +813,22 @@ document.addEventListener('DOMContentLoaded', function () {
             select: function (info) {
                 const start = info.start;
                 const end = info.end;
+                
+                // Explicit check for single-cell selection (exactly 1 hour)
+                const duration = end - start;
+                const oneHour = 60 * 60 * 1000;
+                
+                if (duration !== oneHour) {
+                    // Unselect if not exactly 1 hour
+                    calendar.unselect();
+                    document.getElementById('error').textContent = 'Valitse täsmälleen yksi tunti (yhden solun)!';
+                    document.getElementById('bookingForm').style.display = 'none';
+                    return;
+                }
+                
                 const dateKey = getDateKey(start);
                 const count = getBookingsCountForDay(start);
                 if (
-                    (end - start) === 60 * 60 * 1000 &&
                     start.getHours() >= 9 && start.getHours() < 17 &&
                     start.getDay() >= 1 && start.getDay() <= 5 &&
                     !isSlotBooked({ start }) &&
@@ -781,9 +842,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('bookingForm').style.display = '';
                     document.getElementById('error').textContent = '';
                 } else if (count >= 2) {
+                    calendar.unselect();
                     document.getElementById('error').textContent = 'Tälle päivälle voi varata enintään 2 aikaa!';
                     document.getElementById('bookingForm').style.display = 'none';
                 } else {
+                    calendar.unselect();
                     document.getElementById('error').textContent = 'Valitse vapaa 1h aika maanantaista perjantaihin klo 9–17!';
                     document.getElementById('bookingForm').style.display = 'none';
                 }
@@ -818,13 +881,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         calendar.render();
         
-        // Enhanced touch event handling for mobile devices
+        // Enhanced touch event handling for mobile devices - prevent row-wide selection
         let touchStarted = false;
         let touchTimeout = null;
+        let touchStartCell = null;
         
         // Add touch event listeners to calendar container for better mobile support
         calendarEl.addEventListener('touchstart', function(e) {
             touchStarted = true;
+            // Store the specific cell where touch started
+            const target = e.target || e.touches[0].target;
+            if (target && (target.classList.contains('fc-timegrid-slot') || 
+                          target.classList.contains('fc-timegrid-slot-lane'))) {
+                touchStartCell = target;
+            }
+            
             // Clear any existing timeout
             if (touchTimeout) {
                 clearTimeout(touchTimeout);
@@ -833,32 +904,61 @@ document.addEventListener('DOMContentLoaded', function () {
         }, { passive: true });
         
         calendarEl.addEventListener('touchend', function(e) {
-            if (touchStarted) {
+            if (touchStarted && touchStartCell) {
                 touchStarted = false;
-                // Add small delay to allow FullCalendar to process the touch
-                touchTimeout = setTimeout(() => {
-                    // Force calendar to check for selection if touch ended on a valid slot
-                    const target = e.target || e.changedTouches[0].target;
-                    if (target && (target.classList.contains('fc-timegrid-slot') || 
-                                  target.classList.contains('fc-timegrid-slot-lane'))) {
-                        // Trigger a synthetic click as fallback
-                        const clickEvent = new MouseEvent('click', {
-                            bubbles: true,
-                            cancelable: true,
-                            clientX: e.changedTouches ? e.changedTouches[0].clientX : e.clientX,
-                            clientY: e.changedTouches ? e.changedTouches[0].clientY : e.clientY
-                        });
-                        target.dispatchEvent(clickEvent);
-                    }
-                }, 100);
+                const touchEndTarget = e.target || e.changedTouches[0].target;
+                
+                // Only process if touch ended on the same cell where it started
+                if (touchEndTarget === touchStartCell || 
+                    touchStartCell.contains(touchEndTarget) ||
+                    touchEndTarget.closest('.fc-timegrid-slot') === touchStartCell.closest('.fc-timegrid-slot')) {
+                    
+                    // Add small delay to allow FullCalendar to process the touch
+                    touchTimeout = setTimeout(() => {
+                        // Force calendar to check for selection on the specific cell
+                        if (touchStartCell && (touchStartCell.classList.contains('fc-timegrid-slot') || 
+                                              touchStartCell.classList.contains('fc-timegrid-slot-lane'))) {
+                            // Trigger a synthetic click for precise single-cell selection
+                            const rect = touchStartCell.getBoundingClientRect();
+                            const clickEvent = new MouseEvent('click', {
+                                bubbles: true,
+                                cancelable: true,
+                                clientX: rect.left + rect.width / 2,
+                                clientY: rect.top + rect.height / 2
+                            });
+                            touchStartCell.dispatchEvent(clickEvent);
+                        }
+                    }, 50);
+                }
+                touchStartCell = null;
             }
         }, { passive: true });
         
         calendarEl.addEventListener('touchcancel', function(e) {
             touchStarted = false;
+            touchStartCell = null;
             if (touchTimeout) {
                 clearTimeout(touchTimeout);
                 touchTimeout = null;
+            }
+        }, { passive: true });
+        
+        // Add touchmove handler to prevent selection if user drags across cells
+        calendarEl.addEventListener('touchmove', function(e) {
+            if (touchStarted && touchStartCell) {
+                const currentTarget = document.elementFromPoint(
+                    e.touches[0].clientX, 
+                    e.touches[0].clientY
+                );
+                const currentCell = currentTarget?.closest('.fc-timegrid-slot');
+                const startCell = touchStartCell.closest('.fc-timegrid-slot');
+                
+                // If moved to a different cell, cancel the selection
+                if (currentCell && startCell && currentCell !== startCell) {
+                    touchStarted = false;
+                    touchStartCell = null;
+                    calendar.unselect(); // Clear any ongoing selection
+                }
             }
         }, { passive: true });
         
