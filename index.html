@@ -375,7 +375,8 @@
             /* Override any row-wide selection styles */
             .fc-timegrid-slot-lane .fc-highlight {
                 /* Constrain highlight to individual cell boundaries */
-                width: auto !important;
+                height: 100% !important;
+                width: 100% !important;
                 left: 0 !important;
                 right: 0 !important;
             }
@@ -796,11 +797,11 @@ document.addEventListener('DOMContentLoaded', function () {
             moreLinkClick: 'popover',
             selectMirror: true,
             unselectAuto: true,
-            selectMinDistance: 0,
-            // Enhanced mobile touch handling
-            selectLongPressDelay: 300,
-            longPressDelay: 300,
-            eventLongPressDelay: 300,
+            selectMinDistance: 1,
+            // Enhanced mobile touch handling - reduced sensitivity
+            selectLongPressDelay: 350,
+            longPressDelay: 350,
+            eventLongPressDelay: 350,
             // Mobile selection constraints - prevent row-wide selection
             selectConstraint: {
                 start: '09:00',
@@ -808,7 +809,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 daysOfWeek: [1, 2, 3, 4, 5] // Mon-Fri only
             },
             snapDuration: '01:00:00', // Snap selections to 1-hour intervals
-            selectMinDistance: 10, // Minimum distance for touch selection (prevents accidental selections)
+            // Restrict selection to exactly one cell (one hour)
             selectAllow: function(selectInfo) {
                 const duration = selectInfo.end - selectInfo.start;
                 const oneHour = 60 * 60 * 1000; // One hour in milliseconds
@@ -928,23 +929,23 @@ document.addEventListener('DOMContentLoaded', function () {
         calendarEl.addEventListener('touchend', function(e) {
             const touchEndTarget = e.target || e.changedTouches[0].target;
             if (touchStartCell && touchEndTarget === touchStartCell) {
-                // Ensure touch started and ended on the same cell
-                // Add small delay to allow FullCalendar to process the touch
-                touchTimeout = setTimeout(() => {
-                    // Force calendar to check for selection on the specific cell
-                    if (touchStartCell && (touchStartCell.classList.contains('fc-timegrid-slot') || 
-                                          touchStartCell.classList.contains('fc-timegrid-slot-lane'))) {
-                        // Trigger a synthetic click for precise single-cell selection
-                        const rect = touchStartCell.getBoundingClientRect();
-                        const clickEvent = new MouseEvent('click', {
-                            bubbles: true,
-                            cancelable: true,
-                            clientX: rect.left + rect.width / 2,
-                            clientY: rect.top + rect.height / 2
-                        });
-                        touchStartCell.dispatchEvent(clickEvent);
-                    }
-                }, 50);
+                // Override default drag behavior by implementing single cell selection
+                // Get the dataset date from the touched cell
+                const cellDataset = touchStartCell.dataset;
+                if (cellDataset && cellDataset.date) {
+                    // Select only this specific cell
+                    calendar.select(cellDataset.date);
+                } else {
+                    // Fallback: trigger a synthetic click for precise single-cell selection
+                    const rect = touchStartCell.getBoundingClientRect();
+                    const clickEvent = new MouseEvent('click', {
+                        bubbles: true,
+                        cancelable: true,
+                        clientX: rect.left + rect.width / 2,
+                        clientY: rect.top + rect.height / 2
+                    });
+                    touchStartCell.dispatchEvent(clickEvent);
+                }
             }
             touchStarted = false;
             touchStartCell = null;
