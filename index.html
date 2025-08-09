@@ -254,6 +254,32 @@
             margin-bottom: 10px;
         }
         .fc-timegrid-slot { cursor: pointer; }
+        
+        /* Mobile responsive styles for calendar */
+        @media (max-width: 768px) {
+            #calendar {
+                font-size: 0.8rem;
+            }
+            .fc-toolbar {
+                flex-wrap: wrap;
+            }
+            .fc-toolbar-title {
+                font-size: 1.1rem;
+            }
+            .fc-button {
+                padding: 0.2em 0.4em;
+                font-size: 0.9rem;
+            }
+            .fc-timegrid-slot {
+                min-height: 2.5em;
+            }
+            .ajanvaraus-container {
+                padding: 16px 12px 12px 12px;
+            }
+            .booking-form {
+                padding: 15px 0 0 0;
+            }
+        }
         .footer {
             display: flex;
             flex-wrap: wrap;
@@ -747,6 +773,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('error').textContent = error.message || 'Varaus epäonnistui. Yritä uudelleen!';
             }
         };
+    });
+    
+    // Add touch event handling for mobile devices
+    document.addEventListener('touchstart', function(e) {
+        if (e.target.classList.contains('fc-timegrid-slot')) {
+            e.target.click();
+        }
     });
 });
 </script>
