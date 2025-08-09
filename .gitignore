@@ -29,3 +29,6 @@ Thumbs.db
 .idea/
 *.sublime-workspace
 *.sublime-project
+
+# Ignore test files
+mobile-touch-test.html
