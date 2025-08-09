@@ -22,9 +22,9 @@ exports.book = functions.https.onRequest((req, res) => {
             aika,
             timestamp: admin.firestore.FieldValue.serverTimestamp()
         }).then(doc => {
-            // Luo "mail"-dokumentti sähköpostitriggerille
+            // Luo "mail"-dokumentti sähköpostitriggerille (to array!)
             admin.firestore().collection("mail").add({
-                to: [email], // HUOM! Array, suositus extensionille
+                to: [email], // ARRAY, extension vaatii tätä!
                 message: {
                     subject: "Varausvahvistus – Fixnero",
                     text: `Hei ${name}, varauksesi ajalle ${aika} on vahvistettu! Kiitos varauksestasi.`,
