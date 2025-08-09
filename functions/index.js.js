@@ -1,9 +1,10 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
-const cors = require("cors")({ origin: true }); // Allow all origins, or specify your domain
+const cors = require("cors")({ origin: true });
 
 admin.initializeApp();
 
+// VARAUKSEN TEKO JA SÄHKÖPOSTI
 exports.book = functions.https.onRequest((req, res) => {
     cors(req, res, () => {
         if (req.method !== "POST") {
@@ -13,14 +14,17 @@ exports.book = functions.https.onRequest((req, res) => {
         if (!name || !email || !phone || !aika) {
             return res.status(400).json({ error: "Missing required fields" });
         }
-        // Add booking to Firestore
+        // Tallenna varaus Firestoreen
         admin.firestore().collection("varaukset").add({
-            name, email, phone, aika,
+            name,
+            email,
+            phone,
+            aika,
             timestamp: admin.firestore.FieldValue.serverTimestamp()
         }).then(doc => {
-            // --- ADD THIS: Create mail document for Firebase Trigger Email extension ---
+            // Luo "mail"-dokumentti sähköpostitriggerille
             admin.firestore().collection("mail").add({
-                to: email, // send to the customer's email
+                to: [email], // HUOM! Array, suositus extensionille
                 message: {
                     subject: "Varausvahvistus – Fixnero",
                     text: `Hei ${name}, varauksesi ajalle ${aika} on vahvistettu! Kiitos varauksestasi.`,
@@ -29,18 +33,16 @@ exports.book = functions.https.onRequest((req, res) => {
             }).then(() => {
                 res.json({ success: true, id: doc.id });
             }).catch(error => {
-                // If email doc failed, still return booking success but log error
                 console.error("Failed to create mail doc:", error);
                 res.json({ success: true, id: doc.id, emailError: error.message });
             });
-            // --- END ADD ---
         }).catch(error => {
             res.status(500).json({ error: error.message });
         });
     });
 });
 
-// --- CALENDAR BOOKINGS FUNCTION ---
+// KALENTERIN VARAUKSET
 exports.bookings = functions.https.onRequest((req, res) => {
     cors(req, res, async () => {
         if (req.method !== "GET") {
