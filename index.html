@@ -352,116 +352,6 @@
             }
         }
         
-        /* Mobile time selection modal */
-        .mobile-time-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .mobile-time-modal.active {
-            display: flex;
-        }
-        
-        .mobile-time-content {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            max-width: 90%;
-            width: 320px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        .mobile-time-header {
-            text-align: center;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .mobile-time-slots {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .mobile-time-slot {
-            padding: 12px 8px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            background: white;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-        }
-        
-        .mobile-time-slot:hover {
-            border-color: #007bff;
-            background: #f8f9fa;
-        }
-        
-        .mobile-time-slot.selected {
-            border-color: #007bff;
-            background: #007bff;
-            color: white;
-        }
-        
-        .mobile-time-slot.booked {
-            background: #f5f5f5;
-            color: #999;
-            cursor: not-allowed;
-            border-color: #eee;
-        }
-        
-        .mobile-time-buttons {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .mobile-time-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        
-        .mobile-time-btn.cancel {
-            background: #6c757d;
-            color: white;
-        }
-        
-        .mobile-time-btn.cancel:hover {
-            background: #5a6268;
-        }
-        
-        .mobile-time-btn.confirm {
-            background: #007bff;
-            color: white;
-        }
-        
-        .mobile-time-btn.confirm:hover {
-            background: #0056b3;
-        }
-        
-        .mobile-time-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        
         /* Fix mobile selection highlighting - ensure only individual cells are highlighted */
         @media (max-width: 768px) {
             /* Override any row-wide selection styles */
@@ -791,23 +681,6 @@
       <div id="msg" class="msg"></div>
       <div id="error" class="error"></div>
     </div>
-    
-    <!-- Mobile Time Selection Modal -->
-    <div id="mobileTimeModal" class="mobile-time-modal">
-        <div class="mobile-time-content">
-            <div class="mobile-time-header">
-                <div id="mobileSelectedDate">Valitse aika</div>
-            </div>
-            <div id="mobileTimeSlots" class="mobile-time-slots">
-                <!-- Time slots will be populated dynamically -->
-            </div>
-            <div class="mobile-time-buttons">
-                <button id="mobileTimeCancel" class="mobile-time-btn cancel">Peruuta</button>
-                <button id="mobileTimeConfirm" class="mobile-time-btn confirm" disabled>Vahvista</button>
-            </div>
-        </div>
-    </div>
-    
     <iframe
       id="kartta"
       class="kartanKehys"
@@ -846,28 +719,10 @@
 <script type="module">
 // NOTE: No Firebase config in HTML for security. Use server endpoints instead.
 
-// Mobile device detection utility
-function isMobileDevice() {
-    // Primary detection: User agent check for known mobile devices
-    const userAgentCheck = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
-    // Secondary detection: Touch capability
-    const touchCheck = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    
-    // Tertiary detection: Screen size (for responsive behavior)
-    const screenSizeCheck = window.innerWidth <= 768;
-    
-    // Return true if either user agent indicates mobile OR (touch support AND small screen)
-    return userAgentCheck || (touchCheck && screenSizeCheck);
-}
-
 // Calendar booking logic (ready for backend API, e.g. Firebase Function)
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
     let selectedSlot = null;
-    let selectedMobileDate = null;
-    let selectedMobileTime = null;
-    let isMobile = isMobileDevice();
 
     // FIXED: Fetch bookings from your backend Firebase Function
     async function fetchBookings() {
@@ -898,100 +753,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         return slots;
     }
-    
-    // Mobile time selection modal functions
-    function showMobileTimeModal(date) {
-        const modal = document.getElementById('mobileTimeModal');
-        const dateHeader = document.getElementById('mobileSelectedDate');
-        const slotsContainer = document.getElementById('mobileTimeSlots');
-        
-        selectedMobileDate = date;
-        dateHeader.textContent = `Valitse aika - ${date.toLocaleDateString('fi-FI', { 
-            weekday: 'long', 
-            day: 'numeric', 
-            month: 'long' 
-        })}`;
-        
-        // Generate time slots for the selected date
-        slotsContainer.innerHTML = '';
-        const dayBookings = bookings.filter(b => getDateKey(new Date(b.aika)) === getDateKey(date));
-        
-        // Check if day is fully booked (2 or more bookings)
-        if (dayBookings.length >= 2) {
-            slotsContainer.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #999; padding: 20px;">Tämä päivä on täynnä</div>';
-        } else {
-            // Generate available time slots (9-17)
-            for (let hour = 9; hour < 17; hour++) {
-                const slotTime = new Date(date);
-                slotTime.setHours(hour, 0, 0, 0);
-                
-                const isBooked = dayBookings.some(b => new Date(b.aika).getHours() === hour);
-                const isPast = slotTime < new Date();
-                
-                const slotEl = document.createElement('div');
-                slotEl.className = `mobile-time-slot ${isBooked || isPast ? 'booked' : ''}`;
-                slotEl.textContent = `${hour}:00`;
-                slotEl.dataset.hour = hour;
-                
-                if (!isBooked && !isPast) {
-                    slotEl.addEventListener('click', function() {
-                        // Remove previous selection
-                        slotsContainer.querySelectorAll('.mobile-time-slot.selected').forEach(el => {
-                            el.classList.remove('selected');
-                        });
-                        // Select this slot
-                        this.classList.add('selected');
-                        selectedMobileTime = hour;
-                        document.getElementById('mobileTimeConfirm').disabled = false;
-                    });
-                }
-                
-                slotsContainer.appendChild(slotEl);
-            }
-        }
-        
-        modal.classList.add('active');
-    }
-    
-    function hideMobileTimeModal() {
-        const modal = document.getElementById('mobileTimeModal');
-        modal.classList.remove('active');
-        selectedMobileDate = null;
-        selectedMobileTime = null;
-        document.getElementById('mobileTimeConfirm').disabled = true;
-    }
-    
-    function confirmMobileTimeSelection() {
-        if (selectedMobileDate && selectedMobileTime !== null) {
-            const finalDateTime = new Date(selectedMobileDate);
-            finalDateTime.setHours(selectedMobileTime, 0, 0, 0);
-            
-            selectedSlot = finalDateTime;
-            const aikaTxt = finalDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
-                ', klo ' + finalDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
-            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
-            document.getElementById('aika').value = aikaTxt;
-            document.getElementById('bookingForm').style.display = '';
-            document.getElementById('error').textContent = '';
-            
-            hideMobileTimeModal();
-        }
-    }
-    
-    // Mobile modal event listeners
-    document.getElementById('mobileTimeCancel').addEventListener('click', hideMobileTimeModal);
-    document.getElementById('mobileTimeConfirm').addEventListener('click', confirmMobileTimeSelection);
-    
-    // Close modal when clicking outside
-    document.getElementById('mobileTimeModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            hideMobileTimeModal();
-        }
-    });
-    
     fetchBookings().then(bookings => {
-        window.bookings = bookings; // Make bookings available globally for modal
-        
         function isSlotBooked(slot) {
             return bookings.some(b => b.aika === slot.start.toISOString());
         }
@@ -999,14 +761,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const dateKey = getDateKey(date);
             return bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
         }
-        
-        const calendarConfig = {
-            initialView: isMobile ? 'listWeek' : 'timeGridWeek',
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
             locale: 'fi',
             slotMinTime: '09:00:00',
             slotMaxTime: '17:00:00',
             allDaySlot: false,
-            selectable: !isMobile, // Disable selection on mobile, we'll handle it manually
+            selectable: true,
             selectOverlap: false,
             slotDuration: '01:00:00',
             expandRows: true,
@@ -1015,44 +776,41 @@ document.addEventListener('DOMContentLoaded', function () {
             contentHeight: 'auto',
             dayMaxEvents: true,
             moreLinkClick: 'popover',
-            selectMirror: !isMobile,
+            selectMirror: true,
             unselectAuto: true,
             selectMinDistance: 0,
             // Enhanced mobile touch handling
             selectLongPressDelay: 300,
             longPressDelay: 300,
             eventLongPressDelay: 300,
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: isMobile ? '' : 'timeGridWeek,listWeek'
-            },
-            validRange: {
-                start: new Date(),
-                end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-            }
-        };
-        
-        // Add desktop-specific config
-        if (!isMobile) {
-            calendarConfig.selectConstraint = {
+            // Mobile selection constraints - prevent row-wide selection
+            selectConstraint: {
                 start: '09:00',
                 end: '17:00',
                 daysOfWeek: [1, 2, 3, 4, 5] // Mon-Fri only
-            };
-            calendarConfig.snapDuration = '01:00:00';
-            calendarConfig.selectMinDistance = 10;
-            calendarConfig.selectAllow = function(selectInfo) {
+            },
+            snapDuration: '01:00:00', // Snap selections to 1-hour intervals
+            selectMinDistance: 10, // Minimum distance for touch selection (prevents accidental selections)
+            selectAllow: function(selectInfo) {
                 // Enforce single-cell selection: only allow exactly 1-hour slots
                 const duration = selectInfo.end - selectInfo.start;
                 const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
                 return duration === oneHour;
-            };
-            calendarConfig.aspectRatio = window.innerWidth < 768 ? 1.2 : 1.35;
-            calendarConfig.eventDisplay = 'block';
-            calendarConfig.displayEventTime = true;
-            
-            calendarConfig.select = function (info) {
+            },
+            // Better mobile responsiveness
+            aspectRatio: window.innerWidth < 768 ? 1.2 : 1.35,
+            eventDisplay: 'block',
+            displayEventTime: true,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: ''
+            },
+            validRange: {
+                start: new Date(),
+                end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+            },
+            select: function (info) {
                 const start = info.start;
                 const end = info.end;
                 
@@ -1092,153 +850,123 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('error').textContent = 'Valitse vapaa 1h aika maanantaista perjantaihin klo 9–17!';
                     document.getElementById('bookingForm').style.display = 'none';
                 }
-            };
-        } else {
-            // Mobile-specific: Handle date clicks to show time selection modal
-            calendarConfig.dateClick = function(info) {
-                const clickedDate = info.date;
-                
-                // Check if it's a valid weekday
-                if (clickedDate.getDay() >= 1 && clickedDate.getDay() <= 5) {
-                    // Check if date is not in the past
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    if (clickedDate >= today) {
-                        showMobileTimeModal(clickedDate);
-                    } else {
-                        document.getElementById('error').textContent = 'Et voi varata aikaa menneisyydestä!';
+            },
+            events: function (fetchInfo, successCallback) {
+                const evs = [];
+                for (const slot of getWeekdaySlots(fetchInfo.start, (fetchInfo.end - fetchInfo.start) / (24 * 60 * 60 * 1000))) {
+                    const dateKey = getDateKey(slot.start);
+                    const sameDayCount = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
+                    const isExactMatch = bookings.some(b => new Date(b.aika).toISOString() === slot.start.toISOString());
+                    const isBlocked = sameDayCount >= 2;
+                    if (isBlocked) {
+                        evs.push({
+                            title: 'Täynnä',
+                            start: slot.start.toISOString(),
+                            end: slot.end.toISOString(),
+                            color: '#f99',
+                            display: 'background'
+                        });
+                    } else if (isExactMatch) {
+                        evs.push({
+                            title: 'Varattu',
+                            start: slot.start.toISOString(),
+                            end: slot.end.toISOString(),
+                            color: '#ffd2d2',
+                            display: 'background'
+                        });
                     }
-                } else {
-                    document.getElementById('error').textContent = 'Varaukset vain arkipäivisin (ma-pe)!';
                 }
-            };
-        }
-        
-        calendarConfig.events = function (fetchInfo, successCallback) {
-            const evs = [];
-            for (const slot of getWeekdaySlots(fetchInfo.start, (fetchInfo.end - fetchInfo.start) / (24 * 60 * 60 * 1000))) {
-                const dateKey = getDateKey(slot.start);
-                const sameDayCount = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
-                const isExactMatch = bookings.some(b => new Date(b.aika).toISOString() === slot.start.toISOString());
-                const isBlocked = sameDayCount >= 2;
-                if (isBlocked) {
-                    evs.push({
-                        title: 'Täynnä',
-                        start: slot.start.toISOString(),
-                        end: slot.end.toISOString(),
-                        color: '#f99',
-                        display: 'background'
-                    });
-                } else if (isExactMatch) {
-                    evs.push({
-                        title: 'Varattu',
-                        start: slot.start.toISOString(),
-                        end: slot.end.toISOString(),
-                        color: '#ffd2d2',
-                        display: 'background'
-                    });
-                }
+                successCallback(evs);
             }
-            successCallback(evs);
-        };
-
-        const calendar = new FullCalendar.Calendar(calendarEl, calendarConfig);
+        });
         calendar.render();
         
-        // Desktop-only touch event handling for better mobile support
-        if (!isMobile) {
-            let touchStarted = false;
-            let touchTimeout = null;
-            let touchStartCell = null;
-            
-            // Add touch event listeners to calendar container for better mobile support
-            calendarEl.addEventListener('touchstart', function(e) {
-                touchStarted = true;
-                // Store the specific cell where touch started
-                const target = e.target || e.touches[0].target;
-                if (target && (target.classList.contains('fc-timegrid-slot') || 
-                              target.classList.contains('fc-timegrid-slot-lane'))) {
-                    touchStartCell = target;
-                }
-                
-                // Clear any existing timeout
-                if (touchTimeout) {
-                    clearTimeout(touchTimeout);
-                    touchTimeout = null;
-                }
-            }, { passive: true });
-            
-            calendarEl.addEventListener('touchend', function(e) {
-                if (touchStarted && touchStartCell) {
-                    touchStarted = false;
-                    const touchEndTarget = e.target || e.changedTouches[0].target;
-                    
-                    // Only process if touch ended on the same cell where it started
-                    if (touchEndTarget === touchStartCell || 
-                        touchStartCell.contains(touchEndTarget) ||
-                        touchEndTarget.closest('.fc-timegrid-slot') === touchStartCell.closest('.fc-timegrid-slot')) {
-                        
-                        // Add small delay to allow FullCalendar to process the touch
-                        touchTimeout = setTimeout(() => {
-                            // Force calendar to check for selection on the specific cell
-                            if (touchStartCell && (touchStartCell.classList.contains('fc-timegrid-slot') || 
-                                                  touchStartCell.classList.contains('fc-timegrid-slot-lane'))) {
-                                // Trigger a synthetic click for precise single-cell selection
-                                const rect = touchStartCell.getBoundingClientRect();
-                                const clickEvent = new MouseEvent('click', {
-                                    bubbles: true,
-                                    cancelable: true,
-                                    clientX: rect.left + rect.width / 2,
-                                    clientY: rect.top + rect.height / 2
-                                });
-                                touchStartCell.dispatchEvent(clickEvent);
-                            }
-                        }, 50);
-                    }
-                    touchStartCell = null;
-                }
-            }, { passive: true });
-            
-            calendarEl.addEventListener('touchcancel', function(e) {
-                touchStarted = false;
-                touchStartCell = null;
-                if (touchTimeout) {
-                    clearTimeout(touchTimeout);
-                    touchTimeout = null;
-                }
-            }, { passive: true });
-            
-            // Add touchmove handler to prevent selection if user drags across cells
-            calendarEl.addEventListener('touchmove', function(e) {
-                if (touchStarted && touchStartCell) {
-                    const currentTarget = document.elementFromPoint(
-                        e.touches[0].clientX, 
-                        e.touches[0].clientY
-                    );
-                    const currentCell = currentTarget?.closest('.fc-timegrid-slot');
-                    const startCell = touchStartCell.closest('.fc-timegrid-slot');
-                    
-                    // If moved to a different cell, cancel the selection
-                    if (currentCell && startCell && currentCell !== startCell) {
-                        touchStarted = false;
-                        touchStartCell = null;
-                        calendar.unselect(); // Clear any ongoing selection
-                    }
-                }
-            }, { passive: true });
-        }
+        // Enhanced touch event handling for mobile devices - prevent row-wide selection
+        let touchStarted = false;
+        let touchTimeout = null;
+        let touchStartCell = null;
         
-        // Handle window resize to refresh calendar touch handling and update mobile detection
+        // Add touch event listeners to calendar container for better mobile support
+        calendarEl.addEventListener('touchstart', function(e) {
+            touchStarted = true;
+            // Store the specific cell where touch started
+            const target = e.target || e.touches[0].target;
+            if (target && (target.classList.contains('fc-timegrid-slot') || 
+                          target.classList.contains('fc-timegrid-slot-lane'))) {
+                touchStartCell = target;
+            }
+            
+            // Clear any existing timeout
+            if (touchTimeout) {
+                clearTimeout(touchTimeout);
+                touchTimeout = null;
+            }
+        }, { passive: true });
+        
+        calendarEl.addEventListener('touchend', function(e) {
+            if (touchStarted && touchStartCell) {
+                touchStarted = false;
+                const touchEndTarget = e.target || e.changedTouches[0].target;
+                
+                // Only process if touch ended on the same cell where it started
+                if (touchEndTarget === touchStartCell || 
+                    touchStartCell.contains(touchEndTarget) ||
+                    touchEndTarget.closest('.fc-timegrid-slot') === touchStartCell.closest('.fc-timegrid-slot')) {
+                    
+                    // Add small delay to allow FullCalendar to process the touch
+                    touchTimeout = setTimeout(() => {
+                        // Force calendar to check for selection on the specific cell
+                        if (touchStartCell && (touchStartCell.classList.contains('fc-timegrid-slot') || 
+                                              touchStartCell.classList.contains('fc-timegrid-slot-lane'))) {
+                            // Trigger a synthetic click for precise single-cell selection
+                            const rect = touchStartCell.getBoundingClientRect();
+                            const clickEvent = new MouseEvent('click', {
+                                bubbles: true,
+                                cancelable: true,
+                                clientX: rect.left + rect.width / 2,
+                                clientY: rect.top + rect.height / 2
+                            });
+                            touchStartCell.dispatchEvent(clickEvent);
+                        }
+                    }, 50);
+                }
+                touchStartCell = null;
+            }
+        }, { passive: true });
+        
+        calendarEl.addEventListener('touchcancel', function(e) {
+            touchStarted = false;
+            touchStartCell = null;
+            if (touchTimeout) {
+                clearTimeout(touchTimeout);
+                touchTimeout = null;
+            }
+        }, { passive: true });
+        
+        // Add touchmove handler to prevent selection if user drags across cells
+        calendarEl.addEventListener('touchmove', function(e) {
+            if (touchStarted && touchStartCell) {
+                const currentTarget = document.elementFromPoint(
+                    e.touches[0].clientX, 
+                    e.touches[0].clientY
+                );
+                const currentCell = currentTarget?.closest('.fc-timegrid-slot');
+                const startCell = touchStartCell.closest('.fc-timegrid-slot');
+                
+                // If moved to a different cell, cancel the selection
+                if (currentCell && startCell && currentCell !== startCell) {
+                    touchStarted = false;
+                    touchStartCell = null;
+                    calendar.unselect(); // Clear any ongoing selection
+                }
+            }
+        }, { passive: true });
+        
+        // Handle window resize to refresh calendar touch handling
         let resizeTimeout;
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
-                const newIsMobile = isMobileDevice();
-                if (newIsMobile !== isMobile) {
-                    isMobile = newIsMobile;
-                    // Optionally reload calendar with new settings if device type changed
-                    console.log('Device type changed to:', isMobile ? 'Mobile' : 'Desktop');
-                }
                 calendar.updateSize();
             }, 250);
         });
@@ -1283,7 +1011,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('slot-summary').textContent = '';
                     selectedSlot = null;
                     bookings = await fetchBookings();
-                    window.bookings = bookings;
                     calendar.refetchEvents();
                 } else {
                     const err = await res.json();
