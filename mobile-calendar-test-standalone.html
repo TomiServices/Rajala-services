@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Mobile Calendar Test - Standalone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .calendar-container {
+            max-width: 700px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #ddd;
+        }
+        
+        .calendar-mock {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin: 20px 0;
+        }
+
+        .calendar-day {
+            padding: 20px 5px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+            text-align: center;
+            transition: background 0.2s;
+        }
+
+        .calendar-day:hover {
+            background: #e3f2fd;
+        }
+
+        .calendar-day.weekday {
+            background: #f0f8f0;
+        }
+
+        .calendar-day.weekend {
+            background: #fafafa;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        .device-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .mobile-detected {
+            background: #c8e6c9;
+        }
+
+        /* Mobile Time Selection Modal */
+        .mobile-time-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .mobile-time-modal.active {
+            display: flex;
+        }
+        
+        .mobile-time-content {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 90%;
+            width: 350px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .mobile-time-header {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .mobile-time-slots {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .mobile-time-slot {
+            padding: 12px 8px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            background: white;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        
+        .mobile-time-slot:hover {
+            border-color: #007bff;
+            background: #f8f9fa;
+        }
+        
+        .mobile-time-slot.selected {
+            border-color: #007bff;
+            background: #007bff;
+            color: white;
+        }
+        
+        .mobile-time-slot.booked {
+            background: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+            border-color: #eee;
+        }
+        
+        .mobile-time-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .mobile-time-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .mobile-time-btn.cancel {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .mobile-time-btn.cancel:hover {
+            background: #5a6268;
+        }
+        
+        .mobile-time-btn.confirm {
+            background: #007bff;
+            color: white;
+        }
+        
+        .mobile-time-btn.confirm:hover {
+            background: #0056b3;
+        }
+        
+        .mobile-time-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .selection-display {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #4caf50;
+        }
+
+        .instruction {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #ffc107;
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .calendar-mock {
+                grid-template-columns: repeat(5, 1fr);
+                font-size: 0.8rem;
+            }
+            
+            .calendar-day {
+                padding: 10px 2px;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Mobile Calendar Enhancement Test - Standalone</h1>
+        
+        <div id="deviceInfo" class="device-info">
+            Checking device type...
+        </div>
+
+        <div class="instruction">
+            <strong>Test Instructions:</strong>
+            <ul>
+                <li><strong>Desktop (width > 768px):</strong> Click weekday → Direct selection</li>
+                <li><strong>Mobile (width ≤ 768px):</strong> Click weekday → Opens time picker modal</li>
+                <li>Gray weekend days are disabled</li>
+                <li>Resize window to test responsive behavior</li>
+            </ul>
+        </div>
+
+        <div class="calendar-container">
+            <h3>Mock Calendar - This Week</h3>
+            <div class="calendar-mock">
+                <div class="calendar-day weekend" data-day="sun">Sun<br>10</div>
+                <div class="calendar-day weekday" data-day="mon" data-date="2024-08-12">Mon<br>12</div>
+                <div class="calendar-day weekday" data-day="tue" data-date="2024-08-13">Tue<br>13</div>
+                <div class="calendar-day weekday" data-day="wed" data-date="2024-08-14">Wed<br>14</div>
+                <div class="calendar-day weekday" data-day="thu" data-date="2024-08-15">Thu<br>15</div>
+                <div class="calendar-day weekday" data-day="fri" data-date="2024-08-16">Fri<br>16</div>
+                <div class="calendar-day weekend" data-day="sat">Sat<br>17</div>
+            </div>
+        </div>
+
+        <div id="selectionDisplay" class="selection-display" style="display: none;">
+            <strong>Selected Time:</strong> <span id="selectedTime">None</span>
+        </div>
+
+        <!-- Mobile Time Selection Modal -->
+        <div id="mobileTimeModal" class="mobile-time-modal">
+            <div class="mobile-time-content">
+                <div class="mobile-time-header">
+                    <div id="mobileSelectedDate">Valitse aika</div>
+                </div>
+                <div id="mobileTimeSlots" class="mobile-time-slots">
+                    <!-- Time slots will be populated dynamically -->
+                </div>
+                <div class="mobile-time-buttons">
+                    <button id="mobileTimeCancel" class="mobile-time-btn cancel">Peruuta</button>
+                    <button id="mobileTimeConfirm" class="mobile-time-btn confirm" disabled>Vahvista</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile device detection utility - same as implemented in main file
+        function isMobileDevice() {
+            // Primary detection: User agent check for known mobile devices
+            const userAgentCheck = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            // Secondary detection: Touch capability
+            const touchCheck = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            
+            // Tertiary detection: Screen size (for responsive behavior)
+            const screenSizeCheck = window.innerWidth <= 768;
+            
+            // Return true if mobile user agent OR screen size indicates mobile (for testing)
+            return userAgentCheck || screenSizeCheck;
+        }
+
+        // Initialize the test
+        let isMobile = isMobileDevice();
+        let selectedMobileDate = null;
+        let selectedMobileTime = null;
+
+        // Update device info display
+        function updateDeviceInfo() {
+            const deviceInfo = document.getElementById('deviceInfo');
+            isMobile = isMobileDevice();
+            deviceInfo.textContent = `Device Type: ${isMobile ? 'Mobile' : 'Desktop'} | Width: ${window.innerWidth}px | Touch: ${('ontouchstart' in window) ? 'Yes' : 'No'}`;
+            deviceInfo.className = `device-info ${isMobile ? 'mobile-detected' : ''}`;
+        }
+
+        updateDeviceInfo();
+
+        // Mock bookings - some hours are already booked
+        const mockBookings = [
+            { date: '2024-08-12', hour: 10 },
+            { date: '2024-08-13', hour: 14 },
+            { date: '2024-08-14', hour: 9 },
+            { date: '2024-08-15', hour: 16 }
+        ];
+
+        // Mobile time selection modal functions
+        function showMobileTimeModal(dateStr, dayName) {
+            const modal = document.getElementById('mobileTimeModal');
+            const dateHeader = document.getElementById('mobileSelectedDate');
+            const slotsContainer = document.getElementById('mobileTimeSlots');
+            
+            selectedMobileDate = dateStr;
+            const formattedDate = new Date(dateStr).toLocaleDateString('fi-FI', { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'numeric' 
+            });
+            dateHeader.textContent = `Valitse aika - ${formattedDate}`;
+            
+            // Generate time slots for the selected date
+            slotsContainer.innerHTML = '';
+            const dayBookings = mockBookings.filter(b => b.date === dateStr);
+            
+            // Generate available time slots (9-17)
+            for (let hour = 9; hour < 17; hour++) {
+                const isBooked = dayBookings.some(b => b.hour === hour);
+                
+                const slotEl = document.createElement('div');
+                slotEl.className = `mobile-time-slot ${isBooked ? 'booked' : ''}`;
+                slotEl.textContent = `${hour}:00`;
+                slotEl.dataset.hour = hour;
+                
+                if (!isBooked) {
+                    slotEl.addEventListener('click', function() {
+                        // Remove previous selection
+                        slotsContainer.querySelectorAll('.mobile-time-slot.selected').forEach(el => {
+                            el.classList.remove('selected');
+                        });
+                        // Select this slot
+                        this.classList.add('selected');
+                        selectedMobileTime = hour;
+                        document.getElementById('mobileTimeConfirm').disabled = false;
+                    });
+                } else {
+                    slotEl.title = 'Tämä aika on jo varattu';
+                }
+                
+                slotsContainer.appendChild(slotEl);
+            }
+            
+            modal.classList.add('active');
+        }
+        
+        function hideMobileTimeModal() {
+            const modal = document.getElementById('mobileTimeModal');
+            modal.classList.remove('active');
+            selectedMobileDate = null;
+            selectedMobileTime = null;
+            document.getElementById('mobileTimeConfirm').disabled = true;
+        }
+        
+        function confirmMobileTimeSelection() {
+            if (selectedMobileDate && selectedMobileTime !== null) {
+                const selectionDisplay = document.getElementById('selectionDisplay');
+                const selectedTimeSpan = document.getElementById('selectedTime');
+                
+                selectedTimeSpan.textContent = `${selectedMobileDate} at ${selectedMobileTime}:00 (Selected via Mobile Modal)`;
+                selectionDisplay.style.display = 'block';
+                
+                hideMobileTimeModal();
+            }
+        }
+        
+        // Desktop direct selection
+        function selectTimeDirectly(dateStr, dayName) {
+            const selectionDisplay = document.getElementById('selectionDisplay');
+            const selectedTimeSpan = document.getElementById('selectedTime');
+            
+            // For demo, just pick 10:00 as default
+            selectedTimeSpan.textContent = `${dateStr} at 10:00 (Selected via Desktop Direct Click)`;
+            selectionDisplay.style.display = 'block';
+        }
+
+        // Event listeners for calendar days
+        document.querySelectorAll('.calendar-day.weekday').forEach(dayEl => {
+            dayEl.addEventListener('click', function() {
+                const dateStr = this.dataset.date;
+                const dayName = this.dataset.day;
+                
+                if (isMobile) {
+                    // Mobile: Show time selection modal
+                    showMobileTimeModal(dateStr, dayName.charAt(0).toUpperCase() + dayName.slice(1));
+                } else {
+                    // Desktop: Direct selection
+                    selectTimeDirectly(dateStr, dayName.charAt(0).toUpperCase() + dayName.slice(1));
+                }
+            });
+        });
+
+        // Mobile modal event listeners
+        document.getElementById('mobileTimeCancel').addEventListener('click', hideMobileTimeModal);
+        document.getElementById('mobileTimeConfirm').addEventListener('click', confirmMobileTimeSelection);
+        
+        // Close modal when clicking outside
+        document.getElementById('mobileTimeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideMobileTimeModal();
+            }
+        });
+
+        // Handle window resize to update device detection
+        window.addEventListener('resize', function() {
+            updateDeviceInfo();
+        });
+    </script>
+</body>
+</html>
