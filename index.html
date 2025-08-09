@@ -215,22 +215,13 @@
             padding: 20px 0 0 0;
         }
         .booking-form label { display: block; font-weight: 500; margin-top: 10px; }
-        .booking-form input, .booking-form select, .booking-form textarea {
+        .booking-form input {
             width: 100%;
             padding: 10px;
             margin-top: 2px;
             border-radius: 8px;
             border: 1px solid #ccc;
             margin-bottom: 8px;
-            font-size: 16px;
-            font-family: inherit;
-        }
-        .booking-form textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        .booking-form select {
-            cursor: pointer;
         }
         .btn {
             width: 100%;
@@ -261,51 +252,6 @@
             font-size: 1.1rem;
             margin-top: 8px;
             margin-bottom: 10px;
-        }
-        #available-slots {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 16px;
-            margin: 16px 0;
-            border: 1px solid #e9ecef;
-        }
-        #available-slots h3 {
-            margin: 0 0 12px 0;
-            font-size: 1.1rem;
-            color: #333;
-            text-align: center;
-        }
-        #slots-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        .slot-button {
-            padding: 8px 12px;
-            border: 1px solid #007bff;
-            border-radius: 6px;
-            background: #fff;
-            color: #007bff;
-            cursor: pointer;
-            text-align: center;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-        .slot-button:hover {
-            background: #007bff;
-            color: #fff;
-        }
-        .slot-button.selected {
-            background: #007bff;
-            color: #fff;
-            font-weight: 600;
-        }
-        .slot-button.booked {
-            background: #f8d7da;
-            border-color: #dc3545;
-            color: #721c24;
-            cursor: not-allowed;
         }
         .fc-timegrid-slot { cursor: pointer; }
         
@@ -341,21 +287,6 @@
             }
             .booking-form {
                 padding: 15px 0 0 0;
-            }
-            .booking-form input, .booking-form select, .booking-form textarea {
-                font-size: 16px; /* Prevent zoom on iOS */
-            }
-            #slots-list {
-                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-                gap: 6px;
-            }
-            .slot-button {
-                padding: 6px 8px;
-                font-size: 0.8rem;
-            }
-            #available-slots {
-                padding: 12px;
-                margin: 12px 0;
             }
             /* Improve mobile calendar interaction */
             .fc-timegrid-slot-lane {
@@ -651,31 +582,14 @@
       <h2>Varaa aika kiillotukseen</h2>
       <div id="calendar"></div>
       <div id="slot-summary"></div>
-      <div id="available-slots" style="display:none;">
-        <h3>Saatavilla olevat ajat valitulle päivälle</h3>
-        <div id="slots-list"></div>
-        <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
-          Klikkaa haluamaasi aikaa vahvistaaksesi valintasi.
-        </p>
-      </div>
       <form class="booking-form" id="bookingForm" style="display:none;" autocomplete="off">
         <input type="hidden" name="aika" id="aika" />
-        <label for="serviceType">Palvelun tyyppi</label>
-        <select id="serviceType" name="serviceType" required>
-          <option value="">Valitse palvelu</option>
-          <option value="car-wash">Auton pesu</option>
-          <option value="tire-change">Renkaan vaihto</option>
-          <option value="polishing">Kiillotus</option>
-          <option value="windshield-repair">Tuulilasin korjaus</option>
-        </select>
         <label for="name">Nimi</label>
         <input type="text" id="name" name="name" required placeholder="Etunimi Sukunimi" />
         <label for="email">Sähköposti</label>
         <input type="email" id="email" name="email" required placeholder="sinä@email.com" />
         <label for="phone">Puhelinnumero</label>
         <input type="tel" id="phone" name="phone" required pattern="^\+358\s?\d{1,3}\s?\d{4,}$" placeholder="+358 401234567" />
-        <label for="notes">Lisätiedot (valinnainen)</label>
-        <textarea id="notes" name="notes" placeholder="Kerro meille tarkemmin tarpeistasi tai erityistoiveistasi..."></textarea>
         <div class="g-recaptcha" data-sitekey="6Lcb5pQrAAAAAMFL6-0S0SfLPwpgy4t8N9f1zaGR"></div>
         <button type="submit" class="btn">Vahvista varaus</button>
       </form>
@@ -762,77 +676,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const dateKey = getDateKey(date);
             return bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
         }
-        
-        function showAvailableSlotsForDay(selectedDate) {
-            const availableSlotsContainer = document.getElementById('available-slots');
-            const slotsListContainer = document.getElementById('slots-list');
-            
-            // Get all slots for the selected day
-            const daySlots = getWeekdaySlots(selectedDate, 1).filter(slot => {
-                return getDateKey(slot.start) === getDateKey(selectedDate);
-            });
-            
-            if (daySlots.length === 0) {
-                availableSlotsContainer.style.display = 'none';
-                return;
-            }
-            
-            // Clear previous slots
-            slotsListContainer.innerHTML = '';
-            
-            // Create slot buttons
-            daySlots.forEach(slot => {
-                const isBooked = isSlotBooked(slot);
-                const dayBookingsCount = getBookingsCountForDay(slot.start);
-                const isDayFull = dayBookingsCount >= 2;
-                
-                const slotButton = document.createElement('div');
-                slotButton.className = 'slot-button';
-                slotButton.textContent = slot.start.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
-                
-                if (isBooked || isDayFull) {
-                    slotButton.classList.add('booked');
-                    slotButton.title = isBooked ? 'Tämä aika on jo varattu' : 'Tälle päivälle ei ole enää vapaita aikoja';
-                } else {
-                    slotButton.addEventListener('click', function() {
-                        selectTimeSlot(slot.start);
-                    });
-                }
-                
-                slotsListContainer.appendChild(slotButton);
-            });
-            
-            // Show the container
-            availableSlotsContainer.style.display = 'block';
-        }
-        
-        function selectTimeSlot(timeSlot) {
-            selectedSlot = timeSlot;
-            const aikaTxt = timeSlot.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
-                ', klo ' + timeSlot.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
-            document.getElementById('slot-summary').innerHTML = '<strong>Valittu aika:</strong> ' + aikaTxt;
-            document.getElementById('aika').value = aikaTxt;
-            document.getElementById('bookingForm').style.display = '';
-            document.getElementById('error').textContent = '';
-            
-            updateSlotSelection(timeSlot);
-        }
-        
-        function updateSlotSelection(selectedTime) {
-            // Remove previous selection
-            document.querySelectorAll('.slot-button').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            
-            // Add selection to current slot
-            document.querySelectorAll('.slot-button').forEach(btn => {
-                const btnTime = btn.textContent;
-                const selectedTimeStr = selectedTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
-                if (btnTime === selectedTimeStr && !btn.classList.contains('booked')) {
-                    btn.classList.add('selected');
-                }
-            });
-        }
         const calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'timeGridWeek',
             locale: 'fi',
@@ -872,10 +715,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const end = info.end;
                 const dateKey = getDateKey(start);
                 const count = getBookingsCountForDay(start);
-                
-                // Show available slots for the selected day
-                showAvailableSlotsForDay(start);
-                
                 if (
                     (end - start) === 60 * 60 * 1000 &&
                     start.getHours() >= 9 && start.getHours() < 17 &&
@@ -886,13 +725,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     selectedSlot = start;
                     const aikaTxt = start.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                         ', klo ' + start.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
-                    document.getElementById('slot-summary').innerHTML = '<strong>Valittu aika:</strong> ' + aikaTxt;
+                    document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
                     document.getElementById('aika').value = aikaTxt;
                     document.getElementById('bookingForm').style.display = '';
                     document.getElementById('error').textContent = '';
-                    
-                    // Update slot button selection
-                    updateSlotSelection(start);
                 } else if (count >= 2) {
                     document.getElementById('error').textContent = 'Tälle päivälle voi varata enintään 2 aikaa!';
                     document.getElementById('bookingForm').style.display = 'none';
@@ -937,15 +773,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
-            const serviceType = document.getElementById('serviceType').value;
-            const notes = document.getElementById('notes').value.trim();
             const aikaValue = document.getElementById('aika').value;
-            
-            if (!serviceType) {
-                document.getElementById('error').textContent = 'Valitse palvelun tyyppi!';
-                return;
-            }
-            
             if (!/^\+358\s?\d{1,3}\s?\d{4,}$/.test(phone)) {
                 document.getElementById('error').textContent = 'Syötä puhelinnumero muodossa +358 401234567!';
                 return;
@@ -956,7 +784,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             if (!selectedSlot || !name || !email || !phone) {
-                document.getElementById('error').textContent = 'Täytä kaikki pakolliset kentät ja valitse aika!';
+                document.getElementById('error').textContent = 'Täytä kaikki kentät ja valitse aika!';
                 return;
             }
             try {
@@ -965,7 +793,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        name, email, phone, serviceType, notes,
+                        name, email, phone,
                         aika: selectedSlot.toISOString(),
                         recaptcha: recaptchaResponse
                     })
@@ -976,7 +804,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     grecaptcha.reset();
                     document.getElementById('bookingForm').style.display = 'none';
                     document.getElementById('slot-summary').textContent = '';
-                    document.getElementById('available-slots').style.display = 'none';
                     selectedSlot = null;
                     bookings = await fetchBookings();
                     calendar.refetchEvents();
