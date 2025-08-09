@@ -272,12 +272,40 @@
             }
             .fc-timegrid-slot {
                 min-height: 2.5em;
+                /* Improve touch targets for mobile */
+                min-height: 44px;
+                cursor: pointer;
+                -webkit-tap-highlight-color: rgba(0, 123, 255, 0.1);
+                tap-highlight-color: rgba(0, 123, 255, 0.1);
+            }
+            .fc-timegrid-slot:hover,
+            .fc-timegrid-slot:active {
+                background-color: rgba(0, 123, 255, 0.1) !important;
             }
             .ajanvaraus-container {
                 padding: 16px 12px 12px 12px;
             }
             .booking-form {
                 padding: 15px 0 0 0;
+            }
+            /* Improve mobile calendar interaction */
+            .fc-timegrid-slot-lane {
+                min-height: 44px;
+            }
+            .fc-timegrid-event {
+                border-radius: 4px;
+            }
+        }
+        
+        /* Additional mobile touch improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .fc-timegrid-slot {
+                min-height: 48px;
+                touch-action: manipulation;
+            }
+            .fc-button {
+                min-height: 44px;
+                padding: 0.4em 0.6em;
             }
         }
         .footer {
@@ -658,6 +686,21 @@ document.addEventListener('DOMContentLoaded', function () {
             selectOverlap: false,
             slotDuration: '01:00:00',
             expandRows: true,
+            // Mobile-specific improvements
+            height: 'auto',
+            contentHeight: 'auto',
+            dayMaxEvents: true,
+            moreLinkClick: 'popover',
+            selectMirror: true,
+            unselectAuto: true,
+            selectMinDistance: 5,
+            // Improved touch handling
+            longPressDelay: 1000,
+            selectLongPressDelay: 1000,
+            // Better mobile responsiveness
+            aspectRatio: window.innerWidth < 768 ? 1.2 : 1.35,
+            eventDisplay: 'block',
+            displayEventTime: true,
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
@@ -775,12 +818,73 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     });
     
-    // Add touch event handling for mobile devices
+    // Improved touch event handling for mobile devices
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+    let touchElement = null;
+    
     document.addEventListener('touchstart', function(e) {
         if (e.target.classList.contains('fc-timegrid-slot')) {
-            e.target.click();
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            touchStartTime = Date.now();
+            touchElement = e.target;
+            
+            // Add visual feedback for touch
+            e.target.style.backgroundColor = 'rgba(0, 123, 255, 0.1)';
         }
-    });
+    }, { passive: true });
+    
+    document.addEventListener('touchmove', function(e) {
+        if (touchElement) {
+            const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+            const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+            
+            // If user is scrolling (moved more than 10px), cancel the touch
+            if (deltaX > 10 || deltaY > 10) {
+                touchElement.style.backgroundColor = '';
+                touchElement = null;
+            }
+        }
+    }, { passive: true });
+    
+    document.addEventListener('touchend', function(e) {
+        if (touchElement) {
+            const touchDuration = Date.now() - touchStartTime;
+            
+            // Only trigger selection if touch was quick (< 300ms) and didn't move much
+            if (touchDuration < 300) {
+                // Reset visual feedback
+                touchElement.style.backgroundColor = '';
+                
+                // Trigger the selection with a small delay to ensure proper handling
+                setTimeout(() => {
+                    if (touchElement && touchElement.classList.contains('fc-timegrid-slot')) {
+                        // Create a synthetic click event
+                        const clickEvent = new MouseEvent('click', {
+                            bubbles: true,
+                            cancelable: true,
+                            view: window
+                        });
+                        touchElement.dispatchEvent(clickEvent);
+                    }
+                }, 50);
+            } else {
+                // Reset visual feedback for long touches
+                touchElement.style.backgroundColor = '';
+            }
+            
+            touchElement = null;
+        }
+    }, { passive: true });
+    
+    document.addEventListener('touchcancel', function(e) {
+        if (touchElement) {
+            touchElement.style.backgroundColor = '';
+            touchElement = null;
+        }
+    }, { passive: true });
 });
 </script>
 <script>
