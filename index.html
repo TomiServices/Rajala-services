@@ -301,7 +301,7 @@
             }
         }
         
-        /* Additional mobile touch improvements */
+        /* Enhanced mobile touch improvements */
         @media (hover: none) and (pointer: coarse) {
             .fc-timegrid-slot {
                 min-height: 44px;
@@ -310,6 +310,45 @@
             .fc-button {
                 min-height: 44px;
                 padding: 0.4em 0.6em;
+                touch-action: manipulation;
+            }
+        }
+        
+        /* Comprehensive touch-action for all calendar elements */
+        #calendar {
+            touch-action: manipulation;
+        }
+        .fc-timegrid-slot,
+        .fc-timegrid-slot-lane,
+        .fc-timegrid-col {
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .fc-button,
+        .fc-toolbar-chunk {
+            touch-action: manipulation;
+        }
+        
+        /* Ensure calendar doesn't interfere with scrolling */
+        .fc-scroller {
+            touch-action: pan-y;
+        }
+        
+        /* Enhanced mobile calendar styling */
+        @media (max-width: 768px) {
+            .fc-timegrid-slot {
+                cursor: pointer;
+                position: relative;
+            }
+            .fc-timegrid-slot:active {
+                background-color: rgba(0, 123, 255, 0.1);
+            }
+            .fc-timegrid-slot-lane:active {
+                background-color: rgba(0, 123, 255, 0.1);
             }
         }
         .footer {
@@ -701,9 +740,14 @@ document.addEventListener('DOMContentLoaded', function () {
             moreLinkClick: 'popover',
             selectMirror: true,
             unselectAuto: true,
-            selectMinDistance: 5,
-            // Better mobile touch handling
-            selectLongPressDelay: 500,
+            selectMinDistance: 0,
+            // Enhanced mobile touch handling
+            selectLongPressDelay: 300,
+            longPressDelay: 300,
+            eventLongPressDelay: 300,
+            selectAllow: function(selectInfo) {
+                return true; // Allow all valid selections
+            },
             // Better mobile responsiveness
             aspectRatio: window.innerWidth < 768 ? 1.2 : 1.35,
             eventDisplay: 'block',
@@ -773,6 +817,60 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
         calendar.render();
+        
+        // Enhanced touch event handling for mobile devices
+        let touchStarted = false;
+        let touchTimeout = null;
+        
+        // Add touch event listeners to calendar container for better mobile support
+        calendarEl.addEventListener('touchstart', function(e) {
+            touchStarted = true;
+            // Clear any existing timeout
+            if (touchTimeout) {
+                clearTimeout(touchTimeout);
+                touchTimeout = null;
+            }
+        }, { passive: true });
+        
+        calendarEl.addEventListener('touchend', function(e) {
+            if (touchStarted) {
+                touchStarted = false;
+                // Add small delay to allow FullCalendar to process the touch
+                touchTimeout = setTimeout(() => {
+                    // Force calendar to check for selection if touch ended on a valid slot
+                    const target = e.target || e.changedTouches[0].target;
+                    if (target && (target.classList.contains('fc-timegrid-slot') || 
+                                  target.classList.contains('fc-timegrid-slot-lane'))) {
+                        // Trigger a synthetic click as fallback
+                        const clickEvent = new MouseEvent('click', {
+                            bubbles: true,
+                            cancelable: true,
+                            clientX: e.changedTouches ? e.changedTouches[0].clientX : e.clientX,
+                            clientY: e.changedTouches ? e.changedTouches[0].clientY : e.clientY
+                        });
+                        target.dispatchEvent(clickEvent);
+                    }
+                }, 100);
+            }
+        }, { passive: true });
+        
+        calendarEl.addEventListener('touchcancel', function(e) {
+            touchStarted = false;
+            if (touchTimeout) {
+                clearTimeout(touchTimeout);
+                touchTimeout = null;
+            }
+        }, { passive: true });
+        
+        // Handle window resize to refresh calendar touch handling
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                calendar.updateSize();
+            }, 250);
+        });
+        
         document.getElementById('bookingForm').onsubmit = async function (e) {
             e.preventDefault();
             document.getElementById('msg').textContent = '';
