@@ -225,6 +225,117 @@
             background: #fff;
             border-radius: 12px;
         }
+        
+        /* Mobile Time Selection Modal */
+        .mobile-time-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .mobile-time-modal.active {
+            display: flex;
+        }
+        
+        .mobile-time-content {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 90%;
+            width: 350px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .mobile-time-header {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .mobile-time-slots {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .mobile-time-slot {
+            padding: 12px 8px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            background: white;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        
+        .mobile-time-slot:hover {
+            border-color: #007bff;
+            background: #f8f9fa;
+        }
+        
+        .mobile-time-slot.selected {
+            border-color: #007bff;
+            background: #007bff;
+            color: white;
+        }
+        
+        .mobile-time-slot.booked {
+            background: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+            border-color: #eee;
+        }
+        
+        .mobile-time-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .mobile-time-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .mobile-time-btn.cancel {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .mobile-time-btn.cancel:hover {
+            background: #5a6268;
+        }
+        
+        .mobile-time-btn.confirm {
+            background: #007bff;
+            color: white;
+        }
+        
+        .mobile-time-btn.confirm:hover {
+            background: #0056b3;
+        }
+        
+        .mobile-time-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
         .booking-form {
             max-width: 420px;
             margin: 0 auto;
@@ -316,6 +427,33 @@
             }
             .booking-form {
                 padding: 15px 0 0 0;
+            }
+            
+            /* Mobile-specific: Improve day selection visibility */
+            .fc-timegrid-col-frame {
+                border: 2px solid transparent;
+                transition: border-color 0.2s;
+            }
+            
+            .fc-timegrid-col-frame:hover {
+                border-color: rgba(0, 123, 255, 0.3);
+            }
+            
+            /* Visual feedback for mobile day selection */
+            .fc-col-header-cell {
+                position: relative;
+            }
+            
+            .fc-col-header-cell::after {
+                content: 'Napauta päivää';
+                position: absolute;
+                bottom: -20px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 0.6rem;
+                color: #666;
+                opacity: 0.7;
+                white-space: nowrap;
             }
         }
         
@@ -700,6 +838,22 @@
       <div id="msg" class="msg"></div>
       <div id="error" class="error"></div>
     </div>
+    
+    <!-- Mobile Time Selection Modal -->
+    <div id="mobileTimeModal" class="mobile-time-modal">
+        <div class="mobile-time-content">
+            <div class="mobile-time-header">
+                <div id="mobileSelectedDate">Valitse aika</div>
+            </div>
+            <div id="mobileTimeSlots" class="mobile-time-slots">
+                <!-- Time slots will be populated dynamically -->
+            </div>
+            <div class="mobile-time-buttons">
+                <button id="mobileTimeCancel" class="mobile-time-btn cancel">Peruuta</button>
+                <button id="mobileTimeConfirm" class="mobile-time-btn confirm" disabled>Vahvista</button>
+            </div>
+        </div>
+    </div>
     <iframe
       id="kartta"
       class="kartanKehys"
@@ -747,6 +901,111 @@ document.addEventListener('DOMContentLoaded', function () {
     async function fetchBookings() {
         const response = await fetch('https://us-central1-fxnr-web.cloudfunctions.net/bookings');
         return response.ok ? await response.json() : [];
+    }
+
+    // Mobile device detection utility
+    function isMobileDevice() {
+        // Primary detection: User agent check for known mobile devices
+        const userAgentCheck = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        // Secondary detection: Touch capability
+        const touchCheck = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        
+        // Tertiary detection: Screen size (for responsive behavior)
+        const screenSizeCheck = window.innerWidth <= 768;
+        
+        // Return true if mobile user agent OR small screen (prioritizing responsive design)
+        return userAgentCheck || screenSizeCheck;
+    }
+
+    // Mobile time selection variables
+    let selectedMobileDate = null;
+    let selectedMobileTime = null;
+    let isMobile = isMobileDevice();
+
+    // Mobile time selection modal functions
+    function showMobileTimeModal(dateStr, dayName, bookings) {
+        const modal = document.getElementById('mobileTimeModal');
+        const dateHeader = document.getElementById('mobileSelectedDate');
+        const slotsContainer = document.getElementById('mobileTimeSlots');
+        
+        selectedMobileDate = dateStr;
+        const formattedDate = new Date(dateStr).toLocaleDateString('fi-FI', { 
+            weekday: 'long', 
+            day: 'numeric', 
+            month: 'numeric' 
+        });
+        dateHeader.textContent = `Valitse aika - ${formattedDate}`;
+        
+        // Generate time slots for the selected date
+        slotsContainer.innerHTML = '';
+        const dayBookings = bookings.filter(b => {
+            const bookingDate = new Date(b.aika);
+            const selectedDate = new Date(dateStr);
+            return bookingDate.toDateString() === selectedDate.toDateString();
+        });
+        
+        // Generate available time slots (9-17)
+        for (let hour = 9; hour < 17; hour++) {
+            const isBooked = dayBookings.some(b => {
+                const bookingHour = new Date(b.aika).getHours();
+                return bookingHour === hour;
+            });
+            
+            const slotEl = document.createElement('div');
+            slotEl.className = `mobile-time-slot ${isBooked ? 'booked' : ''}`;
+            slotEl.textContent = `${hour}:00`;
+            slotEl.dataset.hour = hour;
+            
+            if (!isBooked) {
+                slotEl.addEventListener('click', function() {
+                    // Remove previous selection
+                    slotsContainer.querySelectorAll('.mobile-time-slot.selected').forEach(el => {
+                        el.classList.remove('selected');
+                    });
+                    // Select this slot
+                    this.classList.add('selected');
+                    selectedMobileTime = hour;
+                    document.getElementById('mobileTimeConfirm').disabled = false;
+                });
+            } else {
+                slotEl.title = 'Tämä aika on jo varattu';
+            }
+            
+            slotsContainer.appendChild(slotEl);
+        }
+        
+        modal.classList.add('active');
+    }
+    
+    function hideMobileTimeModal() {
+        const modal = document.getElementById('mobileTimeModal');
+        modal.classList.remove('active');
+        selectedMobileDate = null;
+        selectedMobileTime = null;
+        document.getElementById('mobileTimeConfirm').disabled = true;
+    }
+    
+    function confirmMobileTimeSelection(calendar) {
+        if (selectedMobileDate && selectedMobileTime !== null) {
+            const selectedDateTime = new Date(selectedMobileDate);
+            selectedDateTime.setHours(selectedMobileTime, 0, 0, 0);
+            
+            // Use the existing calendar selection logic
+            selectedSlot = selectedDateTime;
+            const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
+                ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+            document.getElementById('aika').value = aikaTxt;
+            document.getElementById('bookingForm').style.display = '';
+            document.getElementById('error').textContent = '';
+            
+            hideMobileTimeModal();
+            
+            // Trigger calendar selection for the confirmed time
+            const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000); // Add 1 hour
+            calendar.select(selectedDateTime, endTime);
+        }
     }
 
     function getDateKey(date) {
@@ -837,6 +1096,31 @@ document.addEventListener('DOMContentLoaded', function () {
                 const start = info.start;
                 const end = info.end;
                 
+                // Check if this is a mobile device
+                if (isMobile) {
+                    // Mobile behavior: Extract day from selection and open time picker modal
+                    const dayStart = new Date(start);
+                    dayStart.setHours(0, 0, 0, 0);
+                    
+                    // Check if it's a valid weekday
+                    if (dayStart.getDay() >= 1 && dayStart.getDay() <= 5) {
+                        const dateStr = dayStart.toISOString().split('T')[0];
+                        const dayName = dayStart.toLocaleDateString('fi-FI', { weekday: 'long' });
+                        
+                        // Unselect the original selection
+                        calendar.unselect();
+                        
+                        // Open mobile time picker modal
+                        showMobileTimeModal(dateStr, dayName, bookings);
+                    } else {
+                        calendar.unselect();
+                        document.getElementById('error').textContent = 'Valitse arkipäivä (maanantai-perjantai)!';
+                        document.getElementById('bookingForm').style.display = 'none';
+                    }
+                    return;
+                }
+                
+                // Desktop behavior: Original logic
                 // Explicit check for single-cell selection (exactly 1 hour)
                 const duration = end - start;
                 const oneHour = 60 * 60 * 1000;
@@ -887,17 +1171,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             start: slot.start.toISOString(),
                             end: slot.end.toISOString(),
                             color: '#f99',
-                            display: 'calendar.setOption('selectMinDistance', 1);
-    calendar.setOption('longPressDelay', 350);
-    calendar.setOption('selectLongPressDelay', 350);
-
-    calendar.on('select', function(info) {
-        if (/Mobi|Android/i.test(navigator.userAgent)) {
-            const start = info.start;
-            const end = new Date(start.getTime() + 60 * 60 * 1000);
-            calendar.unselect();
-            calendar.select(start, end);
-        }
+                            display: 'background'
+                        });
                     } else if (isExactMatch) {
                         evs.push({
                             title: 'Varattu',
@@ -912,6 +1187,32 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
         calendar.render();
+        
+        // Mobile modal event listeners
+        document.getElementById('mobileTimeCancel').addEventListener('click', hideMobileTimeModal);
+        document.getElementById('mobileTimeConfirm').addEventListener('click', function() {
+            confirmMobileTimeSelection(calendar);
+        });
+        
+        // Close modal when clicking outside
+        document.getElementById('mobileTimeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideMobileTimeModal();
+            }
+        });
+        
+        // Handle window resize to update mobile detection
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const newIsMobile = isMobileDevice();
+                if (newIsMobile !== isMobile) {
+                    isMobile = newIsMobile;
+                }
+                calendar.updateSize();
+            }, 250);
+        });
         
         // Enhanced touch event handling for mobile devices - prevent row-wide selection
         let touchStarted = false;
@@ -989,7 +1290,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }, { passive: true });
         
         // Handle window resize to refresh calendar touch handling
-        let resizeTimeout;
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
