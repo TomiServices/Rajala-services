@@ -174,6 +174,22 @@
             z-index: 2;
             position: relative;
         }
+        .book-time-box {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .book-time-box span:first-child {
+            font-size: 2rem;
+            opacity: 0.9;
+        }
+        .book-time-box span:last-child {
+            font-size: 1.14rem;
+            font-weight: 700;
+        }
         @media (max-width: 900px) {
             .categories-row { gap: 10px; }
             .category-box { min-width: 130px; min-height: 90px; max-width: 48vw; }
@@ -271,16 +287,11 @@
                 font-size: 0.9rem;
             }
             .fc-timegrid-slot {
-                min-height: 2.5em;
-                /* Improve touch targets for mobile */
-                min-height: 44px;
+                min-height: 3em;
                 cursor: pointer;
-                -webkit-tap-highlight-color: rgba(0, 123, 255, 0.1);
-                tap-highlight-color: rgba(0, 123, 255, 0.1);
             }
-            .fc-timegrid-slot:hover,
-            .fc-timegrid-slot:active {
-                background-color: rgba(0, 123, 255, 0.1) !important;
+            .fc-timegrid-slot-lane {
+                min-height: 3em;
             }
             .ajanvaraus-container {
                 padding: 16px 12px 12px 12px;
@@ -288,19 +299,12 @@
             .booking-form {
                 padding: 15px 0 0 0;
             }
-            /* Improve mobile calendar interaction */
-            .fc-timegrid-slot-lane {
-                min-height: 44px;
-            }
-            .fc-timegrid-event {
-                border-radius: 4px;
-            }
         }
         
         /* Additional mobile touch improvements */
         @media (hover: none) and (pointer: coarse) {
             .fc-timegrid-slot {
-                min-height: 48px;
+                min-height: 44px;
                 touch-action: manipulation;
             }
             .fc-button {
@@ -392,6 +396,10 @@
         <div class="category-box" style="background-image: url('sisapuhdistus.jpg');" onclick="location.href='#sisapuhdistus'">Sisäpuhdistus</div>
         <div class="category-box" style="background-image: url('kiilloitus.jpg');" onclick="location.href='#kiilloitus'">Kiilloitus</div>
         <div class="category-box" style="background-image: url('lasikorjaus.jpg');" onclick="location.href='#lasikorjaus'">Lasikorjaus</div>
+        <div class="category-box book-time-box" onclick="location.href='#ajanvaraus'">
+            <span>📅</span>
+            <span>Book Time</span>
+        </div>
         <div class="category-box" style="background-image: url('hinnasto.jpg');" onclick="location.href='#hinnasto'">Hinnasto</div>
         <div class="category-box" style="background-image: url('yhteystiedot.jpg');" onclick="location.href='#yhteystiedot'">Yhteystiedot</div>
     </div>
@@ -694,9 +702,8 @@ document.addEventListener('DOMContentLoaded', function () {
             selectMirror: true,
             unselectAuto: true,
             selectMinDistance: 5,
-            // Improved touch handling
-            longPressDelay: 1000,
-            selectLongPressDelay: 1000,
+            // Better mobile touch handling
+            selectLongPressDelay: 500,
             // Better mobile responsiveness
             aspectRatio: window.innerWidth < 768 ? 1.2 : 1.35,
             eventDisplay: 'block',
@@ -818,73 +825,6 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     });
     
-    // Improved touch event handling for mobile devices
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchStartTime = 0;
-    let touchElement = null;
-    
-    document.addEventListener('touchstart', function(e) {
-        if (e.target.classList.contains('fc-timegrid-slot')) {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-            touchStartTime = Date.now();
-            touchElement = e.target;
-            
-            // Add visual feedback for touch
-            e.target.style.backgroundColor = 'rgba(0, 123, 255, 0.1)';
-        }
-    }, { passive: true });
-    
-    document.addEventListener('touchmove', function(e) {
-        if (touchElement) {
-            const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
-            const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
-            
-            // If user is scrolling (moved more than 10px), cancel the touch
-            if (deltaX > 10 || deltaY > 10) {
-                touchElement.style.backgroundColor = '';
-                touchElement = null;
-            }
-        }
-    }, { passive: true });
-    
-    document.addEventListener('touchend', function(e) {
-        if (touchElement) {
-            const touchDuration = Date.now() - touchStartTime;
-            
-            // Only trigger selection if touch was quick (< 300ms) and didn't move much
-            if (touchDuration < 300) {
-                // Reset visual feedback
-                touchElement.style.backgroundColor = '';
-                
-                // Trigger the selection with a small delay to ensure proper handling
-                setTimeout(() => {
-                    if (touchElement && touchElement.classList.contains('fc-timegrid-slot')) {
-                        // Create a synthetic click event
-                        const clickEvent = new MouseEvent('click', {
-                            bubbles: true,
-                            cancelable: true,
-                            view: window
-                        });
-                        touchElement.dispatchEvent(clickEvent);
-                    }
-                }, 50);
-            } else {
-                // Reset visual feedback for long touches
-                touchElement.style.backgroundColor = '';
-            }
-            
-            touchElement = null;
-        }
-    }, { passive: true });
-    
-    document.addEventListener('touchcancel', function(e) {
-        if (touchElement) {
-            touchElement.style.backgroundColor = '';
-            touchElement = null;
-        }
-    }, { passive: true });
 });
 </script>
 <script>
