@@ -887,8 +887,17 @@ document.addEventListener('DOMContentLoaded', function () {
                             start: slot.start.toISOString(),
                             end: slot.end.toISOString(),
                             color: '#f99',
-                            display: 'background'
-                        });
+                            display: 'calendar.setOption('selectMinDistance', 1);
+    calendar.setOption('longPressDelay', 350);
+    calendar.setOption('selectLongPressDelay', 350);
+
+    calendar.on('select', function(info) {
+        if (/Mobi|Android/i.test(navigator.userAgent)) {
+            const start = info.start;
+            const end = new Date(start.getTime() + 60 * 60 * 1000);
+            calendar.unselect();
+            calendar.select(start, end);
+        }
                     } else if (isExactMatch) {
                         evs.push({
                             title: 'Varattu',
