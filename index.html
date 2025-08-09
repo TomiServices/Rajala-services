@@ -848,9 +848,17 @@
 
 // Mobile device detection utility
 function isMobileDevice() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-           ('ontouchstart' in window) ||
-           (window.innerWidth <= 768);
+    // Primary detection: User agent check for known mobile devices
+    const userAgentCheck = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    // Secondary detection: Touch capability
+    const touchCheck = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    // Tertiary detection: Screen size (for responsive behavior)
+    const screenSizeCheck = window.innerWidth <= 768;
+    
+    // Return true if either user agent indicates mobile OR (touch support AND small screen)
+    return userAgentCheck || (touchCheck && screenSizeCheck);
 }
 
 // Calendar booking logic (ready for backend API, e.g. Firebase Function)
@@ -859,7 +867,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedSlot = null;
     let selectedMobileDate = null;
     let selectedMobileTime = null;
-    const isMobile = isMobileDevice();
+    let isMobile = isMobileDevice();
 
     // FIXED: Fetch bookings from your backend Firebase Function
     async function fetchBookings() {
@@ -1220,11 +1228,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }, { passive: true });
         }
         
-        // Handle window resize to refresh calendar touch handling
+        // Handle window resize to refresh calendar touch handling and update mobile detection
         let resizeTimeout;
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
+                const newIsMobile = isMobileDevice();
+                if (newIsMobile !== isMobile) {
+                    isMobile = newIsMobile;
+                    // Optionally reload calendar with new settings if device type changed
+                    console.log('Device type changed to:', isMobile ? 'Mobile' : 'Desktop');
+                }
                 calendar.updateSize();
             }, 250);
         });

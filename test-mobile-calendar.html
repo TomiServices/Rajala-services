@@ -267,13 +267,21 @@
     <script>
         // Mobile device detection utility
         function isMobileDevice() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                   ('ontouchstart' in window) ||
-                   (window.innerWidth <= 768);
+            // Primary detection: User agent check for known mobile devices
+            const userAgentCheck = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            // Secondary detection: Touch capability
+            const touchCheck = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            
+            // Tertiary detection: Screen size (for responsive behavior)
+            const screenSizeCheck = window.innerWidth <= 768;
+            
+            // Return true if either user agent indicates mobile OR (touch support AND small screen)
+            return userAgentCheck || (touchCheck && screenSizeCheck);
         }
 
         // Initialize the test
-        const isMobile = isMobileDevice();
+        let isMobile = isMobileDevice();
         let selectedMobileDate = null;
         let selectedMobileTime = null;
 
@@ -390,11 +398,16 @@
             }
         });
 
-        // Handle window resize
+        // Handle window resize to update device detection
         window.addEventListener('resize', function() {
             const newIsMobile = isMobileDevice();
-            deviceInfo.textContent = `Device Type: ${newIsMobile ? 'Mobile' : 'Desktop'} | Width: ${window.innerWidth}px`;
-            deviceInfo.className = `device-info ${newIsMobile ? 'mobile-detected' : ''}`;
+            if (newIsMobile !== isMobile) {
+                isMobile = newIsMobile;
+                deviceInfo.textContent = `Device Type: ${isMobile ? 'Mobile' : 'Desktop'} | Width: ${window.innerWidth}px`;
+                deviceInfo.className = `device-info ${isMobile ? 'mobile-detected' : ''}`;
+            } else {
+                deviceInfo.textContent = `Device Type: ${isMobile ? 'Mobile' : 'Desktop'} | Width: ${window.innerWidth}px`;
+            }
         });
     </script>
 </body>
