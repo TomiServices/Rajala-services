@@ -803,7 +803,37 @@
             </div>
         </div>
     </footer>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js" onerror="document.write('<script src=\'./assets/js/fullcalendar.min.js\'><\/script>')"></script>
+<script>
+    function loadFallbackScript() {
+        console.log('Loading FullCalendar fallback script...');
+        var script = document.createElement('script');
+        script.src = './assets/js/fullcalendar.min.js';
+        script.onload = function() {
+            console.log('FullCalendar fallback script loaded successfully');
+            // Trigger calendar initialization if needed
+            if (typeof initCalendar === 'function') {
+                initCalendar();
+            }
+        };
+        script.onerror = function() {
+            console.error('Failed to load FullCalendar fallback script');
+        };
+        document.head.appendChild(script);
+    }
+    
+    // Check if FullCalendar loaded properly, if not load fallback
+    window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            if (typeof FullCalendar === 'undefined') {
+                console.log('FullCalendar not found, loading fallback...');
+                loadFallbackScript();
+            } else {
+                console.log('FullCalendar loaded successfully from CDN');
+            }
+        }, 1000);
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js" onerror="loadFallbackScript()"></script>
 <script type="module">
 // NOTE: No Firebase config in HTML for security. Use server endpoints instead.
 
