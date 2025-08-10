@@ -400,6 +400,26 @@
             touch-action: manipulation; /* Prevent default gestures */
         }
         
+        /* Enhanced mobile touch specificity - prevent row-wide selection */
+        .fc-timegrid-slot,
+        .fc-timegrid-slot-lane {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+        
+        /* Improve mobile cell boundaries for better touch targeting */
+        @media (hover: none) and (pointer: coarse) {
+            .fc-timegrid-slot {
+                border: 1px solid #e0e0e0;
+                min-height: 48px; /* Minimum touch target size */
+            }
+            
+            .fc-timegrid-slot-lane {
+                border-right: 1px solid #e0e0e0;
+            }
+        }
+        
         /* Mobile responsive styles for calendar */
         @media (max-width: 768px) {
             #calendar {
@@ -470,13 +490,16 @@
             }
         }
         
-        /* Comprehensive touch-action for all calendar elements */
+        /* Comprehensive touch-action for all calendar elements - prevent unintended gestures */
         #calendar {
             touch-action: manipulation;
         }
         .fc-timegrid-slot,
         .fc-timegrid-slot-lane,
-        .fc-timegrid-col {
+        .fc-timegrid-col,
+        .fc-timegrid-col-frame,
+        .fc-timegrid-body,
+        .fc-col-header-cell {
             touch-action: manipulation;
             -webkit-touch-callout: none;
             -webkit-user-select: none;
@@ -1057,10 +1080,10 @@ document.addEventListener('DOMContentLoaded', function () {
             selectMirror: true,
             unselectAuto: true,
             selectMinDistance: 1,
-            // Enhanced mobile touch handling - reduced sensitivity
-            selectLongPressDelay: 350,
-            longPressDelay: 350,
-            eventLongPressDelay: 350,
+            // Enhanced mobile touch handling - minimal delay for precise selection
+            selectLongPressDelay: 1,
+            longPressDelay: 1,
+            eventLongPressDelay: 1,
             // Mobile selection constraints - prevent row-wide selection
             selectConstraint: {
                 start: '09:00',
@@ -1068,11 +1091,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 daysOfWeek: [1, 2, 3, 4, 5] // Mon-Fri only
             },
             snapDuration: '01:00:00', // Snap selections to 1-hour intervals
-            // Restrict selection to exactly one cell (one hour)
+            // Restrict selection to exactly one cell (one hour) - enhanced for mobile
             selectAllow: function(selectInfo) {
                 const duration = selectInfo.end - selectInfo.start;
                 const oneHour = 60 * 60 * 1000; // One hour in milliseconds
-                return duration === oneHour;
+                
+                // Only allow exactly 1-hour selections during business hours on weekdays
+                const startHour = selectInfo.start.getHours();
+                const startDay = selectInfo.start.getDay(); // 0=Sunday, 1=Monday, etc.
+                
+                return duration === oneHour && 
+                       startHour >= 9 && startHour < 17 && 
+                       startDay >= 1 && startDay <= 5;
             },
             selectConstraint: {
                 start: '09:00',
@@ -1218,15 +1248,22 @@ document.addEventListener('DOMContentLoaded', function () {
         let touchStarted = false;
         let touchTimeout = null;
         let touchStartCell = null;
+        let touchStartTime = 0;
+        let touchMoved = false;
         
-        // Add touch event listeners to calendar container for better mobile support
+        // Add enhanced touch event listeners to calendar container for precise mobile support
         calendarEl.addEventListener('touchstart', function(e) {
             touchStarted = true;
+            touchMoved = false;
+            touchStartTime = Date.now();
+            
             // Store the specific cell where touch started
             const target = e.target || e.touches[0].target;
-            if (target && (target.classList.contains('fc-timegrid-slot') || 
-                          target.classList.contains('fc-timegrid-slot-lane'))) {
-                touchStartCell = target;
+            const slot = target.closest('.fc-timegrid-slot') || target.closest('.fc-timegrid-slot-lane');
+            if (slot) {
+                touchStartCell = slot;
+                // Prevent default touch behavior to avoid unwanted selection
+                e.preventDefault();
             }
             
             // Clear any existing timeout
@@ -1234,58 +1271,80 @@ document.addEventListener('DOMContentLoaded', function () {
                 clearTimeout(touchTimeout);
                 touchTimeout = null;
             }
-        }, { passive: true });
+        }, { passive: false });
         
-        calendarEl.addEventListener('touchend', function(e) {
-            const touchEndTarget = e.target || e.changedTouches[0].target;
-            if (touchStartCell && touchEndTarget === touchStartCell) {
-                // Override default drag behavior by implementing single cell selection
-                // Get the dataset date from the touched cell
-                const cellDataset = touchStartCell.dataset;
-                if (cellDataset && cellDataset.date) {
-                    // Select only this specific cell
-                    calendar.select(cellDataset.date);
-                } else {
-                    // Fallback: trigger a synthetic click for precise single-cell selection
-                    const rect = touchStartCell.getBoundingClientRect();
-                    const clickEvent = new MouseEvent('click', {
-                        bubbles: true,
-                        cancelable: true,
-                        clientX: rect.left + rect.width / 2,
-                        clientY: rect.top + rect.height / 2
-                    });
-                    touchStartCell.dispatchEvent(clickEvent);
-                }
-            }
-            touchStarted = false;
-            touchStartCell = null;
-        }, { passive: true });
-        
-        calendarEl.addEventListener('touchcancel', function(e) {
-            touchStarted = false;
-            touchStartCell = null;
-            if (touchTimeout) {
-                clearTimeout(touchTimeout);
-                touchTimeout = null;
-            }
-        }, { passive: true });
-        
-        // Add touchmove handler to prevent selection if user drags across cells
         calendarEl.addEventListener('touchmove', function(e) {
             if (touchStarted && touchStartCell) {
                 const currentTarget = document.elementFromPoint(
                     e.touches[0].clientX, 
                     e.touches[0].clientY
                 );
-                const currentCell = currentTarget?.closest('.fc-timegrid-slot');
-                const startCell = touchStartCell.closest('.fc-timegrid-slot');
+                const currentSlot = currentTarget?.closest('.fc-timegrid-slot') || 
+                                  currentTarget?.closest('.fc-timegrid-slot-lane');
                 
-                // If moved to a different cell, cancel the selection
-                if (currentCell && startCell && currentCell !== startCell) {
-                    touchStarted = false;
+                // If moved to a different cell or moved significantly, mark as moved
+                if (!currentSlot || currentSlot !== touchStartCell) {
+                    touchMoved = true;
                     touchStartCell = null;
                     calendar.unselect(); // Clear any ongoing selection
                 }
+            }
+            
+            // Prevent default scrolling during potential selection
+            if (touchStartCell) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        calendarEl.addEventListener('touchend', function(e) {
+            const touchDuration = Date.now() - touchStartTime;
+            const touchEndTarget = e.target || e.changedTouches[0].target;
+            
+            // Only process if touch was brief, didn't move, and ended on same cell
+            if (touchStartCell && !touchMoved && touchDuration < 300) {
+                const endSlot = touchEndTarget.closest('.fc-timegrid-slot') || 
+                               touchEndTarget.closest('.fc-timegrid-slot-lane');
+                
+                if (endSlot === touchStartCell) {
+                    // Determine the exact time slot from the touched cell
+                    const timeAttr = touchStartCell.getAttribute('data-time');
+                    const dateAttr = touchStartCell.getAttribute('data-date');
+                    
+                    if (timeAttr && dateAttr) {
+                        // Create precise start and end times for 1-hour slot
+                        const slotStart = new Date(dateAttr + 'T' + timeAttr);
+                        const slotEnd = new Date(slotStart.getTime() + 60 * 60 * 1000);
+                        
+                        // Manually trigger calendar selection with precise timing
+                        calendar.select(slotStart, slotEnd);
+                    } else {
+                        // Fallback: trigger synthetic click for calendar's built-in handling
+                        const rect = touchStartCell.getBoundingClientRect();
+                        const clickEvent = new MouseEvent('click', {
+                            bubbles: true,
+                            cancelable: true,
+                            clientX: rect.left + rect.width / 2,
+                            clientY: rect.top + rect.height / 2
+                        });
+                        touchStartCell.dispatchEvent(clickEvent);
+                    }
+                }
+            }
+            
+            // Reset touch state
+            touchStarted = false;
+            touchStartCell = null;
+            touchMoved = false;
+        }, { passive: false });
+        
+        calendarEl.addEventListener('touchcancel', function(e) {
+            // Reset all touch state on cancel
+            touchStarted = false;
+            touchStartCell = null;
+            touchMoved = false;
+            if (touchTimeout) {
+                clearTimeout(touchTimeout);
+                touchTimeout = null;
             }
         }, { passive: true });
         

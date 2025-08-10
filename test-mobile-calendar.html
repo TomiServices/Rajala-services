@@ -276,8 +276,8 @@
             // Tertiary detection: Screen size (for responsive behavior)
             const screenSizeCheck = window.innerWidth <= 768;
             
-            // Return true if either user agent indicates mobile OR (touch support AND small screen)
-            return userAgentCheck || (touchCheck && screenSizeCheck);
+            // For testing purposes, prioritize screen size to simulate mobile behavior
+            return screenSizeCheck || userAgentCheck || touchCheck;
         }
 
         // Initialize the test
