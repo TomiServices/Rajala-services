@@ -32,3 +32,8 @@ Thumbs.db
 
 # Ignore test files
 mobile-touch-test.html
+index-fixed.html
+test-mobile-calendar.html
+
+# Ignore assets directory if using CDN fallbacks
+assets/
