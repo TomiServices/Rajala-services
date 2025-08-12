@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>FIXNERO</title>
     <link rel="preload" href="FXNR.png" as="image">
-    <!-- FullCalendar CSS for booking - Using local fallback for reliability -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" onerror="this.href='./assets/css/fullcalendar.min.css'" />
+    <!-- FullCalendar CSS for booking -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
     <!-- Google reCAPTCHA v2 -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
@@ -382,10 +382,42 @@
         }
         .fc-timegrid-slot { cursor: pointer; }
         
-        /* Enhanced mobile touch improvements - FIXED blue flash and selection issues */
+        /* Remove unwanted browser-specific styles that cause row-wide blue highlight */
+        .fc-timegrid-slot:focus,
+        .fc-timegrid-slot:active,
+        .fc-timegrid-slot-lane:focus,
+        .fc-timegrid-slot-lane:active {
+            outline: none; /* Remove default border focus */
+            background: none; /* Remove background highlight */
+        }
+
+        .fc-timegrid-slot-lane .fc-highlight {
+            width: auto !important; /* Ensure highlighting is cell-specific */
+        }
+
         * {
             -webkit-tap-highlight-color: transparent; /* Disable tap highlight */
             touch-action: manipulation; /* Prevent default gestures */
+        }
+        
+        /* Enhanced mobile touch specificity - prevent row-wide selection */
+        .fc-timegrid-slot,
+        .fc-timegrid-slot-lane {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+        
+        /* Improve mobile cell boundaries for better touch targeting */
+        @media (hover: none) and (pointer: coarse) {
+            .fc-timegrid-slot {
+                border: 1px solid #e0e0e0;
+                min-height: 48px; /* Minimum touch target size */
+            }
+            
+            .fc-timegrid-slot-lane {
+                border-right: 1px solid #e0e0e0;
+            }
         }
         
         /* Mobile responsive styles for calendar */
@@ -402,23 +434,13 @@
             .fc-button {
                 padding: 0.2em 0.4em;
                 font-size: 0.9rem;
-                min-height: 44px; /* Enhanced touch target */
-                touch-action: manipulation;
             }
             .fc-timegrid-slot {
                 min-height: 3em;
                 cursor: pointer;
-                /* Enhanced mobile touch handling */
-                touch-action: manipulation;
-                -webkit-tap-highlight-color: transparent;
-                user-select: none;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
             }
             .fc-timegrid-slot-lane {
                 min-height: 3em;
-                touch-action: manipulation;
             }
             .ajanvaraus-container {
                 padding: 16px 12px 12px 12px;
@@ -427,24 +449,104 @@
                 padding: 15px 0 0 0;
             }
             
-            /* Enhanced mobile selection feedback */
-            .fc-timegrid-slot:active {
-                background-color: rgba(0, 123, 255, 0.1) !important;
-                transition: background-color 0.1s;
-            }
-            .fc-timegrid-slot-lane:active {
-                background-color: rgba(0, 123, 255, 0.1) !important;
+            /* Mobile-specific: Improve day selection visibility */
+            .fc-timegrid-col-frame {
+                border: 2px solid transparent;
+                transition: border-color 0.2s;
             }
             
-            /* Prevent unintended row-wide selection */
+            .fc-timegrid-col-frame:hover {
+                border-color: rgba(0, 123, 255, 0.3);
+            }
+            
+            /* Visual feedback for mobile day selection */
+            .fc-col-header-cell {
+                position: relative;
+            }
+            
+            .fc-col-header-cell::after {
+                content: 'Napauta päivää';
+                position: absolute;
+                bottom: -20px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 0.6rem;
+                color: #666;
+                opacity: 0.7;
+                white-space: nowrap;
+            }
+        }
+        
+        /* Enhanced mobile touch improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .fc-timegrid-slot {
+                min-height: 44px;
+                touch-action: manipulation;
+            }
+            .fc-button {
+                min-height: 44px;
+                padding: 0.4em 0.6em;
+                touch-action: manipulation;
+            }
+        }
+        
+        /* Comprehensive touch-action for all calendar elements - prevent unintended gestures */
+        #calendar {
+            touch-action: manipulation;
+        }
+        .fc-timegrid-slot,
+        .fc-timegrid-slot-lane,
+        .fc-timegrid-col,
+        .fc-timegrid-col-frame,
+        .fc-timegrid-body,
+        .fc-col-header-cell {
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .fc-button,
+        .fc-toolbar-chunk {
+            touch-action: manipulation;
+        }
+        
+        /* Ensure calendar doesn't interfere with scrolling */
+        .fc-scroller {
+            touch-action: pan-y;
+        }
+        
+        /* Enhanced mobile calendar styling */
+        @media (max-width: 768px) {
+            .fc-timegrid-slot {
+                cursor: pointer;
+                position: relative;
+            }
+            .fc-timegrid-slot:active {
+                background-color: rgba(0, 123, 255, 0.1);
+            }
+            .fc-timegrid-slot-lane:active {
+                background-color: rgba(0, 123, 255, 0.1);
+            }
+        }
+        
+        /* Fix mobile selection highlighting - ensure only individual cells are highlighted */
+        @media (max-width: 768px) {
+            /* Override any row-wide selection styles */
             .fc-timegrid-slot-lane .fc-highlight {
                 /* Constrain highlight to individual cell boundaries */
                 height: 100% !important;
                 width: 100% !important;
                 left: 0 !important;
                 right: 0 !important;
+            }
+            
+            /* Ensure selection highlight is contained within cell */
+            .fc-highlight {
                 border-radius: 4px;
                 opacity: 0.8;
+                /* Prevent highlight from bleeding across cells */
                 overflow: hidden;
                 box-sizing: border-box;
             }
@@ -459,6 +561,12 @@
             .fc-timegrid-slot:has(.fc-highlight) {
                 border-color: rgba(0, 123, 255, 0.3);
                 background-color: rgba(0, 123, 255, 0.1) !important;
+            }
+            
+            /* Prevent selection from expanding beyond single cell on touch */
+            .fc-timegrid-slot-lane {
+                position: relative;
+                overflow: hidden;
             }
         }
         .footer {
@@ -803,7 +911,7 @@
             </div>
         </div>
     </footer>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js" onerror="document.write('<script src=\'./assets/js/fullcalendar.min.js\'><\/script>')"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 <script type="module">
 // NOTE: No Firebase config in HTML for security. Use server endpoints instead.
 
@@ -972,10 +1080,10 @@ document.addEventListener('DOMContentLoaded', function () {
             selectMirror: true,
             unselectAuto: true,
             selectMinDistance: 1,
-            // Enhanced mobile touch handling - reduced sensitivity
-            selectLongPressDelay: 350,
-            longPressDelay: 350,
-            eventLongPressDelay: 350,
+            // Enhanced mobile touch handling - minimal delay for precise selection
+            selectLongPressDelay: 1,
+            longPressDelay: 1,
+            eventLongPressDelay: 1,
             // Mobile selection constraints - prevent row-wide selection
             selectConstraint: {
                 start: '09:00',
@@ -983,11 +1091,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 daysOfWeek: [1, 2, 3, 4, 5] // Mon-Fri only
             },
             snapDuration: '01:00:00', // Snap selections to 1-hour intervals
-            // Restrict selection to exactly one cell (one hour)
+            // Restrict selection to exactly one cell (one hour) - enhanced for mobile
             selectAllow: function(selectInfo) {
                 const duration = selectInfo.end - selectInfo.start;
                 const oneHour = 60 * 60 * 1000; // One hour in milliseconds
-                return duration === oneHour;
+                
+                // Only allow exactly 1-hour selections during business hours on weekdays
+                const startHour = selectInfo.start.getHours();
+                const startDay = selectInfo.start.getDay(); // 0=Sunday, 1=Monday, etc.
+                
+                return duration === oneHour && 
+                       startHour >= 9 && startHour < 17 && 
+                       startDay >= 1 && startDay <= 5;
             },
             selectConstraint: {
                 start: '09:00',
@@ -1133,17 +1248,22 @@ document.addEventListener('DOMContentLoaded', function () {
         let touchStarted = false;
         let touchTimeout = null;
         let touchStartCell = null;
+        let touchStartTime = 0;
+        let touchMoved = false;
         
-        // Add touch event listeners to calendar container for better mobile support
+        // Add enhanced touch event listeners to calendar container for precise mobile support
         calendarEl.addEventListener('touchstart', function(e) {
             touchStarted = true;
+            touchMoved = false;
+            touchStartTime = Date.now();
+            
             // Store the specific cell where touch started
             const target = e.target || e.touches[0].target;
-            if (target && (target.classList.contains('fc-timegrid-slot') || 
-                          target.classList.contains('fc-timegrid-slot-lane'))) {
-                touchStartCell = target;
-                // Immediate visual feedback for mobile users
-                target.style.backgroundColor = 'rgba(0, 123, 255, 0.1)';
+            const slot = target.closest('.fc-timegrid-slot') || target.closest('.fc-timegrid-slot-lane');
+            if (slot) {
+                touchStartCell = slot;
+                // Prevent default touch behavior to avoid unwanted selection
+                e.preventDefault();
             }
             
             // Clear any existing timeout
@@ -1151,66 +1271,80 @@ document.addEventListener('DOMContentLoaded', function () {
                 clearTimeout(touchTimeout);
                 touchTimeout = null;
             }
-        }, { passive: true });
-        
-        calendarEl.addEventListener('touchend', function(e) {
-            const touchEndTarget = e.target || e.changedTouches[0].target;
-            if (touchStartCell && touchEndTarget === touchStartCell) {
-                // Clear visual feedback
-                touchStartCell.style.backgroundColor = '';
-                
-                // Prevent the blue flash by handling the selection manually
-                e.preventDefault();
-                
-                // Find the exact time slot and trigger proper selection
-                const cellRect = touchStartCell.getBoundingClientRect();
-                const calendarView = calendar.view;
-                
-                // Get date and time from the touched cell
-                if (touchStartCell.dataset && touchStartCell.dataset.date) {
-                    const slotDate = new Date(touchStartCell.dataset.date);
-                    const startTime = new Date(slotDate);
-                    const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // Add 1 hour
-                    
-                    // Simulate a proper selection without the blue flash
-                    setTimeout(() => {
-                        calendar.select(startTime, endTime);
-                    }, 50);
-                }
-            }
-            touchStarted = false;
-            touchStartCell = null;
         }, { passive: false });
         
-        calendarEl.addEventListener('touchcancel', function(e) {
-            if (touchStartCell) {
-                touchStartCell.style.backgroundColor = '';
-            }
-            touchStarted = false;
-            touchStartCell = null;
-            if (touchTimeout) {
-                clearTimeout(touchTimeout);
-                touchTimeout = null;
-            }
-        }, { passive: true });
-        
-        // Add touchmove handler to prevent selection if user drags across cells
         calendarEl.addEventListener('touchmove', function(e) {
             if (touchStarted && touchStartCell) {
                 const currentTarget = document.elementFromPoint(
                     e.touches[0].clientX, 
                     e.touches[0].clientY
                 );
-                const currentCell = currentTarget?.closest('.fc-timegrid-slot');
-                const startCell = touchStartCell.closest('.fc-timegrid-slot');
+                const currentSlot = currentTarget?.closest('.fc-timegrid-slot') || 
+                                  currentTarget?.closest('.fc-timegrid-slot-lane');
                 
-                // If moved to a different cell, cancel the selection
-                if (currentCell && startCell && currentCell !== startCell) {
-                    touchStartCell.style.backgroundColor = '';
-                    touchStarted = false;
+                // If moved to a different cell or moved significantly, mark as moved
+                if (!currentSlot || currentSlot !== touchStartCell) {
+                    touchMoved = true;
                     touchStartCell = null;
                     calendar.unselect(); // Clear any ongoing selection
                 }
+            }
+            
+            // Prevent default scrolling during potential selection
+            if (touchStartCell) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        calendarEl.addEventListener('touchend', function(e) {
+            const touchDuration = Date.now() - touchStartTime;
+            const touchEndTarget = e.target || e.changedTouches[0].target;
+            
+            // Only process if touch was brief, didn't move, and ended on same cell
+            if (touchStartCell && !touchMoved && touchDuration < 300) {
+                const endSlot = touchEndTarget.closest('.fc-timegrid-slot') || 
+                               touchEndTarget.closest('.fc-timegrid-slot-lane');
+                
+                if (endSlot === touchStartCell) {
+                    // Determine the exact time slot from the touched cell
+                    const timeAttr = touchStartCell.getAttribute('data-time');
+                    const dateAttr = touchStartCell.getAttribute('data-date');
+                    
+                    if (timeAttr && dateAttr) {
+                        // Create precise start and end times for 1-hour slot
+                        const slotStart = new Date(dateAttr + 'T' + timeAttr);
+                        const slotEnd = new Date(slotStart.getTime() + 60 * 60 * 1000);
+                        
+                        // Manually trigger calendar selection with precise timing
+                        calendar.select(slotStart, slotEnd);
+                    } else {
+                        // Fallback: trigger synthetic click for calendar's built-in handling
+                        const rect = touchStartCell.getBoundingClientRect();
+                        const clickEvent = new MouseEvent('click', {
+                            bubbles: true,
+                            cancelable: true,
+                            clientX: rect.left + rect.width / 2,
+                            clientY: rect.top + rect.height / 2
+                        });
+                        touchStartCell.dispatchEvent(clickEvent);
+                    }
+                }
+            }
+            
+            // Reset touch state
+            touchStarted = false;
+            touchStartCell = null;
+            touchMoved = false;
+        }, { passive: false });
+        
+        calendarEl.addEventListener('touchcancel', function(e) {
+            // Reset all touch state on cancel
+            touchStarted = false;
+            touchStartCell = null;
+            touchMoved = false;
+            if (touchTimeout) {
+                clearTimeout(touchTimeout);
+                touchTimeout = null;
             }
         }, { passive: true });
         
