@@ -380,6 +380,87 @@
             margin-top: 8px;
             margin-bottom: 10px;
         }
+        
+        /* Collapsible Available Slots Section */
+        .available-slots-section {
+            max-width: 420px;
+            margin: 15px auto;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            overflow: hidden;
+        }
+        
+        .available-slots-header {
+            padding: 12px 16px;
+            background: #e9ecef;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        .available-slots-header:hover {
+            background: #dee2e6;
+        }
+        
+        .toggle-icon {
+            font-size: 0.8rem;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-icon.collapsed {
+            transform: rotate(-90deg);
+        }
+        
+        .available-slots-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .available-slots-content.expanded {
+            max-height: 300px;
+        }
+        
+        .available-slots-list {
+            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 8px;
+        }
+        
+        .available-slot-item {
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        .available-slot-item:hover {
+            background: #e3f2fd;
+            border-color: #007bff;
+        }
+        
+        .available-slot-item.selected {
+            background: #007bff;
+            color: white;
+            border-color: #0056b3;
+        }
+        
+        .available-slot-item.booked {
+            background: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+            border-color: #eee;
+        }
+        
         .fc-timegrid-slot { cursor: pointer; }
         
         /* Remove unwanted browser-specific styles that cause row-wide blue highlight */
@@ -569,6 +650,44 @@
                 overflow: hidden;
             }
         }
+        
+        /* Weekend visual indication - dark gray styling */
+        .fc-day-sun, .fc-day-sat {
+            background-color: #4a4a4a !important;
+            color: #cccccc !important;
+        }
+        
+        .fc-day-sun .fc-col-header-cell-cushion,
+        .fc-day-sat .fc-col-header-cell-cushion {
+            color: #cccccc !important;
+        }
+        
+        .fc-day-sun .fc-timegrid-col-frame,
+        .fc-day-sat .fc-timegrid-col-frame {
+            background-color: #4a4a4a !important;
+        }
+        
+        .fc-day-sun .fc-timegrid-slot,
+        .fc-day-sat .fc-timegrid-slot {
+            background-color: #4a4a4a !important;
+            cursor: not-allowed !important;
+            opacity: 0.7;
+        }
+        
+        .fc-day-sun .fc-timegrid-slot-lane,
+        .fc-day-sat .fc-timegrid-slot-lane {
+            background-color: #4a4a4a !important;
+            cursor: not-allowed !important;
+        }
+        
+        /* Prevent selection on weekends */
+        .fc-day-sun .fc-timegrid-slot:active,
+        .fc-day-sat .fc-timegrid-slot:active,
+        .fc-day-sun .fc-timegrid-slot-lane:active,
+        .fc-day-sat .fc-timegrid-slot-lane:active {
+            background-color: #4a4a4a !important;
+        }
+        
         .footer {
             display: flex;
             flex-wrap: wrap;
@@ -846,32 +965,63 @@
       <!-- Mock calendar for testing when FullCalendar CDN is blocked -->
       <div id="mock-calendar" style="display: none; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 8px;">
         <p style="text-align: center; color: #666; margin-bottom: 15px;">
-          <strong>Test Calendar</strong> (FullCalendar CDN blocked - using fallback for testing)
+          <strong>Test Calendar with Weekend Enhancement</strong> (FullCalendar CDN blocked - using fallback for testing)
         </p>
-        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; text-align: center;">
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; text-align: center;">
+          <div style="font-weight: bold; padding: 10px; background: #4a4a4a; color: #cccccc;">Su</div>
           <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ma</div>
           <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ti</div>
           <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ke</div>
           <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">To</div>
           <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Pe</div>
+          <div style="font-weight: bold; padding: 10px; background: #4a4a4a; color: #cccccc;">La</div>
           
+          <!-- Weekend slots (disabled) -->
+          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #4a4a4a; color: #cccccc; opacity: 0.7;">9:00</div>
           <div class="mock-slot" data-time="09:00" data-date="2024-12-02" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
           <div class="mock-slot" data-time="09:00" data-date="2024-12-03" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
           <div class="mock-slot" data-time="09:00" data-date="2024-12-04" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
           <div class="mock-slot" data-time="09:00" data-date="2024-12-05" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
           <div class="mock-slot" data-time="09:00" data-date="2024-12-06" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
+          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #4a4a4a; color: #cccccc; opacity: 0.7;">9:00</div>
           
+          <!-- Weekend slots (disabled) -->
+          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #4a4a4a; color: #cccccc; opacity: 0.7;">10:00</div>
           <div class="mock-slot" data-time="10:00" data-date="2024-12-02" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
           <div class="mock-slot" data-time="10:00" data-date="2024-12-03" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
           <div class="mock-slot" data-time="10:00" data-date="2024-12-04" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
           <div class="mock-slot" data-time="10:00" data-date="2024-12-05" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
           <div class="mock-slot" data-time="10:00" data-date="2024-12-06" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
+          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #4a4a4a; color: #cccccc; opacity: 0.7;">10:00</div>
         </div>
         <p style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: #666;">
-          Click any time slot to test selection (Desktop) or tap for mobile modal
+          Weekdays (white) are available for booking. Weekends (dark gray) are disabled.
+          <br>Click any weekday time slot to test selection (Desktop) or tap for mobile modal
         </p>
       </div>
       <div id="slot-summary"></div>
+      
+      <!-- Collapsible Available Time Slots Section -->
+      <div id="availableSlots" class="available-slots-section" style="display:block;">
+        <div class="available-slots-header" onclick="toggleAvailableSlots()">
+          <span>Saatavilla olevat ajat tällä viikolla</span>
+          <span id="slotsToggleIcon" class="toggle-icon">▼</span>
+        </div>
+        <div id="availableSlotsContent" class="available-slots-content expanded">
+          <div id="availableSlotsList" class="available-slots-list">
+            <!-- Demo available slots -->
+            <div class="available-slot-item">Ma 2. 9:00</div>
+            <div class="available-slot-item">Ma 2. 10:00</div>
+            <div class="available-slot-item">Ma 2. 11:00</div>
+            <div class="available-slot-item">Ti 3. 9:00</div>
+            <div class="available-slot-item">Ti 3. 10:00</div>
+            <div class="available-slot-item">Ke 4. 9:00</div>
+            <div class="available-slot-item">Ke 4. 15:00</div>
+            <div class="available-slot-item">To 5. 14:00</div>
+          </div>
+        </div>
+      </div>
+      
       <form class="booking-form" id="bookingForm" style="display:none;" autocomplete="off">
         <input type="hidden" name="aika" id="aika" />
         <label for="name">Nimi</label>
@@ -1150,6 +1300,154 @@ document.addEventListener('DOMContentLoaded', function () {
         return false; // Indicate failed confirmation
     }
 
+    // Collapsible Available Slots Functions
+    function toggleAvailableSlots() {
+        const content = document.getElementById('availableSlotsContent');
+        const icon = document.getElementById('slotsToggleIcon');
+        
+        if (content.classList.contains('expanded')) {
+            content.classList.remove('expanded');
+            icon.classList.add('collapsed');
+            icon.textContent = '▶';
+        } else {
+            content.classList.add('expanded');
+            icon.classList.remove('collapsed');
+            icon.textContent = '▼';
+        }
+    }
+    
+    function populateAvailableSlots(calendar, bookings) {
+        const slotsSection = document.getElementById('availableSlots');
+        const slotsList = document.getElementById('availableSlotsList');
+        
+        if (!calendar) return;
+        
+        // Get current week's start and end dates
+        const currentDate = calendar.getDate();
+        const startOfWeek = new Date(currentDate);
+        startOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + 1); // Monday
+        
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 4); // Friday
+        
+        slotsList.innerHTML = '';
+        let hasAvailableSlots = false;
+        
+        // Generate available slots for the current week (Mon-Fri)
+        for (let dayOffset = 0; dayOffset < 5; dayOffset++) {
+            const date = new Date(startOfWeek);
+            date.setDate(startOfWeek.getDate() + dayOffset);
+            
+            const dateKey = getDateKey(date);
+            const dayBookings = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey);
+            
+            // Generate time slots for this day (9-17)
+            for (let hour = 9; hour < 17; hour++) {
+                const isBooked = dayBookings.some(b => {
+                    const bookingHour = new Date(b.aika).getHours();
+                    return bookingHour === hour;
+                });
+                
+                if (!isBooked) {
+                    hasAvailableSlots = true;
+                    const slotEl = document.createElement('div');
+                    slotEl.className = 'available-slot-item';
+                    
+                    const dayName = date.toLocaleDateString('fi-FI', { weekday: 'short' });
+                    const dayDate = date.getDate();
+                    slotEl.textContent = `${dayName} ${dayDate}. ${hour}:00`;
+                    
+                    // Add click handler for slot selection
+                    slotEl.addEventListener('click', function() {
+                        const selectedDateTime = new Date(date);
+                        selectedDateTime.setHours(hour, 0, 0, 0);
+                        
+                        // Clear previous selections
+                        slotsList.querySelectorAll('.available-slot-item.selected').forEach(el => {
+                            el.classList.remove('selected');
+                        });
+                        
+                        // Select this slot
+                        this.classList.add('selected');
+                        
+                        // Update the calendar and form
+                        selectedSlot = selectedDateTime;
+                        const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
+                            ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+                        document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+                        document.getElementById('aika').value = aikaTxt;
+                        document.getElementById('bookingForm').style.display = '';
+                        document.getElementById('error').textContent = '';
+                        
+                        // Update calendar selection
+                        if (calendar) {
+                            const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000);
+                            calendar.unselect();
+                            calendar.select(selectedDateTime, endTime);
+                        }
+                    });
+                    
+                    slotsList.appendChild(slotEl);
+                }
+            }
+        }
+        
+        // Show/hide the slots section based on availability
+        if (hasAvailableSlots) {
+            slotsSection.style.display = 'block';
+        } else {
+            slotsSection.style.display = 'none';
+        }
+    }
+
+    // Collapsible Available Slots Functions (global scope for testing)
+    window.toggleAvailableSlots = function() {
+        const content = document.getElementById('availableSlotsContent');
+        const icon = document.getElementById('slotsToggleIcon');
+        
+        if (content.classList.contains('expanded')) {
+            content.classList.remove('expanded');
+            icon.classList.add('collapsed');
+            icon.textContent = '▶';
+        } else {
+            content.classList.add('expanded');
+            icon.classList.remove('collapsed');
+            icon.textContent = '▼';
+        }
+    };
+
+    // Function to find next available booking slot and navigate to that week
+    function findAndNavigateToNextAvailableWeek(calendar, bookings) {
+        const today = new Date();
+        const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        
+        // Find next available slot within next 30 days
+        for (let daysFromToday = 0; daysFromToday < 30; daysFromToday++) {
+            const checkDate = new Date(startOfToday);
+            checkDate.setDate(startOfToday.getDate() + daysFromToday);
+            
+            // Skip weekends
+            const dayOfWeek = checkDate.getDay();
+            if (dayOfWeek === 0 || dayOfWeek === 6) continue;
+            
+            // Check if this day has available slots
+            const dateKey = getDateKey(checkDate);
+            const dayBookingCount = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
+            
+            // If day has less than 2 bookings, it has available slots
+            if (dayBookingCount < 2) {
+                // Navigate calendar to the week containing this date
+                calendar.gotoDate(checkDate);
+                console.log('Navigated to week containing next available slot:', checkDate.toLocaleDateString('fi-FI'));
+                return checkDate;
+            }
+        }
+        
+        // If no available slots found, stay on current week
+        console.log('No available slots found in next 30 days');
+        return null;
+    }
+
     fetchBookings().then(bookings => {
         function isSlotBooked(slot) {
             return bookings.some(b => b.aika === slot.start.toISOString());
@@ -1173,6 +1471,8 @@ document.addEventListener('DOMContentLoaded', function () {
             selectOverlap: false,
             slotDuration: '01:00:00',
             expandRows: true,
+            // Show all 7 days including weekends for visual indication
+            hiddenDays: [], // Show all days including weekends
             // Enhanced time slot display (fix for issue #2)
             slotLabelFormat: {
                 hour: '2-digit',
@@ -1181,6 +1481,13 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             slotLabelInterval: '01:00:00',
             displayEventTime: true,
+            // Update available slots when view changes
+            viewDidMount: function(info) {
+                // Small delay to ensure view is fully rendered
+                setTimeout(() => {
+                    populateAvailableSlots(calendar, bookings);
+                }, 50);
+            },
             // Mobile-specific improvements
             height: 'auto',
             contentHeight: 'auto',
@@ -1325,6 +1632,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
         if (calendar) {
             calendar.render();
+            // Navigate to week with next available booking slot
+            setTimeout(() => {
+                findAndNavigateToNextAvailableWeek(calendar, bookings);
+                // Populate available slots for the current week
+                populateAvailableSlots(calendar, bookings);
+            }, 100); // Small delay to ensure calendar is fully rendered
         }
         
         } catch (error) {
