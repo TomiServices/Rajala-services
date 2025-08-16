@@ -927,38 +927,57 @@
       <!-- Mock calendar for testing when FullCalendar CDN is blocked -->
       <div id="mock-calendar" style="display: none; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 8px;">
         <p style="text-align: center; color: #666; margin-bottom: 15px;">
-          <strong>Test Calendar with Weekend Enhancement</strong> (FullCalendar CDN blocked - using fallback for testing)
+          <strong>Monthly Calendar View</strong> (FullCalendar CDN blocked - using fallback for testing)
         </p>
-        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; text-align: center;">
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0; color: #999999;">Su</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ma</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ti</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ke</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">To</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Pe</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0; color: #999999;">La</div>
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; text-align: center; border: 1px solid #ddd;">
+          <!-- Day headers -->
+          <div style="font-weight: bold; padding: 8px; background: #f0f0f0; color: #999999; border-right: 1px solid #ddd;">Su</div>
+          <div style="font-weight: bold; padding: 8px; background: #f0f0f0; border-right: 1px solid #ddd;">Ma</div>
+          <div style="font-weight: bold; padding: 8px; background: #f0f0f0; border-right: 1px solid #ddd;">Ti</div>
+          <div style="font-weight: bold; padding: 8px; background: #f0f0f0; border-right: 1px solid #ddd;">Ke</div>
+          <div style="font-weight: bold; padding: 8px; background: #f0f0f0; border-right: 1px solid #ddd;">To</div>
+          <div style="font-weight: bold; padding: 8px; background: #f0f0f0; border-right: 1px solid #ddd;">Pe</div>
+          <div style="font-weight: bold; padding: 8px; background: #f0f0f0; color: #999999;">La</div>
           
-          <!-- Weekend slots (disabled) -->
-          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">9:00</div>
-          <div class="mock-slot" data-time="09:00" data-date="2024-12-02" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
-          <div class="mock-slot" data-time="09:00" data-date="2024-12-03" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
-          <div class="mock-slot" data-time="09:00" data-date="2024-12-04" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
-          <div class="mock-slot" data-time="09:00" data-date="2024-12-05" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
-          <div class="mock-slot" data-time="09:00" data-date="2024-12-06" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
-          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">9:00</div>
+          <!-- Week 1 -->
+          <div style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; background: #f0f0f0; color: #999999; opacity: 0.7;">1</div>
+          <div class="mock-slot" data-date="2024-12-02" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">2</div>
+          <div class="mock-slot" data-date="2024-12-03" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">3</div>
+          <div class="mock-slot" data-date="2024-12-04" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">4</div>
+          <div class="mock-slot" data-date="2024-12-05" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">5</div>
+          <div class="mock-slot" data-date="2024-12-06" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">6</div>
+          <div style="padding: 30px 8px; border-bottom: 1px solid #ddd; background: #f0f0f0; color: #999999; opacity: 0.7;">7</div>
           
-          <!-- Weekend slots (disabled) -->
-          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">10:00</div>
-          <div class="mock-slot" data-time="10:00" data-date="2024-12-02" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
-          <div class="mock-slot" data-time="10:00" data-date="2024-12-03" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
-          <div class="mock-slot" data-time="10:00" data-date="2024-12-04" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
-          <div class="mock-slot" data-time="10:00" data-date="2024-12-05" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
-          <div class="mock-slot" data-time="10:00" data-date="2024-12-06" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
-          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">10:00</div>
+          <!-- Week 2 -->
+          <div style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; background: #f0f0f0; color: #999999; opacity: 0.7;">8</div>
+          <div class="mock-slot" data-date="2024-12-09" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">9</div>
+          <div class="mock-slot" data-date="2024-12-10" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">10</div>
+          <div class="mock-slot" data-date="2024-12-11" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">11</div>
+          <div class="mock-slot" data-date="2024-12-12" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">12</div>
+          <div class="mock-slot" data-date="2024-12-13" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">13</div>
+          <div style="padding: 30px 8px; border-bottom: 1px solid #ddd; background: #f0f0f0; color: #999999; opacity: 0.7;">14</div>
+          
+          <!-- Week 3 -->
+          <div style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; background: #f0f0f0; color: #999999; opacity: 0.7;">15</div>
+          <div class="mock-slot" data-date="2024-12-16" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">16</div>
+          <div class="mock-slot" data-date="2024-12-17" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">17</div>
+          <div class="mock-slot" data-date="2024-12-18" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">18</div>
+          <div class="mock-slot" data-date="2024-12-19" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">19</div>
+          <div class="mock-slot" data-date="2024-12-20" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">20</div>
+          <div style="padding: 30px 8px; border-bottom: 1px solid #ddd; background: #f0f0f0; color: #999999; opacity: 0.7;">21</div>
+          
+          <!-- Week 4 -->
+          <div style="padding: 30px 8px; border-right: 1px solid #ddd; background: #f0f0f0; color: #999999; opacity: 0.7;">22</div>
+          <div class="mock-slot" data-date="2024-12-23" style="padding: 30px 8px; border-right: 1px solid #ddd; cursor: pointer; background: white;">23</div>
+          <div class="mock-slot" data-date="2024-12-24" style="padding: 30px 8px; border-right: 1px solid #ddd; cursor: pointer; background: white;">24</div>
+          <div class="mock-slot" data-date="2024-12-25" style="padding: 30px 8px; border-right: 1px solid #ddd; cursor: pointer; background: white;">25</div>
+          <div class="mock-slot" data-date="2024-12-26" style="padding: 30px 8px; border-right: 1px solid #ddd; cursor: pointer; background: white;">26</div>
+          <div class="mock-slot" data-date="2024-12-27" style="padding: 30px 8px; border-right: 1px solid #ddd; cursor: pointer; background: white;">27</div>
+          <div style="padding: 30px 8px; background: #f0f0f0; color: #999999; opacity: 0.7;">28</div>
         </div>
         <p style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: #666;">
           Weekdays (white) are available for booking. Weekends (light gray) are disabled.
-          <br>Click any weekday time slot to test selection (Desktop) or tap for mobile modal
+          <br>Click any weekday to select available time slots for that day
         </p>
       </div>
       <div id="slot-summary"></div>
@@ -1566,7 +1585,7 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             // Try to initialize FullCalendar
             calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'timeGridWeek',
+            initialView: 'dayGridMonth',
             locale: 'fi',
             slotMinTime: '09:00:00',
             slotMaxTime: '17:00:00',
