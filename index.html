@@ -1008,30 +1008,45 @@ document.addEventListener('DOMContentLoaded', function () {
                 end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
             },
             select: function (info) {
-                const start = info.start;
-                const end = info.end;
-                
-                // Check if this is a mobile device
-                if (isMobile) {
-                    // Mobile behavior: Extract day from selection and open time picker modal
-                    const dayStart = new Date(start);
-                    dayStart.setHours(0, 0, 0, 0);
-                    
-                    // Check if it's a valid weekday
-                    if (dayStart.getDay() >= 1 && dayStart.getDay() <= 5) {
-                        const dateStr = dayStart.toISOString().split('T')[0];
-                        const dayName = dayStart.toLocaleDateString('fi-FI', { weekday: 'long' });
-                        
-                        // Unselect the original selection
-                        calendar.unselect();
-                        
-                        // Open mobile time picker modal
-                        showMobileTimeModal(dateStr, dayName, bookings);
-                    } else {
-                        calendar.unselect();
-                        document.getElementById('error').textContent = 'Valitse arkipäivä (maanantai-perjantai)!';
-                        document.getElementById('bookingForm').style.display = 'none';
-                    }
+    const start = info.start;
+    const end = info.end;
+    // Desktop: Hyväksy myös pelkkä klikkaus (ei raahausta)
+    const duration = end - start;
+    const oneHour = 60 * 60 * 1000;
+
+    // Jos valinta ei ole täsmälleen tunti, mutta alku ja loppu on sama (eli pelkkä klikkaus), tee siitä 1h slotti
+    let fixedStart = start;
+    let fixedEnd = end;
+    if (duration === 0) {
+        fixedEnd = new Date(fixedStart.getTime() + oneHour);
+    }
+
+    const dateKey = getDateKey(fixedStart);
+    const count = getBookingsCountForDay(fixedStart);
+
+    if (
+        fixedStart.getHours() >= 9 && fixedStart.getHours() < 17 &&
+        fixedStart.getDay() >= 1 && fixedStart.getDay() <= 5 &&
+        !isSlotBooked({ start: fixedStart }) &&
+        count < 2
+    ) {
+        selectedSlot = fixedStart;
+        const aikaTxt = fixedStart.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
+            ', klo ' + fixedStart.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+        document.getElementById('aika').value = aikaTxt;
+        document.getElementById('bookingForm').style.display = '';
+        document.getElementById('error').textContent = '';
+    } else if (count >= 2) {
+        calendar.unselect();
+        document.getElementById('error').textContent = 'Tälle päivälle voi varata enintään 2 aikaa!';
+        document.getElementById('bookingForm').style.display = 'none';
+    } else {
+        calendar.unselect();
+        document.getElementById('error').textContent = 'Valitse vapaa 1h aika maanantaista perjantaihin klo 9–17!';
+        document.getElementById('bookingForm').style.display = 'none';
+    }
+},
                     return;
                 }
                 
