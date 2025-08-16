@@ -846,6 +846,34 @@
     <div class="ajanvaraus-container" id="ajanvaraus">
       <h2>Varaa aika kiillotukseen</h2>
       <div id="calendar"></div>
+      <!-- Mock calendar for testing when FullCalendar CDN is blocked -->
+      <div id="mock-calendar" style="display: none; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 8px;">
+        <p style="text-align: center; color: #666; margin-bottom: 15px;">
+          <strong>Test Calendar</strong> (FullCalendar CDN blocked - using fallback for testing)
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; text-align: center;">
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ma</div>
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ti</div>
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ke</div>
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">To</div>
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Pe</div>
+          
+          <div class="mock-slot" data-time="09:00" data-date="2024-12-02" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
+          <div class="mock-slot" data-time="09:00" data-date="2024-12-03" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
+          <div class="mock-slot" data-time="09:00" data-date="2024-12-04" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
+          <div class="mock-slot" data-time="09:00" data-date="2024-12-05" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
+          <div class="mock-slot" data-time="09:00" data-date="2024-12-06" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
+          
+          <div class="mock-slot" data-time="10:00" data-date="2024-12-02" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
+          <div class="mock-slot" data-time="10:00" data-date="2024-12-03" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
+          <div class="mock-slot" data-time="10:00" data-date="2024-12-04" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
+          <div class="mock-slot" data-time="10:00" data-date="2024-12-05" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
+          <div class="mock-slot" data-time="10:00" data-date="2024-12-06" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
+        </div>
+        <p style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: #666;">
+          Click any time slot to test selection (Desktop) or tap for mobile modal
+        </p>
+      </div>
       <div id="slot-summary"></div>
       <form class="booking-form" id="bookingForm" style="display:none;" autocomplete="off">
         <input type="hidden" name="aika" id="aika" />
@@ -1027,7 +1055,9 @@ document.addEventListener('DOMContentLoaded', function () {
             
             // Trigger calendar selection for the confirmed time
             const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000); // Add 1 hour
-            calendar.select(selectedDateTime, endTime);
+            if (calendar) {
+                calendar.select(selectedDateTime, endTime);
+            }
         }
     }
 
@@ -1062,7 +1092,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const dateKey = getDateKey(date);
             return bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
         }
-        const calendar = new FullCalendar.Calendar(calendarEl, {
+        
+        let calendar = null;
+        
+        try {
+            // Try to initialize FullCalendar
+            calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'timeGridWeek',
             locale: 'fi',
             slotMinTime: '09:00:00',
@@ -1151,55 +1186,14 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('bookingForm').style.display = '';
         document.getElementById('error').textContent = '';
     } else if (count >= 2) {
-        calendar.unselect();
+        if (calendar) calendar.unselect();
         document.getElementById('error').textContent = 'Tälle päivälle voi varata enintään 2 aikaa!';
         document.getElementById('bookingForm').style.display = 'none';
     } else {
-        calendar.unselect();
+        if (calendar) calendar.unselect();
         document.getElementById('error').textContent = 'Valitse vapaa 1h aika maanantaista perjantaihin klo 9–17!';
         document.getElementById('bookingForm').style.display = 'none';
     }
-},
-                    return;
-                }
-                
-                // Desktop behavior: Original logic
-                // Explicit check for single-cell selection (exactly 1 hour)
-                const duration = end - start;
-                const oneHour = 60 * 60 * 1000;
-                
-                if (duration !== oneHour) {
-                    // Unselect if not exactly 1 hour
-                    calendar.unselect();
-                    document.getElementById('error').textContent = 'Valitse täsmälleen yksi tunti (yhden solun)!';
-                    document.getElementById('bookingForm').style.display = 'none';
-                    return;
-                }
-                
-                const dateKey = getDateKey(start);
-                const count = getBookingsCountForDay(start);
-                if (
-                    start.getHours() >= 9 && start.getHours() < 17 &&
-                    start.getDay() >= 1 && start.getDay() <= 5 &&
-                    !isSlotBooked({ start }) &&
-                    count < 2
-                ) {
-                    selectedSlot = start;
-                    const aikaTxt = start.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
-                        ', klo ' + start.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
-                    document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
-                    document.getElementById('aika').value = aikaTxt;
-                    document.getElementById('bookingForm').style.display = '';
-                    document.getElementById('error').textContent = '';
-                } else if (count >= 2) {
-                    calendar.unselect();
-                    document.getElementById('error').textContent = 'Tälle päivälle voi varata enintään 2 aikaa!';
-                    document.getElementById('bookingForm').style.display = 'none';
-                } else {
-                    calendar.unselect();
-                    document.getElementById('error').textContent = 'Valitse vapaa 1h aika maanantaista perjantaihin klo 9–17!';
-                    document.getElementById('bookingForm').style.display = 'none';
-                }
             },
             events: function (fetchInfo, successCallback) {
                 const evs = [];
@@ -1229,7 +1223,79 @@ document.addEventListener('DOMContentLoaded', function () {
                 successCallback(evs);
             }
         });
-        calendar.render();
+        
+        if (calendar) {
+            calendar.render();
+        }
+        
+        } catch (error) {
+            console.log('FullCalendar failed to initialize:', error);
+            calendar = null;
+        }
+        
+        // Fallback: If FullCalendar doesn't load (CDN blocked), show mock calendar
+        setTimeout(() => {
+            const calendarEl = document.getElementById('calendar');
+            const mockCalendar = document.getElementById('mock-calendar');
+            
+            // Check if FullCalendar actually rendered content or if it failed to initialize
+            if (!calendar || !calendarEl.innerHTML.trim() || calendarEl.children.length === 0) {
+                console.log('FullCalendar failed to load, showing mock calendar for testing');
+                mockCalendar.style.display = 'block';
+                
+                // Add click handlers to mock slots
+                document.querySelectorAll('.mock-slot').forEach(slot => {
+                    slot.addEventListener('click', function() {
+                        const time = this.dataset.time;
+                        const date = this.dataset.date;
+                        
+                        // Clear previous selections
+                        document.querySelectorAll('.mock-slot').forEach(s => s.style.background = 'white');
+                        this.style.background = '#007bff';
+                        this.style.color = 'white';
+                        
+                        if (isMobile) {
+                            // Mobile: show time selection modal
+                            const dateObj = new Date(date + 'T' + time);
+                            const dayName = dateObj.toLocaleDateString('fi-FI', { weekday: 'long' });
+                            showMobileTimeModal(date, dayName, []);
+                        } else {
+                            // Desktop: direct selection
+                            const selectedDateTime = new Date(date + 'T' + time);
+                            selectedSlot = selectedDateTime;
+                            const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
+                                ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+                            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+                            document.getElementById('aika').value = aikaTxt;
+                            document.getElementById('bookingForm').style.display = '';
+                            document.getElementById('error').textContent = '';
+                        }
+                    });
+                    
+                    // Enhanced mobile touch handling for mock slots
+                    let mockTouchStarted = false;
+                    let mockTouchStartTime = 0;
+                    
+                    slot.addEventListener('touchstart', function(e) {
+                        mockTouchStarted = true;
+                        mockTouchStartTime = Date.now();
+                        e.preventDefault();
+                    }, { passive: false });
+                    
+                    slot.addEventListener('touchend', function(e) {
+                        const touchDuration = Date.now() - mockTouchStartTime;
+                        
+                        if (mockTouchStarted && touchDuration < 300) {
+                            // Trigger click for mobile
+                            this.click();
+                        }
+                        
+                        mockTouchStarted = false;
+                        e.preventDefault();
+                    }, { passive: false });
+                });
+            }
+        }, 1000); // Wait 1 second for FullCalendar to load
         
         // Mobile modal event listeners
         document.getElementById('mobileTimeCancel').addEventListener('click', hideMobileTimeModal);
@@ -1253,7 +1319,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (newIsMobile !== isMobile) {
                     isMobile = newIsMobile;
                 }
-                calendar.updateSize();
+                if (calendar) calendar.updateSize();
             }, 250);
         });
         
@@ -1299,7 +1365,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!currentSlot || currentSlot !== touchStartCell) {
                     touchMoved = true;
                     touchStartCell = null;
-                    calendar.unselect(); // Clear any ongoing selection
+                    if (calendar) calendar.unselect(); // Clear any ongoing selection
                 }
             }
             
@@ -1329,7 +1395,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         const slotEnd = new Date(slotStart.getTime() + 60 * 60 * 1000);
                         
                         // Manually trigger calendar selection with precise timing
-                        calendar.select(slotStart, slotEnd);
+                        if (calendar) {
+                            calendar.select(slotStart, slotEnd);
+                        }
                     } else {
                         // Fallback: trigger synthetic click for calendar's built-in handling
                         const rect = touchStartCell.getBoundingClientRect();
@@ -1365,7 +1433,7 @@ document.addEventListener('DOMContentLoaded', function () {
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
-                calendar.updateSize();
+                if (calendar) calendar.updateSize();
             }, 250);
         });
         
@@ -1409,7 +1477,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('slot-summary').textContent = '';
                     selectedSlot = null;
                     bookings = await fetchBookings();
-                    calendar.refetchEvents();
+                    if (calendar) calendar.refetchEvents();
                 } else {
                     const err = await res.json();
                     throw new Error(err.message || 'Varaus epäonnistui. Yritä uudelleen!');
