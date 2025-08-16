@@ -965,8 +965,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // Tertiary detection: Screen size (for responsive behavior)
         const screenSizeCheck = window.innerWidth <= 768;
         
-        // Return true if mobile user agent OR small screen (prioritizing responsive design)
-        return userAgentCheck || screenSizeCheck;
+        // Return true if mobile user agent OR (touch support AND small screen) for better mobile modal triggering
+        return userAgentCheck || (touchCheck && screenSizeCheck) || screenSizeCheck;
     }
 
     // Mobile time selection variables
@@ -1084,6 +1084,94 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         return slots;
     }
+
+    // Mobile time selection modal functions (moved outside fetchBookings for global access)
+    function showMobileTimeModal(dateStr, dayName, bookings) {
+        const modal = document.getElementById('mobileTimeModal');
+        const dateHeader = document.getElementById('mobileSelectedDate');
+        const slotsContainer = document.getElementById('mobileTimeSlots');
+        
+        selectedMobileDate = dateStr;
+        const formattedDate = new Date(dateStr).toLocaleDateString('fi-FI', { 
+            weekday: 'long', 
+            day: 'numeric', 
+            month: 'numeric' 
+        });
+        dateHeader.textContent = `Valitse aika - ${formattedDate}`;
+        
+        // Generate time slots for the selected date
+        slotsContainer.innerHTML = '';
+        const dayBookings = bookings.filter(b => {
+            const bookingDate = new Date(b.aika);
+            const selectedDate = new Date(dateStr);
+            return bookingDate.toDateString() === selectedDate.toDateString();
+        });
+        
+        // Generate available time slots (9-17)
+        for (let hour = 9; hour < 17; hour++) {
+            const isBooked = dayBookings.some(b => {
+                const bookingHour = new Date(b.aika).getHours();
+                return bookingHour === hour;
+            });
+            
+            const slotEl = document.createElement('div');
+            slotEl.className = `mobile-time-slot ${isBooked ? 'booked' : ''}`;
+            slotEl.textContent = `${hour}:00`;
+            slotEl.dataset.hour = hour;
+            
+            if (!isBooked) {
+                slotEl.addEventListener('click', function() {
+                    // Remove previous selection
+                    slotsContainer.querySelectorAll('.mobile-time-slot.selected').forEach(el => {
+                        el.classList.remove('selected');
+                    });
+                    // Select this slot
+                    this.classList.add('selected');
+                    selectedMobileTime = hour;
+                    document.getElementById('mobileTimeConfirm').disabled = false;
+                });
+            } else {
+                slotEl.title = 'Tämä aika on jo varattu';
+            }
+            
+            slotsContainer.appendChild(slotEl);
+        }
+        
+        modal.classList.add('active');
+    }
+    
+    function hideMobileTimeModal() {
+        const modal = document.getElementById('mobileTimeModal');
+        modal.classList.remove('active');
+        selectedMobileDate = null;
+        selectedMobileTime = null;
+        document.getElementById('mobileTimeConfirm').disabled = true;
+    }
+    
+    function confirmMobileTimeSelection(calendar) {
+        if (selectedMobileDate && selectedMobileTime !== null) {
+            const selectedDateTime = new Date(selectedMobileDate);
+            selectedDateTime.setHours(selectedMobileTime, 0, 0, 0);
+            
+            // Use the existing calendar selection logic
+            selectedSlot = selectedDateTime;
+            const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
+                ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+            document.getElementById('aika').value = aikaTxt;
+            document.getElementById('bookingForm').style.display = '';
+            document.getElementById('error').textContent = '';
+            
+            hideMobileTimeModal();
+            
+            // Trigger calendar selection for the confirmed time
+            const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000); // Add 1 hour
+            if (calendar) {
+                calendar.select(selectedDateTime, endTime);
+            }
+        }
+    }
+
     fetchBookings().then(bookings => {
         function isSlotBooked(slot) {
             return bookings.some(b => b.aika === slot.start.toISOString());
@@ -1158,42 +1246,67 @@ document.addEventListener('DOMContentLoaded', function () {
                 end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
             },
             select: function (info) {
-    let start = info.start;
-    let end = info.end;
-    const oneHour = 60 * 60 * 1000;
+                let start = info.start;
+                let end = info.end;
+                const oneHour = 60 * 60 * 1000;
 
-    // Jos pelkkä klikkaus (alku ja loppu sama), tee siitä tunnin slotti
-    if (start.getTime() === end.getTime()) {
-        end = new Date(start.getTime() + oneHour);
-    }
-    const duration = end - start;
+                // If on mobile device, show mobile modal instead of direct selection
+                if (isMobile) {
+                    // For mobile: show time modal for the selected day
+                    const dayOfWeek = start.getDay();
+                    if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Only weekdays
+                        const dateStr = start.toISOString().split('T')[0];
+                        showMobileTimeModal(dateStr, null, bookings);
+                    }
+                    // Unselect immediately since we're showing modal
+                    if (calendar) calendar.unselect();
+                    return;
+                }
 
-    const dateKey = getDateKey(start);
-    const count = getBookingsCountForDay(start);
+                // Desktop behavior: direct selection
+                // Jos pelkkä klikkaus (alku ja loppu sama), tee siitä tunnin slotti
+                if (start.getTime() === end.getTime()) {
+                    end = new Date(start.getTime() + oneHour);
+                }
+                const duration = end - start;
 
-    if (
-        duration === oneHour &&
-        start.getHours() >= 9 && start.getHours() < 17 &&
-        start.getDay() >= 1 && start.getDay() <= 5 &&
-        !isSlotBooked({ start }) &&
-        count < 2
-    ) {
-        selectedSlot = start;
-        const aikaTxt = start.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
-            ', klo ' + start.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
-        document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
-        document.getElementById('aika').value = aikaTxt;
-        document.getElementById('bookingForm').style.display = '';
-        document.getElementById('error').textContent = '';
-    } else if (count >= 2) {
-        if (calendar) calendar.unselect();
-        document.getElementById('error').textContent = 'Tälle päivälle voi varata enintään 2 aikaa!';
-        document.getElementById('bookingForm').style.display = 'none';
-    } else {
-        if (calendar) calendar.unselect();
-        document.getElementById('error').textContent = 'Valitse vapaa 1h aika maanantaista perjantaihin klo 9–17!';
-        document.getElementById('bookingForm').style.display = 'none';
-    }
+                const dateKey = getDateKey(start);
+                const count = getBookingsCountForDay(start);
+
+                if (
+                    duration === oneHour &&
+                    start.getHours() >= 9 && start.getHours() < 17 &&
+                    start.getDay() >= 1 && start.getDay() <= 5 &&
+                    !isSlotBooked({ start }) &&
+                    count < 2
+                ) {
+                    selectedSlot = start;
+                    const aikaTxt = start.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
+                        ', klo ' + start.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+                    document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+                    document.getElementById('aika').value = aikaTxt;
+                    document.getElementById('bookingForm').style.display = '';
+                    document.getElementById('error').textContent = '';
+                } else if (count >= 2) {
+                    if (calendar) calendar.unselect();
+                    document.getElementById('error').textContent = 'Tälle päivälle voi varata enintään 2 aikaa!';
+                    document.getElementById('bookingForm').style.display = 'none';
+                } else {
+                    if (calendar) calendar.unselect();
+                    document.getElementById('error').textContent = 'Valitse vapaa 1h aika maanantaista perjantaihin klo 9–17!';
+                    document.getElementById('bookingForm').style.display = 'none';
+                }
+            },
+            dateClick: function(info) {
+                // Handle day/slot clicks on mobile
+                if (isMobile) {
+                    const dayOfWeek = info.date.getDay();
+                    if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Only weekdays
+                        const dateStr = info.date.toISOString().split('T')[0];
+                        showMobileTimeModal(dateStr, null, bookings);
+                    }
+                }
+                // Desktop behavior is handled by the select event
             },
             events: function (fetchInfo, successCallback) {
                 const evs = [];
@@ -1385,29 +1498,47 @@ document.addEventListener('DOMContentLoaded', function () {
                                touchEndTarget.closest('.fc-timegrid-slot-lane');
                 
                 if (endSlot === touchStartCell) {
-                    // Determine the exact time slot from the touched cell
-                    const timeAttr = touchStartCell.getAttribute('data-time');
-                    const dateAttr = touchStartCell.getAttribute('data-date');
-                    
-                    if (timeAttr && dateAttr) {
-                        // Create precise start and end times for 1-hour slot
-                        const slotStart = new Date(dateAttr + 'T' + timeAttr);
-                        const slotEnd = new Date(slotStart.getTime() + 60 * 60 * 1000);
-                        
-                        // Manually trigger calendar selection with precise timing
-                        if (calendar) {
-                            calendar.select(slotStart, slotEnd);
+                    // Check if this is a mobile device
+                    if (isMobile) {
+                        // For mobile: Extract date from the touched cell and show mobile modal
+                        const dayColumn = touchStartCell.closest('.fc-day');
+                        if (dayColumn) {
+                            const dateAttr = dayColumn.getAttribute('data-date');
+                            if (dateAttr) {
+                                const selectedDate = new Date(dateAttr);
+                                const dayOfWeek = selectedDate.getDay();
+                                
+                                // Only show modal for weekdays (1=Monday through 5=Friday)
+                                if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+                                    showMobileTimeModal(dateAttr, null, bookings);
+                                }
+                            }
                         }
                     } else {
-                        // Fallback: trigger synthetic click for calendar's built-in handling
-                        const rect = touchStartCell.getBoundingClientRect();
-                        const clickEvent = new MouseEvent('click', {
-                            bubbles: true,
-                            cancelable: true,
-                            clientX: rect.left + rect.width / 2,
-                            clientY: rect.top + rect.height / 2
-                        });
-                        touchStartCell.dispatchEvent(clickEvent);
+                        // For desktop: Use existing direct selection logic
+                        const timeAttr = touchStartCell.getAttribute('data-time');
+                        const dateAttr = touchStartCell.getAttribute('data-date');
+                        
+                        if (timeAttr && dateAttr) {
+                            // Create precise start and end times for 1-hour slot
+                            const slotStart = new Date(dateAttr + 'T' + timeAttr);
+                            const slotEnd = new Date(slotStart.getTime() + 60 * 60 * 1000);
+                            
+                            // Manually trigger calendar selection with precise timing
+                            if (calendar) {
+                                calendar.select(slotStart, slotEnd);
+                            }
+                        } else {
+                            // Fallback: trigger synthetic click for calendar's built-in handling
+                            const rect = touchStartCell.getBoundingClientRect();
+                            const clickEvent = new MouseEvent('click', {
+                                bubbles: true,
+                                cancelable: true,
+                                clientX: rect.left + rect.width / 2,
+                                clientY: rect.top + rect.height / 2
+                            });
+                            touchStartCell.dispatchEvent(clickEvent);
+                        }
                     }
                 }
             }
