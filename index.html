@@ -1285,10 +1285,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     serviceSelection.style.display = 'block';
                     
                     // Update calendar selection (if calendar exists)
-                    if (window.calendar) {
+                    if (calendar && typeof calendar.unselect === 'function') {
                         const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000);
-                        window.calendar.unselect();
-                        window.calendar.select(selectedDateTime, endTime);
+                        calendar.unselect();
+                        calendar.select(selectedDateTime, endTime);
                     }
                 }
             });
@@ -1779,59 +1779,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log('FullCalendar failed to load, showing mock calendar for testing');
                 mockCalendar.style.display = 'block';
                 
-                // Add click handlers to mock slots
-                document.querySelectorAll('.mock-slot').forEach(slot => {
-                    slot.addEventListener('click', function() {
-                        const time = this.dataset.time;
-                        const date = this.dataset.date;
-                        
-                        // Clear previous selections
-                        document.querySelectorAll('.mock-slot').forEach(s => s.style.background = 'white');
-                        this.style.background = '#007bff';
-                        this.style.color = 'white';
-                        
-                        if (isMobile) {
-                            // Mobile: show time selection modal
-                            const dateObj = new Date(date + 'T' + time);
-                            const dayName = dateObj.toLocaleDateString('fi-FI', { weekday: 'long' });
-                            showMobileTimeModal(date, dayName, []);
-                        } else {
-                            // Desktop: direct selection
-                            const selectedDateTime = new Date(date + 'T' + time);
-                            selectedSlot = selectedDateTime;
-                            const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
-                                ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
-                            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
-                            document.getElementById('aika').value = aikaTxt;
-                            document.getElementById('bookingForm').style.display = '';
-                            document.getElementById('error').textContent = '';
-                        }
-                    });
-                    
-                    // Enhanced mobile touch handling for mock slots
-                    let mockTouchStarted = false;
-                    let mockTouchStartTime = 0;
-                    
-                    slot.addEventListener('touchstart', function(e) {
-                        mockTouchStarted = true;
-                        mockTouchStartTime = Date.now();
-                        e.preventDefault();
-                    }, { passive: false });
-                    
-                    slot.addEventListener('touchend', function(e) {
-                        const touchDuration = Date.now() - mockTouchStartTime;
-                        
-                        if (mockTouchStarted && touchDuration < 300) {
-                            // Trigger click for mobile
-                            this.click();
-                        }
-                        
-                        mockTouchStarted = false;
-                        e.preventDefault();
-                    }, { passive: false });
-                });
-                
-                // Setup dropdown event listener for fallback case
+                // The mock calendar click handlers are already set up by initializeMockCalendarAndDropdowns()
+                // No need to add duplicate handlers here - just ensure dropdown setup is called
                 setupDropdownEventListener();
             }
         }, 1000); // Wait 1 second for FullCalendar to load
