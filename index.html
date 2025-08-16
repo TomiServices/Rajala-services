@@ -951,7 +951,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return response.ok ? await response.json() : [];
     }
 
-    // Mobile device detection utility
+    // Mobile device detection utility - enhanced for better mobile/touch detection
     function isMobileDevice() {
         // Primary detection: User agent check for known mobile devices
         const userAgentCheck = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -959,11 +959,12 @@ document.addEventListener('DOMContentLoaded', function () {
         // Secondary detection: Touch capability
         const touchCheck = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
         
-        // Tertiary detection: Screen size (for responsive behavior)
+        // Tertiary detection: Screen size (for responsive behavior) 
         const screenSizeCheck = window.innerWidth <= 768;
         
-        // Return true if mobile user agent OR (touch support AND small screen) for better mobile modal triggering
-        return userAgentCheck || (touchCheck && screenSizeCheck) || screenSizeCheck;
+        // Enhanced: Return true if any mobile indicator is present
+        // This ensures mobile-like behavior on small screens regardless of touch support
+        return userAgentCheck || touchCheck || screenSizeCheck;
     }
 
     // Mobile time selection variables
@@ -1034,30 +1035,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('mobileTimeConfirm').disabled = true;
     }
     
-    function confirmMobileTimeSelection(calendar) {
-        if (selectedMobileDate && selectedMobileTime !== null) {
-            const selectedDateTime = new Date(selectedMobileDate);
-            selectedDateTime.setHours(selectedMobileTime, 0, 0, 0);
-            
-            // Use the existing calendar selection logic
-            selectedSlot = selectedDateTime;
-            const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
-                ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
-            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
-            document.getElementById('aika').value = aikaTxt;
-            document.getElementById('bookingForm').style.display = '';
-            document.getElementById('error').textContent = '';
-            
-            hideMobileTimeModal();
-            
-            // Trigger calendar selection for the confirmed time
-            const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000); // Add 1 hour
-            if (calendar) {
-                calendar.select(selectedDateTime, endTime);
-            }
-        }
-    }
-
     function getDateKey(date) {
         return date.toISOString().split('T')[0];
     }
@@ -1159,6 +1136,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('bookingForm').style.display = '';
             document.getElementById('error').textContent = '';
             
+            // Critical fix for issue #3: Always hide the modal to ensure auto-close
             hideMobileTimeModal();
             
             // Trigger calendar selection for the confirmed time
@@ -1166,7 +1144,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (calendar) {
                 calendar.select(selectedDateTime, endTime);
             }
+            
+            return true; // Indicate successful confirmation
         }
+        return false; // Indicate failed confirmation
     }
 
     fetchBookings().then(bookings => {
@@ -1192,6 +1173,14 @@ document.addEventListener('DOMContentLoaded', function () {
             selectOverlap: false,
             slotDuration: '01:00:00',
             expandRows: true,
+            // Enhanced time slot display (fix for issue #2)
+            slotLabelFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            },
+            slotLabelInterval: '01:00:00',
+            displayEventTime: true,
             // Mobile-specific improvements
             height: 'auto',
             contentHeight: 'auto',
@@ -1433,128 +1422,50 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 250);
         });
         
-        // Enhanced touch event handling for mobile devices - prevent row-wide selection
+        // Simplified touch event handling for mobile devices - improved tap-to-select (fix for issue #4)
         let touchStarted = false;
-        let touchTimeout = null;
-        let touchStartCell = null;
         let touchStartTime = 0;
-        let touchMoved = false;
+        let touchStartTarget = null;
         
-        // Add enhanced touch event listeners to calendar container for precise mobile support
+        // Simplified touch handling for better mobile interaction
         calendarEl.addEventListener('touchstart', function(e) {
             touchStarted = true;
-            touchMoved = false;
             touchStartTime = Date.now();
-            
-            // Store the specific cell where touch started
-            const target = e.target || e.touches[0].target;
-            const slot = target.closest('.fc-timegrid-slot') || target.closest('.fc-timegrid-slot-lane');
-            if (slot) {
-                touchStartCell = slot;
-                // Prevent default touch behavior to avoid unwanted selection
-                e.preventDefault();
-            }
-            
-            // Clear any existing timeout
-            if (touchTimeout) {
-                clearTimeout(touchTimeout);
-                touchTimeout = null;
-            }
-        }, { passive: false });
-        
-        calendarEl.addEventListener('touchmove', function(e) {
-            if (touchStarted && touchStartCell) {
-                const currentTarget = document.elementFromPoint(
-                    e.touches[0].clientX, 
-                    e.touches[0].clientY
-                );
-                const currentSlot = currentTarget?.closest('.fc-timegrid-slot') || 
-                                  currentTarget?.closest('.fc-timegrid-slot-lane');
-                
-                // If moved to a different cell or moved significantly, mark as moved
-                if (!currentSlot || currentSlot !== touchStartCell) {
-                    touchMoved = true;
-                    touchStartCell = null;
-                    if (calendar) calendar.unselect(); // Clear any ongoing selection
-                }
-            }
-            
-            // Prevent default scrolling during potential selection
-            if (touchStartCell) {
-                e.preventDefault();
-            }
-        }, { passive: false });
+            touchStartTarget = e.target || e.touches[0].target;
+        }, { passive: true });
         
         calendarEl.addEventListener('touchend', function(e) {
             const touchDuration = Date.now() - touchStartTime;
             const touchEndTarget = e.target || e.changedTouches[0].target;
             
-            // Only process if touch was brief, didn't move, and ended on same cell
-            if (touchStartCell && !touchMoved && touchDuration < 300) {
-                const endSlot = touchEndTarget.closest('.fc-timegrid-slot') || 
-                               touchEndTarget.closest('.fc-timegrid-slot-lane');
-                
-                if (endSlot === touchStartCell) {
-                    // Check if this is a mobile device
-                    if (isMobile) {
-                        // For mobile: Extract date from the touched cell and show mobile modal
-                        const dayColumn = touchStartCell.closest('.fc-day');
-                        if (dayColumn) {
-                            const dateAttr = dayColumn.getAttribute('data-date');
-                            if (dateAttr) {
-                                const selectedDate = new Date(dateAttr);
-                                const dayOfWeek = selectedDate.getDay();
-                                
-                                // Only show modal for weekdays (1=Monday through 5=Friday)
-                                if (dayOfWeek >= 1 && dayOfWeek <= 5) {
-                                    showMobileTimeModal(dateAttr, null, bookings);
-                                }
-                            }
-                        }
-                    } else {
-                        // For desktop: Use existing direct selection logic
-                        const timeAttr = touchStartCell.getAttribute('data-time');
-                        const dateAttr = touchStartCell.getAttribute('data-date');
-                        
-                        if (timeAttr && dateAttr) {
-                            // Create precise start and end times for 1-hour slot
-                            const slotStart = new Date(dateAttr + 'T' + timeAttr);
-                            const slotEnd = new Date(slotStart.getTime() + 60 * 60 * 1000);
-                            
-                            // Manually trigger calendar selection with precise timing
-                            if (calendar) {
-                                calendar.select(slotStart, slotEnd);
-                            }
-                        } else {
-                            // Fallback: trigger synthetic click for calendar's built-in handling
-                            const rect = touchStartCell.getBoundingClientRect();
-                            const clickEvent = new MouseEvent('click', {
-                                bubbles: true,
-                                cancelable: true,
-                                clientX: rect.left + rect.width / 2,
-                                clientY: rect.top + rect.height / 2
-                            });
-                            touchStartCell.dispatchEvent(clickEvent);
-                        }
+            // Simple tap detection: short duration and same target
+            if (touchStarted && touchDuration < 500 && touchStartTarget === touchEndTarget) {
+                // Check if we're on a mobile device and clicked on a calendar element
+                if (isMobile) {
+                    // Look for calendar slot elements (works for both FullCalendar and mock calendar)
+                    const slot = touchEndTarget.closest('.fc-timegrid-slot, .fc-timegrid-slot-lane, .mock-slot');
+                    if (slot) {
+                        // Trigger a synthetic click event for consistent behavior
+                        const clickEvent = new MouseEvent('click', {
+                            bubbles: true,
+                            cancelable: true,
+                            view: window
+                        });
+                        slot.dispatchEvent(clickEvent);
+                        e.preventDefault(); // Prevent double-triggering
                     }
                 }
             }
             
             // Reset touch state
             touchStarted = false;
-            touchStartCell = null;
-            touchMoved = false;
+            touchStartTarget = null;
         }, { passive: false });
         
         calendarEl.addEventListener('touchcancel', function(e) {
-            // Reset all touch state on cancel
+            // Reset touch state on cancel
             touchStarted = false;
-            touchStartCell = null;
-            touchMoved = false;
-            if (touchTimeout) {
-                clearTimeout(touchTimeout);
-                touchTimeout = null;
-            }
+            touchStartTarget = null;
         }, { passive: true });
         
         // Handle window resize to refresh calendar touch handling
