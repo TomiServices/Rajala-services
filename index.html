@@ -943,6 +943,122 @@
 <script type="module">
 // NOTE: No Firebase config in HTML for security. Use server endpoints instead.
 
+// Global mobile variables and functions (accessible from anywhere)
+let selectedMobileDate = null;
+let selectedMobileTime = null;
+let isMobile = false;
+
+// Mobile device detection utility
+function isMobileDevice() {
+    // Primary detection: User agent check for known mobile devices
+    const userAgentCheck = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    // Secondary detection: Touch capability
+    const touchCheck = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    // Tertiary detection: Screen size (for responsive behavior)
+    const screenSizeCheck = window.innerWidth <= 768;
+    
+    // Return true if mobile user agent OR (touch support AND small screen) for better mobile modal triggering
+    return userAgentCheck || (touchCheck && screenSizeCheck) || screenSizeCheck;
+}
+
+// Initialize mobile detection
+isMobile = isMobileDevice();
+
+// Mobile time selection modal functions (globally accessible)
+function showMobileTimeModal(dateStr, dayName, bookings) {
+    const modal = document.getElementById('mobileTimeModal');
+    const dateHeader = document.getElementById('mobileSelectedDate');
+    const slotsContainer = document.getElementById('mobileTimeSlots');
+    
+    selectedMobileDate = dateStr;
+    const formattedDate = new Date(dateStr).toLocaleDateString('fi-FI', { 
+        weekday: 'long', 
+        day: 'numeric', 
+        month: 'numeric' 
+    });
+    dateHeader.textContent = `Valitse aika - ${formattedDate}`;
+    
+    // Generate time slots for the selected date
+    slotsContainer.innerHTML = '';
+    const dayBookings = bookings.filter(b => {
+        const bookingDate = new Date(b.aika);
+        const selectedDate = new Date(dateStr);
+        return bookingDate.toDateString() === selectedDate.toDateString();
+    });
+    
+    // Generate available time slots (9-17)
+    for (let hour = 9; hour < 17; hour++) {
+        const isBooked = dayBookings.some(b => {
+            const bookingHour = new Date(b.aika).getHours();
+            return bookingHour === hour;
+        });
+        
+        const slotEl = document.createElement('div');
+        slotEl.className = `mobile-time-slot ${isBooked ? 'booked' : ''}`;
+        slotEl.textContent = `${hour}:00`;
+        slotEl.dataset.hour = hour;
+        
+        if (!isBooked) {
+            slotEl.addEventListener('click', function() {
+                // Remove previous selection
+                slotsContainer.querySelectorAll('.mobile-time-slot.selected').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                // Select this slot
+                this.classList.add('selected');
+                selectedMobileTime = hour;
+                document.getElementById('mobileTimeConfirm').disabled = false;
+            });
+        } else {
+            slotEl.title = 'Tämä aika on jo varattu';
+        }
+        
+        slotsContainer.appendChild(slotEl);
+    }
+    
+    modal.classList.add('active');
+}
+
+function hideMobileTimeModal() {
+    const modal = document.getElementById('mobileTimeModal');
+    modal.classList.remove('active');
+    selectedMobileDate = null;
+    selectedMobileTime = null;
+    document.getElementById('mobileTimeConfirm').disabled = true;
+}
+
+function confirmMobileTimeSelection(calendar) {
+    if (selectedMobileDate && selectedMobileTime !== null) {
+        const selectedDateTime = new Date(selectedMobileDate);
+        selectedDateTime.setHours(selectedMobileTime, 0, 0, 0);
+        
+        // Use the existing calendar selection logic
+        selectedSlot = selectedDateTime;
+        const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
+            ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+        document.getElementById('aika').value = aikaTxt;
+        document.getElementById('bookingForm').style.display = '';
+        document.getElementById('error').textContent = '';
+        
+        hideMobileTimeModal();
+        
+        // Trigger calendar selection for the confirmed time
+        const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000); // Add 1 hour
+        if (calendar) {
+            calendar.select(selectedDateTime, endTime);
+        }
+    }
+}
+
+// Make functions globally accessible
+window.showMobileTimeModal = showMobileTimeModal;
+window.hideMobileTimeModal = hideMobileTimeModal;
+window.confirmMobileTimeSelection = confirmMobileTimeSelection;
+window.isMobileDevice = isMobileDevice;
+
 // Calendar booking logic (ready for backend API, e.g. Firebase Function)
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
