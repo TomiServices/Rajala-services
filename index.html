@@ -1008,31 +1008,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
             },
             select: function (info) {
-    const start = info.start;
-    const end = info.end;
-    // Desktop: Hyväksy myös pelkkä klikkaus (ei raahausta)
-    const duration = end - start;
+    let start = info.start;
+    let end = info.end;
     const oneHour = 60 * 60 * 1000;
 
-    // Jos valinta ei ole täsmälleen tunti, mutta alku ja loppu on sama (eli pelkkä klikkaus), tee siitä 1h slotti
-    let fixedStart = start;
-    let fixedEnd = end;
-    if (duration === 0) {
-        fixedEnd = new Date(fixedStart.getTime() + oneHour);
+    // Jos pelkkä klikkaus (alku ja loppu sama), tee siitä tunnin slotti
+    if (start.getTime() === end.getTime()) {
+        end = new Date(start.getTime() + oneHour);
     }
+    const duration = end - start;
 
-    const dateKey = getDateKey(fixedStart);
-    const count = getBookingsCountForDay(fixedStart);
+    const dateKey = getDateKey(start);
+    const count = getBookingsCountForDay(start);
 
     if (
-        fixedStart.getHours() >= 9 && fixedStart.getHours() < 17 &&
-        fixedStart.getDay() >= 1 && fixedStart.getDay() <= 5 &&
-        !isSlotBooked({ start: fixedStart }) &&
+        duration === oneHour &&
+        start.getHours() >= 9 && start.getHours() < 17 &&
+        start.getDay() >= 1 && start.getDay() <= 5 &&
+        !isSlotBooked({ start }) &&
         count < 2
     ) {
-        selectedSlot = fixedStart;
-        const aikaTxt = fixedStart.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
-            ', klo ' + fixedStart.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+        selectedSlot = start;
+        const aikaTxt = start.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
+            ', klo ' + start.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
         document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
         document.getElementById('aika').value = aikaTxt;
         document.getElementById('bookingForm').style.display = '';
