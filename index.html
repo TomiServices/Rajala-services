@@ -963,8 +963,32 @@
       </div>
       <div id="slot-summary"></div>
       
+      <!-- Service Selection Dropdown -->
+      <div id="serviceSelection" class="available-slots-section" style="display:block;">
+        <div class="available-slots-dropdown">
+          <label for="serviceSelect">Valitse haluamasi palvelu:</label>
+          <select id="serviceSelect" class="available-times-select">
+            <option value="">Valitse palvelu...</option>
+            <option value="tire">Rengastyöt</option>
+            <option value="washing">Pesupalvelut</option>
+            <option value="polishing">Kiilloitus ja pinnoitteet</option>
+            <option value="interior">Sisäpuhdistus</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Task Selection Dropdown -->
+      <div id="taskSelection" class="available-slots-section" style="display:none;">
+        <div class="available-slots-dropdown">
+          <label for="taskSelect">Valitse palvelun tyyppi:</label>
+          <select id="taskSelect" class="available-times-select">
+            <option value="">Valitse tyyppi...</option>
+          </select>
+        </div>
+      </div>
+
       <!-- Available Time Slots Dropdown -->
-      <div id="availableSlots" class="available-slots-section" style="display:block;">
+      <div id="availableSlots" class="available-slots-section" style="display:none;">
         <div class="available-slots-dropdown">
           <label for="availableTimesSelect">Saatavilla olevat ajat tällä viikolla:</label>
           <select id="availableTimesSelect" class="available-times-select">
@@ -984,6 +1008,8 @@
       
       <form class="booking-form" id="bookingForm" style="display:none;" autocomplete="off">
         <input type="hidden" name="aika" id="aika" />
+        <input type="hidden" name="service" id="service" />
+        <input type="hidden" name="task" id="task" />
         <label for="name">Nimi</label>
         <input type="text" id="name" name="name" required placeholder="Etunimi Sukunimi" />
         <label for="email">Sähköposti</label>
@@ -1333,12 +1359,31 @@ document.addEventListener('DOMContentLoaded', function () {
                     const selectedDateTime = new Date(selectedDate);
                     selectedDateTime.setHours(selectedHour, 0, 0, 0);
                     
+                    // Get selected service and task
+                    const serviceSelect = document.getElementById('serviceSelect');
+                    const taskSelect = document.getElementById('taskSelect');
+                    const selectedService = serviceSelect.value;
+                    const selectedTask = taskSelect.value;
+                    
                     // Update the calendar and form
                     selectedSlot = selectedDateTime;
                     const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                         ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
-                    document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+                    
+                    // Get service and task names for display
+                    let serviceInfo = '';
+                    if (selectedService && serviceData[selectedService] && selectedTask) {
+                        const serviceObj = serviceData[selectedService];
+                        const taskObj = serviceObj.tasks.find(task => task.id === selectedTask);
+                        if (taskObj) {
+                            serviceInfo = `\nPalvelu: ${serviceObj.name} - ${taskObj.name}: ${taskObj.price}`;
+                        }
+                    }
+                    
+                    document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt + serviceInfo;
                     document.getElementById('aika').value = aikaTxt;
+                    document.getElementById('service').value = selectedService;
+                    document.getElementById('task').value = selectedTask;
                     document.getElementById('bookingForm').style.display = '';
                     document.getElementById('error').textContent = '';
                     
@@ -1352,6 +1397,111 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     }
+
+    // Service and task data structure
+    const serviceData = {
+        tire: {
+            name: 'Rengastyöt',
+            tasks: [
+                { id: 'tire-change', name: 'Renkaiden vaihto', price: 'alkaen 35 €' },
+                { id: 'tire-change-14-16', name: 'Renkaiden vaihto (14-16 tuumaa)', price: 'alkaen 40 €' },
+                { id: 'tire-change-17-18', name: 'Renkaiden vaihto (17-18 tuumaa)', price: 'alkaen 45 €' },
+                { id: 'tire-change-19-22', name: 'Renkaiden vaihto (19-22 tuumaa)', price: 'alkaen 50 €' },
+                { id: 'balancing', name: 'Tasapainotus', price: '20 € / sarja' },
+                { id: 'tire-repair', name: 'Renkaan paikkaus', price: 'alkaen 25 €' },
+                { id: 'tire-hotel', name: 'Rengashotelli', price: 'alkaen 55 € / kausi' }
+            ]
+        },
+        washing: {
+            name: 'Pesupalvelut',
+            tasks: [
+                { id: 'quick-wash', name: 'Pikapesu', price: 'alkaen 20 €' },
+                { id: 'hand-wash', name: 'Käsinpesu', price: 'alkaen 25 €' },
+                { id: 'tire-wash', name: 'Renkaiden pesu', price: 'alkaen 15 €' },
+                { id: 'waxing', name: 'Vahaukset', price: 'alkaen 35 €' },
+                { id: 'hard-wax', name: 'Kova vaha', price: 'alkaen 45 €' },
+                { id: 'ceramic-spray', name: 'Ceramic spray -pinnoite', price: 'alkaen 60 €' },
+                { id: 'water-repellent', name: 'Vettä ja likaa hylkivä pinnoite', price: 'alkaen 40 €' }
+            ]
+        },
+        polishing: {
+            name: 'Kiilloitus ja pinnoitteet',
+            tasks: [
+                { id: 'wax', name: 'Vahaus', price: 'alkaen 80 €' },
+                { id: '1-step-polish', name: '1-step kiillotus', price: 'alkaen 120 €' },
+                { id: '2-step-polish', name: '2-step kiillotus', price: 'alkaen 180 €' },
+                { id: '3-step-ceramic', name: '3-step + keraaminen pinnoitus', price: 'alkaen 300 €' },
+                { id: 'scratch-removal', name: 'Naarmujen poisto', price: 'alkaen 50 € / paneeli' }
+            ]
+        },
+        interior: {
+            name: 'Sisäpuhdistus',
+            tasks: [
+                { id: 'interior-cleaning', name: 'Sisätilojen puhdistus', price: 'alkaen 49 €' },
+                { id: 'interior-and-wash', name: 'Sisätila + käsinpesu', price: 'alkaen 65 €' },
+                { id: 'ozone', name: 'Otsonointi', price: 'alkaen 80 €' },
+                { id: 'deep-cleaning', name: 'Syväpuhdistus (detailing)', price: 'alkaen 150 €' },
+                { id: 'leather-care', name: 'Nahkapenkkien hoito ja suojaus', price: 'alkaen 75 €' },
+                { id: 'fabric-cleaning', name: 'Kankaan puhdistus kangaspesurilla', price: 'alkaen 60 €' },
+                { id: 'odor-removal', name: 'Hajunpoisto erikoisaineilla', price: 'alkaen 70 €' },
+                { id: 'allergy-cleaning', name: 'Allergiapuhdistus', price: 'alkaen 90 €' },
+                { id: 'fabric-protection', name: 'Kangaspintojen suojaus', price: 'alkaen 85 €' }
+            ]
+        }
+    };
+
+    // Service selection event handler
+    function setupServiceSelection() {
+        const serviceSelect = document.getElementById('serviceSelect');
+        const taskSelection = document.getElementById('taskSelection');
+        const taskSelect = document.getElementById('taskSelect');
+        const availableSlots = document.getElementById('availableSlots');
+
+        if (serviceSelect) {
+            serviceSelect.addEventListener('change', function() {
+                const selectedService = this.value;
+                
+                if (selectedService && serviceData[selectedService]) {
+                    // Show task selection
+                    taskSelection.style.display = 'block';
+                    
+                    // Populate task dropdown
+                    taskSelect.innerHTML = '<option value="">Valitse tyyppi...</option>';
+                    serviceData[selectedService].tasks.forEach(task => {
+                        const option = document.createElement('option');
+                        option.value = task.id;
+                        option.textContent = `${task.name}: ${task.price}`;
+                        taskSelect.appendChild(option);
+                    });
+                    
+                    // Reset task selection and hide time slots
+                    taskSelect.value = '';
+                    availableSlots.style.display = 'none';
+                } else {
+                    // Hide both task selection and time slots
+                    taskSelection.style.display = 'none';
+                    availableSlots.style.display = 'none';
+                }
+            });
+        }
+
+        if (taskSelect) {
+            taskSelect.addEventListener('change', function() {
+                const selectedTask = this.value;
+                
+                if (selectedTask) {
+                    // Show time selection dropdown
+                    availableSlots.style.display = 'block';
+                } else {
+                    // Hide time selection
+                    availableSlots.style.display = 'none';
+                }
+            });
+        }
+    }
+
+    // Call setupServiceSelection immediately
+    setupServiceSelection();
 
     // Function to find next available booking slot and navigate to that week
     function findAndNavigateToNextAvailableWeek(calendar, bookings) {
