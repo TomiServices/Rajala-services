@@ -924,43 +924,7 @@
     <div class="ajanvaraus-container" id="ajanvaraus">
       <h2>Varaa aika kiillotukseen</h2>
       <div id="calendar"></div>
-      <!-- Mock calendar for testing when FullCalendar CDN is blocked -->
-      <div id="mock-calendar" style="display: none; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 8px;">
-        <p style="text-align: center; color: #666; margin-bottom: 15px;">
-          <strong>Test Calendar with Weekend Enhancement</strong> (FullCalendar CDN blocked - using fallback for testing)
-        </p>
-        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; text-align: center;">
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0; color: #999999;">Su</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ma</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ti</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ke</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">To</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Pe</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0; color: #999999;">La</div>
-          
-          <!-- Weekend slots (disabled) -->
-          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">9:00</div>
-          <div class="mock-slot" data-time="09:00" data-date="2024-12-02" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
-          <div class="mock-slot" data-time="09:00" data-date="2024-12-03" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
-          <div class="mock-slot" data-time="09:00" data-date="2024-12-04" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
-          <div class="mock-slot" data-time="09:00" data-date="2024-12-05" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
-          <div class="mock-slot" data-time="09:00" data-date="2024-12-06" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
-          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">9:00</div>
-          
-          <!-- Weekend slots (disabled) -->
-          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">10:00</div>
-          <div class="mock-slot" data-time="10:00" data-date="2024-12-02" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
-          <div class="mock-slot" data-time="10:00" data-date="2024-12-03" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
-          <div class="mock-slot" data-time="10:00" data-date="2024-12-04" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
-          <div class="mock-slot" data-time="10:00" data-date="2024-12-05" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
-          <div class="mock-slot" data-time="10:00" data-date="2024-12-06" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
-          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">10:00</div>
-        </div>
-        <p style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: #666;">
-          Weekdays (white) are available for booking. Weekends (light gray) are disabled.
-          <br>Click any weekday time slot to test selection (Desktop) or tap for mobile modal
-        </p>
-      </div>
+
       <div id="slot-summary"></div>
       
       <!-- Available Time Slots Dropdown - Now first in flow -->
@@ -1326,45 +1290,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return false; // Indicate failed confirmation
     }
 
-    // Initialize mock calendar connection and setup event listeners
-    function initializeMockCalendarAndDropdowns() {
-        // Get mock bookings for testing
-        fetchBookings().then(bookings => {
-            // Connect mock calendar slots to our time selection function
-            const mockSlots = document.querySelectorAll('.mock-slot[data-date]');
-            mockSlots.forEach(slot => {
-                slot.addEventListener('click', function() {
-                    const dateStr = this.dataset.date;
-                    const selectedDate = new Date(dateStr);
-                    
-                    // Check if it's a weekday
-                    const dayOfWeek = selectedDate.getDay();
-                    if (dayOfWeek >= 1 && dayOfWeek <= 5) {
-                        // Show time slots for the selected date
-                        const hasAvailableSlots = populateTimeSlotsForDate(selectedDate, bookings);
-                        
-                        if (hasAvailableSlots) {
-                            document.getElementById('error').textContent = '';
-                        } else {
-                            document.getElementById('error').textContent = 'Valitulle päivälle ei ole vapaita aikoja saatavilla.';
-                        }
-                        
-                        // Scroll to the dropdowns
-                        document.getElementById('availableSlots').scrollIntoView({ behavior: 'smooth' });
-                    } else {
-                        document.getElementById('error').textContent = 'Valitse arkipäivä (maanantai-perjantai)!';
-                    }
-                });
-            });
-            
-            // Setup dropdown event listeners
-            setupDropdownEventListener();
-            
-            console.log('Mock calendar and dropdowns initialized successfully');
-        }).catch(error => {
-            console.error('Error initializing calendar:', error);
-        });
-    }
+
 
     // Service and task data structure
     const serviceData = {
@@ -1519,8 +1445,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Call setupServiceSelection immediately
     setupServiceSelection();
 
-    // Initialize mock calendar and dropdown functionality
-    initializeMockCalendarAndDropdowns();
+
 
     // Function to find next available booking slot and navigate to that week
     function findAndNavigateToNextAvailableWeek(calendar, bookings) {
@@ -1751,133 +1676,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('FullCalendar failed to initialize:', error);
             calendar = null;
         }
-        
-        // Enhanced Fallback: Improved detection with retry mechanism
-        let fallbackCheckAttempts = 0;
-        const maxFallbackAttempts = 10; // Check up to 10 times
-        const fallbackCheckInterval = 300; // Check every 300ms (total: 3 seconds max)
-        
-        function checkForFullCalendarFailure() {
-            fallbackCheckAttempts++;
-            
-            const calendarEl = document.getElementById('calendar');
-            const mockCalendar = document.getElementById('mock-calendar');
-            
-            // Enhanced validation criteria
-            const hasCalendarObject = calendar !== null;
-            const hasCalendarContent = calendarEl && calendarEl.querySelector('.fc');
-            const hasCalendarClasses = calendarEl && calendarEl.classList.contains('fc');
-            const hasCalendarStructure = calendarEl && calendarEl.children.length > 0;
-            const isFullCalendarAvailable = typeof window.FullCalendar !== 'undefined';
-            const cdnLoadedSuccessfully = window.fullCalendarCDNLoaded === true;
-            const cdnFailedToLoad = window.fullCalendarCDNError === true;
-            
-            // FullCalendar is considered successfully loaded if:
-            // 1. Calendar object exists AND
-            // 2. Either has FC-specific content OR FC classes OR basic structure AND
-            // 3. FullCalendar library is available AND
-            // 4. CDN loaded without errors
-            const isCalendarRendered = hasCalendarObject && 
-                                     (hasCalendarContent || hasCalendarClasses || hasCalendarStructure) && 
-                                     isFullCalendarAvailable &&
-                                     !cdnFailedToLoad;
-            
-            console.log(`FullCalendar check attempt ${fallbackCheckAttempts}/${maxFallbackAttempts}:`, {
-                hasCalendarObject,
-                hasCalendarContent,
-                hasCalendarClasses,
-                hasCalendarStructure,
-                isFullCalendarAvailable,
-                cdnLoadedSuccessfully,
-                cdnFailedToLoad,
-                isCalendarRendered
-            });
-            
-            // If FullCalendar is not yet rendered and we haven't exceeded max attempts, retry
-            if (!isCalendarRendered && fallbackCheckAttempts < maxFallbackAttempts) {
-                setTimeout(checkForFullCalendarFailure, fallbackCheckInterval);
-                return;
-            }
-            
-            // If FullCalendar failed to load after all attempts, show fallback
-            if (!isCalendarRendered) {
-                let failureReason = 'Unknown';
-                if (cdnFailedToLoad) {
-                    failureReason = 'CDN failed to load';
-                } else if (!isFullCalendarAvailable) {
-                    failureReason = 'FullCalendar library not available';
-                } else if (!hasCalendarObject) {
-                    failureReason = 'Calendar object creation failed';
-                } else if (!hasCalendarContent && !hasCalendarClasses && !hasCalendarStructure) {
-                    failureReason = 'Calendar failed to render content';
-                }
-                
-                console.log(`FullCalendar failed to load after ${fallbackCheckAttempts} attempts. Reason: ${failureReason}. Activating fallback mock calendar.`);
-                mockCalendar.style.display = 'block';
-                
-                // Add click handlers to mock slots
-                document.querySelectorAll('.mock-slot').forEach(slot => {
-                    slot.addEventListener('click', function() {
-                        const time = this.dataset.time;
-                        const date = this.dataset.date;
-                        
-                        // Clear previous selections
-                        document.querySelectorAll('.mock-slot').forEach(s => s.style.background = 'white');
-                        this.style.background = '#007bff';
-                        this.style.color = 'white';
-                        
-                        if (isMobile) {
-                            // Mobile: show time selection modal
-                            const dateObj = new Date(date + 'T' + time);
-                            const dayName = dateObj.toLocaleDateString('fi-FI', { weekday: 'long' });
-                            showMobileTimeModal(date, dayName, []);
-                        } else {
-                            // Desktop: direct selection
-                            const selectedDateTime = new Date(date + 'T' + time);
-                            selectedSlot = selectedDateTime;
-                            const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
-                                ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
-                            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
-                            document.getElementById('aika').value = aikaTxt;
-                            document.getElementById('bookingForm').style.display = '';
-                            document.getElementById('error').textContent = '';
-                        }
-                    });
-                    
-                    // Enhanced mobile touch handling for mock slots
-                    let mockTouchStarted = false;
-                    let mockTouchStartTime = 0;
-                    
-                    slot.addEventListener('touchstart', function(e) {
-                        mockTouchStarted = true;
-                        mockTouchStartTime = Date.now();
-                        e.preventDefault();
-                    }, { passive: false });
-                    
-                    slot.addEventListener('touchend', function(e) {
-                        const touchDuration = Date.now() - mockTouchStartTime;
-                        
-                        if (mockTouchStarted && touchDuration < 300) {
-                            // Trigger click for mobile
-                            this.click();
-                        }
-                        
-                        mockTouchStarted = false;
-                        e.preventDefault();
-                    }, { passive: false });
-                });
-                
-                // Setup dropdown event listener for fallback case
-                setupDropdownEventListener();
-            } else {
-                console.log('FullCalendar loaded successfully after', fallbackCheckAttempts, 'attempts.');
-                // Ensure mock calendar is hidden when FullCalendar works
-                mockCalendar.style.display = 'none';
-            }
-        }
-        
-        // Start the fallback detection process
-        setTimeout(checkForFullCalendarFailure, fallbackCheckInterval);
+
         
         // Mobile modal event listeners
         document.getElementById('mobileTimeCancel').addEventListener('click', hideMobileTimeModal);
@@ -1925,8 +1724,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (touchStarted && touchDuration < 500 && touchStartTarget === touchEndTarget) {
                 // Check if we're on a mobile device and clicked on a calendar element
                 if (isMobile) {
-                    // Look for calendar slot elements (works for both FullCalendar and mock calendar)
-                    const slot = touchEndTarget.closest('.fc-timegrid-slot, .fc-timegrid-slot-lane, .mock-slot');
+                    // Look for calendar slot elements
+                    const slot = touchEndTarget.closest('.fc-timegrid-slot, .fc-timegrid-slot-lane');
                     if (slot) {
                         // Trigger a synthetic click event for consistent behavior
                         const clickEvent = new MouseEvent('click', {
