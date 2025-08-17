@@ -961,7 +961,6 @@
           <br>Click any weekday time slot to test selection (Desktop) or tap for mobile modal
         </p>
       </div>
-      <div id="slot-summary"></div>
       
       <!-- Available Time Slots Dropdown - Now first in flow -->
       <div id="availableSlots" class="available-slots-section" style="display:none;">
@@ -996,6 +995,9 @@
           </select>
         </div>
       </div>
+      
+      <!-- Summary section moved here to appear below dropdown lists -->
+      <div id="slot-summary"></div>
       
       <form class="booking-form" id="bookingForm" style="display:none;" autocomplete="off">
         <input type="hidden" name="aika" id="aika" />
@@ -1293,15 +1295,36 @@ document.addEventListener('DOMContentLoaded', function () {
             
             labelElement.textContent = `Valittu aika: ${day}.${month.toString().padStart(2, '0')} ${hour}:${minute.toString().padStart(2, '0')}`;
             
-            // Update the time dropdown with the selected value
-            selectElement.innerHTML = '<option value="">Valitse aika...</option>';
-            const option = document.createElement('option');
-            option.value = `${hour}:00`;
-            option.textContent = `${hour}:00`;
-            option.dataset.date = selectedDateTime.toISOString();
-            option.dataset.hour = hour;
-            option.selected = true;
-            selectElement.appendChild(option);
+            // Update the time dropdown with all available times for the selected date
+            const selectedDate = new Date(selectedMobileDate);
+            // Get the current bookings to check availability
+            fetch('./get-bookings.php', { method: 'GET' })
+                .then(response => response.json())
+                .then(bookings => {
+                    // Populate all available time slots for the selected date
+                    populateTimeSlotsForDate(selectedDate, bookings);
+                    
+                    // Set the selected option in the dropdown
+                    const optionToSelect = Array.from(selectElement.options).find(option => 
+                        parseInt(option.dataset.hour) === selectedMobileTime
+                    );
+                    if (optionToSelect) {
+                        optionToSelect.selected = true;
+                        selectElement.value = optionToSelect.value;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching bookings for dropdown:', error);
+                    // Fallback to the original behavior if fetch fails
+                    selectElement.innerHTML = '<option value="">Valitse aika...</option>';
+                    const option = document.createElement('option');
+                    option.value = `${hour}:00`;
+                    option.textContent = `${hour}:00`;
+                    option.dataset.date = selectedDateTime.toISOString();
+                    option.dataset.hour = hour;
+                    option.selected = true;
+                    selectElement.appendChild(option);
+                });
             
             // Show the time dropdown and service selection
             document.getElementById('availableSlots').style.display = 'block';
@@ -1310,8 +1333,10 @@ document.addEventListener('DOMContentLoaded', function () {
             // Clear any errors
             document.getElementById('error').textContent = '';
             
-            // Critical fix for issue #3: Always hide the modal to ensure auto-close
-            hideMobileTimeModal();
+            // Critical fix for issue #3: Always hide the modal to ensure auto-close with 0.3s delay
+            setTimeout(() => {
+                hideMobileTimeModal();
+            }, 300);
             
             // Trigger calendar selection for the confirmed time
             const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000); // Add 1 hour
