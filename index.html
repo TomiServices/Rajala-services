@@ -961,10 +961,21 @@
           <br>Click any weekday time slot to test selection (Desktop) or tap for mobile modal
         </p>
       </div>
-      <div id="slot-summary"></div>
+      <!-- FIRST: Time Selection Dropdown -->
+      <div id="timeSelection" class="available-slots-section" style="display:block;">
+        <div class="available-slots-dropdown">
+          <label for="availableTimesSelect" id="timeSelectLabel">Valitse kellonaika:</label>
+          <select id="availableTimesSelect" class="available-times-select">
+            <option value="">Valitse aika...</option>
+            <!-- Available times will be populated dynamically -->
+          </select>
+        </div>
+      </div>
       
-      <!-- Service Selection Dropdown -->
-      <div id="serviceSelection" class="available-slots-section" style="display:block;">
+      <div id="slot-summary"></div>
+
+      <!-- SECOND: Service Selection Dropdown -->
+      <div id="serviceSelection" class="available-slots-section" style="display:none;">
         <div class="available-slots-dropdown">
           <label for="serviceSelect">Valitse haluamasi palvelu:</label>
           <select id="serviceSelect" class="available-times-select">
@@ -977,7 +988,7 @@
         </div>
       </div>
 
-      <!-- Task Selection Dropdown -->
+      <!-- THIRD: Task Selection Dropdown -->
       <div id="taskSelection" class="available-slots-section" style="display:none;">
         <div class="available-slots-dropdown">
           <label for="taskSelect">Valitse palvelun tyyppi:</label>
@@ -987,21 +998,12 @@
         </div>
       </div>
 
-      <!-- Available Time Slots Dropdown -->
+      <!-- Hidden: Old available slots section (kept for compatibility) -->
       <div id="availableSlots" class="available-slots-section" style="display:none;">
         <div class="available-slots-dropdown">
-          <label for="availableTimesSelect">Saatavilla olevat ajat tällä viikolla:</label>
-          <select id="availableTimesSelect" class="available-times-select">
+          <label for="availableTimesSelectOld">Saatavilla olevat ajat tällä viikolla:</label>
+          <select id="availableTimesSelectOld" class="available-times-select">
             <option value="">Valitse aika...</option>
-            <!-- Demo available slots -->
-            <option value="Ma 2. 9:00">Ma 2. 9:00</option>
-            <option value="Ma 2. 10:00">Ma 2. 10:00</option>
-            <option value="Ma 2. 11:00">Ma 2. 11:00</option>
-            <option value="Ti 3. 9:00">Ti 3. 9:00</option>
-            <option value="Ti 3. 10:00">Ti 3. 10:00</option>
-            <option value="Ke 4. 9:00">Ke 4. 9:00</option>
-            <option value="Ke 4. 15:00">Ke 4. 15:00</option>
-            <option value="To 5. 14:00">To 5. 14:00</option>
           </select>
         </div>
       </div>
@@ -1267,10 +1269,31 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedSlot = selectedDateTime;
             const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                 ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+            
+            // NEW FLOW: Update time dropdown and proceed to service selection
+            const timeSelect = document.getElementById('availableTimesSelect');
+            const timeSelectLabel = document.getElementById('timeSelectLabel');
+            const serviceSelection = document.getElementById('serviceSelection');
+            
+            // Update the time dropdown to show selected time
+            timeSelectLabel.textContent = `Valitsemasi aika: ${aikaTxt}`;
+            
+            // Update slot summary and form values
             document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
             document.getElementById('aika').value = aikaTxt;
-            document.getElementById('bookingForm').style.display = '';
             document.getElementById('error').textContent = '';
+            
+            // Show service selection as next step
+            serviceSelection.style.display = 'block';
+            
+            // Reset and hide subsequent steps
+            const serviceSelect = document.getElementById('serviceSelect');
+            const taskSelection = document.getElementById('taskSelection');
+            const bookingForm = document.getElementById('bookingForm');
+            
+            serviceSelect.value = '';
+            taskSelection.style.display = 'none';
+            bookingForm.style.display = 'none';
             
             // Critical fix for issue #3: Always hide the modal to ensure auto-close
             hideMobileTimeModal();
@@ -1286,9 +1309,9 @@ document.addEventListener('DOMContentLoaded', function () {
         return false; // Indicate failed confirmation
     }
 
-    // Available Slots Dropdown Functions
+    // UPDATED: Available Slots Dropdown Functions - now populates timeSelection
     function populateAvailableSlots(calendar, bookings) {
-        const slotsSection = document.getElementById('availableSlots');
+        const timeSection = document.getElementById('timeSelection');
         const selectElement = document.getElementById('availableTimesSelect');
         
         if (!calendar || !selectElement) return;
@@ -1337,17 +1360,20 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         
-        // Show/hide the slots section based on availability
+        // Show/hide the time section based on availability - always show since it's the first step
         if (hasAvailableSlots) {
-            slotsSection.style.display = 'block';
+            timeSection.style.display = 'block';
         } else {
-            slotsSection.style.display = 'none';
+            timeSection.style.display = 'block'; // Always show, but may be empty
         }
     }
 
-    // Dropdown event handler for time selection
-    function setupDropdownEventListener() {
+    // NEW: Dropdown event handler for time selection (FIRST step)
+    function setupTimeSelectionEventListener() {
         const selectElement = document.getElementById('availableTimesSelect');
+        const timeSelectLabel = document.getElementById('timeSelectLabel');
+        const serviceSelection = document.getElementById('serviceSelection');
+        
         if (selectElement) {
             selectElement.addEventListener('change', function() {
                 const selectedValue = this.value;
@@ -1359,33 +1385,30 @@ document.addEventListener('DOMContentLoaded', function () {
                     const selectedDateTime = new Date(selectedDate);
                     selectedDateTime.setHours(selectedHour, 0, 0, 0);
                     
-                    // Get selected service and task
-                    const serviceSelect = document.getElementById('serviceSelect');
-                    const taskSelect = document.getElementById('taskSelect');
-                    const selectedService = serviceSelect.value;
-                    const selectedTask = taskSelect.value;
-                    
-                    // Update the calendar and form
+                    // Update the calendar and store selected time
                     selectedSlot = selectedDateTime;
                     const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                         ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
                     
-                    // Get service and task names for display
-                    let serviceInfo = '';
-                    if (selectedService && serviceData[selectedService] && selectedTask) {
-                        const serviceObj = serviceData[selectedService];
-                        const taskObj = serviceObj.tasks.find(task => task.id === selectedTask);
-                        if (taskObj) {
-                            serviceInfo = `\nPalvelu: ${serviceObj.name} - ${taskObj.name}: ${taskObj.price}`;
-                        }
-                    }
+                    // Update label to show selected time
+                    timeSelectLabel.textContent = `Valitsemasi aika: ${aikaTxt}`;
                     
-                    document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt + serviceInfo;
+                    // Show slot summary
+                    document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
                     document.getElementById('aika').value = aikaTxt;
-                    document.getElementById('service').value = selectedService;
-                    document.getElementById('task').value = selectedTask;
-                    document.getElementById('bookingForm').style.display = '';
                     document.getElementById('error').textContent = '';
+                    
+                    // IMPORTANT: Show service selection as SECOND step
+                    serviceSelection.style.display = 'block';
+                    
+                    // Reset service and task selections when time changes
+                    const serviceSelect = document.getElementById('serviceSelect');
+                    const taskSelection = document.getElementById('taskSelection');
+                    const bookingForm = document.getElementById('bookingForm');
+                    
+                    serviceSelect.value = '';
+                    taskSelection.style.display = 'none';
+                    bookingForm.style.display = 'none';
                     
                     // Update calendar selection
                     if (calendar) {
@@ -1393,9 +1416,22 @@ document.addEventListener('DOMContentLoaded', function () {
                         calendar.unselect();
                         calendar.select(selectedDateTime, endTime);
                     }
+                } else {
+                    // Reset everything if no time selected
+                    timeSelectLabel.textContent = 'Valitse kellonaika:';
+                    serviceSelection.style.display = 'none';
+                    document.getElementById('taskSelection').style.display = 'none';
+                    document.getElementById('bookingForm').style.display = 'none';
+                    document.getElementById('slot-summary').textContent = '';
                 }
             });
         }
+    }
+
+    // LEGACY: Keep old function for compatibility but update it
+    function setupDropdownEventListener() {
+        // This is now handled by setupTimeSelectionEventListener
+        setupTimeSelectionEventListener();
     }
 
     // Service and task data structure
@@ -1450,19 +1486,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    // Service selection event handler
+    // UPDATED: Service selection event handler (SECOND step)
     function setupServiceSelection() {
         const serviceSelect = document.getElementById('serviceSelect');
         const taskSelection = document.getElementById('taskSelection');
         const taskSelect = document.getElementById('taskSelect');
-        const availableSlots = document.getElementById('availableSlots');
+        const bookingForm = document.getElementById('bookingForm');
 
         if (serviceSelect) {
             serviceSelect.addEventListener('change', function() {
                 const selectedService = this.value;
                 
                 if (selectedService && serviceData[selectedService]) {
-                    // Show task selection
+                    // Show task selection as THIRD step
                     taskSelection.style.display = 'block';
                     
                     // Populate task dropdown
@@ -1474,13 +1510,16 @@ document.addEventListener('DOMContentLoaded', function () {
                         taskSelect.appendChild(option);
                     });
                     
-                    // Reset task selection and hide time slots
+                    // Reset task selection and hide form
                     taskSelect.value = '';
-                    availableSlots.style.display = 'none';
+                    bookingForm.style.display = 'none';
+                    
+                    // Update service value in form
+                    document.getElementById('service').value = selectedService;
                 } else {
-                    // Hide both task selection and time slots
+                    // Hide task selection and form
                     taskSelection.style.display = 'none';
-                    availableSlots.style.display = 'none';
+                    bookingForm.style.display = 'none';
                 }
             });
         }
@@ -1488,13 +1527,24 @@ document.addEventListener('DOMContentLoaded', function () {
         if (taskSelect) {
             taskSelect.addEventListener('change', function() {
                 const selectedTask = this.value;
+                const selectedService = serviceSelect.value;
                 
-                if (selectedTask) {
-                    // Show time selection dropdown
-                    availableSlots.style.display = 'block';
+                if (selectedTask && selectedService) {
+                    // Update summary with service info
+                    const serviceObj = serviceData[selectedService];
+                    const taskObj = serviceObj.tasks.find(task => task.id === selectedTask);
+                    if (taskObj) {
+                        const currentSummary = document.getElementById('slot-summary').textContent;
+                        const serviceInfo = `\nPalvelu: ${serviceObj.name} - ${taskObj.name}: ${taskObj.price}`;
+                        document.getElementById('slot-summary').textContent = currentSummary + serviceInfo;
+                    }
+                    
+                    // Update form values and show form as FINAL step
+                    document.getElementById('task').value = selectedTask;
+                    bookingForm.style.display = 'block';
                 } else {
-                    // Hide time selection
-                    availableSlots.style.display = 'none';
+                    // Hide form if no task selected
+                    bookingForm.style.display = 'none';
                 }
             });
         }
@@ -1663,17 +1713,41 @@ document.addEventListener('DOMContentLoaded', function () {
                     selectedSlot = start;
                     const aikaTxt = start.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                         ', klo ' + start.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+                    
+                    // NEW FLOW: Update time dropdown and proceed to service selection
+                    const timeSelectLabel = document.getElementById('timeSelectLabel');
+                    const serviceSelection = document.getElementById('serviceSelection');
+                    
+                    // Update the time dropdown label to show selected time
+                    timeSelectLabel.textContent = `Valitsemasi aika: ${aikaTxt}`;
+                    
+                    // Update slot summary and form values
                     document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
                     document.getElementById('aika').value = aikaTxt;
-                    document.getElementById('bookingForm').style.display = '';
                     document.getElementById('error').textContent = '';
+                    
+                    // Show service selection as next step
+                    serviceSelection.style.display = 'block';
+                    
+                    // Reset and hide subsequent steps
+                    const serviceSelect = document.getElementById('serviceSelect');
+                    const taskSelection = document.getElementById('taskSelection');
+                    const bookingForm = document.getElementById('bookingForm');
+                    
+                    serviceSelect.value = '';
+                    taskSelection.style.display = 'none';
+                    bookingForm.style.display = 'none';
                 } else if (count >= 2) {
                     if (calendar) calendar.unselect();
                     document.getElementById('error').textContent = 'Tälle päivälle voi varata enintään 2 aikaa!';
+                    document.getElementById('serviceSelection').style.display = 'none';
+                    document.getElementById('taskSelection').style.display = 'none';
                     document.getElementById('bookingForm').style.display = 'none';
                 } else {
                     if (calendar) calendar.unselect();
                     document.getElementById('error').textContent = 'Valitse vapaa 1h aika maanantaista perjantaihin klo 9–17!';
+                    document.getElementById('serviceSelection').style.display = 'none';
+                    document.getElementById('taskSelection').style.display = 'none';
                     document.getElementById('bookingForm').style.display = 'none';
                 }
             },
