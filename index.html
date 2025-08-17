@@ -963,8 +963,18 @@
       </div>
       <div id="slot-summary"></div>
       
-      <!-- Service Selection Dropdown -->
-      <div id="serviceSelection" class="available-slots-section" style="display:block;">
+      <!-- Selected Time Dropdown (First dropdown) -->
+      <div id="selectedTimeSection" class="available-slots-section" style="display:none;">
+        <div class="available-slots-dropdown">
+          <label for="selectedTimeSelect" id="selectedTimeLabel">Valitsemasi aika:</label>
+          <select id="selectedTimeSelect" class="available-times-select">
+            <option value="">Valitse aika...</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Service Selection Dropdown (Hidden until time is selected) -->
+      <div id="serviceSelection" class="available-slots-section" style="display:none;">
         <div class="available-slots-dropdown">
           <label for="serviceSelect">Valitse haluamasi palvelu:</label>
           <select id="serviceSelect" class="available-times-select">
@@ -987,7 +997,7 @@
         </div>
       </div>
 
-      <!-- Available Time Slots Dropdown -->
+      <!-- Available Time Slots Dropdown (Hidden as no longer needed) -->
       <div id="availableSlots" class="available-slots-section" style="display:none;">
         <div class="available-slots-dropdown">
           <label for="availableTimesSelect">Saatavilla olevat ajat tällä viikolla:</label>
@@ -1267,9 +1277,13 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedSlot = selectedDateTime;
             const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                 ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+            
+            // Update selected time section and show service selection
+            updateSelectedTimeDropdown(selectedDateTime, bookings);
+            showServiceSelection();
+            
             document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
             document.getElementById('aika').value = aikaTxt;
-            document.getElementById('bookingForm').style.display = '';
             document.getElementById('error').textContent = '';
             
             // Critical fix for issue #3: Always hide the modal to ensure auto-close
@@ -1450,7 +1464,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    // Service selection event handler
+    // Service selection event handler (updated)
     function setupServiceSelection() {
         const serviceSelect = document.getElementById('serviceSelect');
         const taskSelection = document.getElementById('taskSelection');
@@ -1474,13 +1488,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         taskSelect.appendChild(option);
                     });
                     
-                    // Reset task selection and hide time slots
+                    // Reset task selection
                     taskSelect.value = '';
-                    availableSlots.style.display = 'none';
                 } else {
-                    // Hide both task selection and time slots
+                    // Hide task selection
                     taskSelection.style.display = 'none';
-                    availableSlots.style.display = 'none';
                 }
             });
         }
@@ -1490,18 +1502,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 const selectedTask = this.value;
                 
                 if (selectedTask) {
-                    // Show time selection dropdown
-                    availableSlots.style.display = 'block';
+                    // Show booking form when task is selected
+                    document.getElementById('bookingForm').style.display = '';
                 } else {
-                    // Hide time selection
-                    availableSlots.style.display = 'none';
+                    // Hide booking form
+                    document.getElementById('bookingForm').style.display = 'none';
                 }
             });
         }
     }
 
-    // Call setupServiceSelection immediately
-    setupServiceSelection();
+    // Call setupServiceSelection will be done after calendar setup
 
     // Function to find next available booking slot and navigate to that week
     function findAndNavigateToNextAvailableWeek(calendar, bookings) {
@@ -1533,6 +1544,96 @@ document.addEventListener('DOMContentLoaded', function () {
         // If no available slots found, stay on current week
         console.log('No available slots found in next 30 days');
         return null;
+    }
+
+    // Function to update selected time dropdown with single day's time slots
+    function updateSelectedTimeDropdown(selectedDate, bookings) {
+        const selectedTimeSection = document.getElementById('selectedTimeSection');
+        const selectedTimeSelect = document.getElementById('selectedTimeSelect');
+        const selectedTimeLabel = document.getElementById('selectedTimeLabel');
+        
+        // Format the selected date for display
+        const formattedDate = selectedDate.toLocaleDateString('fi-FI', { 
+            day: 'numeric', 
+            month: 'numeric' 
+        });
+        const formattedTime = selectedDate.toLocaleTimeString('fi-FI', { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        });
+        
+        // Update label to show selected date and time
+        selectedTimeLabel.textContent = `Valitsemasi aika: ${formattedDate} klo ${formattedTime}`;
+        
+        // Clear existing options
+        selectedTimeSelect.innerHTML = '<option value="">Valitse aika...</option>';
+        
+        // Get the date key for filtering bookings
+        const selectedDateKey = getDateKey(selectedDate);
+        const dayBookings = bookings.filter(b => getDateKey(new Date(b.aika)) === selectedDateKey);
+        
+        // Generate time slots for the selected day (9-17)
+        for (let hour = 9; hour < 17; hour++) {
+            const slotDateTime = new Date(selectedDate);
+            slotDateTime.setHours(hour, 0, 0, 0);
+            
+            const isBooked = dayBookings.some(b => {
+                const bookingHour = new Date(b.aika).getHours();
+                return bookingHour === hour;
+            });
+            
+            const timeText = `${hour}:00`;
+            const displayText = isBooked ? `${timeText} - varattu` : timeText;
+            const isSelected = hour === selectedDate.getHours();
+            
+            const option = document.createElement('option');
+            option.value = slotDateTime.toISOString();
+            option.textContent = displayText;
+            option.disabled = isBooked;
+            option.selected = isSelected;
+            option.dataset.hour = hour;
+            
+            selectedTimeSelect.appendChild(option);
+        }
+        
+        // Show the selected time section
+        selectedTimeSection.style.display = 'block';
+    }
+    
+    // Function to show service selection after time is selected
+    function showServiceSelection() {
+        const serviceSelection = document.getElementById('serviceSelection');
+        serviceSelection.style.display = 'block';
+    }
+    
+    // Setup event listener for selected time dropdown
+    function setupSelectedTimeEventListener() {
+        const selectedTimeSelect = document.getElementById('selectedTimeSelect');
+        if (selectedTimeSelect) {
+            selectedTimeSelect.addEventListener('change', function() {
+                const selectedValue = this.value;
+                if (selectedValue) {
+                    const selectedDateTime = new Date(selectedValue);
+                    
+                    // Update the selected slot
+                    selectedSlot = selectedDateTime;
+                    
+                    const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
+                        ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+                    
+                    document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+                    document.getElementById('aika').value = aikaTxt;
+                    document.getElementById('error').textContent = '';
+                    
+                    // Update calendar selection if available
+                    if (calendar) {
+                        const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000);
+                        calendar.unselect();
+                        calendar.select(selectedDateTime, endTime);
+                    }
+                }
+            });
+        }
     }
 
     fetchBookings().then(bookings => {
@@ -1663,9 +1764,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     selectedSlot = start;
                     const aikaTxt = start.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                         ', klo ' + start.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+                    
+                    // Update selected time section and show service selection
+                    updateSelectedTimeDropdown(start, bookings);
+                    showServiceSelection();
+                    
                     document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
                     document.getElementById('aika').value = aikaTxt;
-                    document.getElementById('bookingForm').style.display = '';
                     document.getElementById('error').textContent = '';
                 } else if (count >= 2) {
                     if (calendar) calendar.unselect();
@@ -1726,6 +1831,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 populateAvailableSlots(calendar, bookings);
                 // Setup dropdown event listener
                 setupDropdownEventListener();
+                // Setup selected time event listener
+                setupSelectedTimeEventListener();
+                // Setup service selection
+                setupServiceSelection();
             }, 100); // Small delay to ensure calendar is fully rendered
         }
         
@@ -1766,9 +1875,13 @@ document.addEventListener('DOMContentLoaded', function () {
                             selectedSlot = selectedDateTime;
                             const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                                 ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+                            
+                            // Update selected time section and show service selection
+                            updateSelectedTimeDropdown(selectedDateTime, []);
+                            showServiceSelection();
+                            
                             document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
                             document.getElementById('aika').value = aikaTxt;
-                            document.getElementById('bookingForm').style.display = '';
                             document.getElementById('error').textContent = '';
                         }
                     });
@@ -1798,6 +1911,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 
                 // Setup dropdown event listener for fallback case
                 setupDropdownEventListener();
+                // Setup selected time event listener for fallback case
+                setupSelectedTimeEventListener();
+                // Setup service selection for fallback case
+                setupServiceSelection();
             }
         }, 1000); // Wait 1 second for FullCalendar to load
         
