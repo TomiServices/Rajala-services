@@ -1755,7 +1755,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Enhanced Fallback: Improved detection with retry mechanism
         let fallbackCheckAttempts = 0;
         const maxFallbackAttempts = 10; // Check up to 10 times
-        const fallbackCheckInterval = 300; // Check every 300ms (total: 3 seconds max)
+        const fallbackCheckInterval = 3000; // Check every 300ms (total: 3 seconds max)
         
         function checkForFullCalendarFailure() {
             fallbackCheckAttempts++;
