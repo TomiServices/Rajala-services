@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>FullCalendar Detection Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .pass { background-color: #d4edda; border-color: #c3e6cb; }
+        .fail { background-color: #f8d7da; border-color: #f5c6cb; }
+        #calendar { min-height: 200px; border: 1px solid #ccc; padding: 10px; }
+        #mock-calendar { display: none; border: 1px solid #ddd; padding: 20px; }
+    </style>
+</head>
+<body>
+    <h1>FullCalendar Detection Logic Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: FullCalendar Available (Simulated)</h2>
+        <div id="test1-result">Testing...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: FullCalendar Not Available</h2>
+        <div id="test2-result">Testing...</div>
+    </div>
+    
+    <div id="calendar"></div>
+    <div id="mock-calendar">Mock Calendar (Fallback)</div>
+    
+    <script>
+        // Test 1: Simulate FullCalendar being available
+        function test1_FullCalendarAvailable() {
+            // Simulate FullCalendar global
+            window.FullCalendar = {
+                Calendar: function(el, options) {
+                    this.render = function() {
+                        // Simulate successful rendering by adding FC classes
+                        el.classList.add('fc');
+                        el.innerHTML = '<div class="fc-view">Mock FullCalendar Content</div>';
+                    };
+                }
+            };
+            
+            const calendarEl = document.getElementById('calendar');
+            const mockCalendar = document.getElementById('mock-calendar');
+            
+            let calendar = null;
+            let fallbackTriggered = false;
+            
+            try {
+                calendar = new FullCalendar.Calendar(calendarEl, {});
+                calendar.render();
+                console.log('Test 1: FullCalendar render() called successfully');
+            } catch (error) {
+                console.log('Test 1: FullCalendar failed to initialize:', error);
+                calendar = null;
+            }
+            
+            // Our improved fallback detection logic
+            let fallbackCheckAttempts = 0;
+            const maxFallbackAttempts = 5;
+            
+            function checkForFallback() {
+                fallbackCheckAttempts++;
+                
+                const hasCalendarObject = calendar !== null;
+                const hasCalendarContent = calendarEl && calendarEl.querySelector('.fc');
+                const hasCalendarClasses = calendarEl && calendarEl.classList.contains('fc');
+                const isCalendarRendered = hasCalendarObject && (hasCalendarContent || hasCalendarClasses);
+                
+                if (!isCalendarRendered && fallbackCheckAttempts < maxFallbackAttempts) {
+                    setTimeout(checkForFallback, 100); // Faster for testing
+                    return;
+                }
+                
+                if (!isCalendarRendered) {
+                    console.log('Test 1: FullCalendar failed to load, showing mock calendar');
+                    mockCalendar.style.display = 'block';
+                    fallbackTriggered = true;
+                } else {
+                    console.log('Test 1: FullCalendar loaded successfully');
+                    mockCalendar.style.display = 'none';
+                }
+                
+                // Report test result
+                const resultEl = document.getElementById('test1-result');
+                if (!fallbackTriggered && isCalendarRendered) {
+                    resultEl.textContent = 'PASS: FullCalendar detected as available, fallback not triggered';
+                    resultEl.parentElement.classList.add('pass');
+                } else {
+                    resultEl.textContent = 'FAIL: Fallback triggered when FullCalendar should be available';
+                    resultEl.parentElement.classList.add('fail');
+                }
+                
+                // Clean up for test 2
+                calendarEl.innerHTML = '';
+                calendarEl.classList.remove('fc');
+                mockCalendar.style.display = 'none';
+                delete window.FullCalendar;
+                
+                // Run test 2
+                setTimeout(test2_FullCalendarNotAvailable, 100);
+            }
+            
+            setTimeout(checkForFallback, 100);
+        }
+        
+        // Test 2: FullCalendar not available
+        function test2_FullCalendarNotAvailable() {
+            const calendarEl = document.getElementById('calendar');
+            const mockCalendar = document.getElementById('mock-calendar');
+            
+            let calendar = null;
+            let fallbackTriggered = false;
+            
+            try {
+                // This should fail since FullCalendar is not defined
+                calendar = new FullCalendar.Calendar(calendarEl, {});
+                calendar.render();
+                console.log('Test 2: FullCalendar render() called successfully');
+            } catch (error) {
+                console.log('Test 2: FullCalendar failed to initialize:', error);
+                calendar = null;
+            }
+            
+            // Our improved fallback detection logic
+            let fallbackCheckAttempts = 0;
+            const maxFallbackAttempts = 5;
+            
+            function checkForFallback() {
+                fallbackCheckAttempts++;
+                
+                const hasCalendarObject = calendar !== null;
+                const hasCalendarContent = calendarEl && calendarEl.querySelector('.fc');
+                const hasCalendarClasses = calendarEl && calendarEl.classList.contains('fc');
+                const isCalendarRendered = hasCalendarObject && (hasCalendarContent || hasCalendarClasses);
+                
+                if (!isCalendarRendered && fallbackCheckAttempts < maxFallbackAttempts) {
+                    setTimeout(checkForFallback, 100);
+                    return;
+                }
+                
+                if (!isCalendarRendered) {
+                    console.log('Test 2: FullCalendar failed to load, showing mock calendar');
+                    mockCalendar.style.display = 'block';
+                    fallbackTriggered = true;
+                } else {
+                    console.log('Test 2: FullCalendar loaded successfully');
+                    mockCalendar.style.display = 'none';
+                }
+                
+                // Report test result
+                const resultEl = document.getElementById('test2-result');
+                if (fallbackTriggered && !isCalendarRendered) {
+                    resultEl.textContent = 'PASS: FullCalendar not available, fallback correctly triggered';
+                    resultEl.parentElement.classList.add('pass');
+                } else {
+                    resultEl.textContent = 'FAIL: Fallback not triggered when FullCalendar unavailable';
+                    resultEl.parentElement.classList.add('fail');
+                }
+            }
+            
+            setTimeout(checkForFallback, 100);
+        }
+        
+        // Start tests
+        document.addEventListener('DOMContentLoaded', function() {
+            test1_FullCalendarAvailable();
+        });
+    </script>
+</body>
+</html>

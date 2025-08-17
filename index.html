@@ -1082,7 +1082,7 @@
             </div>
         </div>
     </footer>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
 <script type="module">
 // NOTE: No Firebase config in HTML for security. Use server endpoints instead.
 
@@ -1753,15 +1753,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         
         if (calendar) {
-            calendar.render();
-            // Navigate to week with next available booking slot
-            setTimeout(() => {
-                findAndNavigateToNextAvailableWeek(calendar, bookings);
-                // Populate available slots for the current week
-                populateAvailableSlots(calendar, bookings);
-                // Setup dropdown event listener
-                setupDropdownEventListener();
-            }, 100); // Small delay to ensure calendar is fully rendered
+            try {
+                calendar.render();
+                console.log('FullCalendar render() called successfully');
+                // Navigate to week with next available booking slot
+                setTimeout(() => {
+                    findAndNavigateToNextAvailableWeek(calendar, bookings);
+                    // Populate available slots for the current week
+                    populateAvailableSlots(calendar, bookings);
+                    // Setup dropdown event listener
+                    setupDropdownEventListener();
+                }, 100); // Small delay to ensure calendar is fully rendered
+            } catch (renderError) {
+                console.log('FullCalendar render failed:', renderError);
+                calendar = null;
+            }
         }
         
         } catch (error) {
@@ -1770,20 +1776,43 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         
         // Fallback: If FullCalendar doesn't load (CDN blocked), show mock calendar
-        setTimeout(() => {
+        // Use a more robust detection method with multiple checks
+        let fallbackCheckAttempts = 0;
+        const maxFallbackAttempts = 5;
+        
+        function checkForFallback() {
+            fallbackCheckAttempts++;
             const calendarEl = document.getElementById('calendar');
             const mockCalendar = document.getElementById('mock-calendar');
             
-            // Check if FullCalendar actually rendered content or if it failed to initialize
-            if (!calendar || !calendarEl.innerHTML.trim() || calendarEl.children.length === 0) {
-                console.log('FullCalendar failed to load, showing mock calendar for testing');
+            // More robust checks for FullCalendar initialization
+            const hasCalendarObject = calendar !== null;
+            const hasCalendarContent = calendarEl && calendarEl.querySelector('.fc');
+            const hasCalendarClasses = calendarEl && calendarEl.classList.contains('fc');
+            const isCalendarRendered = hasCalendarObject && (hasCalendarContent || hasCalendarClasses);
+            
+            if (!isCalendarRendered && fallbackCheckAttempts < maxFallbackAttempts) {
+                // Not ready yet, check again
+                setTimeout(checkForFallback, 500);
+                return;
+            }
+            
+            if (!isCalendarRendered) {
+                console.log('FullCalendar failed to load after multiple attempts, showing mock calendar for testing');
                 mockCalendar.style.display = 'block';
                 
                 // The mock calendar click handlers are already set up by initializeMockCalendarAndDropdowns()
                 // No need to add duplicate handlers here - just ensure dropdown setup is called
                 setupDropdownEventListener();
+            } else {
+                console.log('FullCalendar loaded successfully');
+                // Ensure mock calendar is hidden if FullCalendar loaded
+                mockCalendar.style.display = 'none';
             }
-        }, 1000); // Wait 1 second for FullCalendar to load
+        }
+        
+        // Start checking after initial render attempt
+        setTimeout(checkForFallback, 500);
         
         // Mobile modal event listeners
         document.getElementById('mobileTimeCancel').addEventListener('click', hideMobileTimeModal);
