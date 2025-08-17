@@ -1270,9 +1270,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Update calendar selection (if calendar exists)
                     if (window.calendar) {
                         const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000);
-                        window.calendar.unselect();
-                        window.calendar.select(selectedDateTime, endTime);
-                    }
+                        if (window.calendar && typeof window.calendar.unselect === 'function') {
+    window.calendar.unselect();
+}
                 }
             });
         }
