@@ -1552,6 +1552,38 @@ document.addEventListener('DOMContentLoaded', function () {
         return null;
     }
 
+    // Generate weekday time slots for FullCalendar events
+    function getWeekdaySlots(startDate, numberOfDays) {
+        const slots = [];
+        const currentDate = new Date(startDate);
+        
+        for (let day = 0; day < numberOfDays; day++) {
+            const dayOfWeek = currentDate.getDay();
+            
+            // Only generate slots for weekdays (Monday = 1, Friday = 5)
+            if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+                // Generate hourly slots from 9:00 to 17:00 (8 slots per day)
+                for (let hour = 9; hour < 17; hour++) {
+                    const slotStart = new Date(currentDate);
+                    slotStart.setHours(hour, 0, 0, 0);
+                    
+                    const slotEnd = new Date(currentDate);
+                    slotEnd.setHours(hour + 1, 0, 0, 0);
+                    
+                    slots.push({
+                        start: slotStart,
+                        end: slotEnd
+                    });
+                }
+            }
+            
+            // Move to next day
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+        
+        return slots;
+    }
+
     fetchBookings().then(bookings => {
         function isSlotBooked(slot) {
             return bookings.some(b => b.aika === slot.start.toISOString());
