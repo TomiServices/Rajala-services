@@ -6,7 +6,7 @@
     <title>FIXNERO</title>
     <link rel="preload" href="FXNR.png" as="image">
     <!-- FullCalendar CSS for booking -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
     <!-- Google reCAPTCHA v2 -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
@@ -927,73 +927,44 @@
       <!-- Mock calendar for testing when FullCalendar CDN is blocked -->
       <div id="mock-calendar" style="display: none; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 8px;">
         <p style="text-align: center; color: #666; margin-bottom: 15px;">
-          <strong>Monthly Calendar View</strong> (FullCalendar CDN blocked - using fallback for testing)
+          <strong>Test Calendar with Weekend Enhancement</strong> (FullCalendar CDN blocked - using fallback for testing)
         </p>
-        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; text-align: center; border: 1px solid #ddd;">
-          <!-- Day headers -->
-          <div style="font-weight: bold; padding: 8px; background: #f0f0f0; color: #999999; border-right: 1px solid #ddd;">Su</div>
-          <div style="font-weight: bold; padding: 8px; background: #f0f0f0; border-right: 1px solid #ddd;">Ma</div>
-          <div style="font-weight: bold; padding: 8px; background: #f0f0f0; border-right: 1px solid #ddd;">Ti</div>
-          <div style="font-weight: bold; padding: 8px; background: #f0f0f0; border-right: 1px solid #ddd;">Ke</div>
-          <div style="font-weight: bold; padding: 8px; background: #f0f0f0; border-right: 1px solid #ddd;">To</div>
-          <div style="font-weight: bold; padding: 8px; background: #f0f0f0; border-right: 1px solid #ddd;">Pe</div>
-          <div style="font-weight: bold; padding: 8px; background: #f0f0f0; color: #999999;">La</div>
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; text-align: center;">
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0; color: #999999;">Su</div>
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ma</div>
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ti</div>
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ke</div>
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">To</div>
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Pe</div>
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0; color: #999999;">La</div>
           
-          <!-- Week 1 -->
-          <div style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; background: #f0f0f0; color: #999999; opacity: 0.7;">1</div>
-          <div class="mock-slot" data-date="2024-12-02" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">2</div>
-          <div class="mock-slot" data-date="2024-12-03" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">3</div>
-          <div class="mock-slot" data-date="2024-12-04" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">4</div>
-          <div class="mock-slot" data-date="2024-12-05" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">5</div>
-          <div class="mock-slot" data-date="2024-12-06" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">6</div>
-          <div style="padding: 30px 8px; border-bottom: 1px solid #ddd; background: #f0f0f0; color: #999999; opacity: 0.7;">7</div>
+          <!-- Weekend slots (disabled) -->
+          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">9:00</div>
+          <div class="mock-slot" data-time="09:00" data-date="2024-12-02" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
+          <div class="mock-slot" data-time="09:00" data-date="2024-12-03" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
+          <div class="mock-slot" data-time="09:00" data-date="2024-12-04" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
+          <div class="mock-slot" data-time="09:00" data-date="2024-12-05" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
+          <div class="mock-slot" data-time="09:00" data-date="2024-12-06" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
+          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">9:00</div>
           
-          <!-- Week 2 -->
-          <div style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; background: #f0f0f0; color: #999999; opacity: 0.7;">8</div>
-          <div class="mock-slot" data-date="2024-12-09" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">9</div>
-          <div class="mock-slot" data-date="2024-12-10" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">10</div>
-          <div class="mock-slot" data-date="2024-12-11" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">11</div>
-          <div class="mock-slot" data-date="2024-12-12" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">12</div>
-          <div class="mock-slot" data-date="2024-12-13" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">13</div>
-          <div style="padding: 30px 8px; border-bottom: 1px solid #ddd; background: #f0f0f0; color: #999999; opacity: 0.7;">14</div>
-          
-          <!-- Week 3 -->
-          <div style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; background: #f0f0f0; color: #999999; opacity: 0.7;">15</div>
-          <div class="mock-slot" data-date="2024-12-16" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">16</div>
-          <div class="mock-slot" data-date="2024-12-17" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">17</div>
-          <div class="mock-slot" data-date="2024-12-18" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">18</div>
-          <div class="mock-slot" data-date="2024-12-19" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">19</div>
-          <div class="mock-slot" data-date="2024-12-20" style="padding: 30px 8px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; cursor: pointer; background: white;">20</div>
-          <div style="padding: 30px 8px; border-bottom: 1px solid #ddd; background: #f0f0f0; color: #999999; opacity: 0.7;">21</div>
-          
-          <!-- Week 4 -->
-          <div style="padding: 30px 8px; border-right: 1px solid #ddd; background: #f0f0f0; color: #999999; opacity: 0.7;">22</div>
-          <div class="mock-slot" data-date="2024-12-23" style="padding: 30px 8px; border-right: 1px solid #ddd; cursor: pointer; background: white;">23</div>
-          <div class="mock-slot" data-date="2024-12-24" style="padding: 30px 8px; border-right: 1px solid #ddd; cursor: pointer; background: white;">24</div>
-          <div class="mock-slot" data-date="2024-12-25" style="padding: 30px 8px; border-right: 1px solid #ddd; cursor: pointer; background: white;">25</div>
-          <div class="mock-slot" data-date="2024-12-26" style="padding: 30px 8px; border-right: 1px solid #ddd; cursor: pointer; background: white;">26</div>
-          <div class="mock-slot" data-date="2024-12-27" style="padding: 30px 8px; border-right: 1px solid #ddd; cursor: pointer; background: white;">27</div>
-          <div style="padding: 30px 8px; background: #f0f0f0; color: #999999; opacity: 0.7;">28</div>
+          <!-- Weekend slots (disabled) -->
+          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">10:00</div>
+          <div class="mock-slot" data-time="10:00" data-date="2024-12-02" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
+          <div class="mock-slot" data-time="10:00" data-date="2024-12-03" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
+          <div class="mock-slot" data-time="10:00" data-date="2024-12-04" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
+          <div class="mock-slot" data-time="10:00" data-date="2024-12-05" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
+          <div class="mock-slot" data-time="10:00" data-date="2024-12-06" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
+          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">10:00</div>
         </div>
         <p style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: #666;">
           Weekdays (white) are available for booking. Weekends (light gray) are disabled.
-          <br>Click any weekday to select available time slots for that day
+          <br>Click any weekday time slot to test selection (Desktop) or tap for mobile modal
         </p>
       </div>
       <div id="slot-summary"></div>
       
-      <!-- Available Time Slots Dropdown - Now first in flow -->
-      <div id="availableSlots" class="available-slots-section" style="display:none;">
-        <div class="available-slots-dropdown">
-          <label for="availableTimesSelect" id="availableTimesLabel">Valitse aika valitulle päivälle:</label>
-          <select id="availableTimesSelect" class="available-times-select">
-            <option value="">Valitse aika...</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Service Selection Dropdown - Now second in flow -->
-      <div id="serviceSelection" class="available-slots-section" style="display:none;">
+      <!-- Service Selection Dropdown -->
+      <div id="serviceSelection" class="available-slots-section" style="display:block;">
         <div class="available-slots-dropdown">
           <label for="serviceSelect">Valitse haluamasi palvelu:</label>
           <select id="serviceSelect" class="available-times-select">
@@ -1006,12 +977,31 @@
         </div>
       </div>
 
-      <!-- Task Selection Dropdown - Now third in flow -->
+      <!-- Task Selection Dropdown -->
       <div id="taskSelection" class="available-slots-section" style="display:none;">
         <div class="available-slots-dropdown">
           <label for="taskSelect">Valitse palvelun tyyppi:</label>
           <select id="taskSelect" class="available-times-select">
             <option value="">Valitse tyyppi...</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Available Time Slots Dropdown -->
+      <div id="availableSlots" class="available-slots-section" style="display:none;">
+        <div class="available-slots-dropdown">
+          <label for="availableTimesSelect">Saatavilla olevat ajat tällä viikolla:</label>
+          <select id="availableTimesSelect" class="available-times-select">
+            <option value="">Valitse aika...</option>
+            <!-- Demo available slots -->
+            <option value="Ma 2. 9:00">Ma 2. 9:00</option>
+            <option value="Ma 2. 10:00">Ma 2. 10:00</option>
+            <option value="Ma 2. 11:00">Ma 2. 11:00</option>
+            <option value="Ti 3. 9:00">Ti 3. 9:00</option>
+            <option value="Ti 3. 10:00">Ti 3. 10:00</option>
+            <option value="Ke 4. 9:00">Ke 4. 9:00</option>
+            <option value="Ke 4. 15:00">Ke 4. 15:00</option>
+            <option value="To 5. 14:00">To 5. 14:00</option>
           </select>
         </div>
       </div>
@@ -1082,7 +1072,7 @@
             </div>
         </div>
     </footer>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 <script type="module">
 // NOTE: No Firebase config in HTML for security. Use server endpoints instead.
 
@@ -1093,24 +1083,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // FIXED: Fetch bookings from your backend Firebase Function
     async function fetchBookings() {
-        try {
-            const response = await fetch('https://us-central1-fxnr-web.cloudfunctions.net/bookings');
-            return response.ok ? await response.json() : [];
-        } catch (error) {
-            // Fallback mock data for testing when external APIs are blocked
-            console.log('Using fallback mock data for testing');
-            return [
-                { aika: '2024-12-06T10:00:00.000Z' },
-                { aika: '2024-12-06T14:00:00.000Z' },
-                { aika: '2024-12-07T11:00:00.000Z' },
-                { aika: '2024-12-09T15:00:00.000Z' }
-            ];
-        }
-    }
-
-    // Helper functions for date handling
-    function getDateKey(date) {
-        return date.toISOString().split('T')[0];
+        const response = await fetch('https://us-central1-fxnr-web.cloudfunctions.net/bookings');
+        return response.ok ? await response.json() : [];
     }
 
     // Mobile device detection utility - enhanced for better mobile/touch detection
@@ -1133,6 +1107,93 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedMobileDate = null;
     let selectedMobileTime = null;
     let isMobile = isMobileDevice();
+
+    // Mobile time selection modal functions
+    function showMobileTimeModal(dateStr, dayName, bookings) {
+        const modal = document.getElementById('mobileTimeModal');
+        const dateHeader = document.getElementById('mobileSelectedDate');
+        const slotsContainer = document.getElementById('mobileTimeSlots');
+        
+        selectedMobileDate = dateStr;
+        const formattedDate = new Date(dateStr).toLocaleDateString('fi-FI', { 
+            weekday: 'long', 
+            day: 'numeric', 
+            month: 'numeric' 
+        });
+        dateHeader.textContent = `Valitse aika - ${formattedDate}`;
+        
+        // Generate time slots for the selected date
+        slotsContainer.innerHTML = '';
+        const dayBookings = bookings.filter(b => {
+            const bookingDate = new Date(b.aika);
+            const selectedDate = new Date(dateStr);
+            return bookingDate.toDateString() === selectedDate.toDateString();
+        });
+        
+        // Generate available time slots (9-17)
+        for (let hour = 9; hour < 17; hour++) {
+            const isBooked = dayBookings.some(b => {
+                const bookingHour = new Date(b.aika).getHours();
+                return bookingHour === hour;
+            });
+            
+            const slotEl = document.createElement('div');
+            slotEl.className = `mobile-time-slot ${isBooked ? 'booked' : ''}`;
+            slotEl.textContent = `${hour}:00`;
+            slotEl.dataset.hour = hour;
+            
+            if (!isBooked) {
+                slotEl.addEventListener('click', function() {
+                    // Remove previous selection
+                    slotsContainer.querySelectorAll('.mobile-time-slot.selected').forEach(el => {
+                        el.classList.remove('selected');
+                    });
+                    // Select this slot
+                    this.classList.add('selected');
+                    selectedMobileTime = hour;
+                    document.getElementById('mobileTimeConfirm').disabled = false;
+                });
+            } else {
+                slotEl.title = 'Tämä aika on jo varattu';
+            }
+            
+            slotsContainer.appendChild(slotEl);
+        }
+        
+        modal.classList.add('active');
+    }
+    
+    function hideMobileTimeModal() {
+        const modal = document.getElementById('mobileTimeModal');
+        modal.classList.remove('active');
+        selectedMobileDate = null;
+        selectedMobileTime = null;
+        document.getElementById('mobileTimeConfirm').disabled = true;
+    }
+    
+    function getDateKey(date) {
+        return date.toISOString().split('T')[0];
+    }
+    function getWeekdaySlots(startDate, days = 30) {
+        const slots = [];
+        let d = new Date(startDate);
+        d.setHours(9, 0, 0, 0);
+        for (let i = 0; i < days; i++) {
+            if (d.getDay() >= 1 && d.getDay() <= 5) {
+                for (let h = 9; h < 17; h++) {
+                    let slot = new Date(d);
+                    slot.setHours(h, 0, 0, 0);
+                    slots.push({
+                        start: new Date(slot),
+                        end: new Date(slot.getTime() + 60 * 60 * 1000)
+                    });
+                }
+            }
+            d.setDate(d.getDate() + 1);
+            d.setHours(9, 0, 0, 0);
+        }
+        return slots;
+    }
 
     // Mobile time selection modal functions (moved outside fetchBookings for global access)
     function showMobileTimeModal(dateStr, dayName, bookings) {
@@ -1165,7 +1226,7 @@ document.addEventListener('DOMContentLoaded', function () {
             
             const slotEl = document.createElement('div');
             slotEl.className = `mobile-time-slot ${isBooked ? 'booked' : ''}`;
-            slotEl.textContent = isBooked ? `${hour}:00 (Varattu)` : `${hour}:00`;
+            slotEl.textContent = `${hour}:00`;
             slotEl.dataset.hour = hour;
             
             if (!isBooked) {
@@ -1196,137 +1257,19 @@ document.addEventListener('DOMContentLoaded', function () {
         selectedMobileTime = null;
         document.getElementById('mobileTimeConfirm').disabled = true;
     }
-
-    // Function to populate time slots for a specific selected date
-    function populateTimeSlotsForDate(selectedDate, bookings) {
-        const slotsSection = document.getElementById('availableSlots');
-        const selectElement = document.getElementById('availableTimesSelect');
-        const labelElement = document.getElementById('availableTimesLabel');
-        
-        if (!selectElement) return;
-        
-        // Format the selected date for display
-        const formattedDate = selectedDate.toLocaleDateString('fi-FI', { 
-            weekday: 'long', 
-            day: 'numeric', 
-            month: 'numeric' 
-        });
-        
-        // Update label to show selected date
-        labelElement.textContent = `Valitse aika - ${formattedDate}:`;
-        
-        // Clear existing options
-        selectElement.innerHTML = '<option value="">Valitse aika...</option>';
-        
-        // Get bookings for the selected date
-        const dateKey = getDateKey(selectedDate);
-        const dayBookings = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey);
-        
-        let hasAvailableSlots = false;
-        
-        // Generate time slots for the day (9-17)
-        for (let hour = 9; hour < 17; hour++) {
-            const isBooked = dayBookings.some(b => {
-                const bookingHour = new Date(b.aika).getHours();
-                return bookingHour === hour;
-            });
-            
-            const timeSlot = new Date(selectedDate);
-            timeSlot.setHours(hour, 0, 0, 0);
-            
-            let slotText = `${hour}:00`;
-            if (isBooked) {
-                slotText += ' (Varattu)';
-            } else {
-                hasAvailableSlots = true;
-            }
-            
-            const option = document.createElement('option');
-            option.value = slotText;
-            option.textContent = slotText;
-            option.dataset.date = timeSlot.toISOString();
-            option.dataset.hour = hour;
-            option.disabled = isBooked;
-            
-            selectElement.appendChild(option);
-        }
-        
-        // Show the time slots section
-        slotsSection.style.display = 'block';
-        
-        return hasAvailableSlots;
-    }
-
-    // Updated dropdown event handler for time selection
-    function setupDropdownEventListener() {
-        const selectElement = document.getElementById('availableTimesSelect');
-        if (selectElement) {
-            selectElement.addEventListener('change', function() {
-                const selectedValue = this.value;
-                if (selectedValue && !this.options[this.selectedIndex].disabled) {
-                    const selectedOption = this.options[this.selectedIndex];
-                    const selectedDate = new Date(selectedOption.dataset.date);
-                    const selectedHour = parseInt(selectedOption.dataset.hour);
-                    
-                    const selectedDateTime = new Date(selectedDate);
-                    selectedDateTime.setHours(selectedHour, 0, 0, 0);
-                    
-                    // Update the label to show selected time in required format
-                    const day = selectedDateTime.getDate();
-                    const month = selectedDateTime.getMonth() + 1;
-                    const hour = selectedDateTime.getHours();
-                    const minute = selectedDateTime.getMinutes();
-                    
-                    const labelElement = document.getElementById('availableTimesLabel');
-                    labelElement.textContent = `Valittu aika: ${day}.${month.toString().padStart(2, '0')} ${hour}:${minute.toString().padStart(2, '0')}`;
-                    
-                    // Show service selection dropdown
-                    const serviceSelection = document.getElementById('serviceSelection');
-                    serviceSelection.style.display = 'block';
-                    
-                    // Update calendar selection (if calendar exists)
-                    if (calendar && typeof calendar.unselect === 'function') {
-                        const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000);
-                        calendar.unselect();
-                        calendar.select(selectedDateTime, endTime);
-                    }
-                }
-            });
-        }
-    }
     
     function confirmMobileTimeSelection(calendar) {
         if (selectedMobileDate && selectedMobileTime !== null) {
             const selectedDateTime = new Date(selectedMobileDate);
             selectedDateTime.setHours(selectedMobileTime, 0, 0, 0);
             
-            // Update the time dropdown to show selected time
-            const selectElement = document.getElementById('availableTimesSelect');
-            const labelElement = document.getElementById('availableTimesLabel');
-            
-            // Format time for display
-            const day = selectedDateTime.getDate();
-            const month = selectedDateTime.getMonth() + 1;
-            const hour = selectedDateTime.getHours();
-            const minute = selectedDateTime.getMinutes();
-            
-            labelElement.textContent = `Valittu aika: ${day}.${month.toString().padStart(2, '0')} ${hour}:${minute.toString().padStart(2, '0')}`;
-            
-            // Update the time dropdown with the selected value
-            selectElement.innerHTML = '<option value="">Valitse aika...</option>';
-            const option = document.createElement('option');
-            option.value = `${hour}:00`;
-            option.textContent = `${hour}:00`;
-            option.dataset.date = selectedDateTime.toISOString();
-            option.dataset.hour = hour;
-            option.selected = true;
-            selectElement.appendChild(option);
-            
-            // Show the time dropdown and service selection
-            document.getElementById('availableSlots').style.display = 'block';
-            document.getElementById('serviceSelection').style.display = 'block';
-            
-            // Clear any errors
+            // Use the existing calendar selection logic
+            selectedSlot = selectedDateTime;
+            const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
+                ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+            document.getElementById('aika').value = aikaTxt;
+            document.getElementById('bookingForm').style.display = '';
             document.getElementById('error').textContent = '';
             
             // Critical fix for issue #3: Always hide the modal to ensure auto-close
@@ -1343,44 +1286,116 @@ document.addEventListener('DOMContentLoaded', function () {
         return false; // Indicate failed confirmation
     }
 
-    // Initialize mock calendar connection and setup event listeners
-    function initializeMockCalendarAndDropdowns() {
-        // Get mock bookings for testing
-        fetchBookings().then(bookings => {
-            // Connect mock calendar slots to our time selection function
-            const mockSlots = document.querySelectorAll('.mock-slot[data-date]');
-            mockSlots.forEach(slot => {
-                slot.addEventListener('click', function() {
-                    const dateStr = this.dataset.date;
-                    const selectedDate = new Date(dateStr);
-                    
-                    // Check if it's a weekday
-                    const dayOfWeek = selectedDate.getDay();
-                    if (dayOfWeek >= 1 && dayOfWeek <= 5) {
-                        // Show time slots for the selected date
-                        const hasAvailableSlots = populateTimeSlotsForDate(selectedDate, bookings);
-                        
-                        if (hasAvailableSlots) {
-                            document.getElementById('error').textContent = '';
-                        } else {
-                            document.getElementById('error').textContent = 'Valitulle päivälle ei ole vapaita aikoja saatavilla.';
-                        }
-                        
-                        // Scroll to the dropdowns
-                        document.getElementById('availableSlots').scrollIntoView({ behavior: 'smooth' });
-                    } else {
-                        document.getElementById('error').textContent = 'Valitse arkipäivä (maanantai-perjantai)!';
-                    }
+    // Available Slots Dropdown Functions
+    function populateAvailableSlots(calendar, bookings) {
+        const slotsSection = document.getElementById('availableSlots');
+        const selectElement = document.getElementById('availableTimesSelect');
+        
+        if (!calendar || !selectElement) return;
+        
+        // Get current week's start and end dates
+        const currentDate = calendar.getDate();
+        const startOfWeek = new Date(currentDate);
+        startOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + 1); // Monday
+        
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 4); // Friday
+        
+        // Clear existing options except the first one
+        selectElement.innerHTML = '<option value="">Valitse aika...</option>';
+        let hasAvailableSlots = false;
+        
+        // Generate available slots for the current week (Mon-Fri)
+        for (let dayOffset = 0; dayOffset < 5; dayOffset++) {
+            const date = new Date(startOfWeek);
+            date.setDate(startOfWeek.getDate() + dayOffset);
+            
+            const dateKey = getDateKey(date);
+            const dayBookings = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey);
+            
+            // Generate time slots for this day (9-17)
+            for (let hour = 9; hour < 17; hour++) {
+                const isBooked = dayBookings.some(b => {
+                    const bookingHour = new Date(b.aika).getHours();
+                    return bookingHour === hour;
                 });
+                
+                if (!isBooked) {
+                    hasAvailableSlots = true;
+                    const dayName = date.toLocaleDateString('fi-FI', { weekday: 'short' });
+                    const dayDate = date.getDate();
+                    const slotText = `${dayName} ${dayDate}. ${hour}:00`;
+                    
+                    const option = document.createElement('option');
+                    option.value = slotText;
+                    option.textContent = slotText;
+                    option.dataset.date = date.toISOString();
+                    option.dataset.hour = hour;
+                    
+                    selectElement.appendChild(option);
+                }
+            }
+        }
+        
+        // Show/hide the slots section based on availability
+        if (hasAvailableSlots) {
+            slotsSection.style.display = 'block';
+        } else {
+            slotsSection.style.display = 'none';
+        }
+    }
+
+    // Dropdown event handler for time selection
+    function setupDropdownEventListener() {
+        const selectElement = document.getElementById('availableTimesSelect');
+        if (selectElement) {
+            selectElement.addEventListener('change', function() {
+                const selectedValue = this.value;
+                if (selectedValue) {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const selectedDate = new Date(selectedOption.dataset.date);
+                    const selectedHour = parseInt(selectedOption.dataset.hour);
+                    
+                    const selectedDateTime = new Date(selectedDate);
+                    selectedDateTime.setHours(selectedHour, 0, 0, 0);
+                    
+                    // Get selected service and task
+                    const serviceSelect = document.getElementById('serviceSelect');
+                    const taskSelect = document.getElementById('taskSelect');
+                    const selectedService = serviceSelect.value;
+                    const selectedTask = taskSelect.value;
+                    
+                    // Update the calendar and form
+                    selectedSlot = selectedDateTime;
+                    const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
+                        ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+                    
+                    // Get service and task names for display
+                    let serviceInfo = '';
+                    if (selectedService && serviceData[selectedService] && selectedTask) {
+                        const serviceObj = serviceData[selectedService];
+                        const taskObj = serviceObj.tasks.find(task => task.id === selectedTask);
+                        if (taskObj) {
+                            serviceInfo = `\nPalvelu: ${serviceObj.name} - ${taskObj.name}: ${taskObj.price}`;
+                        }
+                    }
+                    
+                    document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt + serviceInfo;
+                    document.getElementById('aika').value = aikaTxt;
+                    document.getElementById('service').value = selectedService;
+                    document.getElementById('task').value = selectedTask;
+                    document.getElementById('bookingForm').style.display = '';
+                    document.getElementById('error').textContent = '';
+                    
+                    // Update calendar selection
+                    if (calendar) {
+                        const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000);
+                        calendar.unselect();
+                        calendar.select(selectedDateTime, endTime);
+                    }
+                }
             });
-            
-            // Setup dropdown event listeners
-            setupDropdownEventListener();
-            
-            console.log('Mock calendar and dropdowns initialized successfully');
-        }).catch(error => {
-            console.error('Error initializing calendar:', error);
-        });
+        }
     }
 
     // Service and task data structure
@@ -1440,7 +1455,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const serviceSelect = document.getElementById('serviceSelect');
         const taskSelection = document.getElementById('taskSelection');
         const taskSelect = document.getElementById('taskSelect');
-        const serviceSelection = document.getElementById('serviceSelection');
+        const availableSlots = document.getElementById('availableSlots');
 
         if (serviceSelect) {
             serviceSelect.addEventListener('change', function() {
@@ -1459,11 +1474,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         taskSelect.appendChild(option);
                     });
                     
-                    // Reset task selection
+                    // Reset task selection and hide time slots
                     taskSelect.value = '';
+                    availableSlots.style.display = 'none';
                 } else {
-                    // Hide task selection
+                    // Hide both task selection and time slots
                     taskSelection.style.display = 'none';
+                    availableSlots.style.display = 'none';
                 }
             });
         }
@@ -1473,71 +1490,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 const selectedTask = this.value;
                 
                 if (selectedTask) {
-                    // Task selected - booking is complete, show booking form
-                    const selectedDateTime = getCurrentSelectedDateTime();
-                    if (selectedDateTime) {
-                        showBookingForm(selectedDateTime);
-                    }
+                    // Show time selection dropdown
+                    availableSlots.style.display = 'block';
                 } else {
-                    // Hide booking form if task is deselected
-                    document.getElementById('bookingForm').style.display = 'none';
+                    // Hide time selection
+                    availableSlots.style.display = 'none';
                 }
             });
         }
     }
 
-    // Helper function to get currently selected date/time
-    function getCurrentSelectedDateTime() {
-        const selectElement = document.getElementById('availableTimesSelect');
-        if (selectElement && selectElement.value) {
-            const selectedOption = selectElement.options[selectElement.selectedIndex];
-            if (selectedOption.dataset.date && selectedOption.dataset.hour) {
-                const selectedDate = new Date(selectedOption.dataset.date);
-                const selectedHour = parseInt(selectedOption.dataset.hour);
-                selectedDate.setHours(selectedHour, 0, 0, 0);
-                return selectedDate;
-            }
-        }
-        return null;
-    }
-
-    // Show booking form with selected time and service info
-    function showBookingForm(selectedDateTime) {
-        const serviceSelect = document.getElementById('serviceSelect');
-        const taskSelect = document.getElementById('taskSelect');
-        
-        const selectedService = serviceSelect.value;
-        const selectedTask = taskSelect.value;
-        
-        if (selectedDateTime && selectedService && selectedTask) {
-            selectedSlot = selectedDateTime;
-            const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
-                ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
-            
-            // Get service and task names for display
-            let serviceInfo = '';
-            if (serviceData[selectedService]) {
-                const serviceObj = serviceData[selectedService];
-                const taskObj = serviceObj.tasks.find(task => task.id === selectedTask);
-                if (taskObj) {
-                    serviceInfo = `\nPalvelu: ${serviceObj.name} - ${taskObj.name}: ${taskObj.price}`;
-                }
-            }
-            
-            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt + serviceInfo;
-            document.getElementById('aika').value = aikaTxt;
-            document.getElementById('service').value = selectedService;
-            document.getElementById('task').value = selectedTask;
-            document.getElementById('bookingForm').style.display = '';
-            document.getElementById('error').textContent = '';
-        }
-    }
-
     // Call setupServiceSelection immediately
     setupServiceSelection();
-
-    // Initialize mock calendar and dropdown functionality
-    initializeMockCalendarAndDropdowns();
 
     // Function to find next available booking slot and navigate to that week
     function findAndNavigateToNextAvailableWeek(calendar, bookings) {
@@ -1585,7 +1549,7 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             // Try to initialize FullCalendar
             calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
+            initialView: 'timeGridWeek',
             locale: 'fi',
             slotMinTime: '09:00:00',
             slotMaxTime: '17:00:00',
@@ -1679,49 +1643,50 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                // Desktop behavior: Show time dropdown for selected date
-                const dayOfWeek = start.getDay();
-                if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Only weekdays
-                    const selectedDate = new Date(start);
-                    selectedDate.setHours(9, 0, 0, 0); // Set to start of business day
-                    
-                    // Populate time slots for the selected date
-                    const hasAvailableSlots = populateTimeSlotsForDate(selectedDate, bookings);
-                    
-                    if (hasAvailableSlots) {
-                        document.getElementById('error').textContent = '';
-                    } else {
-                        document.getElementById('error').textContent = 'Valitulle päivälle ei ole vapaita aikoja saatavilla.';
-                    }
-                    
-                    // Unselect the calendar selection since user hasn't picked a time yet
+                // Desktop behavior: direct selection
+                // Jos pelkkä klikkaus (alku ja loppu sama), tee siitä tunnin slotti
+                if (start.getTime() === end.getTime()) {
+                    end = new Date(start.getTime() + oneHour);
+                }
+                const duration = end - start;
+
+                const dateKey = getDateKey(start);
+                const count = getBookingsCountForDay(start);
+
+                if (
+                    duration === oneHour &&
+                    start.getHours() >= 9 && start.getHours() < 17 &&
+                    start.getDay() >= 1 && start.getDay() <= 5 &&
+                    !isSlotBooked({ start }) &&
+                    count < 2
+                ) {
+                    selectedSlot = start;
+                    const aikaTxt = start.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
+                        ', klo ' + start.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+                    document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+                    document.getElementById('aika').value = aikaTxt;
+                    document.getElementById('bookingForm').style.display = '';
+                    document.getElementById('error').textContent = '';
+                } else if (count >= 2) {
                     if (calendar) calendar.unselect();
+                    document.getElementById('error').textContent = 'Tälle päivälle voi varata enintään 2 aikaa!';
+                    document.getElementById('bookingForm').style.display = 'none';
                 } else {
                     if (calendar) calendar.unselect();
-                    document.getElementById('error').textContent = 'Valitse arkipäivä (maanantai-perjantai)!';
+                    document.getElementById('error').textContent = 'Valitse vapaa 1h aika maanantaista perjantaihin klo 9–17!';
+                    document.getElementById('bookingForm').style.display = 'none';
                 }
             },
             dateClick: function(info) {
-                // Handle day/slot clicks - use same logic as select for consistency
-                const dayOfWeek = info.date.getDay();
-                if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Only weekdays
-                    if (isMobile) {
+                // Handle day/slot clicks on mobile
+                if (isMobile) {
+                    const dayOfWeek = info.date.getDay();
+                    if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Only weekdays
                         const dateStr = info.date.toISOString().split('T')[0];
                         showMobileTimeModal(dateStr, null, bookings);
-                    } else {
-                        // For desktop, trigger the select behavior
-                        const selectedDate = new Date(info.date);
-                        selectedDate.setHours(9, 0, 0, 0);
-                        
-                        const hasAvailableSlots = populateTimeSlotsForDate(selectedDate, bookings);
-                        
-                        if (hasAvailableSlots) {
-                            document.getElementById('error').textContent = '';
-                        } else {
-                            document.getElementById('error').textContent = 'Valitulle päivälle ei ole vapaita aikoja saatavilla.';
-                        }
                     }
                 }
+                // Desktop behavior is handled by the select event
             },
             events: function (fetchInfo, successCallback) {
                 const evs = [];
@@ -1753,21 +1718,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         
         if (calendar) {
-            try {
-                calendar.render();
-                console.log('FullCalendar render() called successfully');
-                // Navigate to week with next available booking slot
-                setTimeout(() => {
-                    findAndNavigateToNextAvailableWeek(calendar, bookings);
-                    // Populate available slots for the current week
-                    populateAvailableSlots(calendar, bookings);
-                    // Setup dropdown event listener
-                    setupDropdownEventListener();
-                }, 100); // Small delay to ensure calendar is fully rendered
-            } catch (renderError) {
-                console.log('FullCalendar render failed:', renderError);
-                calendar = null;
-            }
+            calendar.render();
+            // Navigate to week with next available booking slot
+            setTimeout(() => {
+                findAndNavigateToNextAvailableWeek(calendar, bookings);
+                // Populate available slots for the current week
+                populateAvailableSlots(calendar, bookings);
+                // Setup dropdown event listener
+                setupDropdownEventListener();
+            }, 100); // Small delay to ensure calendar is fully rendered
         }
         
         } catch (error) {
@@ -1776,43 +1735,71 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         
         // Fallback: If FullCalendar doesn't load (CDN blocked), show mock calendar
-        // Use a more robust detection method with multiple checks
-        let fallbackCheckAttempts = 0;
-        const maxFallbackAttempts = 5;
-        
-        function checkForFallback() {
-            fallbackCheckAttempts++;
+        setTimeout(() => {
             const calendarEl = document.getElementById('calendar');
             const mockCalendar = document.getElementById('mock-calendar');
             
-            // More robust checks for FullCalendar initialization
-            const hasCalendarObject = calendar !== null;
-            const hasCalendarContent = calendarEl && calendarEl.querySelector('.fc');
-            const hasCalendarClasses = calendarEl && calendarEl.classList.contains('fc');
-            const isCalendarRendered = hasCalendarObject && (hasCalendarContent || hasCalendarClasses);
-            
-            if (!isCalendarRendered && fallbackCheckAttempts < maxFallbackAttempts) {
-                // Not ready yet, check again
-                setTimeout(checkForFallback, 500);
-                return;
-            }
-            
-            if (!isCalendarRendered) {
-                console.log('FullCalendar failed to load after multiple attempts, showing mock calendar for testing');
+            // Check if FullCalendar actually rendered content or if it failed to initialize
+            if (!calendar || !calendarEl.innerHTML.trim() || calendarEl.children.length === 0) {
+                console.log('FullCalendar failed to load, showing mock calendar for testing');
                 mockCalendar.style.display = 'block';
                 
-                // The mock calendar click handlers are already set up by initializeMockCalendarAndDropdowns()
-                // No need to add duplicate handlers here - just ensure dropdown setup is called
+                // Add click handlers to mock slots
+                document.querySelectorAll('.mock-slot').forEach(slot => {
+                    slot.addEventListener('click', function() {
+                        const time = this.dataset.time;
+                        const date = this.dataset.date;
+                        
+                        // Clear previous selections
+                        document.querySelectorAll('.mock-slot').forEach(s => s.style.background = 'white');
+                        this.style.background = '#007bff';
+                        this.style.color = 'white';
+                        
+                        if (isMobile) {
+                            // Mobile: show time selection modal
+                            const dateObj = new Date(date + 'T' + time);
+                            const dayName = dateObj.toLocaleDateString('fi-FI', { weekday: 'long' });
+                            showMobileTimeModal(date, dayName, []);
+                        } else {
+                            // Desktop: direct selection
+                            const selectedDateTime = new Date(date + 'T' + time);
+                            selectedSlot = selectedDateTime;
+                            const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
+                                ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+                            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+                            document.getElementById('aika').value = aikaTxt;
+                            document.getElementById('bookingForm').style.display = '';
+                            document.getElementById('error').textContent = '';
+                        }
+                    });
+                    
+                    // Enhanced mobile touch handling for mock slots
+                    let mockTouchStarted = false;
+                    let mockTouchStartTime = 0;
+                    
+                    slot.addEventListener('touchstart', function(e) {
+                        mockTouchStarted = true;
+                        mockTouchStartTime = Date.now();
+                        e.preventDefault();
+                    }, { passive: false });
+                    
+                    slot.addEventListener('touchend', function(e) {
+                        const touchDuration = Date.now() - mockTouchStartTime;
+                        
+                        if (mockTouchStarted && touchDuration < 300) {
+                            // Trigger click for mobile
+                            this.click();
+                        }
+                        
+                        mockTouchStarted = false;
+                        e.preventDefault();
+                    }, { passive: false });
+                });
+                
+                // Setup dropdown event listener for fallback case
                 setupDropdownEventListener();
-            } else {
-                console.log('FullCalendar loaded successfully');
-                // Ensure mock calendar is hidden if FullCalendar loaded
-                mockCalendar.style.display = 'none';
             }
-        }
-        
-        // Start checking after initial render attempt
-        setTimeout(checkForFallback, 500);
+        }, 1000); // Wait 1 second for FullCalendar to load
         
         // Mobile modal event listeners
         document.getElementById('mobileTimeCancel').addEventListener('click', hideMobileTimeModal);
