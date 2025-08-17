@@ -962,7 +962,7 @@
         </p>
       </div>
       <!-- FIRST: Time Selection Dropdown -->
-      <div id="timeSelection" class="available-slots-section" style="display:block;">
+      <div id="timeSelection" class="available-slots-section" style="display:none;">
         <div class="available-slots-dropdown">
           <label for="availableTimesSelect" id="timeSelectLabel">Valitse kellonaika:</label>
           <select id="availableTimesSelect" class="available-times-select">
@@ -1270,10 +1270,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                 ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
             
-            // NEW FLOW: Update time dropdown and proceed to service selection
+            // NEW FLOW: Show time dropdown with selected time, then proceed to service selection
+            const timeSelection = document.getElementById('timeSelection');
             const timeSelect = document.getElementById('availableTimesSelect');
             const timeSelectLabel = document.getElementById('timeSelectLabel');
             const serviceSelection = document.getElementById('serviceSelection');
+            
+            // Show the time dropdown as confirmation of selection
+            timeSelection.style.display = 'block';
             
             // Update the time dropdown to show selected time
             timeSelectLabel.textContent = `Valitsemasi aika: ${aikaTxt}`;
@@ -1714,9 +1718,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     const aikaTxt = start.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                         ', klo ' + start.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
                     
-                    // NEW FLOW: Update time dropdown and proceed to service selection
+                    // NEW FLOW: Show time dropdown with selected time, then proceed to service selection
+                    const timeSelection = document.getElementById('timeSelection');
                     const timeSelectLabel = document.getElementById('timeSelectLabel');
                     const serviceSelection = document.getElementById('serviceSelection');
+                    
+                    // Show the time dropdown as confirmation of selection
+                    timeSelection.style.display = 'block';
                     
                     // Update the time dropdown label to show selected time
                     timeSelectLabel.textContent = `Valitsemasi aika: ${aikaTxt}`;
