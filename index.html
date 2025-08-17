@@ -1063,7 +1063,9 @@
             </div>
         </div>
     </footer>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js" 
+        onerror="console.error('FullCalendar CDN failed to load from jsdelivr.net'); window.fullCalendarCDNError = true;"
+        onload="console.log('FullCalendar CDN loaded successfully'); window.fullCalendarCDNLoaded = true;"></script>
 <script type="module">
 // NOTE: No Firebase config in HTML for security. Use server endpoints instead.
 
@@ -1750,14 +1752,67 @@ document.addEventListener('DOMContentLoaded', function () {
             calendar = null;
         }
         
-        // Fallback: If FullCalendar doesn't load (CDN blocked), show mock calendar
-        setTimeout(() => {
+        // Enhanced Fallback: Improved detection with retry mechanism
+        let fallbackCheckAttempts = 0;
+        const maxFallbackAttempts = 10; // Check up to 10 times
+        const fallbackCheckInterval = 300; // Check every 300ms (total: 3 seconds max)
+        
+        function checkForFullCalendarFailure() {
+            fallbackCheckAttempts++;
+            
             const calendarEl = document.getElementById('calendar');
             const mockCalendar = document.getElementById('mock-calendar');
             
-            // Check if FullCalendar actually rendered content or if it failed to initialize
-            if (!calendar || !calendarEl.innerHTML.trim() || calendarEl.children.length === 0) {
-                console.log('FullCalendar failed to load, showing mock calendar for testing');
+            // Enhanced validation criteria
+            const hasCalendarObject = calendar !== null;
+            const hasCalendarContent = calendarEl && calendarEl.querySelector('.fc');
+            const hasCalendarClasses = calendarEl && calendarEl.classList.contains('fc');
+            const hasCalendarStructure = calendarEl && calendarEl.children.length > 0;
+            const isFullCalendarAvailable = typeof window.FullCalendar !== 'undefined';
+            const cdnLoadedSuccessfully = window.fullCalendarCDNLoaded === true;
+            const cdnFailedToLoad = window.fullCalendarCDNError === true;
+            
+            // FullCalendar is considered successfully loaded if:
+            // 1. Calendar object exists AND
+            // 2. Either has FC-specific content OR FC classes OR basic structure AND
+            // 3. FullCalendar library is available AND
+            // 4. CDN loaded without errors
+            const isCalendarRendered = hasCalendarObject && 
+                                     (hasCalendarContent || hasCalendarClasses || hasCalendarStructure) && 
+                                     isFullCalendarAvailable &&
+                                     !cdnFailedToLoad;
+            
+            console.log(`FullCalendar check attempt ${fallbackCheckAttempts}/${maxFallbackAttempts}:`, {
+                hasCalendarObject,
+                hasCalendarContent,
+                hasCalendarClasses,
+                hasCalendarStructure,
+                isFullCalendarAvailable,
+                cdnLoadedSuccessfully,
+                cdnFailedToLoad,
+                isCalendarRendered
+            });
+            
+            // If FullCalendar is not yet rendered and we haven't exceeded max attempts, retry
+            if (!isCalendarRendered && fallbackCheckAttempts < maxFallbackAttempts) {
+                setTimeout(checkForFullCalendarFailure, fallbackCheckInterval);
+                return;
+            }
+            
+            // If FullCalendar failed to load after all attempts, show fallback
+            if (!isCalendarRendered) {
+                let failureReason = 'Unknown';
+                if (cdnFailedToLoad) {
+                    failureReason = 'CDN failed to load';
+                } else if (!isFullCalendarAvailable) {
+                    failureReason = 'FullCalendar library not available';
+                } else if (!hasCalendarObject) {
+                    failureReason = 'Calendar object creation failed';
+                } else if (!hasCalendarContent && !hasCalendarClasses && !hasCalendarStructure) {
+                    failureReason = 'Calendar failed to render content';
+                }
+                
+                console.log(`FullCalendar failed to load after ${fallbackCheckAttempts} attempts. Reason: ${failureReason}. Activating fallback mock calendar.`);
                 mockCalendar.style.display = 'block';
                 
                 // Add click handlers to mock slots
@@ -1814,8 +1869,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 
                 // Setup dropdown event listener for fallback case
                 setupDropdownEventListener();
+            } else {
+                console.log('FullCalendar loaded successfully after', fallbackCheckAttempts, 'attempts.');
+                // Ensure mock calendar is hidden when FullCalendar works
+                mockCalendar.style.display = 'none';
             }
-        }, 1000); // Wait 1 second for FullCalendar to load
+        }
+        
+        // Start the fallback detection process
+        setTimeout(checkForFullCalendarFailure, fallbackCheckInterval);
         
         // Mobile modal event listeners
         document.getElementById('mobileTimeCancel').addEventListener('click', hideMobileTimeModal);
