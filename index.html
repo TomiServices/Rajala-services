@@ -72,74 +72,151 @@
         .hamburger-menu {
             display: none;
             cursor: pointer;
-            padding: 8px;
-            background: linear-gradient(135deg, #333, #444);
+            padding: 12px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
             position: fixed;
-            top: 0; right: 0;
+            top: 8px; right: 8px;
             z-index: 1004;
-            opacity: 0.95;
-            border-bottom: 2px solid #fff;
-            border-radius: 0 0 0 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 0 0 2px rgba(255,255,255,0.1);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 2px solid rgba(255,255,255,0.2);
         }
         .hamburger-menu:hover {
-            background: linear-gradient(135deg, #444, #555);
-            opacity: 1;
-            transform: scale(1.05);
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 50%, #3498db 100%);
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 6px 25px rgba(52, 152, 219, 0.4), 0 0 0 3px rgba(255,255,255,0.2);
+        }
+        .hamburger-menu:active {
+            transform: scale(0.95);
         }
         .hamburger-menu span {
             display: block;
-            width: 25px; height: 3px;
-            margin: 4px auto;
-            background: #fff;
-            transition: all 0.3s ease;
+            width: 20px; 
+            height: 2px;
+            margin: 3px auto;
+            background: linear-gradient(90deg, #fff 0%, #ecf0f1 100%);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             border-radius: 2px;
+            position: relative;
+        }
+        .hamburger-menu span::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            border-radius: 2px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .hamburger-menu:hover span::before {
+            opacity: 1;
+        }
+        .hamburger-menu.active {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 50%, #e74c3c 100%);
+            transform: scale(1.05) rotate(180deg);
+            box-shadow: 0 6px 25px rgba(231, 76, 60, 0.4), 0 0 0 3px rgba(255,255,255,0.3);
         }
         .hamburger-menu.active span:nth-child(1) {
-            transform: rotate(45deg) translate(6px, 6px);
+            transform: rotate(45deg) translate(5px, 5px);
+            background: linear-gradient(90deg, #fff 0%, #ecf0f1 100%);
         }
         .hamburger-menu.active span:nth-child(2) {
             opacity: 0;
+            transform: scale(0);
         }
         .hamburger-menu.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -6px);
+            transform: rotate(-45deg) translate(7px, -6px);
+            background: linear-gradient(90deg, #fff 0%, #ecf0f1 100%);
+        }
+        .hamburger-menu::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.4s ease;
+            pointer-events: none;
+        }
+        .hamburger-menu:hover::after {
+            transform: translate(-50%, -50%) scale(1);
         }
         @media (max-width: 1279px) {
-            .hamburger-menu { display: block; }
+            .hamburger-menu { display: flex; align-items: center; justify-content: center; }
             nav {
                 flex-direction: column;
                 align-items: flex-start;
-                width: 250px;
+                width: 280px;
                 top: 0;
                 left: 0;
                 transform: translateX(-100%);
-                transition: transform 0.4s ease;
+                transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
                 height: 100%;
-                padding-top: 50px;
-                background: linear-gradient(180deg, rgba(0,0,0,0.98), rgba(30,30,30,0.95));
-                box-shadow: 8px 0 25px rgba(0,0,0,0.5);
+                padding: 70px 0 20px 0;
+                background: linear-gradient(145deg, rgba(44, 62, 80, 0.98) 0%, rgba(52, 73, 94, 0.95) 50%, rgba(44, 62, 80, 0.98) 100%);
+                box-shadow: 8px 0 40px rgba(0,0,0,0.6);
                 overflow-y: auto;
-                backdrop-filter: blur(15px);
+                backdrop-filter: blur(20px);
+                border-right: 1px solid rgba(255,255,255,0.1);
             }
             nav.active { 
                 transform: translateX(0);
-                box-shadow: 8px 0 30px rgba(0,0,0,0.6);
+                box-shadow: 8px 0 50px rgba(0,0,0,0.8);
+            }
+            nav::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 60px;
+                background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(155, 89, 182, 0.2) 100%);
+                border-bottom: 1px solid rgba(255,255,255,0.1);
             }
             nav a {
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-                color: #f0f0f0;
+                border-bottom: 1px solid rgba(255,255,255,0.08);
+                color: #ecf0f1;
                 font-size: 16px;
-                padding: 15px 25px;
+                font-weight: 500;
+                padding: 18px 25px;
                 text-align: left;
                 width: 100%;
-                transition: all 0.3s ease;
+                transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
                 margin: 0;
+                position: relative;
+                overflow: hidden;
+            }
+            nav a::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.3), transparent);
+                transition: left 0.5s ease;
+            }
+            nav a:hover::before {
+                left: 100%;
             }
             nav a:hover { 
-                background: linear-gradient(135deg, #555, #666);
+                background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(155, 89, 182, 0.2) 100%);
                 color: #fff;
-                transform: translateX(5px);
+                transform: translateX(10px);
+                box-shadow: inset 3px 0 0 #3498db;
+                padding-left: 28px;
+            }
+            nav a:active {
+                transform: translateX(5px) scale(0.98);
             }
         }
         #carousel-container {
@@ -831,14 +908,149 @@
                 <p style="color: #555; line-height: 1.6;">Käytämme vain laadukkaita materiaaleja ja välineitä parhaan lopputuloksen takaamiseksi.</p>
             </div>
         </div>
-        <div style="text-align: center; margin-top: 40px; padding: 30px; background: linear-gradient(135deg, #666666, #444444); border-radius: 15px; color: white;"">>
-            <p style="font-size: 1.2rem; margin: 0;">
+        <div style="text-align: center; margin-top: 40px; padding: 30px; background: white; border: 2px solid #000; border-radius: 15px; color: black;">
+            <p style="font-size: 1.2rem; margin: 0; color: black;">
                 <strong>✨ Varaa aikasi helposti</strong> alla olevasta kalenterista tai 
-                <a href="#yhteystiedot" style="color: #fff; text-decoration: underline;">ota yhteyttä</a> 
+                <a href="#yhteystiedot" style="color: #000; text-decoration: underline;">ota yhteyttä</a> 
                 lisätietoja varten!
             </p>
         </div>
     </section>
+    
+    <!-- Työnäytteet section moved here with black border -->
+    <section id="tyonnaytteet-cta" style="border: 2px solid #000;">
+        <h2>Työnäytteet</h2>
+        <p>Tutustu työnäytteisiimme ja näe laadukasta työtämme!</p>
+        <div style="text-align: center; margin-top: 25px;">
+            <a href="tyonnaytteet.html" style="
+                display: inline-block;
+                padding: 15px 30px;
+                background: linear-gradient(135deg, #666666, #444444);
+                color: white;
+                text-decoration: none;
+                border-radius: 25px;
+                font-weight: 600;
+                font-size: 1.1rem;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)'">
+                📸 Katso työnäytteitä
+            </a>
+        </div>
+    </section>
+    
+    <!-- Ajanvaraus section moved here with black border -->
+    <div class="ajanvaraus-container" id="ajanvaraus" style="border: 2px solid #000;">
+      <h2>Varaa aika kiillotukseen</h2>
+      <div id="calendar"></div>
+      <!-- Mock calendar for testing when FullCalendar CDN is blocked -->
+      <div id="mock-calendar" style="display: none; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 8px;">
+        <p style="text-align: center; color: #666; margin-bottom: 15px;">
+          <strong>Test Calendar with Weekend Enhancement</strong> (FullCalendar CDN blocked - using fallback for testing)
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; text-align: center;">
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0; color: #999999;">Su</div>
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ma</div>
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ti</div>
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ke</div>
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">To</div>
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Pe</div>
+          <div style="font-weight: bold; padding: 10px; background: #f0f0f0; color: #999999;">La</div>
+          
+          <!-- Weekend slots (disabled) -->
+          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">9:00</div>
+          <div class="mock-slot" data-time="09:00" data-date="2024-12-02" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
+          <div class="mock-slot" data-time="09:00" data-date="2024-12-03" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
+          <div class="mock-slot" data-time="09:00" data-date="2024-12-04" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
+          <div class="mock-slot" data-time="09:00" data-date="2024-12-05" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
+          <div class="mock-slot" data-time="09:00" data-date="2024-12-06" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
+          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">9:00</div>
+          
+          <!-- Weekend slots (disabled) -->
+          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">10:00</div>
+          <div class="mock-slot" data-time="10:00" data-date="2024-12-02" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
+          <div class="mock-slot" data-time="10:00" data-date="2024-12-03" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
+          <div class="mock-slot" data-time="10:00" data-date="2024-12-04" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
+          <div class="mock-slot" data-time="10:00" data-date="2024-12-05" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
+          <div class="mock-slot" data-time="10:00" data-date="2024-12-06" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
+          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">10:00</div>
+        </div>
+        <p style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: #666;">
+          Weekdays (white) are available for booking. Weekends (light gray) are disabled.
+          <br>Click any weekday time slot to test selection (Desktop) or tap for mobile modal
+        </p>
+      </div>
+      
+      <!-- Available Time Slots Dropdown - Now first in flow -->
+      <div id="availableSlots" class="available-slots-section" style="display:none;">
+        <div class="available-slots-dropdown">
+          <label for="availableTimesSelect" id="availableTimesLabel">Valitse aika valitulle päivälle:</label>
+          <select id="availableTimesSelect" class="available-times-select">
+            <option value="">Valitse aika...</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Service Selection Dropdown - Now second in flow -->
+      <div id="serviceSelection" class="available-slots-section" style="display:none;">
+        <div class="available-slots-dropdown">
+          <label for="serviceSelect">Valitse haluamasi palvelu:</label>
+          <select id="serviceSelect" class="available-times-select">
+            <option value="">Valitse palvelu...</option>
+            <option value="tire">Rengastyöt</option>
+            <option value="repair">Korjaustyöt</option>
+            <option value="washing">Pesupalvelut</option>
+            <option value="polishing">Kiilloitus ja pinnoitteet</option>
+            <option value="interior">Sisäpuhdistus</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Task Selection Dropdown - Now third in flow -->
+      <div id="taskSelection" class="available-slots-section" style="display:none;">
+        <div class="available-slots-dropdown">
+          <label for="taskSelect">Valitse palvelun tyyppi:</label>
+          <select id="taskSelect" class="available-times-select">
+            <option value="">Valitse tyyppi...</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- Summary section moved here to appear below dropdown lists -->
+      <div id="slot-summary"></div>
+      
+      <form class="booking-form" id="bookingForm" style="display:none;" autocomplete="off">
+        <input type="hidden" name="aika" id="aika" />
+        <input type="hidden" name="service" id="service" />
+        <input type="hidden" name="task" id="task" />
+        <label for="name">Nimi</label>
+        <input type="text" id="name" name="name" required placeholder="Etunimi Sukunimi" />
+        <label for="email">Sähköposti</label>
+        <input type="email" id="email" name="email" required placeholder="sinä@email.com" />
+        <label for="phone">Puhelinnumero</label>
+        <input type="tel" id="phone" name="phone" required pattern="^\+358\s?\d{1,3}\s?\d{4,}$" placeholder="+358 401234567" />
+        <div class="g-recaptcha" data-sitekey="6Lcb5pQrAAAAAMFL6-0S0SfLPwpgy4t8N9f1zaGR"></div>
+        <button type="submit" class="btn">Vahvista varaus</button>
+      </form>
+      <div id="msg" class="msg"></div>
+      <div id="error" class="error"></div>
+    </div>
+    
+    <!-- Mobile Time Selection Modal -->
+    <div id="mobileTimeModal" class="mobile-time-modal">
+        <div class="mobile-time-content">
+            <div class="mobile-time-header">
+                <div id="mobileSelectedDate">Valitse aika</div>
+            </div>
+            <div id="mobileTimeSlots" class="mobile-time-slots">
+                <!-- Time slots will be populated dynamically -->
+            </div>
+            <div class="mobile-time-buttons">
+                <button id="mobileTimeCancel" class="mobile-time-btn cancel">Peruuta</button>
+                <button id="mobileTimeConfirm" class="mobile-time-btn confirm" disabled>Vahvista</button>
+            </div>
+        </div>
+    </div>
     
     <div class="categories-row">
         <div class="category-box" style="background-image: url('pesupalvelut.jpg');" onclick="location.href='#pesupalvelut'">Pesupalvelut</div>
@@ -1067,137 +1279,6 @@
             <li><strong>Aukioloajat:</strong> Arkisin 9:00-17:00, viikonloppuisin suljettu</li>
         </ul>
     </section>
-    <section id="tyonnaytteet-cta">
-        <h2>Työnäytteet</h2>
-        <p>Tutustu työnäytteisiimme ja näe laadukasta työtämme!</p>
-        <div style="text-align: center; margin-top: 25px;">
-            <a href="tyonnaytteet.html" style="
-                display: inline-block;
-                padding: 15px 30px;
-                background: linear-gradient(135deg, #666666, #444444);
-                color: white;
-                text-decoration: none;
-                border-radius: 25px;
-                font-weight: 600;
-                font-size: 1.1rem;
-                transition: all 0.3s ease;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)'">
-                📸 Katso työnäytteitä
-            </a>
-        </div>
-    </section>
-    <div class="ajanvaraus-container" id="ajanvaraus">
-      <h2>Varaa aika kiillotukseen</h2>
-      <div id="calendar"></div>
-      <!-- Mock calendar for testing when FullCalendar CDN is blocked -->
-      <div id="mock-calendar" style="display: none; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 8px;">
-        <p style="text-align: center; color: #666; margin-bottom: 15px;">
-          <strong>Test Calendar with Weekend Enhancement</strong> (FullCalendar CDN blocked - using fallback for testing)
-        </p>
-        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; text-align: center;">
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0; color: #999999;">Su</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ma</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ti</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Ke</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">To</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0;">Pe</div>
-          <div style="font-weight: bold; padding: 10px; background: #f0f0f0; color: #999999;">La</div>
-          
-          <!-- Weekend slots (disabled) -->
-          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">9:00</div>
-          <div class="mock-slot" data-time="09:00" data-date="2024-12-02" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
-          <div class="mock-slot" data-time="09:00" data-date="2024-12-03" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
-          <div class="mock-slot" data-time="09:00" data-date="2024-12-04" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
-          <div class="mock-slot" data-time="09:00" data-date="2024-12-05" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
-          <div class="mock-slot" data-time="09:00" data-date="2024-12-06" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">9:00</div>
-          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">9:00</div>
-          
-          <!-- Weekend slots (disabled) -->
-          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">10:00</div>
-          <div class="mock-slot" data-time="10:00" data-date="2024-12-02" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
-          <div class="mock-slot" data-time="10:00" data-date="2024-12-03" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
-          <div class="mock-slot" data-time="10:00" data-date="2024-12-04" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
-          <div class="mock-slot" data-time="10:00" data-date="2024-12-05" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
-          <div class="mock-slot" data-time="10:00" data-date="2024-12-06" style="padding: 15px 5px; border: 1px solid #ccc; cursor: pointer; background: white;">10:00</div>
-          <div style="padding: 15px 5px; border: 1px solid #eee; cursor: not-allowed; background: #f0f0f0; color: #999999; opacity: 0.7;">10:00</div>
-        </div>
-        <p style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: #666;">
-          Weekdays (white) are available for booking. Weekends (light gray) are disabled.
-          <br>Click any weekday time slot to test selection (Desktop) or tap for mobile modal
-        </p>
-      </div>
-      
-      <!-- Available Time Slots Dropdown - Now first in flow -->
-      <div id="availableSlots" class="available-slots-section" style="display:none;">
-        <div class="available-slots-dropdown">
-          <label for="availableTimesSelect" id="availableTimesLabel">Valitse aika valitulle päivälle:</label>
-          <select id="availableTimesSelect" class="available-times-select">
-            <option value="">Valitse aika...</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Service Selection Dropdown - Now second in flow -->
-      <div id="serviceSelection" class="available-slots-section" style="display:none;">
-        <div class="available-slots-dropdown">
-          <label for="serviceSelect">Valitse haluamasi palvelu:</label>
-          <select id="serviceSelect" class="available-times-select">
-            <option value="">Valitse palvelu...</option>
-            <option value="tire">Rengastyöt</option>
-            <option value="repair">Korjaustyöt</option>
-            <option value="washing">Pesupalvelut</option>
-            <option value="polishing">Kiilloitus ja pinnoitteet</option>
-            <option value="interior">Sisäpuhdistus</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Task Selection Dropdown - Now third in flow -->
-      <div id="taskSelection" class="available-slots-section" style="display:none;">
-        <div class="available-slots-dropdown">
-          <label for="taskSelect">Valitse palvelun tyyppi:</label>
-          <select id="taskSelect" class="available-times-select">
-            <option value="">Valitse tyyppi...</option>
-          </select>
-        </div>
-      </div>
-      
-      <!-- Summary section moved here to appear below dropdown lists -->
-      <div id="slot-summary"></div>
-      
-      <form class="booking-form" id="bookingForm" style="display:none;" autocomplete="off">
-        <input type="hidden" name="aika" id="aika" />
-        <input type="hidden" name="service" id="service" />
-        <input type="hidden" name="task" id="task" />
-        <label for="name">Nimi</label>
-        <input type="text" id="name" name="name" required placeholder="Etunimi Sukunimi" />
-        <label for="email">Sähköposti</label>
-        <input type="email" id="email" name="email" required placeholder="sinä@email.com" />
-        <label for="phone">Puhelinnumero</label>
-        <input type="tel" id="phone" name="phone" required pattern="^\+358\s?\d{1,3}\s?\d{4,}$" placeholder="+358 401234567" />
-        <div class="g-recaptcha" data-sitekey="6Lcb5pQrAAAAAMFL6-0S0SfLPwpgy4t8N9f1zaGR"></div>
-        <button type="submit" class="btn">Vahvista varaus</button>
-      </form>
-      <div id="msg" class="msg"></div>
-      <div id="error" class="error"></div>
-    </div>
-    
-    <!-- Mobile Time Selection Modal -->
-    <div id="mobileTimeModal" class="mobile-time-modal">
-        <div class="mobile-time-content">
-            <div class="mobile-time-header">
-                <div id="mobileSelectedDate">Valitse aika</div>
-            </div>
-            <div id="mobileTimeSlots" class="mobile-time-slots">
-                <!-- Time slots will be populated dynamically -->
-            </div>
-            <div class="mobile-time-buttons">
-                <button id="mobileTimeCancel" class="mobile-time-btn cancel">Peruuta</button>
-                <button id="mobileTimeConfirm" class="mobile-time-btn confirm" disabled>Vahvista</button>
-            </div>
-        </div>
-    </div>
     <iframe
       id="kartta"
       class="kartanKehys"
