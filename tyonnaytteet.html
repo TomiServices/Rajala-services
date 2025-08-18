@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>FIXNERO - Työnäytteet</title>
+    <link rel="preload" href="FXNR.png" as="image">
+    <style>
+        /* --- Enhanced modern styling --- */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .top-banner {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: linear-gradient(90deg, #2c3e50, #4a6741);
+            color: #fff;
+            text-align: center;
+            padding: 8px 0;
+            z-index: 1002;
+            font-weight: 500;
+        }
+        nav {
+            position: fixed;
+            top: 35px; left: 0; right: 0;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1003;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        nav img {
+            height: 45px;
+            margin-left: 20px;
+        }
+        nav a {
+            color: #fff;
+            padding: 16px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            display: block;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0 5px;
+        }
+        nav a:hover {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        .hamburger-menu {
+            display: none;
+            cursor: pointer;
+            padding: 8px;
+            background: #333;
+            position: fixed;
+            top: 0; right: 0;
+            z-index: 1004;
+            opacity: 0.95;
+            border-bottom: 2px solid #fff;
+            border-radius: 0 0 0 8px;
+        }
+        .hamburger-menu span {
+            display: block;
+            width: 25px; height: 3px;
+            margin: 5px auto;
+            background: #fff;
+            transition: all 0.3s;
+        }
+        @media (max-width: 1279px) {
+            .hamburger-menu { display: block; }
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 250px;
+                top: 0;
+                left: 0;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+                height: 100%;
+                padding-top: 50px;
+                background: rgba(0,0,0,0.95);
+                box-shadow: 5px 0 20px rgba(0,0,0,0.5);
+                overflow-y: auto;
+            }
+            nav.active { transform: translateX(0); }
+            nav a {
+                border-bottom: 1px solid #444;
+                color: #ddd;
+                font-size: 16px;
+                padding: 15px 25px;
+                text-align: left;
+                width: 100%;
+                margin: 0;
+            }
+            nav a:hover { 
+                background: linear-gradient(135deg, #007bff, #0056b3); 
+                color: #fff;
+            }
+        }
+        .container {
+            max-width: 1200px;
+            margin: 120px auto 40px;
+            padding: 30px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .back-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+        }
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,123,255,0.4);
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-align: center;
+            background: linear-gradient(135deg, #2c3e50, #4a6741);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .intro-text {
+            font-size: 1.2rem;
+            color: #555;
+            text-align: center;
+            margin-bottom: 40px;
+            line-height: 1.8;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        .work-example {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .work-example:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        }
+        .work-example img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .work-example:hover img {
+            transform: scale(1.05);
+        }
+        .work-content {
+            padding: 25px;
+        }
+        .work-content h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        .work-content p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .work-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        .tag {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .coming-soon {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            margin: 40px 0;
+        }
+        .coming-soon h2 {
+            color: #6c757d;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        .coming-soon p {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+        .contact-cta {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 40px 0;
+        }
+        .contact-cta h2 {
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        .contact-cta p {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .cta-button {
+            padding: 12px 25px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .cta-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 60px;
+        }
+        @media (max-width: 768px) {
+            .container { margin: 100px 20px 40px; padding: 20px; }
+            h1 { font-size: 2.2rem; }
+            .gallery { grid-template-columns: 1fr; gap: 20px; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-banner">
+        <a href="tel:+358401935001" style="color: inherit; text-decoration: none;">📞 Puhelin: 040 1935001</a> | 
+        <a href="mailto:info@fixnero.fi" style="color: inherit; text-decoration: none;">📧 info@fixnero.fi</a> | 
+        <a href="#kartta" style="color: inherit; text-decoration: none;">📍 Tiilenvalajantie 6, 02330 Espoo</a>
+    </div>
+
+    <div class="hamburger-menu" role="button" tabindex="0" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+    </div>
+
+    <nav id="nav">
+        <a href="index.html#top"><img src="FXNR.png" alt="Fixnero logo"></a>
+        <a href="index.html#pesupalvelut">Pesupalvelut</a>
+        <a href="index.html#rengastyot">Rengastyöt</a>
+        <a href="index.html#korjaustyot">Korjaustyöt</a>
+        <a href="index.html#sisapuhdistus">Sisäpuhdistus</a>
+        <a href="index.html#kiilloitus">Kiilloitus</a>
+        <a href="index.html#lasikorjaus">Lasikorjaus</a>
+        <a href="index.html#hinnasto">Hinnasto</a>
+        <a href="index.html#yhteystiedot">Yhteystiedot</a>
+    </nav>
+
+    <div class="container">
+        <a href="index.html" class="back-button">← Takaisin etusivulle</a>
+        
+        <h1>Työnäytteet</h1>
+        
+        <div class="intro-text">
+            Tässä voit nähdä esimerkkejä ammattitaitoisesta työstämme. Päivitämme galleriaa säännöllisesti uusilla projekteilla ja työsuorituksilla.
+        </div>
+
+        <!-- Placeholder work examples - will be updated with real images -->
+        <div class="gallery">
+            <div class="work-example">
+                <img src="FN1.png" alt="Ennen ja jälkeen - Kiillotus" loading="lazy">
+                <div class="work-content">
+                    <h3>Premium Kiillotus</h3>
+                    <p>3-step kiillotus + keraaminen pinnoitus. Maalipinnan täydellinen kunnostus ja pitkäkestoinen suoja.</p>
+                    <div class="work-tags">
+                        <span class="tag">Kiillotus</span>
+                        <span class="tag">Pinnoitus</span>
+                        <span class="tag">Korjaus</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="work-example">
+                <img src="FN3.png" alt="Sisäpuhdistus tulokset" loading="lazy">
+                <div class="work-content">
+                    <h3>Syväpuhdistus</h3>
+                    <p>Täydellinen sisätilojen kunnostus sisältäen penkkien pesun, hajunpoiston ja pintojen suojauksen.</p>
+                    <div class="work-tags">
+                        <span class="tag">Sisäpuhdistus</span>
+                        <span class="tag">Detailing</span>
+                        <span class="tag">Hajunpoisto</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="work-example">
+                <img src="FN4.png" alt="Korjaustyö tulos" loading="lazy">
+                <div class="work-content">
+                    <h3>Korjaustyöt</h3>
+                    <p>Katsastuskorjaukset ja huoltotyöt ammattitaidolla. Laadukkaita varaosia ja takuuta töille.</p>
+                    <div class="work-tags">
+                        <span class="tag">Korjaukset</span>
+                        <span class="tag">Huolto</span>
+                        <span class="tag">Katsastus</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="coming-soon">
+            <h2>🚧 Lisää työnäytteitä tulossa pian!</h2>
+            <p>Päivitämme tätä sivua säännöllisesti uusilla projekteilla ja ennen/jälkeen -kuvayksilöillä työstämme.</p>
+        </div>
+
+        <div class="contact-cta">
+            <h2>Kiinnostuitko palveluistamme?</h2>
+            <p>Ota yhteyttä ja keskustelkaamme, miten voimme auttaa ajoneuvosi kanssa!</p>
+            <div class="cta-buttons">
+                <a href="tel:+358401935001" class="cta-button">📞 Soita meille</a>
+                <a href="https://wa.me/358401935001" class="cta-button" target="_blank">💬 WhatsApp</a>
+                <a href="mailto:info@fixnero.fi" class="cta-button">📧 Lähetä viesti</a>
+                <a href="index.html#ajanvaraus" class="cta-button">📅 Varaa aika</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 FIXNERO. Kaikki oikeudet pidätetään.</p>
+    </footer>
+
+    <script>
+        // Hamburger and nav toggle
+        const hamburger = document.querySelector('.hamburger-menu');
+        const nav = document.getElementById('nav');
+        hamburger.addEventListener('click', () => nav.classList.toggle('active'));
+        hamburger.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') nav.classList.toggle('active');
+        });
+        
+        // Responsive nav close on resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1279) nav.classList.remove('active');
+        });
+    </script>
+</body>
+</html>
