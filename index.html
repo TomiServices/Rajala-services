@@ -42,8 +42,15 @@
             padding: 0 20px;
         }
         nav img {
-            height: 45px;
-            margin-left: 20px;
+            height: 50px;
+            margin-left: 10px;
+            margin-right: 15px;
+            filter: brightness(1.1);
+            transition: all 0.3s ease;
+        }
+        nav img:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
         }
         nav a {
             color: #fff;
@@ -65,46 +72,75 @@
         .hamburger-menu {
             display: none;
             cursor: pointer;
-            padding: 4px;
-            background: #333;
+            padding: 8px;
+            background: linear-gradient(135deg, #333, #444);
             position: fixed;
             top: 0; right: 0;
             z-index: 1004;
             opacity: 0.95;
             border-bottom: 2px solid #fff;
+            border-radius: 0 0 0 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        .hamburger-menu:hover {
+            background: linear-gradient(135deg, #444, #555);
+            opacity: 1;
+            transform: scale(1.05);
         }
         .hamburger-menu span {
             display: block;
             width: 25px; height: 3px;
-            margin: 5px auto;
+            margin: 4px auto;
             background: #fff;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+        .hamburger-menu.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+        .hamburger-menu.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger-menu.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
         }
         @media (max-width: 1279px) {
             .hamburger-menu { display: block; }
             nav {
                 flex-direction: column;
                 align-items: flex-start;
-                width: 220px;
+                width: 250px;
                 top: 0;
                 left: 0;
                 transform: translateX(-100%);
-                transition: transform 0.3s;
+                transition: transform 0.4s ease;
                 height: 100%;
-                padding-top: 40px;
-                background: rgba(0,0,0,0.95);
-                box-shadow: 5px 0 10px rgba(0,0,0,0.5);
+                padding-top: 50px;
+                background: linear-gradient(180deg, rgba(0,0,0,0.98), rgba(30,30,30,0.95));
+                box-shadow: 8px 0 25px rgba(0,0,0,0.5);
                 overflow-y: auto;
+                backdrop-filter: blur(15px);
             }
-            nav.active { transform: translateX(0); }
+            nav.active { 
+                transform: translateX(0);
+                box-shadow: 8px 0 30px rgba(0,0,0,0.6);
+            }
             nav a {
-                border-bottom: 1px solid #444;
-                color: #ddd;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                color: #f0f0f0;
                 font-size: 16px;
-                padding: 12px 20px;
+                padding: 15px 25px;
                 text-align: left;
+                width: 100%;
+                transition: all 0.3s ease;
+                margin: 0;
             }
-            nav a:hover { background: #555; }
+            nav a:hover { 
+                background: linear-gradient(135deg, #555, #666);
+                color: #fff;
+                transform: translateX(5px);
+            }
         }
         #carousel-container {
             margin-top: 140px;
@@ -214,6 +250,11 @@
             max-width: 800px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             border-radius: 18px;
+        }
+        #yhteystiedot {
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 0 0 15px rgba(0,0,0,0.15);
         }
         h2, h3, h4 { color: #333; }
         p, li { color: #555; }
@@ -910,8 +951,8 @@
 
         <p>Voit yhdistää sisäpuhdistuksen myös ulkopesuun tai kiillotukseen kokonaisvaltaista lopputulosta varten.</p>
     </section>
-    <section id="kiillotus">
-        <h2>Kiillotus ja pinnoitteet</h2>
+    <section id="kiilloitus">
+        <h2>Kiilloitus ja pinnoitteet</h2>
         <p>Koneellinen kiillotus palauttaa maalipinnan kiillon ja poistaa pienet naarmut tehokkaasti. Käytämme ammattilaisille tarkoitettuja huippulaatuisia tuotteita ja koneita, joilla taataan paras mahdollinen lopputulos.</p>
 
         <p>Meillä on laaja kokemus kiillotuksesta ja pinnoituksista eri ajoneuvotyypeille: henkilöautot, moottoripyörät, veneet sekä työkoneet. Jokainen kiillotus tehdään huolellisesti ajoneuvon maalipinnan kunnon ja toivotun lopputuloksen mukaan.</p>
@@ -1025,6 +1066,26 @@
             <li><strong>Osoite:</strong> Tiilenvalajantie 6, 02330 Espoo</li>
             <li><strong>Aukioloajat:</strong> Arkisin 9:00-17:00, viikonloppuisin suljettu</li>
         </ul>
+    </section>
+    <section id="tyonnaytteet-cta">
+        <h2>Työnäytteet</h2>
+        <p>Tutustu työnäytteisiimme ja näe laadukasta työtämme!</p>
+        <div style="text-align: center; margin-top: 25px;">
+            <a href="tyonnaytteet.html" style="
+                display: inline-block;
+                padding: 15px 30px;
+                background: linear-gradient(135deg, #666666, #444444);
+                color: white;
+                text-decoration: none;
+                border-radius: 25px;
+                font-weight: 600;
+                font-size: 1.1rem;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)'">
+                📸 Katso työnäytteitä
+            </a>
+        </div>
     </section>
     <div class="ajanvaraus-container" id="ajanvaraus">
       <h2>Varaa aika kiillotukseen</h2>
@@ -2130,9 +2191,15 @@ document.addEventListener('DOMContentLoaded', function () {
 // Hamburger and nav toggle
 const hamburger = document.querySelector('.hamburger-menu');
 const nav = document.getElementById('nav');
-hamburger.addEventListener('click', () => nav.classList.toggle('active'));
+hamburger.addEventListener('click', () => {
+    nav.classList.toggle('active');
+    hamburger.classList.toggle('active');
+});
 hamburger.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') nav.classList.toggle('active');
+    if (e.key === 'Enter' || e.key === ' ') {
+        nav.classList.toggle('active');
+        hamburger.classList.toggle('active');
+    }
 });
 // Smooth scroll for all anchor links in nav and footer
 document.querySelectorAll('nav a, .footer a').forEach(link => {
@@ -2161,7 +2228,10 @@ function nextSlide() {
 setInterval(nextSlide, 7000);
 // Responsive nav close on resize
 window.addEventListener('resize', () => {
-    if (window.innerWidth > 1279) nav.classList.remove('active');
+    if (window.innerWidth > 1279) {
+        nav.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
 });
 </script>
 </body>
