@@ -73,11 +73,11 @@
             display: none;
             cursor: pointer;
             padding: 12px;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            background: #000000;
             position: fixed;
             top: 8px; right: 8px;
             z-index: 1004;
-            border-radius: 50%;
+            border-radius: 4px;
             width: 48px;
             height: 48px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 0 0 2px rgba(255,255,255,0.1);
@@ -85,9 +85,9 @@
             border: 2px solid rgba(255,255,255,0.2);
         }
         .hamburger-menu:hover {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 50%, #3498db 100%);
+            background: #000000;
             transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 6px 25px rgba(52, 152, 219, 0.4), 0 0 0 3px rgba(255,255,255,0.2);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(255,255,255,0.2);
         }
         .hamburger-menu:active {
             transform: scale(0.95);
@@ -118,9 +118,9 @@
             opacity: 1;
         }
         .hamburger-menu.active {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 50%, #e74c3c 100%);
+            background: #000000;
             transform: scale(1.05) rotate(180deg);
-            box-shadow: 0 6px 25px rgba(231, 76, 60, 0.4), 0 0 0 3px rgba(255,255,255,0.3);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(255,255,255,0.3);
         }
         .hamburger-menu.active span:nth-child(1) {
             transform: rotate(45deg) translate(5px, 5px);
@@ -162,7 +162,7 @@
                 transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
                 height: 100%;
                 padding: 70px 0 20px 0;
-                background: linear-gradient(145deg, rgba(44, 62, 80, 0.98) 0%, rgba(52, 73, 94, 0.95) 50%, rgba(44, 62, 80, 0.98) 100%);
+                background: #000000;
                 box-shadow: 8px 0 40px rgba(0,0,0,0.6);
                 overflow-y: auto;
                 backdrop-filter: blur(20px);
@@ -319,6 +319,27 @@
         @media (max-width: 900px) {
             .categories-row { gap: 10px; }
             .category-box { min-width: 130px; min-height: 90px; max-width: 48vw; }
+        }
+        
+        /* Enhanced mobile layout for devices like iPhone 15 Pro - force two-row layout */
+        @media (max-width: 430px) {
+            .categories-row { 
+                gap: 8px !important; 
+                justify-content: space-between !important;
+                max-width: 100% !important;
+                padding: 0 10px !important;
+                display: flex !important;
+                flex-wrap: wrap !important;
+            }
+            .category-box { 
+                flex: 0 0 calc(50% - 4px) !important;
+                min-width: calc(50% - 4px) !important; 
+                max-width: calc(50% - 4px) !important;
+                width: calc(50% - 4px) !important;
+                min-height: 80px !important; 
+                font-size: 1rem !important;
+                box-sizing: border-box !important;
+            }
         }
         section {
             background: #fff;
