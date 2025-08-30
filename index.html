@@ -1,25 +1,415 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Title</title>
+    <title>FIXNERO - Ammattitaitoista autohuoltoa</title>
+    <link rel="preload" href="FXNR.png" as="image">
     <style>
-        /* Add custom styles here */
-        body {
+        /* --- Enhanced modern styling --- */
+        * {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            box-sizing: border-box;
         }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f8f8f8 0%, #e0e0e0 100%);
+            line-height: 1.6;
+            color: #333;
+        }
+        
         .header-image {
             width: 100%;
             height: auto;
             display: block;
+            max-height: 100vh;
+            object-fit: cover;
+        }
+        
+        .top-banner {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: linear-gradient(90deg, #333333, #555555);
+            color: #fff;
+            text-align: center;
+            padding: 8px 0;
+            z-index: 1002;
+            font-weight: 500;
+        }
+        
+        nav {
+            position: fixed;
+            top: 35px; left: 0; right: 0;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1003;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        nav img {
+            height: 45px;
+            margin-left: 20px;
+        }
+        
+        nav a {
+            color: #fff;
+            padding: 16px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            display: block;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0 5px;
+        }
+        
+        nav a:hover {
+            background: linear-gradient(135deg, #666666, #444444);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 120px auto 40px;
+            padding: 30px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .hero-section {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .hero-section h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #333333, #555555);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .hero-section p {
+            font-size: 1.4rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+        
+        .service-section {
+            margin: 80px 0;
+            padding: 60px 0;
+            border-radius: 20px;
+        }
+        
+        .service-section h2 {
+            font-size: 2.5rem;
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #333333, #555555);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .service-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.2);
+        }
+        
+        .service-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .service-card h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .service-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #666666, #444444);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+        
+        .contact-section {
+            background: linear-gradient(135deg, #f8f8f8, #e9e9e9);
+            padding: 60px 30px;
+            border-radius: 20px;
+            text-align: center;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .contact-item {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .contact-item h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .contact-item p {
+            color: #666;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                padding: 10px;
+            }
+            
+            nav a {
+                padding: 10px 15px;
+                margin: 5px 0;
+            }
+            
+            .container {
+                margin: 160px auto 40px;
+                padding: 20px;
+            }
+            
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+            
+            .service-section h2 {
+                font-size: 2rem;
+            }
+            
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <img src="Alotusnäyttö.PNG" alt="Aloitusnäyttö kuva" class="header-image">
-    <!-- Your other content goes here -->
+    <img src="Alotusnäyttö.PNG" alt="Aloitusnäyttö kuva" class="header-image" id="top">
+    
+    <div class="top-banner">
+        🔧 Ammattitaitoista autohuoltoa yli 10 vuoden kokemuksella 🚗
+    </div>
+    
+    <nav id="nav">
+        <a href="#top"><img src="FXNR.png" alt="Fixnero logo"></a>
+        <a href="#pesupalvelut">Pesupalvelut</a>
+        <a href="#rengastyot">Rengastyöt</a>
+        <a href="#korjaustyot">Korjaustyöt</a>
+        <a href="#sisapuhdistus">Sisäpuhdistus</a>
+        <a href="#kiilloitus">Kiilloitus</a>
+        <a href="#lasikorjaus">Lasikorjaus</a>
+        <a href="#hinnasto">Hinnasto</a>
+        <a href="#yhteystiedot">Yhteystiedot</a>
+    </nav>
+
+    <div class="container">
+        <div class="hero-section">
+            <h1>FIXNERO</h1>
+            <p>Ammattitaitoista autohuoltoa, korjausta ja detailing-palveluja. Huolehdimme ajoneuvostasi parhaalla mahdollisella tavalla.</p>
+            <a href="#ajanvaraus" class="cta-button">📅 Varaa aika</a>
+            <a href="tyonnaytteet.html" class="cta-button">👀 Katso työnäytteet</a>
+        </div>
+
+        <div class="service-section" id="pesupalvelut">
+            <h2>Pesupalvelut</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <img src="pesupalvelut.jpg" alt="Pesupalvelut">
+                    <h3>Ulkopesu</h3>
+                    <p>Perusteellinen ulkopuolinen pesu ja kuivaus ammattilaistuotteilla.</p>
+                </div>
+                <div class="service-card">
+                    <img src="sisapuhdistus.jpg" alt="Sisäpuhdistus">
+                    <h3>Sisäpesu</h3>
+                    <p>Kokonaisvaltainen sisätilojen puhdistus ja tuoksujen poisto.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-section" id="rengastyot">
+            <h2>Rengastyöt</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <img src="rengastyot.jpg" alt="Rengastyöt">
+                    <h3>Rengasvaihdot</h3>
+                    <p>Nopeat ja asiantuntevat rengasvaihdot kaikkiin autoihin.</p>
+                </div>
+                <div class="service-card">
+                    <img src="rengastyot.jpg" alt="Renkaat">
+                    <h3>Rengaskorjaukset</h3>
+                    <p>Paikkaamo-palvelut ja rengasvaurioiden korjaus.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-section" id="korjaustyot">
+            <h2>Korjaustyöt</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <img src="FN4.png" alt="Korjaustyöt">
+                    <h3>Korinkorjaukset</h3>
+                    <p>Ammattitaitoista korinkorjausta ja maalitöitä.</p>
+                </div>
+                <div class="service-card">
+                    <img src="FN5.png" alt="Huolto">
+                    <h3>Huoltotyöt</h3>
+                    <p>Säännölliset huollot ja tekniset korjaukset.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-section" id="sisapuhdistus">
+            <h2>Sisäpuhdistus</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <img src="FN3.png" alt="Sisäpuhdistus">
+                    <h3>Syväpuhdistus</h3>
+                    <p>Perusteellinen sisätilojen puhdistus höyrypesussa.</p>
+                </div>
+                <div class="service-card">
+                    <img src="sisapuhdistus.jpg" alt="Detailing">
+                    <h3>Detailing</h3>
+                    <p>Sisätilojen detailing-käsittely ja suojaus.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-section" id="kiilloitus">
+            <h2>Kiilloitus</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <img src="FN1.png" alt="Kiilloitus">
+                    <h3>Premium Kiilloitus</h3>
+                    <p>3-step kiilloitus ja keraaminen pinnoitus.</p>
+                </div>
+                <div class="service-card">
+                    <img src="kiilloitus.jpg" alt="Pinnoitus">
+                    <h3>Pinnoitukset</h3>
+                    <p>Kestävät pinnoitukset ja suojaukset.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-section" id="lasikorjaus">
+            <h2>Lasikorjaus</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <img src="lasikorjaus.jpg" alt="Lasikorjaus">
+                    <h3>Lasivauriot</h3>
+                    <p>Tuulilasin paikkaamo ja lasinvaihto.</p>
+                </div>
+                <div class="service-card">
+                    <img src="lasikorjaus.jpg" alt="Lasityöt">
+                    <h3>Lasityöt</h3>
+                    <p>Kaikkien lasien korjaus ja vaihto.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-section" id="hinnasto">
+            <h2>Hinnasto</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <img src="hinnasto.jpg" alt="Hinnat">
+                    <h3>Kilpailukykyiset hinnat</h3>
+                    <p>Tarjoamme markkinoiden kilpailukykyisimpiä hintoja laadukkaista palveluista.</p>
+                    <a href="#yhteystiedot" class="cta-button">Pyydä tarjous</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-section contact-section" id="yhteystiedot">
+            <h2>Yhteystiedot</h2>
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <h4>📞 Puhelin</h4>
+                    <p>+358 XX XXX XXXX</p>
+                </div>
+                <div class="contact-item">
+                    <h4>📧 Sähköposti</h4>
+                    <p>info@fixnero.fi</p>
+                </div>
+                <div class="contact-item">
+                    <h4>📍 Osoite</h4>
+                    <p>Rajala Services<br>Osoite täydennettävä</p>
+                </div>
+                <div class="contact-item">
+                    <h4>🕒 Aukioloajat</h4>
+                    <p>Ma-Pe: 8:00-17:00<br>La: 9:00-15:00</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-section" id="ajanvaraus">
+            <h2>Ajanvaraus</h2>
+            <div style="text-align: center;">
+                <p style="font-size: 1.2rem; margin-bottom: 30px;">Varaa aikasi helposti!</p>
+                <a href="tel:+358XXXXXXXX" class="cta-button">📞 Soita meille</a>
+                <a href="mailto:info@fixnero.fi" class="cta-button">📧 Lähetä viesti</a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
