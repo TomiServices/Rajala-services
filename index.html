@@ -219,32 +219,45 @@
                 transform: translateX(5px) scale(0.98);
             }
         }
-        #carousel-container {
-            margin-top: 140px;
-            overflow: hidden;
-            position: relative;
-            max-width: 700px;
-            margin-left: auto; margin-right: auto;
+        /* Hero section responsive styles */
+        @media (max-width: 768px) {
+            #hero {
+                min-height: 70vh;
+                margin-left: 10px;
+                margin-right: 10px;
+                margin-top: 120px;
+            }
+            #hero h1 {
+                font-size: 2.4rem !important;
+            }
+            #hero p {
+                font-size: 1.1rem !important;
+            }
+            #hero > div > div:first-child {
+                padding: 40px 20px !important;
+            }
+            #hero div[style*="grid-template-columns"] {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
         }
-        #carousel {
-            display: flex;
-            transition: transform 0.5s;
-        }
-        .carousel-item {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-width: 100%;
-        }
-        .carousel-item img {
-            width: 100%;
-            height: auto;
-            margin: 5px;
-            object-fit: cover;
-            display: block;
-            loading: lazy;
-            border-radius: 20px;
-            box-shadow: 0 4px 18px #0003;
+        
+        @media (max-width: 480px) {
+            #hero {
+                min-height: 60vh;
+                margin-top: 100px;
+                margin-left: 5px;
+                margin-right: 5px;
+            }
+            #hero h1 {
+                font-size: 2rem !important;
+            }
+            #hero p {
+                font-size: 1rem !important;
+            }
+            #hero > div {
+                padding: 30px 15px !important;
+            }
         }
         .categories-row {
             display: flex;
@@ -880,61 +893,156 @@
         <a href="#hinnasto">Hinnasto</a>
         <a href="#yhteystiedot">Yhteystiedot</a>
     </nav>
-    <div id="carousel-container">
-        <div id="carousel">
-            <div class="carousel-item">
-                <img src="FN.png" alt="Kuva 1" loading="lazy">
+    <!-- Hero Section with Background Image -->
+    <section id="hero" style="
+        position: relative;
+        min-height: 80vh;
+        background-image: url('Alotusnäyttö.PNG');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        margin-top: 140px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        margin-left: 20px;
+        margin-right: 20px;
+    ">
+        <!-- Background overlay for better text readability -->
+        <div style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg, 
+                rgba(0,0,0,0.4) 0%, 
+                rgba(0,0,0,0.2) 50%, 
+                rgba(0,0,0,0.4) 100%
+            );
+            z-index: 1;
+        "></div>
+        
+        <!-- Welcome content with overlay -->
+        <div style="
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 1200px;
+            padding: 60px 40px;
+            color: white;
+        ">
+            <div style="margin-bottom: 40px;">
+                <h1 style="
+                    font-size: 3.2rem; 
+                    margin-bottom: 20px; 
+                    font-weight: 700;
+                    color: white;
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+                    line-height: 1.2;
+                ">Tervetuloa FIXNERO-palveluihin!</h1>
+                <p style="
+                    font-size: 1.4rem; 
+                    line-height: 1.7; 
+                    max-width: 900px; 
+                    margin: 0 auto;
+                    color: white;
+                    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+                    font-weight: 400;
+                ">
+                    Olemme Espoossa toimiva autopalvelualan ammattilainen, joka tarjoaa kattavan valikoiman laadukkaita palveluita ajoneuvollesi. 
+                    Meiltä saat asiantuntevaa palvelua rengastöistä sisäpuhdistukseen, kiillotuksesta korjaustöihin.
+                </p>
             </div>
-            <div class="carousel-item">
-                <img src="FN1.png" alt="Kuva 2" loading="lazy">
+            
+            <div style="
+                display: grid; 
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+                gap: 30px; 
+                margin-top: 50px;
+            ">
+                <div style="
+                    text-align: center; 
+                    padding: 30px; 
+                    background: rgba(255,255,255,0.15); 
+                    border-radius: 15px; 
+                    border: 1px solid rgba(255,255,255,0.2);
+                    backdrop-filter: blur(10px);
+                ">
+                    <h3 style="
+                        color: white; 
+                        margin-bottom: 15px; 
+                        font-size: 1.4rem;
+                        text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+                    ">🔧 Ammattitaito</h3>
+                    <p style="
+                        color: white; 
+                        line-height: 1.6;
+                        text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+                    ">Pitkän kokemuksen omaava tiimimme huolehtii ajoneuvostasi huolellisesti ja ammattitaidolla.</p>
+                </div>
+                <div style="
+                    text-align: center; 
+                    padding: 30px; 
+                    background: rgba(255,255,255,0.15); 
+                    border-radius: 15px; 
+                    border: 1px solid rgba(255,255,255,0.2);
+                    backdrop-filter: blur(10px);
+                ">
+                    <h3 style="
+                        color: white; 
+                        margin-bottom: 15px; 
+                        font-size: 1.4rem;
+                        text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+                    ">⚡ Nopeus</h3>
+                    <p style="
+                        color: white; 
+                        line-height: 1.6;
+                        text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+                    ">Arvostamme aikaasi - palvelumme ovat tehokkaita ilman kompromisseja laadusta.</p>
+                </div>
+                <div style="
+                    text-align: center; 
+                    padding: 30px; 
+                    background: rgba(255,255,255,0.15); 
+                    border-radius: 15px; 
+                    border: 1px solid rgba(255,255,255,0.2);
+                    backdrop-filter: blur(10px);
+                ">
+                    <h3 style="
+                        color: white; 
+                        margin-bottom: 15px; 
+                        font-size: 1.4rem;
+                        text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+                    ">💎 Laatu</h3>
+                    <p style="
+                        color: white; 
+                        line-height: 1.6;
+                        text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+                    ">Käytämme vain laadukkaita materiaaleja ja välineitä parhaan lopputuloksen takaamiseksi.</p>
+                </div>
             </div>
-            <div class="carousel-item">
-                <img src="FN4.png" alt="Kuva 3" loading="lazy">
+            
+            <div style="
+                text-align: center; 
+                margin-top: 50px; 
+                padding: 30px; 
+                background: rgba(255,255,255,0.95); 
+                border: 2px solid rgba(255,255,255,0.3); 
+                border-radius: 15px; 
+                color: black;
+                backdrop-filter: blur(10px);
+            ">
+                <p style="font-size: 1.2rem; margin: 0; color: black; font-weight: 500;">
+                    <strong>✨ Varaa aikasi helposti</strong> alla olevasta kalenterista tai 
+                    <a href="#yhteystiedot" style="color: #000; text-decoration: underline;">ota yhteyttä</a> 
+                    lisätietoja varten!
+                </p>
             </div>
-            <div class="carousel-item">
-                <img src="FN8.png" alt="Kuva 4" loading="lazy">
-            </div>
-            <div class="carousel-item">
-                <img src="FN5.png" alt="Kuva 5" loading="lazy">
-            </div>
-            <div class="carousel-item">
-                <img src="FN7.png" alt="Kuva 6" loading="lazy">
-            </div>
-            <div class="carousel-item">
-                <img src="FN6.png" alt="Kuva 7" loading="lazy">
-            </div>
-        </div>
-    </div>
-    
-    <!-- Intro Section -->
-    <section id="intro" style="max-width: 1200px; margin: 40px auto; padding: 40px; background: rgba(255,255,255,0.95); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); backdrop-filter: blur(10px);">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <h1 style="background: linear-gradient(135deg, #2c3e50, #4a6741); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-size: 2.8rem; margin-bottom: 20px; font-weight: 700;">Tervetuloa FIXNERO-palveluihin!</h1>
-            <p style="font-size: 1.3rem; color: #555; line-height: 1.7; max-width: 900px; margin: 0 auto;">
-                Olemme Espoossa toimiva autopalvelualan ammattilainen, joka tarjoaa kattavan valikoiman laadukkaita palveluita ajoneuvollesi. 
-                Meiltä saat asiantuntevaa palvelua rengastöistä sisäpuhdistukseen, kiillotuksesta korjaustöihin.
-            </p>
-        </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px;">
-            <div style="text-align: center; padding: 30px; background: rgba(120,120,120,0.05); border-radius: 15px; border: 1px solid rgba(120,120,120,0.1);">
-                <h3 style="color: #666666; margin-bottom: 15px; font-size: 1.4rem;">🔧 Ammattitaito</h3>
-                <p style="color: #555; line-height: 1.6;">Pitkän kokemuksen omaava tiimimme huolehtii ajoneuvostasi huolellisesti ja ammattitaidolla.</p>
-            </div>
-            <div style="text-align: center; padding: 30px; background: rgba(80,80,80,0.05); border-radius: 15px; border: 1px solid rgba(80,80,80,0.1);">
-                <h3 style="color: #555555; margin-bottom: 15px; font-size: 1.4rem;">⚡ Nopeus</h3>
-                <p style="color: #555; line-height: 1.6;">Arvostamme aikaasi - palvelumme ovat tehokkaita ilman kompromisseja laadusta.</p>
-            </div>
-            <div style="text-align: center; padding: 30px; background: rgba(100,100,100,0.05); border-radius: 15px; border: 1px solid rgba(100,100,100,0.1);">
-                <h3 style="color: #777777; margin-bottom: 15px; font-size: 1.4rem;">💎 Laatu</h3>
-                <p style="color: #555; line-height: 1.6;">Käytämme vain laadukkaita materiaaleja ja välineitä parhaan lopputuloksen takaamiseksi.</p>
-            </div>
-        </div>
-        <div style="text-align: center; margin-top: 40px; padding: 30px; background: white; border: 2px solid #000; border-radius: 15px; color: black;">
-            <p style="font-size: 1.2rem; margin: 0; color: black;">
-                <strong>✨ Varaa aikasi helposti</strong> alla olevasta kalenterista tai 
-                <a href="#yhteystiedot" style="color: #000; text-decoration: underline;">ota yhteyttä</a> 
-                lisätietoja varten!
-            </p>
         </div>
     </section>
     
@@ -2320,14 +2428,6 @@ document.querySelectorAll('nav a, .footer a').forEach(link => {
         }
     });
 });
-// Carousel logic (auto-advance every 7s, one image at a time)
-const carousel = document.getElementById('carousel');
-let currentIndex = 0;
-function nextSlide() {
-    currentIndex = (currentIndex + 1) % carousel.children.length;
-    carousel.style.transform = `translateX(${-currentIndex * 100}%)`;
-}
-setInterval(nextSlide, 7000);
 // Responsive nav close on resize
 window.addEventListener('resize', () => {
     if (window.innerWidth > 1279) {
