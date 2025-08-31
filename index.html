@@ -222,49 +222,50 @@
         /* Hero section responsive styles */
         @media (max-width: 768px) {
             #hero {
-                min-height: 70vh;
-                margin-left: 10px;
-                margin-right: 10px;
-                margin-top: 120px;
+                min-height: 100vh;
                 /* Fix background image scaling on mobile */
-                background-size: contain !important;
+                background-size: cover !important;
                 background-position: center !important;
                 background-repeat: no-repeat !important;
             }
             #hero h1 {
-                font-size: 2.4rem !important;
+                font-size: 3.2rem !important;
+                margin-bottom: 20px !important;
             }
             #hero p {
-                font-size: 1.1rem !important;
+                font-size: 1.4rem !important;
+                margin-bottom: 40px !important;
             }
-            #hero > div > div:first-child {
+            #hero > div {
                 padding: 40px 20px !important;
             }
-            #hero div[style*="grid-template-columns"] {
-                grid-template-columns: 1fr !important;
-                gap: 20px !important;
+            #hero a {
+                padding: 16px 32px !important;
+                font-size: 1.1rem !important;
             }
         }
         
         @media (max-width: 480px) {
             #hero {
-                min-height: 60vh;
-                margin-top: 100px;
-                margin-left: 5px;
-                margin-right: 5px;
+                min-height: 100vh;
                 /* Ensure background image scaling is optimized for small screens */
-                background-size: contain !important;
+                background-size: cover !important;
                 background-position: center !important;
                 background-repeat: no-repeat !important;
             }
             #hero h1 {
-                font-size: 2rem !important;
+                font-size: 2.8rem !important;
+                letter-spacing: 1px !important;
             }
             #hero p {
-                font-size: 1rem !important;
+                font-size: 1.2rem !important;
             }
             #hero > div {
                 padding: 30px 15px !important;
+            }
+            #hero a {
+                padding: 14px 28px !important;
+                font-size: 1rem !important;
             }
         }
         .categories-row {
@@ -904,20 +905,16 @@
     <!-- Hero Section with Background Image -->
     <section id="hero" style="
         position: relative;
-        min-height: 80vh;
+        min-height: 100vh;
         background-image: url('hero-background.PNG');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        margin-top: 140px;
+        margin-top: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        margin-left: 20px;
-        margin-right: 20px;
     ">
         <!-- Background overlay for better text readability -->
         <div style="
@@ -946,110 +943,48 @@
         ">
             <div style="margin-bottom: 40px;">
                 <h1 style="
-                    font-size: 3.2rem; 
-                    margin-bottom: 20px; 
+                    font-size: 4.5rem; 
+                    margin-bottom: 30px; 
                     font-weight: 700;
                     color: white;
                     text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
                     line-height: 1.2;
-                ">Tervetuloa FIXNERO-palveluihin!</h1>
+                    letter-spacing: 2px;
+                ">FIXNERO</h1>
                 <p style="
-                    font-size: 1.4rem; 
+                    font-size: 1.8rem; 
                     line-height: 1.7; 
-                    max-width: 900px; 
-                    margin: 0 auto;
+                    max-width: 800px; 
+                    margin: 0 auto 60px auto;
                     color: white;
                     text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
                     font-weight: 400;
                 ">
-                    Olemme Espoossa toimiva autopalvelualan ammattilainen, joka tarjoaa kattavan valikoiman laadukkaita palveluita ajoneuvollesi. 
-                    Meiltä saat asiantuntevaa palvelua rengastöistä sisäpuhdistukseen, kiillotuksesta korjaustöihin.
+                    Ammattitaitoista autojen kunnostusta ja huoltoa.
                 </p>
             </div>
             
-            <div style="
-                display: grid; 
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-                gap: 30px; 
-                margin-top: 50px;
-            ">
-                <div style="
-                    text-align: center; 
-                    padding: 30px; 
-                    background: rgba(255,255,255,0.15); 
-                    border-radius: 15px; 
-                    border: 1px solid rgba(255,255,255,0.2);
-                    backdrop-filter: blur(10px);
-                ">
-                    <h3 style="
-                        color: white; 
-                        margin-bottom: 15px; 
-                        font-size: 1.4rem;
-                        text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-                    ">🔧 Ammattitaito</h3>
-                    <p style="
-                        color: white; 
-                        line-height: 1.6;
-                        text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
-                    ">Pitkän kokemuksen omaava tiimimme huolehtii ajoneuvostasi huolellisesti ja ammattitaidolla.</p>
-                </div>
-                <div style="
-                    text-align: center; 
-                    padding: 30px; 
-                    background: rgba(255,255,255,0.15); 
-                    border-radius: 15px; 
-                    border: 1px solid rgba(255,255,255,0.2);
-                    backdrop-filter: blur(10px);
-                ">
-                    <h3 style="
-                        color: white; 
-                        margin-bottom: 15px; 
-                        font-size: 1.4rem;
-                        text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-                    ">⚡ Nopeus</h3>
-                    <p style="
-                        color: white; 
-                        line-height: 1.6;
-                        text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
-                    ">Arvostamme aikaasi - palvelumme ovat tehokkaita ilman kompromisseja laadusta.</p>
-                </div>
-                <div style="
-                    text-align: center; 
-                    padding: 30px; 
-                    background: rgba(255,255,255,0.15); 
-                    border-radius: 15px; 
-                    border: 1px solid rgba(255,255,255,0.2);
-                    backdrop-filter: blur(10px);
-                ">
-                    <h3 style="
-                        color: white; 
-                        margin-bottom: 15px; 
-                        font-size: 1.4rem;
-                        text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-                    ">💎 Laatu</h3>
-                    <p style="
-                        color: white; 
-                        line-height: 1.6;
-                        text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
-                    ">Käytämme vain laadukkaita materiaaleja ja välineitä parhaan lopputuloksen takaamiseksi.</p>
-                </div>
-            </div>
-            
+            <!-- CTA Button -->
             <div style="
                 text-align: center; 
-                margin-top: 50px; 
-                padding: 30px; 
-                background: rgba(255,255,255,0.95); 
-                border: 2px solid rgba(255,255,255,0.3); 
-                border-radius: 15px; 
-                color: black;
-                backdrop-filter: blur(10px);
+                margin-top: 50px;
             ">
-                <p style="font-size: 1.2rem; margin: 0; color: black; font-weight: 500;">
-                    <strong>✨ Varaa aikasi helposti</strong> alla olevasta kalenterista tai 
-                    <a href="#yhteystiedot" style="color: #000; text-decoration: underline;">ota yhteyttä</a> 
-                    lisätietoja varten!
-                </p>
+                <a href="#pesupalvelut" style="
+                    display: inline-block;
+                    padding: 20px 40px;
+                    background: linear-gradient(135deg, #666666, #444444);
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 35px;
+                    font-weight: 600;
+                    font-size: 1.3rem;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+                    text-shadow: none;
+                    letter-spacing: 1px;
+                " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.3)'">
+                    Tutustu palveluihimme
+                </a>
             </div>
         </div>
     </section>
