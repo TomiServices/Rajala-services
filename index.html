@@ -275,10 +275,11 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 25px;
+            gap: 28px;
             margin: 50px auto 0 auto;
             max-width: 1000px;
             padding: 0 20px;
+            align-items: stretch;
         }
         .category-box {
             flex: 1 1 200px;
@@ -301,7 +302,7 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             text-shadow: 0 2px 12px rgba(0,0,0,0.6);
             border: 2px solid rgba(255,255,255,0.1);
         }
@@ -315,8 +316,9 @@
         }
         .category-box:hover {
             transform: translateY(-8px) scale(1.05);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2), 0 0 30px rgba(0,0,0,0.1);
             filter: brightness(1.1);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
         .category-box:hover::after {
             background: linear-gradient(to top, rgba(60,60,60,0.4) 60%, rgba(60,60,60,0.1) 100%);
@@ -386,10 +388,29 @@
         .ajanvaraus-container {
             max-width: 800px;
             margin: 30px auto 20px auto;
-            background: #fff;
+            background: #fff url('Tausta.PNG') center/cover;
             border-radius: 14px;
-            box-shadow: 0 2px 14px #0001;
+            box-shadow: 0 2px 14px #0001, 0 8px 40px rgba(0,0,0,0.15);
             padding: 24px 20px 20px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ajanvaraus-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.9);
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .ajanvaraus-container > * {
+            position: relative;
+            z-index: 2;
         }
         .ajanvaraus-container h2 {
             text-align: center;
@@ -400,7 +421,32 @@
             max-width: 700px;
             margin: 0 auto 20px auto;
             background: #fff;
-            border-radius: 12px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        
+        /* Enhanced calendar hover effects */
+        .fc-timegrid-slot:hover {
+            background-color: rgba(0, 123, 255, 0.08) !important;
+            border-color: rgba(0, 123, 255, 0.3) !important;
+            transition: all 0.2s ease;
+        }
+        
+        .fc-col-header-cell:hover {
+            background-color: rgba(0, 123, 255, 0.05) !important;
+            transition: all 0.2s ease;
+        }
+        
+        .fc-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.2s ease;
+        }
+        
+        .fc-daygrid-day:hover {
+            background-color: rgba(0, 123, 255, 0.05) !important;
+            transition: all 0.2s ease;
         }
         
         /* Mobile Time Selection Modal */
@@ -993,7 +1039,10 @@
     </section>
     
     <!-- Services Section with Categories -->
-    <section id="palvelumme" style="background: #fff; margin: 30px auto; padding: 24px 18px 18px 18px; max-width: 1200px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 18px;">
+    <section id="palvelumme" style="background: #fff url('Tausta.PNG') center/cover; margin: 30px auto; padding: 24px 18px 18px 18px; max-width: 1200px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 18px; position: relative; overflow: hidden;">
+        <!-- Background overlay for better text readability -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.85); z-index: 1;"></div>
+        <div style="position: relative; z-index: 2;">
         <h2 style="text-align: center; margin-bottom: 30px; font-size: 2.2rem; color: #333; font-weight: 600;">Palvelumme</h2>
         <div class="categories-row">
             <div class="category-box" style="background-image: url('pesupalvelut.jpg');" onclick="location.href='#pesupalvelut'">Pesupalvelut</div>
@@ -1006,6 +1055,7 @@
             <div class="category-box" style="background-image: url('Ajanvaraus.jpeg');" onclick="location.href='#ajanvaraus'">Ajanvaraus</div>
             <div class="category-box" style="background-image: url('hinnasto.jpg');" onclick="location.href='#hinnasto'">Hinnasto</div>
             <div class="category-box" style="background-image: url('yhteystiedot.jpg');" onclick="location.href='#yhteystiedot'">Yhteystiedot</div>
+        </div>
         </div>
     </section>
     
