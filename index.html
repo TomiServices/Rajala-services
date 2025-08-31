@@ -75,83 +75,42 @@
         .hamburger-menu {
             display: none;
             cursor: pointer;
-            padding: 12px;
-            background: #000000;
+            padding: 8px;
+            background: rgba(0,0,0,0.8);
             position: fixed;
             top: 8px; right: 8px;
             z-index: 1004;
-            border-radius: 4px;
-            width: 48px;
-            height: 48px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 0 0 2px rgba(255,255,255,0.1);
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            width: 36px;
+            height: 36px;
+            transition: all 0.3s ease;
         }
         .hamburger-menu:hover {
-            background: #000000;
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.9);
         }
         .hamburger-menu:active {
             transform: scale(0.95);
         }
         .hamburger-menu span {
             display: block;
-            width: 20px; 
+            width: 18px; 
             height: 2px;
             margin: 3px auto;
-            background: linear-gradient(90deg, #fff 0%, #ecf0f1 100%);
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            border-radius: 2px;
-            position: relative;
-        }
-        .hamburger-menu span::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, #3498db, #2980b9);
-            border-radius: 2px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .hamburger-menu:hover span::before {
-            opacity: 1;
+            background: #fff;
+            transition: all 0.3s ease;
+            border-radius: 1px;
         }
         .hamburger-menu.active {
-            background: #000000;
-            transform: scale(1.05) rotate(180deg);
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.9);
         }
         .hamburger-menu.active span:nth-child(1) {
             transform: rotate(45deg) translate(5px, 5px);
-            background: linear-gradient(90deg, #fff 0%, #ecf0f1 100%);
         }
         .hamburger-menu.active span:nth-child(2) {
             opacity: 0;
-            transform: scale(0);
         }
         .hamburger-menu.active span:nth-child(3) {
             transform: rotate(-45deg) translate(7px, -6px);
-            background: linear-gradient(90deg, #fff 0%, #ecf0f1 100%);
-        }
-        .hamburger-menu::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 60px;
-            height: 60px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.4s ease;
-            pointer-events: none;
-        }
-        .hamburger-menu:hover::after {
-            transform: translate(-50%, -50%) scale(1);
         }
         @media (max-width: 1279px) {
             .hamburger-menu { display: flex; align-items: center; justify-content: center; }
@@ -955,6 +914,8 @@
     <section id="hero" style="
         position: relative;
         min-height: 100vh;
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
         background-image: url('hero-background.PNG');
         background-size: cover;
         background-position: center;
@@ -1045,8 +1006,8 @@
         <div style="position: relative; z-index: 2;">
         <h2 style="text-align: center; margin-bottom: 30px; font-size: 2.2rem; color: #333; font-weight: 600;">Palvelumme</h2>
         <div class="categories-row">
-            <div class="category-box" style="background-image: url('pesupalvelut.jpg');" onclick="location.href='#pesupalvelut'">Pesupalvelut</div>
-            <div class="category-box" style="background-image: url('rengastyot.jpg');" onclick="location.href='#rengastyot'">Rengastyöt</div>
+            <div class="category-box" style="background-image: url('Pesupalvelut.PNG');" onclick="location.href='#pesupalvelut'">Pesupalvelut</div>
+            <div class="category-box" style="background-image: url('Rengastyot.PNG');" onclick="location.href='#rengastyot'">Rengastyöt</div>
             <div class="category-box" style="background-image: url('Korjaustyot.PNG');" onclick="location.href='#korjaustyot'">Korjaustyöt</div>
             <div class="category-box" style="background-image: url('sisapuhdistus.jpg');" onclick="location.href='#sisapuhdistus'">Sisäpuhdistus</div>
             <div class="category-box" style="background-image: url('kiilloitus.jpg');" onclick="location.href='#kiilloitus'">Kiilloitus</div>
