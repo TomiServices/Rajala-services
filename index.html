@@ -226,8 +226,8 @@
                 margin-left: 10px;
                 margin-right: 10px;
                 margin-top: 120px;
-                /* Fix background image scaling on mobile */
-                background-size: contain !important;
+                /* Optimize background image scaling for mobile - use cover but adjust position */
+                background-size: cover !important;
                 background-position: center !important;
                 background-repeat: no-repeat !important;
             }
@@ -252,8 +252,8 @@
                 margin-top: 100px;
                 margin-left: 5px;
                 margin-right: 5px;
-                /* Ensure background image scaling is optimized for small screens */
-                background-size: contain !important;
+                /* Optimize background image scaling for small screens - maintain cover */
+                background-size: cover !important;
                 background-position: center !important;
                 background-repeat: no-repeat !important;
             }
@@ -905,7 +905,7 @@
     <section id="hero" style="
         position: relative;
         min-height: 80vh;
-        background-image: url('hero-background.PNG');
+        background-image: url('FN1.png');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
