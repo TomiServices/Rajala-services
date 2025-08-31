@@ -327,6 +327,14 @@
                 box-sizing: border-box !important;
             }
         }
+        
+        /* Large screen hero section - full width for 1920px+ displays */
+        @media (min-width: 1920px) {
+            #hero {
+                width: 100vw;
+                margin-left: calc(-50vw + 50%);
+            }
+        }
         section {
             background: #fff;
             margin: 30px auto;
@@ -914,8 +922,6 @@
     <section id="hero" style="
         position: relative;
         min-height: 100vh;
-        width: 100vw;
-        margin-left: calc(-50vw + 50%);
         background-image: url('hero-background.PNG');
         background-size: cover;
         background-position: center;
