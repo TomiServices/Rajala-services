@@ -10,8 +10,8 @@ exports.book = functions.https.onRequest((req, res) => {
         if (req.method !== "POST") {
             return res.status(405).json({ error: "Method not allowed" });
         }
-        const { name, email, phone, aika } = req.body;
-        if (!name || !email || !phone || !aika) {
+        const { name, email, phone, aika, palvelu, palvelunTyyppi } = req.body;
+        if (!name || !email || !phone || !aika || !palvelu || !palvelunTyyppi) {
             return res.status(400).json({ error: "Missing required fields" });
         }
         // Tallenna varaus Firestoreen
@@ -20,6 +20,8 @@ exports.book = functions.https.onRequest((req, res) => {
             email,
             phone,
             aika,
+            palvelu,
+            palvelunTyyppi,
             timestamp: admin.firestore.FieldValue.serverTimestamp()
         }).then(doc => {
             // Luo "mail"-dokumentti sähköpostitriggerille (to array!)
@@ -27,8 +29,8 @@ exports.book = functions.https.onRequest((req, res) => {
                 to: [email], // ARRAY, extension vaatii tätä!
                 message: {
                     subject: "Varausvahvistus – Fixnero",
-                    text: `Hei ${name}, varauksesi ajalle ${aika} on vahvistettu! Kiitos varauksestasi.`,
-                    html: `<strong>Hei ${name},</strong><br>Varauksesi ajalle <b>${aika}</b> on vahvistettu!<br>Kiitos varauksestasi.`
+                    text: `Hei ${name},\n\nKiitos paljon tekemästäsi varauksesta! Sinulle on vahvistettu varaus palveluun ${palvelunTyyppi} ajalle ${aika}.\nTervetuloa asiakkaaksemme!\n\nYstävällisin terveisin,\nFixnero-tiimi\n\nPuhelin: 040 1935001\nSähköposti: info@fixnero.fi\nOsoite: Tiilenvalajantie 6, 02330 Espoo\nAukioloajat: Arkisin 9:00-17:00, viikonloppuisin suljettu`,
+                    html: `<strong>Hei ${name},</strong><br><br>Kiitos paljon tekemästäsi varauksesta! Sinulle on vahvistettu varaus palveluun <b>${palvelunTyyppi}</b> ajalle <b>${aika}</b>.<br>Tervetuloa asiakkaaksemme!<br><br><strong>Ystävällisin terveisin,</strong><br>Fixnero-tiimi<br><br><strong>Puhelin:</strong> 040 1935001<br><strong>Sähköposti:</strong> <a href="mailto:info@fixnero.fi">info@fixnero.fi</a><br><strong>Osoite:</strong> Tiilenvalajantie 6, 02330 Espoo<br><strong>Aukioloajat:</strong> Arkisin 9:00-17:00, viikonloppuisin suljettu`
                 }
             }).then(() => {
                 res.json({ success: true, id: doc.id });
