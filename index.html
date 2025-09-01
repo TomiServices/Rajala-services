@@ -343,6 +343,109 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             border-radius: 18px;
         }
+        
+        /* Services container with decorative fixnero lines */
+        .services-container {
+            position: relative;
+            margin: 30px auto;
+            max-width: 1000px;
+            padding: 0 20px;
+        }
+        
+        /* Left decorative line with fixnero text */
+        .services-container::before {
+            content: "fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero";
+            position: absolute;
+            left: -15px;
+            top: 0;
+            bottom: 0;
+            width: 8px;
+            background: linear-gradient(180deg, #000 0%, #333 50%, #000 100%);
+            color: #fff;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            writing-mode: vertical-lr;
+            text-orientation: mixed;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 3px 0 8px rgba(0,0,0,0.3);
+            border-radius: 4px;
+        }
+        
+        /* Right decorative line with fixnero text */
+        .services-container::after {
+            content: "fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero • fixnero";
+            position: absolute;
+            right: -15px;
+            top: 0;
+            bottom: 0;
+            width: 8px;
+            background: linear-gradient(180deg, #000 0%, #333 50%, #000 100%);
+            color: #fff;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            writing-mode: vertical-lr;
+            text-orientation: mixed;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: -3px 0 8px rgba(0,0,0,0.3);
+            border-radius: 4px;
+        }
+        
+        /* Ensure services sections within container have proper spacing */
+        .services-container section {
+            margin: 30px auto;
+        }
+        
+        /* Responsive design for decorative lines */
+        @media (max-width: 1200px) {
+            .services-container {
+                max-width: 900px;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .services-container::before,
+            .services-container::after {
+                width: 6px;
+                font-size: 8px;
+                letter-spacing: 1px;
+            }
+            .services-container::before {
+                left: -12px;
+            }
+            .services-container::after {
+                right: -12px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .services-container {
+                padding: 0 10px;
+            }
+            .services-container::before,
+            .services-container::after {
+                width: 4px;
+                font-size: 6px;
+                letter-spacing: 0.5px;
+            }
+            .services-container::before {
+                left: -8px;
+            }
+            .services-container::after {
+                right: -8px;
+            }
+        }
         #yhteystiedot {
             background: #fff;
             border: 2px solid #000;
@@ -1139,6 +1242,8 @@
         </div>
     </div>
     
+    <!-- Services sections with decorative fixnero lines -->
+    <div class="services-container">
     <section id="pesupalvelut">
         <h2>Pesupalvelut</h2>
         <p>Tarjoamme laadukkaita auton pesupalveluita: käsinpesu, vahaukset, pikapesut ja renkaiden pesut. Käytämme vain huolellisesti valittuja, laadukkaita aineita ja välineitä, jotka suojaavat ajoneuvon pintoja ja tekevät autostasi kiiltävän puhtaan.</p>
@@ -1343,6 +1448,9 @@
 
         <p>Pyydä tarjous erityispalveluista tai suuremmista kokonaisuuksista!</p>
     </section>
+    </div>
+    <!-- End of services container with decorative lines -->
+    
     <section id="yhteystiedot">
         <h2>Yhteystiedot</h2>
         <p>Ota yhteyttä ja kysy lisää palveluistamme tai varaa aika!</p>
