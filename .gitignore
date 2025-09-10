@@ -37,3 +37,6 @@ test-mobile-calendar.html
 
 # Ignore assets directory if using CDN fallbacks
 assets/
+
+# Ignore demo screenshots
+logo-enhanced-*.png

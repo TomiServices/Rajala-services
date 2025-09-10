@@ -951,23 +951,41 @@
         /* Company logo styling for services section */
         .services-logo {
             text-align: center;
-            margin: 40px auto 30px auto;
+            margin: 50px auto 40px auto;
             position: relative;
             z-index: 2;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 248, 248, 0.85));
+            border-radius: 20px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.12),
+                0 4px 16px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 320px;
         }
         
         .services-logo img {
-            max-width: 200px;
+            max-width: 250px;
             height: auto;
-            opacity: 0.9;
-            transition: all 0.3s ease;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+            opacity: 0.95;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 6px 16px rgba(0,0,0,0.15));
         }
         
         .services-logo img:hover {
             opacity: 1;
-            transform: scale(1.02);
-            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
+            transform: scale(1.05);
+            filter: drop-shadow(0 12px 24px rgba(0,0,0,0.2));
+        }
+        
+        .services-logo:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 48px rgba(0, 0, 0, 0.16),
+                0 8px 24px rgba(0, 0, 0, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
         }
         
         /* Enhanced services section styling */
@@ -984,11 +1002,39 @@
             }
             
             .services-logo {
-                margin: 30px auto 20px auto;
+                margin: 40px auto 30px auto;
+                padding: 20px;
+                max-width: 280px;
             }
             
             .services-logo img {
-                max-width: 150px;
+                max-width: 200px;
+            }
+        }
+        
+        /* Enhanced mobile styling for iPhone 15 Pro and similar devices */
+        @media (max-width: 430px) {
+            .services-logo {
+                margin: 35px auto 25px auto;
+                padding: 18px;
+                max-width: 260px;
+            }
+            
+            .services-logo img {
+                max-width: 180px;
+            }
+        }
+        
+        /* Small mobile devices */
+        @media (max-width: 375px) {
+            .services-logo {
+                margin: 30px auto 20px auto;
+                padding: 15px;
+                max-width: 240px;
+            }
+            
+            .services-logo img {
+                max-width: 160px;
             }
         }
     </style>
