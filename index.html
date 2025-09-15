@@ -3,7 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Pesupalvelut, sisäpuhdistukset, rengastyöt, kiillotukset, tuulilasityöt. Fixnero parasta silmäterällesi.">
     <title>FIXNERO</title>
+    
+    <!-- Structured Data (Schema Markup) for better Google search results -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "AutoRepair",
+        "name": "Fixnero",
+        "image": "https://fixnero.fi/FXNR.png",
+        "description": "Pesupalvelut, sisäpuhdistukset, rengastyöt, kiillotukset, tuulilasityöt. Fixnero parasta silmäterällesi.",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Tiilenvalajantie 6",
+            "addressLocality": "Espoo",
+            "postalCode": "02330",
+            "addressCountry": "FI"
+        },
+        "telephone": "+358401935001",
+        "email": "info@fixnero.fi",
+        "url": "https://fixnero.fi",
+        "openingHours": "Mo-Fr 09:00-17:00",
+        "priceRange": "€",
+        "areaServed": {
+            "@type": "Place",
+            "name": "Espoo, Helsinki metropolitan area"
+        },
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Automotive Services",
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Pesupalvelut",
+                        "description": "Käsinpesu, vahaukset, pikapesut ja renkaiden pesut"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Sisäpuhdistus",
+                        "description": "Kattava sisätilojen puhdistus ja hoito"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Rengastyöt",
+                        "description": "Renkaiden vaihto, tasapainotus, paikkaus ja rengashotelli"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Kiilloitus ja pinnoitteet",
+                        "description": "Koneellinen kiillotus ja keraaminen pinnoitus"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Tuulilasityöt",
+                        "description": "Tuulilasin korjaus ja vaihto"
+                    }
+                }
+            ]
+        }
+    }
+    </script>
+    
     <link rel="preload" href="FXNR.png" as="image">
     <!-- FullCalendar CSS for booking -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
@@ -948,50 +1023,96 @@
             filter: blur(2px);
         }
         
-        /* Company logo styling for services section */
+        /* Company logo styling for services section - ENHANCED */
         .services-logo {
             text-align: center;
             margin: 50px auto 40px auto;
             position: relative;
             z-index: 2;
-            padding: 25px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 248, 248, 0.85));
-            border-radius: 20px;
+            padding: 35px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 248, 248, 0.9));
+            border-radius: 25px;
             box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.12),
-                0 4px 16px rgba(0, 0, 0, 0.08),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            max-width: 320px;
+                0 12px 48px rgba(0, 0, 0, 0.18),
+                0 8px 24px rgba(0, 0, 0, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8),
+                0 0 0 3px rgba(102, 102, 102, 0.1);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(102, 102, 102, 0.2);
+            max-width: 480px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .services-logo img {
-            max-width: 250px;
+            max-width: 380px;
+            width: 100%;
             height: auto;
-            opacity: 0.95;
+            opacity: 0.98;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            filter: drop-shadow(0 6px 16px rgba(0,0,0,0.15));
+            filter: drop-shadow(0 8px 24px rgba(0,0,0,0.2)) contrast(1.05) saturate(1.1);
         }
         
         .services-logo img:hover {
             opacity: 1;
-            transform: scale(1.05);
-            filter: drop-shadow(0 12px 24px rgba(0,0,0,0.2));
+            transform: scale(1.08);
+            filter: drop-shadow(0 16px 32px rgba(0,0,0,0.25)) contrast(1.1) saturate(1.15);
         }
         
         .services-logo:hover {
-            transform: translateY(-2px);
+            transform: translateY(-4px);
             box-shadow: 
-                0 12px 48px rgba(0, 0, 0, 0.16),
-                0 8px 24px rgba(0, 0, 0, 0.12),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+                0 20px 64px rgba(0, 0, 0, 0.22),
+                0 12px 32px rgba(0, 0, 0, 0.16),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                0 0 0 3px rgba(102, 102, 102, 0.15);
         }
         
         /* Enhanced services section styling */
         #palvelumme {
             position: relative;
             overflow: visible;
+        }
+        
+        /* Enhanced responsive design for logo across different resolutions */
+        
+        /* Large screens (1920px+) - Maximum logo size */
+        @media (min-width: 1920px) {
+            .services-logo {
+                margin: 60px auto 50px auto;
+                padding: 45px;
+                max-width: 600px;
+                border-radius: 30px;
+            }
+            
+            .services-logo img {
+                max-width: 480px;
+            }
+        }
+        
+        /* Desktop screens (1200px - 1919px) - Large logo */
+        @media (min-width: 1200px) and (max-width: 1919px) {
+            .services-logo {
+                margin: 55px auto 45px auto;
+                padding: 40px;
+                max-width: 520px;
+            }
+            
+            .services-logo img {
+                max-width: 420px;
+            }
+        }
+        
+        /* Standard desktop/laptop (992px - 1199px) - Medium-large logo */
+        @media (min-width: 992px) and (max-width: 1199px) {
+            .services-logo {
+                margin: 50px auto 40px auto;
+                padding: 35px;
+                max-width: 480px;
+            }
+            
+            .services-logo img {
+                max-width: 380px;
+            }
         }
         
         @media (max-width: 768px) {
@@ -1003,12 +1124,13 @@
             
             .services-logo {
                 margin: 40px auto 30px auto;
-                padding: 20px;
-                max-width: 280px;
+                padding: 25px;
+                max-width: 350px;
+                border-radius: 20px;
             }
             
             .services-logo img {
-                max-width: 200px;
+                max-width: 280px;
             }
         }
         
@@ -1016,12 +1138,13 @@
         @media (max-width: 430px) {
             .services-logo {
                 margin: 35px auto 25px auto;
-                padding: 18px;
-                max-width: 260px;
+                padding: 20px;
+                max-width: 320px;
+                border-radius: 18px;
             }
             
             .services-logo img {
-                max-width: 180px;
+                max-width: 250px;
             }
         }
         
@@ -1029,12 +1152,13 @@
         @media (max-width: 375px) {
             .services-logo {
                 margin: 30px auto 20px auto;
-                padding: 15px;
-                max-width: 240px;
+                padding: 18px;
+                max-width: 300px;
+                border-radius: 16px;
             }
             
             .services-logo img {
-                max-width: 160px;
+                max-width: 220px;
             }
         }
     </style>
