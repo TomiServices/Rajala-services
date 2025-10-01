@@ -1377,6 +1377,21 @@
       <!-- Summary section moved here to appear below dropdown lists -->
       <div id="slot-summary"></div>
       
+      <!-- Selected services list -->
+      <div id="selected-services-container" style="display:none; margin: 15px 0;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 10px;">Valitut palvelut:</h3>
+        <ul id="selected-services-list" style="list-style: none; padding: 0; margin: 0;">
+          <!-- Selected services will be added here -->
+        </ul>
+      </div>
+      
+      <!-- Add another service button -->
+      <div id="add-service-container" style="display:none; margin: 15px 0; text-align: center;">
+        <button id="add-service-btn" class="btn" type="button" style="background: #444; width: auto; padding: 10px 20px; display: inline-block;">
+          ➕ Lisää toinen palvelu
+        </button>
+      </div>
+      
       <!-- Repair services disclaimer -->
       <div id="repair-disclaimer" style="display:none; background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: center;">
         <strong>Huomioithan että korjaustöiden hinnat ovat aina tapauskohtaisia. Voit olla meihin yhteydessä ennen korjausta hinta-arviota varten.</strong>
@@ -2078,6 +2093,99 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
+    // Multiple services management
+    let selectedServices = [];
+    
+    function addSelectedService(service, task) {
+        const serviceObj = serviceData[service];
+        const taskObj = serviceObj.tasks.find(t => t.id === task);
+        
+        if (!serviceObj || !taskObj) return;
+        
+        // Add to selected services array
+        selectedServices.push({
+            service: service,
+            serviceName: serviceObj.name,
+            task: task,
+            taskName: taskObj.name,
+            taskPrice: taskObj.price || ''
+        });
+        
+        updateSelectedServicesDisplay();
+    }
+    
+    function removeSelectedService(index) {
+        selectedServices.splice(index, 1);
+        updateSelectedServicesDisplay();
+        
+        // If no services left, hide the booking form
+        if (selectedServices.length === 0) {
+            document.getElementById('bookingForm').style.display = 'none';
+            document.getElementById('add-service-container').style.display = 'none';
+            document.getElementById('selected-services-container').style.display = 'none';
+            document.getElementById('repair-disclaimer').style.display = 'none';
+        } else {
+            // Update disclaimer visibility based on remaining services
+            updateRepairDisclaimer();
+        }
+    }
+    
+    function updateSelectedServicesDisplay() {
+        const container = document.getElementById('selected-services-container');
+        const list = document.getElementById('selected-services-list');
+        
+        if (selectedServices.length === 0) {
+            container.style.display = 'none';
+            return;
+        }
+        
+        container.style.display = 'block';
+        list.innerHTML = '';
+        
+        selectedServices.forEach((service, index) => {
+            const li = document.createElement('li');
+            li.style.cssText = 'padding: 10px; margin: 5px 0; background: #f8f9fa; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;';
+            
+            const serviceText = document.createElement('span');
+            if (service.taskPrice && service.taskPrice.trim() !== '') {
+                serviceText.textContent = `${service.serviceName} - ${service.taskName}: ${service.taskPrice}`;
+            } else {
+                serviceText.textContent = `${service.serviceName} - ${service.taskName}`;
+            }
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = '✕';
+            removeBtn.type = 'button';
+            removeBtn.style.cssText = 'background: #dc3545; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-weight: bold;';
+            removeBtn.onclick = () => removeSelectedService(index);
+            
+            li.appendChild(serviceText);
+            li.appendChild(removeBtn);
+            list.appendChild(li);
+        });
+    }
+    
+    function updateRepairDisclaimer() {
+        const repairDisclaimer = document.getElementById('repair-disclaimer');
+        const hasRepairService = selectedServices.some(s => s.service === 'repair');
+        
+        if (hasRepairService) {
+            repairDisclaimer.style.display = 'block';
+        } else {
+            repairDisclaimer.style.display = 'none';
+        }
+    }
+    
+    function resetServiceSelection() {
+        // Reset dropdowns
+        document.getElementById('serviceSelect').value = '';
+        document.getElementById('taskSelect').value = '';
+        document.getElementById('taskSelection').style.display = 'none';
+        
+        // Show service selection again
+        document.getElementById('serviceSelection').style.display = 'block';
+    }
+
     // Service selection event handler
     function setupServiceSelection() {
         const serviceSelect = document.getElementById('serviceSelect');
@@ -2158,45 +2266,47 @@ document.addEventListener('DOMContentLoaded', function () {
         const selectedTask = taskSelect.value;
         
         if (selectedDateTime && selectedService && selectedTask) {
+            // Add service to the list if it's a new service
+            addSelectedService(selectedService, selectedTask);
+            
             selectedSlot = selectedDateTime;
             const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                 ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
             
-            // Get service and task names for display
-            let serviceInfo = '';
-            if (serviceData[selectedService]) {
-                const serviceObj = serviceData[selectedService];
-                const taskObj = serviceObj.tasks.find(task => task.id === selectedTask);
-                if (taskObj) {
-                    // Display price only if it exists and is not empty
-                    if (taskObj.price && taskObj.price.trim() !== '') {
-                        serviceInfo = `\nPalvelu: ${serviceObj.name} - ${taskObj.name}: ${taskObj.price}`;
-                    } else {
-                        serviceInfo = `\nPalvelu: ${serviceObj.name} - ${taskObj.name}`;
-                    }
-                }
-            }
-            
-            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt + serviceInfo;
+            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
             document.getElementById('aika').value = aikaTxt;
-            document.getElementById('service').value = selectedService;
-            document.getElementById('task').value = selectedTask;
             
-            // Show repair disclaimer if repair service is selected
-            const repairDisclaimer = document.getElementById('repair-disclaimer');
-            if (selectedService === 'repair') {
-                repairDisclaimer.style.display = 'block';
-            } else {
-                repairDisclaimer.style.display = 'none';
-            }
+            // Store all services as comma-separated values
+            const serviceValues = selectedServices.map(s => s.service).join(', ');
+            const taskValues = selectedServices.map(s => s.task).join(', ');
+            document.getElementById('service').value = serviceValues;
+            document.getElementById('task').value = taskValues;
             
+            // Show repair disclaimer if any repair service is selected
+            updateRepairDisclaimer();
+            
+            // Show add service button and booking form
+            document.getElementById('add-service-container').style.display = 'block';
             document.getElementById('bookingForm').style.display = '';
             document.getElementById('error').textContent = '';
+            
+            // Reset service selection for next service
+            resetServiceSelection();
         }
     }
 
     // Call setupServiceSelection immediately
     setupServiceSelection();
+    
+    // Setup "Add another service" button
+    const addServiceBtn = document.getElementById('add-service-btn');
+    if (addServiceBtn) {
+        addServiceBtn.addEventListener('click', function() {
+            // Show service selection again to add another service
+            document.getElementById('serviceSelection').style.display = 'block';
+            document.getElementById('serviceSelect').value = '';
+        });
+    }
 
     // Initialize mock calendar and dropdown functionality
     initializeMockCalendarAndDropdowns();
@@ -2632,6 +2742,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             try {
+                // Build service description from selected services
+                const palveluText = selectedServices.map(s => s.serviceName).join(', ');
+                const palvelunTyyppiText = selectedServices.map(s => {
+                    if (s.taskPrice && s.taskPrice.trim() !== '') {
+                        return `${s.taskName}: ${s.taskPrice}`;
+                    }
+                    return s.taskName;
+                }).join(', ');
+                
                 // FIXED: Send booking to backend Firebase Function
                 const res = await fetch('https://us-central1-fxnr-web.cloudfunctions.net/book', {
                     method: 'POST',
@@ -2639,6 +2758,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     body: JSON.stringify({
                         name, email, phone,
                         aika: selectedSlot.toISOString(),
+                        palvelu: palveluText,
+                        palvelunTyyppi: palvelunTyyppiText,
                         recaptcha: recaptchaResponse
                     })
                 });
@@ -2648,7 +2769,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     grecaptcha.reset();
                     document.getElementById('bookingForm').style.display = 'none';
                     document.getElementById('slot-summary').textContent = '';
+                    document.getElementById('add-service-container').style.display = 'none';
+                    document.getElementById('selected-services-container').style.display = 'none';
+                    document.getElementById('repair-disclaimer').style.display = 'none';
                     selectedSlot = null;
+                    selectedServices = [];
                     bookings = await fetchBookings();
                     if (calendar) calendar.refetchEvents();
                 } else {
