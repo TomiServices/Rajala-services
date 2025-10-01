@@ -1299,7 +1299,7 @@
     
     <!-- Booking Calendar Section -->
     <div class="ajanvaraus-container" id="ajanvaraus" style="border: 2px solid #000;">
-      <h2>Varaa aika kiillotukseen</h2>
+      <h2>Varaa aika silmäterällesi</h2>
       <div id="calendar"></div>
       <!-- Mock calendar for testing when FullCalendar CDN is blocked -->
       <div id="mock-calendar" style="display: none; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 8px;">
@@ -1376,6 +1376,11 @@
       
       <!-- Summary section moved here to appear below dropdown lists -->
       <div id="slot-summary"></div>
+      
+      <!-- Repair services disclaimer -->
+      <div id="repair-disclaimer" style="display:none; background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: center;">
+        <strong>Huomioithan että korjaustöiden hinnat ovat aina tapauskohtaisia. Voit olla meihin yhteydessä ennen korjausta hinta-arviota varten.</strong>
+      </div>
       
       <form class="booking-form" id="bookingForm" style="display:none;" autocomplete="off">
         <input type="hidden" name="aika" id="aika" />
@@ -1524,7 +1529,7 @@
             <li>Keraaminen pinnoite (lisäpalvelu)</li>
         </ul>
 
-        <p>Varaa aika kiillotukseen <strong>varauskalenterista</strong> tai tule paikan päälle näyttämään ajoneuvoasi – annamme arvion ja suosittelemme sopivinta palvelua juuri sinun tarpeisiisi.</p>
+        <p>Varaa aika <strong>varauskalenterista</strong> tai tule paikan päälle näyttämään ajoneuvoasi – annamme arvion ja suosittelemme sopivinta palvelua juuri sinun tarpeisiisi.</p>
     </section>
     <section id="lasikorjaus">
         <h2>Lasikorjaus</h2>
@@ -1607,11 +1612,11 @@
             Pyydä tarjous viestin, sähköpostin tai puhelun kautta. Annamme realistisen arvion korjauskustannuksista ennen töiden aloittamista.
         </p>
         <ul>
-            <li>Iskunvaimentimien ja jousituksen uusiminen: pyydä tarjous</li>
-            <li>Tukivarsien, nivelien ja raidetankojen vaihto: pyydä tarjous</li>
-            <li>Jarrulevyjen ja palojen korjaukset: pyydä tarjous</li>
-            <li>Pakoputkistojen korjaukset: pyydä tarjous</li>
-            <li>Vikakoodien luku ja nollaus: pyydä tarjous</li>
+            <li>Vikakoodien luku ja nollaus: alkaen 40 €</li>
+            <li>Iskunvaimentimien ja jousituksen uusiminen</li>
+            <li>Tukivarsien, nivelien ja raidetankojen vaihto</li>
+            <li>Jarrulevyjen ja palojen korjaukset</li>
+            <li>Pakoputkistojen korjaukset</li>
         </ul>
 
         <p>Pyydä tarjous erityispalveluista tai suuremmista kokonaisuuksista!</p>
@@ -1739,8 +1744,19 @@ document.addEventListener('DOMContentLoaded', function () {
             return bookingDate.toDateString() === selectedDate.toDateString();
         });
         
+        // Get current date and time for comparison
+        const now = new Date();
+        const selectedDate = new Date(dateStr);
+        const isToday = selectedDate.toDateString() === now.toDateString();
+        const currentHour = now.getHours();
+        
         // Generate available time slots (9-17)
         for (let hour = 9; hour < 17; hour++) {
+            // Skip past time slots if it's today
+            if (isToday && hour <= currentHour) {
+                continue;
+            }
+            
             const isBooked = dayBookings.some(b => {
                 const bookingHour = new Date(b.aika).getHours();
                 return bookingHour === hour;
@@ -1807,8 +1823,18 @@ document.addEventListener('DOMContentLoaded', function () {
         
         let hasAvailableSlots = false;
         
+        // Get current date and time for comparison
+        const now = new Date();
+        const isToday = dateKey === getDateKey(now);
+        const currentHour = now.getHours();
+        
         // Generate time slots for the day (9-17)
         for (let hour = 9; hour < 17; hour++) {
+            // Skip past time slots if it's today
+            if (isToday && hour <= currentHour) {
+                continue;
+            }
+            
             const isBooked = dayBookings.some(b => {
                 const bookingHour = new Date(b.aika).getHours();
                 return bookingHour === hour;
@@ -2006,12 +2032,12 @@ document.addEventListener('DOMContentLoaded', function () {
         repair: {
             name: 'Korjaustyöt',
             tasks: [
-                { id: 'shock-absorber', name: 'Iskunvaimentimien ja jousituksen uusiminen', price: 'pyydä tarjous' },
-                { id: 'suspension-parts', name: 'Tukivarsien, nivelien ja raidetankojen vaihto', price: 'pyydä tarjous' },
-                { id: 'stabilizer-bar', name: 'Vakaajatangon ja koiranluiden vaihto', price: 'pyydä tarjous' },
-                { id: 'brake-repair', name: 'Jarrulevyjen, palojen ja käsijarrujen korjaukset', price: 'pyydä tarjous' },
-                { id: 'exhaust-repair', name: 'Pakoputkistojen korjaukset', price: 'pyydä tarjous' },
-                { id: 'diagnostics', name: 'Vikakoodien luku ja nollaus', price: 'alkaen 40 €' }
+                { id: 'diagnostics', name: 'Vikakoodien luku ja nollaus', price: 'alkaen 40 €' },
+                { id: 'shock-absorber', name: 'Iskunvaimentimien ja jousituksen uusiminen', price: '' },
+                { id: 'suspension-parts', name: 'Tukivarsien, nivelien ja raidetankojen vaihto', price: '' },
+                { id: 'stabilizer-bar', name: 'Vakaajatangon ja koiranluiden vaihto', price: '' },
+                { id: 'brake-repair', name: 'Jarrulevyjen, palojen ja käsijarrujen korjaukset', price: '' },
+                { id: 'exhaust-repair', name: 'Pakoputkistojen korjaukset', price: '' }
             ]
         },
         washing: {
@@ -2072,7 +2098,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     serviceData[selectedService].tasks.forEach(task => {
                         const option = document.createElement('option');
                         option.value = task.id;
-                        option.textContent = `${task.name}: ${task.price}`;
+                        // Display price only if it exists and is not empty
+                        if (task.price && task.price.trim() !== '') {
+                            option.textContent = `${task.name}: ${task.price}`;
+                        } else {
+                            option.textContent = task.name;
+                        }
                         taskSelect.appendChild(option);
                     });
                     
@@ -2137,7 +2168,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 const serviceObj = serviceData[selectedService];
                 const taskObj = serviceObj.tasks.find(task => task.id === selectedTask);
                 if (taskObj) {
-                    serviceInfo = `\nPalvelu: ${serviceObj.name} - ${taskObj.name}: ${taskObj.price}`;
+                    // Display price only if it exists and is not empty
+                    if (taskObj.price && taskObj.price.trim() !== '') {
+                        serviceInfo = `\nPalvelu: ${serviceObj.name} - ${taskObj.name}: ${taskObj.price}`;
+                    } else {
+                        serviceInfo = `\nPalvelu: ${serviceObj.name} - ${taskObj.name}`;
+                    }
                 }
             }
             
@@ -2145,6 +2181,15 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('aika').value = aikaTxt;
             document.getElementById('service').value = selectedService;
             document.getElementById('task').value = selectedTask;
+            
+            // Show repair disclaimer if repair service is selected
+            const repairDisclaimer = document.getElementById('repair-disclaimer');
+            if (selectedService === 'repair') {
+                repairDisclaimer.style.display = 'block';
+            } else {
+                repairDisclaimer.style.display = 'none';
+            }
+            
             document.getElementById('bookingForm').style.display = '';
             document.getElementById('error').textContent = '';
         }
