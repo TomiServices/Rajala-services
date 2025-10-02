@@ -198,7 +198,7 @@
                 transform: translateX(-100%);
                 transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
                 height: 100%;
-                padding: 70px 0 20px 0;
+                padding: 0;
                 background: #000000;
                 box-shadow: 8px 0 40px rgba(0,0,0,0.6);
                 overflow-y: auto;
@@ -209,41 +209,44 @@
                 transform: translateX(0);
                 box-shadow: 8px 0 50px rgba(0,0,0,0.8);
             }
-            nav a {
-                border-bottom: 1px solid rgba(255,255,255,0.08);
+            nav > a:first-child {
+                background: #ffffff;
+                padding: 20px;
+                text-align: center;
+                width: 100%;
+                border-bottom: 2px solid #000;
+                margin: 0;
+            }
+            nav > a:first-child img {
+                margin: 0;
+            }
+            nav a:not(:first-child) {
                 color: #ecf0f1;
                 font-size: 16px;
                 font-weight: 500;
                 padding: 18px 25px;
                 text-align: left;
                 width: 100%;
-                transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                transition: all 0.3s ease;
                 margin: 0;
                 position: relative;
-                overflow: hidden;
+                border-bottom: 1px solid rgba(255,255,255,0.08);
             }
-            nav a::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: -100%;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.3), transparent);
-                transition: left 0.5s ease;
+            nav a:not(:first-child):nth-child(odd) {
+                background: #000000;
             }
-            nav a:hover::before {
-                left: 100%;
+            nav a:not(:first-child):nth-child(even) {
+                background: #ffffff;
+                color: #333;
             }
-            nav a:hover { 
-                background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(155, 89, 182, 0.2) 100%);
-                color: #fff;
-                transform: translateX(10px);
-                box-shadow: inset 3px 0 0 #3498db;
-                padding-left: 28px;
+            nav a:not(:first-child):hover { 
+                background: #666666 !important;
+                color: #fff !important;
+                transform: translateX(8px);
+                padding-left: 30px;
             }
-            nav a:active {
-                transform: translateX(5px) scale(0.98);
+            nav a:not(:first-child):active {
+                transform: translateX(4px) scale(0.98);
             }
         }
         /* Hero section responsive styles */
@@ -1273,9 +1276,9 @@
                 Voit varata ajan jo tänään!
             </p>
             <!-- Company Logo as Guarantee Seal -->
-            <div style="display: inline-block; margin-top: 10px;">
+            <div style="display: inline-block; margin: 20px 0 15px 0;">
                 <img src="Logo.png.PNG" alt="Fixnero Takuu" loading="lazy" 
-                     style="max-width: 80px; height: auto; opacity: 0.85; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.15));">
+                     style="max-width: 160px; height: auto; opacity: 0.9; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));">
             </div>
         </div>
         
@@ -2290,8 +2293,9 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('bookingForm').style.display = '';
             document.getElementById('error').textContent = '';
             
-            // Reset service selection for next service
-            resetServiceSelection();
+            // Hide service selection dropdowns after adding service (user can click button to add more)
+            document.getElementById('serviceSelection').style.display = 'none';
+            document.getElementById('taskSelection').style.display = 'none';
         }
     }
 
@@ -2302,9 +2306,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const addServiceBtn = document.getElementById('add-service-btn');
     if (addServiceBtn) {
         addServiceBtn.addEventListener('click', function() {
-            // Show service selection again to add another service
-            document.getElementById('serviceSelection').style.display = 'block';
+            // Reset and show service selection dropdowns for adding another service
             document.getElementById('serviceSelect').value = '';
+            document.getElementById('taskSelect').value = '';
+            document.getElementById('taskSelection').style.display = 'none';
+            document.getElementById('serviceSelection').style.display = 'block';
         });
     }
 
