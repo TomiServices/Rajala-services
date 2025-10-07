@@ -531,7 +531,7 @@
             margin-bottom: 18px;
         }
         #calendar {
-            max-width: 700px;
+            max-width: 900px;
             margin: 0 auto 20px auto;
             background: #fff;
             border-radius: 16px;
@@ -539,109 +539,105 @@
             overflow: hidden;
         }
         
-        /* Automotive/Repair Shop Theme for Calendar */
+        /* Modern Black, White, Gray Theme for Calendar */
         #calendar {
-            border: 3px solid #2c3e50;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #000000;
+            background: #ffffff;
         }
         
-        /* Calendar header - garage/workshop style */
+        /* Calendar header - modern professional style */
         .fc-toolbar {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
-            padding: 12px !important;
-            border-bottom: 3px solid #e74c3c;
-            box-shadow: inset 0 -2px 5px rgba(0,0,0,0.2);
+            background: #000000 !important;
+            padding: 15px !important;
+            border-bottom: 2px solid #333333;
         }
         
         .fc-toolbar-title {
             color: #ffffff !important;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            font-weight: 700 !important;
+            font-weight: 600 !important;
             letter-spacing: 0.5px;
         }
         
-        /* Calendar buttons - tool/mechanic style */
+        /* Calendar buttons - modern style */
         .fc-button {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
-            border: 2px solid #a93226 !important;
+            background: #333333 !important;
+            border: 2px solid #555555 !important;
             color: #ffffff !important;
             font-weight: 600 !important;
-            text-transform: uppercase;
             letter-spacing: 0.5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+            border-radius: 4px;
         }
         
         .fc-button:hover {
-            background: linear-gradient(135deg, #c0392b 0%, #a93226 100%) !important;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+            background: #555555 !important;
+            border-color: #666666 !important;
+            transform: translateY(-1px);
         }
         
         .fc-button:active {
             transform: translateY(0);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2), inset 0 2px 4px rgba(0,0,0,0.2) !important;
+            background: #222222 !important;
         }
         
         .fc-button-primary:disabled {
-            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%) !important;
-            border-color: #7f8c8d !important;
+            background: #cccccc !important;
+            border-color: #cccccc !important;
+            color: #888888 !important;
             opacity: 0.6;
         }
         
-        /* Calendar day headers - metallic workshop look */
+        /* Calendar day headers - modern professional look */
         .fc-col-header-cell {
-            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%) !important;
-            border-color: #1a252f !important;
+            background: #333333 !important;
+            border-color: #555555 !important;
             color: #ffffff !important;
             font-weight: 600 !important;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding: 10px 5px !important;
-            border-bottom: 2px solid #e74c3c !important;
+            padding: 12px 5px !important;
+            border-bottom: 2px solid #000000 !important;
         }
         
-        /* Time slots - garage floor grid style */
+        /* Time slots - clean professional style */
         .fc-timegrid-slot {
-            border-color: #bdc3c7 !important;
-            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+            border-color: #e0e0e0 !important;
+            background: #ffffff;
         }
         
         .fc-timegrid-slot:hover {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+            background: #f5f5f5 !important;
             border-color: #e74c3c !important;
             box-shadow: inset 0 0 8px rgba(231, 76, 60, 0.2);
         }
         
-        /* Time labels - bold mechanic style */
+        /* Time labels - modern style */
         .fc-timegrid-axis-cushion,
         .fc-timegrid-slot-label-cushion {
-            color: #2c3e50 !important;
+            color: #333333 !important;
             font-weight: 600 !important;
         }
         
-        /* Available/booked slots with automotive colors */
+        /* Available/booked slots with modern colors */
         .fc-event {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
-            border: 2px solid #a93226 !important;
+            background: #666666 !important;
+            border: 2px solid #555555 !important;
             color: #ffffff !important;
             font-weight: 600 !important;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
         /* Day grid cells */
         .fc-daygrid-day {
             background: #ffffff;
-            border-color: #bdc3c7 !important;
+            border-color: #e0e0e0 !important;
         }
         
         .fc-daygrid-day:hover {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
-            box-shadow: inset 0 0 10px rgba(231, 76, 60, 0.15);
+            background: #f5f5f5 !important;
         }
         
         .fc-daygrid-day.fc-day-today {
-            background: linear-gradient(135deg, #d5f4e6 0%, #b8e994 100%) !important;
-            border: 2px solid #27ae60 !important;
+            background: #f0f0f0 !important;
+            border: 2px solid #333333 !important;
         }
         
         /* Scrollbar styling for calendar - industrial look */
@@ -650,29 +646,29 @@
         }
         
         #calendar ::-webkit-scrollbar-track {
-            background: #ecf0f1;
+            background: #f0f0f0;
             border-radius: 5px;
         }
         
         #calendar ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            background: #cccccc;
             border-radius: 5px;
-            border: 2px solid #ecf0f1;
+            border: 2px solid #f0f0f0;
         }
         
         #calendar ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            background: #999999;
         }
         
         /* Enhanced calendar hover effects */
         .fc-timegrid-slot:hover {
-            background-color: rgba(0, 123, 255, 0.08) !important;
-            border-color: rgba(0, 123, 255, 0.3) !important;
+            background-color: #f5f5f5 !important;
+            border-color: #cccccc !important;
             transition: all 0.2s ease;
         }
         
         .fc-col-header-cell:hover {
-            background-color: rgba(0, 123, 255, 0.05) !important;
+            background-color: #555555 !important;
             transition: all 0.2s ease;
         }
         
@@ -683,7 +679,7 @@
         }
         
         .fc-daygrid-day:hover {
-            background-color: rgba(0, 123, 255, 0.05) !important;
+            background-color: #f5f5f5 !important;
             transition: all 0.2s ease;
         }
         
@@ -951,24 +947,26 @@
         /* Mobile responsive styles for calendar */
         @media (max-width: 768px) {
             #calendar {
-                font-size: 0.8rem;
+                font-size: 0.9rem;
+                max-width: 100%;
+                margin: 0 auto 20px auto;
             }
             .fc-toolbar {
                 flex-wrap: wrap;
             }
             .fc-toolbar-title {
-                font-size: 1.1rem;
+                font-size: 1.2rem;
             }
             .fc-button {
-                padding: 0.2em 0.4em;
-                font-size: 0.9rem;
+                padding: 0.3em 0.5em;
+                font-size: 1rem;
             }
             .fc-timegrid-slot {
-                min-height: 3em;
+                min-height: 4em;
                 cursor: pointer;
             }
             .fc-timegrid-slot-lane {
-                min-height: 3em;
+                min-height: 4em;
             }
             .ajanvaraus-container {
                 padding: 16px 12px 12px 12px;
@@ -984,7 +982,7 @@
             }
             
             .fc-timegrid-col-frame:hover {
-                border-color: rgba(0, 123, 255, 0.3);
+                border-color: rgba(0, 0, 0, 0.2);
             }
             
             /* Visual feedback for mobile day selection */
@@ -1052,10 +1050,10 @@
                 position: relative;
             }
             .fc-timegrid-slot:active {
-                background-color: rgba(0, 123, 255, 0.1);
+                background-color: rgba(0, 0, 0, 0.05);
             }
             .fc-timegrid-slot-lane:active {
-                background-color: rgba(0, 123, 255, 0.1);
+                background-color: rgba(0, 0, 0, 0.05);
             }
         }
         
@@ -1087,8 +1085,8 @@
             
             .fc-timegrid-slot.fc-highlight,
             .fc-timegrid-slot:has(.fc-highlight) {
-                border-color: rgba(0, 123, 255, 0.3);
-                background-color: rgba(0, 123, 255, 0.1) !important;
+                border-color: rgba(0, 0, 0, 0.2);
+                background-color: rgba(0, 0, 0, 0.05) !important;
             }
             
             /* Prevent selection from expanding beyond single cell on touch */
@@ -2585,7 +2583,7 @@ document.addEventListener('DOMContentLoaded', function () {
             allDaySlot: false,
             selectable: true,
             selectOverlap: false,
-            slotDuration: '01:00:00',
+            slotDuration: '00:30:00',
             expandRows: true,
             // Show all 7 days including weekends for visual indication
             hiddenDays: [], // Show all days including weekends
