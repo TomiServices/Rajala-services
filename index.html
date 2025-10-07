@@ -200,7 +200,7 @@
             nav {
                 flex-direction: column;
                 align-items: flex-start;
-                width: 280px;
+                width: 300px;
                 top: 0;
                 left: 0;
                 transform: translateX(-100%);
@@ -227,6 +227,8 @@
             }
             nav > a:first-child img {
                 margin: 0;
+                max-width: 200px;
+                height: auto;
             }
             nav a:not(:first-child) {
                 color: #ecf0f1;
@@ -300,6 +302,39 @@
             #hero a {
                 padding: 14px 28px !important;
                 font-size: 1rem !important;
+            }
+            
+            /* iPhone 15 Pro and similar small phones - optimize hamburger menu and logo */
+            nav {
+                width: 260px;
+            }
+            
+            nav > a:first-child {
+                padding: 15px 10px;
+            }
+            
+            nav > a:first-child img {
+                max-width: 160px;
+                height: auto;
+            }
+            
+            nav img {
+                height: 40px;
+            }
+            
+            /* Make service sections scale better on small phones */
+            .services-container section {
+                transform: scale(1.02);
+                transform-origin: center;
+                padding: 20px 15px;
+                margin: 20px auto;
+            }
+            
+            #pesupalvelut h2, 
+            .services-container section h2 {
+                font-size: 1.8rem;
+                color: #1a1a1a;
+                text-shadow: 0 1px 2px rgba(0,0,0,0.1);
             }
         }
         .categories-row {
@@ -414,6 +449,22 @@
             border-radius: 18px;
         }
         
+        /* Improve text contrast in sections */
+        section h2 {
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+        
+        section h4 {
+            color: #2a2a2a;
+            font-weight: 600;
+        }
+        
+        section p, section li {
+            color: #333333;
+            line-height: 1.7;
+        }
+        
         /* Services container */
         .services-container {
             margin: 30px auto;
@@ -486,6 +537,131 @@
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
             overflow: hidden;
+        }
+        
+        /* Automotive/Repair Shop Theme for Calendar */
+        #calendar {
+            border: 3px solid #2c3e50;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        
+        /* Calendar header - garage/workshop style */
+        .fc-toolbar {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+            padding: 12px !important;
+            border-bottom: 3px solid #e74c3c;
+            box-shadow: inset 0 -2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .fc-toolbar-title {
+            color: #ffffff !important;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: 700 !important;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Calendar buttons - tool/mechanic style */
+        .fc-button {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
+            border: 2px solid #a93226 !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+        }
+        
+        .fc-button:hover {
+            background: linear-gradient(135deg, #c0392b 0%, #a93226 100%) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.2) !important;
+        }
+        
+        .fc-button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2), inset 0 2px 4px rgba(0,0,0,0.2) !important;
+        }
+        
+        .fc-button-primary:disabled {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%) !important;
+            border-color: #7f8c8d !important;
+            opacity: 0.6;
+        }
+        
+        /* Calendar day headers - metallic workshop look */
+        .fc-col-header-cell {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%) !important;
+            border-color: #1a252f !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 10px 5px !important;
+            border-bottom: 2px solid #e74c3c !important;
+        }
+        
+        /* Time slots - garage floor grid style */
+        .fc-timegrid-slot {
+            border-color: #bdc3c7 !important;
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+        }
+        
+        .fc-timegrid-slot:hover {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+            border-color: #e74c3c !important;
+            box-shadow: inset 0 0 8px rgba(231, 76, 60, 0.2);
+        }
+        
+        /* Time labels - bold mechanic style */
+        .fc-timegrid-axis-cushion,
+        .fc-timegrid-slot-label-cushion {
+            color: #2c3e50 !important;
+            font-weight: 600 !important;
+        }
+        
+        /* Available/booked slots with automotive colors */
+        .fc-event {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%) !important;
+            border: 2px solid #a93226 !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        /* Day grid cells */
+        .fc-daygrid-day {
+            background: #ffffff;
+            border-color: #bdc3c7 !important;
+        }
+        
+        .fc-daygrid-day:hover {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+            box-shadow: inset 0 0 10px rgba(231, 76, 60, 0.15);
+        }
+        
+        .fc-daygrid-day.fc-day-today {
+            background: linear-gradient(135deg, #d5f4e6 0%, #b8e994 100%) !important;
+            border: 2px solid #27ae60 !important;
+        }
+        
+        /* Scrollbar styling for calendar - industrial look */
+        #calendar ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        #calendar ::-webkit-scrollbar-track {
+            background: #ecf0f1;
+            border-radius: 5px;
+        }
+        
+        #calendar ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-radius: 5px;
+            border: 2px solid #ecf0f1;
+        }
+        
+        #calendar ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
         }
         
         /* Enhanced calendar hover effects */
@@ -1440,7 +1616,7 @@
     <!-- Services sections -->
     <div class="services-container">
     <section id="pesupalvelut" style="background: #fff url('Elementti2.PNG') center/cover; position: relative; overflow: hidden;">
-        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.88); z-index: 1; border-radius: 18px;"></div>
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(240,240,240,0.92); z-index: 1; border-radius: 18px;"></div>
         <div style="position: relative; z-index: 2;">
         <h2>Pesupalvelut</h2>
         <p>Tarjoamme laadukkaita auton pesupalveluita: käsinpesu, vahaukset, pikapesut ja renkaiden pesut. Käytämme vain huolellisesti valittuja, laadukkaita aineita ja välineitä, jotka suojaavat ajoneuvon pintoja ja tekevät autostasi kiiltävän puhtaan.</p>
