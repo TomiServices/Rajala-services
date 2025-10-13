@@ -531,10 +531,10 @@
             margin-bottom: 18px;
         }
         #calendar {
-            max-width: 900px;
+            max-width: 750px;
             margin: 0 auto 20px auto;
             background: #fff;
-            border-radius: 16px;
+            border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
             overflow: hidden;
         }
@@ -543,6 +543,89 @@
         #calendar {
             border: 2px solid #000000;
             background: #ffffff;
+        }
+        
+        /* Time Selection Grid Styling */
+        .time-selection-container {
+            max-width: 750px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .time-selection-title {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .time-slots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .time-slot-box {
+            background: #ffffff;
+            border: 2px solid #333333;
+            color: #000000;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        
+        .time-slot-box:hover {
+            background: #f5f5f5;
+            border-color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .time-slot-box.selected {
+            background: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+        
+        .time-slot-box.booked {
+            background: #e0e0e0;
+            color: #999999;
+            border-color: #cccccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .time-slot-box.booked:hover {
+            transform: none;
+            box-shadow: none;
+            background: #e0e0e0;
+        }
+        
+        .time-slot-box.disabled {
+            background: #f0f0f0;
+            color: #cccccc;
+            border-color: #e0e0e0;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .time-slot-box.disabled:hover {
+            transform: none;
+            box-shadow: none;
+            background: #f0f0f0;
         }
         
         /* Calendar header - modern professional style */
@@ -972,6 +1055,22 @@
             }
             .booking-form {
                 padding: 15px 0 0 0;
+            }
+            
+            /* Mobile time selection grid */
+            .time-selection-container {
+                max-width: 100%;
+                padding: 15px;
+            }
+            
+            .time-slots-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+                gap: 8px;
+            }
+            
+            .time-slot-box {
+                padding: 10px 6px;
+                font-size: 0.9rem;
             }
             
             /* Mobile-specific: Improve day selection visibility */
@@ -1481,6 +1580,15 @@
     <div class="ajanvaraus-container" id="ajanvaraus" style="border: 2px solid #000;">
       <h2>Varaa aika silmäterällesi</h2>
       <div id="calendar"></div>
+      
+      <!-- Time Selection Grid -->
+      <div id="time-selection-grid" class="time-selection-container" style="display:none;">
+        <h3 class="time-selection-title">Valitse aika:</h3>
+        <div id="time-slots-grid" class="time-slots-grid">
+          <!-- Time slots will be dynamically generated here -->
+        </div>
+      </div>
+      
       <!-- Mock calendar for testing when FullCalendar CDN is blocked -->
       <div id="mock-calendar" style="display: none; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 8px;">
         <p style="text-align: center; color: #666; margin-bottom: 15px;">
@@ -1899,6 +2007,118 @@ document.addEventListener('DOMContentLoaded', function () {
         return date.toISOString().split('T')[0];
     }
 
+    // Populate time selection grid with available times for current week
+    function populateTimeSelectionGrid(bookings, calendar) {
+        const gridContainer = document.getElementById('time-slots-grid');
+        if (!gridContainer) return;
+        
+        gridContainer.innerHTML = '';
+        
+        // Get current date
+        const now = new Date();
+        const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+        
+        // Find start of current week (Monday)
+        const startOfWeek = new Date(now);
+        const daysToMonday = currentDay === 0 ? -6 : 1 - currentDay;
+        startOfWeek.setDate(now.getDate() + daysToMonday);
+        startOfWeek.setHours(0, 0, 0, 0);
+        
+        // Generate time slots for the current week (Monday to Friday)
+        for (let dayOffset = 0; dayOffset < 5; dayOffset++) {
+            const currentDate = new Date(startOfWeek);
+            currentDate.setDate(startOfWeek.getDate() + dayOffset);
+            
+            const dateKey = getDateKey(currentDate);
+            const dayBookings = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey);
+            
+            // Check if this day has reached booking limit (2 bookings)
+            const isDayFull = dayBookings.length >= 2;
+            
+            // Get current hour for checking if slot is in the past
+            const isToday = getDateKey(now) === dateKey;
+            const currentHour = now.getHours();
+            
+            // Generate time slots for business hours (9-17)
+            for (let hour = 9; hour < 17; hour++) {
+                const slotTime = new Date(currentDate);
+                slotTime.setHours(hour, 0, 0, 0);
+                
+                // Check if slot is in the past
+                const isPast = slotTime < now;
+                
+                // Check if specific slot is booked
+                const isSlotBooked = bookings.some(b => {
+                    const bookingTime = new Date(b.aika);
+                    return bookingTime.getTime() === slotTime.getTime();
+                });
+                
+                const slotBox = document.createElement('div');
+                slotBox.className = 'time-slot-box';
+                
+                // Format display: "Ma 9:00", "Ti 10:00", etc.
+                const dayNames = ['Su', 'Ma', 'Ti', 'Ke', 'To', 'Pe', 'La'];
+                const dayName = dayNames[currentDate.getDay()];
+                slotBox.textContent = `${dayName} ${hour}:00`;
+                
+                // Set state and behavior
+                if (isPast) {
+                    slotBox.classList.add('disabled');
+                    slotBox.title = 'Aika on mennyt';
+                } else if (isSlotBooked || isDayFull) {
+                    slotBox.classList.add('booked');
+                    slotBox.title = isSlotBooked ? 'Varattu' : 'Päivä täynnä';
+                } else {
+                    // Available slot - add click handler
+                    slotBox.dataset.datetime = slotTime.toISOString();
+                    slotBox.dataset.date = dateKey;
+                    slotBox.dataset.hour = hour;
+                    
+                    slotBox.addEventListener('click', function() {
+                        // Remove previous selection
+                        document.querySelectorAll('.time-slot-box.selected').forEach(box => {
+                            box.classList.remove('selected');
+                        });
+                        
+                        // Select this slot
+                        this.classList.add('selected');
+                        
+                        // Update the time dropdown
+                        const selectElement = document.getElementById('availableTimesSelect');
+                        const labelElement = document.getElementById('availableTimesLabel');
+                        
+                        // Clear and populate dropdown with this single time
+                        selectElement.innerHTML = '';
+                        const option = document.createElement('option');
+                        option.value = `${hour}:00`;
+                        option.textContent = `${dayName} ${currentDate.getDate()}.${currentDate.getMonth() + 1}. klo ${hour}:00`;
+                        option.dataset.date = slotTime.toISOString();
+                        option.dataset.hour = hour;
+                        option.selected = true;
+                        selectElement.appendChild(option);
+                        
+                        labelElement.textContent = `Valittu aika: ${dayName} ${currentDate.getDate()}.${currentDate.getMonth() + 1}. klo ${hour}:00`;
+                        
+                        // Show the time dropdown and service selection
+                        document.getElementById('availableSlots').style.display = 'block';
+                        document.getElementById('serviceSelection').style.display = 'block';
+                        
+                        // Clear any errors
+                        document.getElementById('error').textContent = '';
+                        
+                        // If calendar exists, update its selection
+                        if (calendar) {
+                            const endTime = new Date(slotTime.getTime() + 60 * 60 * 1000);
+                            calendar.select(slotTime, endTime);
+                        }
+                    });
+                }
+                
+                gridContainer.appendChild(slotBox);
+            }
+        }
+    }
+
     // Mobile device detection utility - enhanced for better mobile/touch detection
     function isMobileDevice() {
         // Primary detection: User agent check for known mobile devices
@@ -2177,6 +2397,15 @@ document.addEventListener('DOMContentLoaded', function () {
     function initializeMockCalendarAndDropdowns() {
         // Get mock bookings for testing
         fetchBookings().then(bookings => {
+            // Populate the time selection grid
+            populateTimeSelectionGrid(bookings, null);
+            
+            // Show the time selection grid
+            const timeGridContainer = document.getElementById('time-selection-grid');
+            if (timeGridContainer) {
+                timeGridContainer.style.display = 'block';
+            }
+            
             // Connect mock calendar slots to our time selection function
             const mockSlots = document.querySelectorAll('.mock-slot[data-date]');
             mockSlots.forEach(slot => {
@@ -2643,13 +2872,28 @@ document.addEventListener('DOMContentLoaded', function () {
             eventDisplay: 'block',
             displayEventTime: true,
             headerToolbar: {
-                left: 'prev,next today',
+                left: '',
                 center: 'title',
                 right: ''
             },
-            validRange: {
-                start: new Date(),
-                end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+            validRange: function() {
+                const now = new Date();
+                const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+                
+                // Find start of current week (Monday)
+                const startOfWeek = new Date(now);
+                const daysToMonday = currentDay === 0 ? -6 : 1 - currentDay;
+                startOfWeek.setDate(now.getDate() + daysToMonday);
+                startOfWeek.setHours(0, 0, 0, 0);
+                
+                // End of week (Sunday)
+                const endOfWeek = new Date(startOfWeek);
+                endOfWeek.setDate(startOfWeek.getDate() + 7);
+                
+                return {
+                    start: startOfWeek,
+                    end: endOfWeek
+                };
             },
             select: function (info) {
                 let start = info.start;
@@ -2749,6 +2993,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 findAndNavigateToNextAvailableWeek(calendar, bookings);
                 // Populate available slots for the current week
                 populateAvailableSlots(calendar, bookings);
+                // Populate time selection grid
+                populateTimeSelectionGrid(bookings, calendar);
+                // Show the time selection grid
+                const timeGridContainer = document.getElementById('time-selection-grid');
+                if (timeGridContainer) {
+                    timeGridContainer.style.display = 'block';
+                }
                 // Setup dropdown event listener
                 setupDropdownEventListener();
             }, 100); // Small delay to ensure calendar is fully rendered
