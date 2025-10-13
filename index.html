@@ -1582,7 +1582,7 @@
       <div id="calendar"></div>
       
       <!-- Time Selection Grid -->
-      <div id="time-selection-grid" class="time-selection-container">
+      <div id="time-selection-grid" class="time-selection-container" style="display:none;">
         <h3 class="time-selection-title">Valitse aika:</h3>
         <div id="time-slots-grid" class="time-slots-grid">
           <!-- Time slots will be dynamically generated here -->
@@ -2397,6 +2397,15 @@ document.addEventListener('DOMContentLoaded', function () {
     function initializeMockCalendarAndDropdowns() {
         // Get mock bookings for testing
         fetchBookings().then(bookings => {
+            // Populate the time selection grid
+            populateTimeSelectionGrid(bookings, null);
+            
+            // Show the time selection grid
+            const timeGridContainer = document.getElementById('time-selection-grid');
+            if (timeGridContainer) {
+                timeGridContainer.style.display = 'block';
+            }
+            
             // Connect mock calendar slots to our time selection function
             const mockSlots = document.querySelectorAll('.mock-slot[data-date]');
             mockSlots.forEach(slot => {
@@ -2986,6 +2995,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 populateAvailableSlots(calendar, bookings);
                 // Populate time selection grid
                 populateTimeSelectionGrid(bookings, calendar);
+                // Show the time selection grid
+                const timeGridContainer = document.getElementById('time-selection-grid');
+                if (timeGridContainer) {
+                    timeGridContainer.style.display = 'block';
+                }
                 // Setup dropdown event listener
                 setupDropdownEventListener();
             }, 100); // Small delay to ensure calendar is fully rendered
