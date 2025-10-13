@@ -86,6 +86,8 @@
     <link rel="preload" href="Hero3.PNG" as="image" media="(max-width: 767px)">
     <!-- FullCalendar CSS for booking -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
+    <!-- Google Font for service titles - bold italic style similar to Serpentine -->
+    <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
     <!-- Google reCAPTCHA v2 -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
@@ -263,16 +265,23 @@
         /* Mobile-first approach: Default to mobile image */
         #hero {
             background-image: url('Hero3.PNG');
-            /* Ensure proper centering on all devices */
+            /* Enhanced centering and positioning for all devices */
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
+            /* Improve image rendering quality */
+            background-attachment: scroll;
+            /* Ensure no white space around hero */
+            object-fit: cover;
         }
         
         /* Hero2: Desktop and laptop screens (768px - 2559px) */
         @media (min-width: 768px) and (max-width: 2559px) {
             #hero {
                 background-image: url('Hero2.jpg');
+                /* Fine-tune centering for desktop */
+                background-position: center center;
+                background-size: cover;
             }
         }
         
@@ -280,6 +289,9 @@
         @media (min-width: 2560px) {
             #hero {
                 background-image: url('Hero1.png');
+                /* Optimize for large displays */
+                background-position: center center;
+                background-size: cover;
             }
         }
         
@@ -363,6 +375,10 @@
                 font-size: 1.8rem;
                 color: #1a1a1a;
                 text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+                /* Apply Serpentine-like font style (bold italic/oblique) */
+                font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+                font-style: italic;
+                letter-spacing: 0.05em;
             }
         }
         .categories-row {
@@ -473,6 +489,10 @@
             transition: background-image 0.3s ease-in-out;
             /* Optimize rendering for better performance */
             will-change: background-image;
+            /* Ensure perfect centering on all resolutions */
+            position: relative;
+            left: 0;
+            right: 0;
         }
         section {
             background: #fff;
@@ -488,6 +508,10 @@
         section h2 {
             color: #1a1a1a;
             font-weight: 700;
+            /* Apply Serpentine-like font style (bold italic/oblique) */
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+            font-style: italic;
+            letter-spacing: 0.05em;
         }
         
         section h4 {
@@ -681,7 +705,14 @@
             color: #999999;
         }
         
-        /* Progress bar styles */
+        /* Progress bar container styles */
+        .progress-container {
+            max-width: 650px;
+            margin: 20px auto 0 auto;
+            width: 100%;
+        }
+        
+        /* Loading animation bar (shown during booking) */
         .progress {
             background: rgba(0,0,0,0.05);
             justify-content: flex-start;
@@ -692,8 +723,7 @@
             display: none;
             height: 35px;
             width: 100%;
-            max-width: 650px;
-            margin: 20px auto 0 auto;
+            margin-bottom: 10px;
         }
         
         .progress.active {
@@ -702,18 +732,42 @@
         
         .progress-value {
             animation: load 3s normal forwards;
-            box-shadow: 0 5px 20px -5px rgba(76, 175, 80, 0.6);
+            box-shadow: 0 5px 20px -5px rgba(100, 150, 200, 0.6);
             border-radius: 100px;
-            background: #4CAF50;
+            background: linear-gradient(90deg, #4a90e2, #357abd);
             height: 29px;
             width: 0;
         }
         
-        .progress-value.success {
-            background: #4CAF50;
-            box-shadow: 0 5px 20px -5px rgba(76, 175, 80, 0.8);
+        /* Success bar (green bar shown after booking succeeds) */
+        .success-bar {
+            background: rgba(0,0,0,0.05);
+            justify-content: center;
+            border-radius: 100px;
+            align-items: center;
+            position: relative;
+            padding: 0 3px;
+            display: none;
+            height: 35px;
             width: 100%;
-            animation: none;
+        }
+        
+        .success-bar.active {
+            display: flex;
+        }
+        
+        .success-bar-value {
+            box-shadow: 0 5px 20px -5px rgba(76, 175, 80, 0.8);
+            border-radius: 100px;
+            background: #4CAF50;
+            height: 29px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
         }
         
         @keyframes load {
@@ -1880,9 +1934,16 @@
       <div id="msg" class="msg"></div>
       <div id="error" class="error"></div>
       
-      <!-- Progress Bar -->
-      <div class="progress" id="bookingProgress">
-        <div class="progress-value" id="bookingProgressValue"></div>
+      <!-- Progress Bar Container -->
+      <div class="progress-container">
+        <!-- Loading Animation Bar -->
+        <div class="progress" id="bookingProgress">
+          <div class="progress-value" id="bookingProgressValue"></div>
+        </div>
+        <!-- Success Bar -->
+        <div class="success-bar" id="successBar">
+          <div class="success-bar-value">Onnistui</div>
+        </div>
       </div>
     </div>
     
@@ -2975,12 +3036,12 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             // Try to initialize FullCalendar
             calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridTwoWeeks',
+            initialView: 'dayGridThreeWeeks',
             locale: 'fi',
             views: {
-                dayGridTwoWeeks: {
+                dayGridThreeWeeks: {
                     type: 'dayGrid',
-                    duration: { weeks: 2 }
+                    duration: { weeks: 3 }
                 }
             },
             selectable: true,
@@ -3035,13 +3096,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 startOfWeek.setDate(now.getDate() + daysToMonday);
                 startOfWeek.setHours(0, 0, 0, 0);
                 
-                // End of next 2 weeks (show 2 weeks total)
-                const endOfTwoWeeks = new Date(startOfWeek);
-                endOfTwoWeeks.setDate(startOfWeek.getDate() + 14);
+                // End of next 3 weeks (show 3 weeks total)
+                const endOfThreeWeeks = new Date(startOfWeek);
+                endOfThreeWeeks.setDate(startOfWeek.getDate() + 21);
                 
                 return {
                     start: startOfWeek,
-                    end: endOfTwoWeeks
+                    end: endOfThreeWeeks
                 };
             },
             select: function (info) {
@@ -3383,12 +3444,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             
-            // Show progress bar when booking starts
+            // Show loading animation bar when booking starts
             const progressBar = document.getElementById('bookingProgress');
             const progressValue = document.getElementById('bookingProgressValue');
+            const successBar = document.getElementById('successBar');
+            
+            // Hide success bar and show loading bar
+            successBar.classList.remove('active');
             progressBar.classList.add('active');
-            progressValue.classList.remove('success');
             progressValue.style.width = '0';
+            
             // Trigger animation
             setTimeout(() => {
                 progressValue.style.animation = 'load 3s normal forwards';
@@ -3417,9 +3482,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     })
                 });
                 if (res.ok) {
-                    // Turn progress bar green on success
-                    progressValue.style.animation = 'none';
-                    progressValue.classList.add('success');
+                    // Hide loading bar and show success bar
+                    progressBar.classList.remove('active');
+                    successBar.classList.add('active');
                     
                     document.getElementById('msg').innerHTML = "Varaus onnistui! <br>Saat varausvahvistuksen sähköpostiisi pian.";
                     document.getElementById('bookingForm').reset();
@@ -3434,10 +3499,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     bookings = await fetchBookings();
                     if (calendar) calendar.refetchEvents();
                     
-                    // Hide progress bar after showing success for 2 seconds
-                    setTimeout(() => {
-                        progressBar.classList.remove('active');
-                    }, 2000);
+                    // Keep success bar visible (don't auto-hide)
                 } else {
                     const err = await res.json();
                     throw new Error(err.message || 'Varaus epäonnistui. Yritä uudelleen!');
@@ -3445,8 +3507,9 @@ document.addEventListener('DOMContentLoaded', function () {
             } catch (error) {
                 console.error(error);
                 document.getElementById('error').textContent = error.message || 'Varaus epäonnistui. Yritä uudelleen!';
-                // Hide progress bar on error
+                // Hide both bars on error
                 progressBar.classList.remove('active');
+                successBar.classList.remove('active');
             }
         };
     });
