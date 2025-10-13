@@ -81,8 +81,8 @@
     
     <link rel="preload" href="FXNR.png" as="image">
     <!-- Preload hero images for faster loading -->
-    <link rel="preload" href="Hero1.PNG" as="image" media="(min-width: 768px) and (max-width: 2559px)">
-    <link rel="preload" href="Hero2.jpg" as="image" media="(min-width: 2560px)">
+    <link rel="preload" href="Hero2.jpg" as="image" media="(min-width: 768px) and (max-width: 2559px)">
+    <link rel="preload" href="Hero1.png" as="image" media="(min-width: 2560px)">
     <link rel="preload" href="Hero3.PNG" as="image" media="(max-width: 767px)">
     <!-- FullCalendar CSS for booking -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
@@ -262,7 +262,7 @@
         /* Hero section responsive background images */
         /* Mobile-first approach: Default to mobile image */
         #hero {
-            background-image: url('hero3-mobile.jpg');
+            background-image: url('Hero3.PNG');
             /* Ensure proper centering on all devices */
             background-size: cover;
             background-position: center center;
@@ -272,14 +272,14 @@
         /* Hero2: Desktop and laptop screens (768px - 2559px) */
         @media (min-width: 768px) and (max-width: 2559px) {
             #hero {
-                background-image: url('hero2-desktop.jpg');
+                background-image: url('Hero2.jpg');
             }
         }
         
         /* Hero1: High-resolution screens (2K and above, >= 2560px) */
         @media (min-width: 2560px) {
             #hero {
-                background-image: url('hero1-2k.jpg');
+                background-image: url('Hero1.png');
             }
         }
         
@@ -623,13 +623,13 @@
             margin-bottom: 18px;
         }
         #calendar {
-            max-width: 700px;
+            max-width: 650px;
             margin: 0 auto 20px auto;
             background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
             overflow: hidden;
-            border: 2px solid #000000;
+            border: 1px solid #e0e0e0;
         }
         
         /* Compact calendar styling */
@@ -646,6 +646,79 @@
             background: #f0f0f0;
             opacity: 0.6;
             cursor: not-allowed;
+        }
+        
+        /* Calendar navigation buttons */
+        .calendar-nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .calendar-nav-btn {
+            padding: 10px 20px;
+            background: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #000000;
+        }
+        
+        .calendar-nav-btn:hover:not(:disabled) {
+            background: #f5f5f5;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .calendar-nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            border-color: #cccccc;
+            color: #999999;
+        }
+        
+        /* Progress bar styles */
+        .progress {
+            background: rgba(0,0,0,0.05);
+            justify-content: flex-start;
+            border-radius: 100px;
+            align-items: center;
+            position: relative;
+            padding: 0 3px;
+            display: none;
+            height: 35px;
+            width: 100%;
+            max-width: 650px;
+            margin: 20px auto 0 auto;
+        }
+        
+        .progress.active {
+            display: flex;
+        }
+        
+        .progress-value {
+            animation: load 3s normal forwards;
+            box-shadow: 0 5px 20px -5px rgba(76, 175, 80, 0.6);
+            border-radius: 100px;
+            background: #4CAF50;
+            height: 29px;
+            width: 0;
+        }
+        
+        .progress-value.success {
+            background: #4CAF50;
+            box-shadow: 0 5px 20px -5px rgba(76, 175, 80, 0.8);
+            width: 100%;
+            animation: none;
+        }
+        
+        @keyframes load {
+            0% { width: 0; }
+            100% { width: 68%; }
         }
         
         /* Time Selection Grid Styling */
@@ -1678,6 +1751,13 @@
     <!-- Booking Calendar Section -->
     <div class="ajanvaraus-container" id="ajanvaraus" style="border: 2px solid #000;">
       <h2>Varaa aika silmäterällesi</h2>
+      
+      <!-- Calendar Navigation Buttons -->
+      <div class="calendar-nav-container">
+        <button id="prevWeekBtn" class="calendar-nav-btn">← Edellinen</button>
+        <button id="nextWeekBtn" class="calendar-nav-btn">Seuraava →</button>
+      </div>
+      
       <div id="calendar"></div>
       
       <!-- Time Selection Grid -->
@@ -1799,6 +1879,11 @@
       </form>
       <div id="msg" class="msg"></div>
       <div id="error" class="error"></div>
+      
+      <!-- Progress Bar -->
+      <div class="progress" id="bookingProgress">
+        <div class="progress-value" id="bookingProgressValue"></div>
+      </div>
     </div>
     
     <!-- Mobile Time Selection Modal -->
@@ -3061,9 +3146,57 @@ document.addEventListener('DOMContentLoaded', function () {
         
         if (calendar) {
             calendar.render();
+            
+            // Navigation button state management
+            let navigationCount = 0; // Track how many times user moved forward
+            const maxForwardNavigations = 2; // Can only go forward 2 times (4 weeks total)
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            function updateNavigationButtons() {
+                const prevBtn = document.getElementById('prevWeekBtn');
+                const nextBtn = document.getElementById('nextWeekBtn');
+                const currentDate = calendar.getDate();
+                
+                // Disable prev button if we're at or before today
+                if (currentDate <= today) {
+                    prevBtn.disabled = true;
+                } else {
+                    prevBtn.disabled = false;
+                }
+                
+                // Disable next button if we've reached max forward navigations
+                if (navigationCount >= maxForwardNavigations) {
+                    nextBtn.disabled = true;
+                } else {
+                    nextBtn.disabled = false;
+                }
+            }
+            
+            // Previous week button
+            document.getElementById('prevWeekBtn').addEventListener('click', function() {
+                calendar.prev();
+                if (navigationCount > 0) {
+                    navigationCount--;
+                }
+                updateNavigationButtons();
+                populateAvailableSlots(calendar, bookings);
+            });
+            
+            // Next week button
+            document.getElementById('nextWeekBtn').addEventListener('click', function() {
+                if (navigationCount < maxForwardNavigations) {
+                    calendar.next();
+                    navigationCount++;
+                    updateNavigationButtons();
+                    populateAvailableSlots(calendar, bookings);
+                }
+            });
+            
             // Navigate to week with next available booking slot
             setTimeout(() => {
                 findAndNavigateToNextAvailableWeek(calendar, bookings);
+                updateNavigationButtons();
                 // Populate available slots for the current week
                 populateAvailableSlots(calendar, bookings);
                 // Don't show time selection grid initially - user must click a day first
@@ -3249,6 +3382,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('error').textContent = 'Täytä kaikki kentät ja valitse aika!';
                 return;
             }
+            
+            // Show progress bar when booking starts
+            const progressBar = document.getElementById('bookingProgress');
+            const progressValue = document.getElementById('bookingProgressValue');
+            progressBar.classList.add('active');
+            progressValue.classList.remove('success');
+            progressValue.style.width = '0';
+            // Trigger animation
+            setTimeout(() => {
+                progressValue.style.animation = 'load 3s normal forwards';
+            }, 10);
+            
             try {
                 // Build service description from selected services
                 const palveluText = selectedServices.map(s => s.serviceName).join(', ');
@@ -3272,6 +3417,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     })
                 });
                 if (res.ok) {
+                    // Turn progress bar green on success
+                    progressValue.style.animation = 'none';
+                    progressValue.classList.add('success');
+                    
                     document.getElementById('msg').innerHTML = "Varaus onnistui! <br>Saat varausvahvistuksen sähköpostiisi pian.";
                     document.getElementById('bookingForm').reset();
                     grecaptcha.reset();
@@ -3284,6 +3433,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     selectedServices = [];
                     bookings = await fetchBookings();
                     if (calendar) calendar.refetchEvents();
+                    
+                    // Hide progress bar after showing success for 2 seconds
+                    setTimeout(() => {
+                        progressBar.classList.remove('active');
+                    }, 2000);
                 } else {
                     const err = await res.json();
                     throw new Error(err.message || 'Varaus epäonnistui. Yritä uudelleen!');
@@ -3291,6 +3445,8 @@ document.addEventListener('DOMContentLoaded', function () {
             } catch (error) {
                 console.error(error);
                 document.getElementById('error').textContent = error.message || 'Varaus epäonnistui. Yritä uudelleen!';
+                // Hide progress bar on error
+                progressBar.classList.remove('active');
             }
         };
     });
