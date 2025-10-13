@@ -147,6 +147,7 @@
             transition: all 0.3s ease;
             border-radius: 8px;
             margin: 0 2px;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
         }
         nav a:hover {
             background: linear-gradient(135deg, #666666, #444444);
@@ -415,6 +416,7 @@
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             text-shadow: 0 2px 12px rgba(0,0,0,0.6);
             border: 2px solid rgba(255,255,255,0.1);
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
         }
         .category-box::after {
             content: "";
@@ -481,7 +483,9 @@
         
         /* Hero section - full width for all screen sizes with proper centering */
         #hero {
-            width: 100%;
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
             /* Ensure proper image positioning and scaling on all devices */
             background-attachment: scroll;
             /* Smooth transitions when resizing */
@@ -533,13 +537,13 @@
             margin: 30px auto;
         }
         
-        /* Animated background pattern for rengastyöt and korjaustyöt sections */
-        #rengastyot, #korjaustyot {
+        /* Animated background pattern for rengastyöt, korjaustyöt and sisapuhdistus sections */
+        #rengastyot, #korjaustyot, #sisapuhdistus {
             background: #181c21;
             overflow: hidden;
         }
         
-        #rengastyot::before, #korjaustyöt::before {
+        #rengastyot::before, #korjaustyöt::before, #sisapuhdistus::before {
             content: '';
             position: absolute;
             top: 0;
@@ -559,6 +563,13 @@
             pointer-events: none;
         }
         
+        /* Fallback if the operating system prefers reduced motion */
+        @media (prefers-reduced-motion) {
+            #rengastyot::before, #korjaustyöt::before, #sisapuhdistus::before {
+                animation: patternMove 800s linear infinite;
+            }
+        }
+        
         @keyframes patternMove {
             from {
                 transform: translateY(0) translateX(0);
@@ -568,25 +579,60 @@
             }
         }
         
-        #rengastyot > *, #korjaustyot > * {
+        /* Hero text shine animation - runs once */
+        @keyframes heroShine {
+            0% {
+                background-position: -200%;
+            }
+            100% {
+                background-position: 200%;
+            }
+        }
+        
+        .hero-tagline {
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.9) 0%,
+                rgba(255, 255, 255, 0.9) 40%,
+                rgba(255, 255, 255, 1) 50%,
+                rgba(255, 255, 255, 0.9) 60%,
+                rgba(255, 255, 255, 0.9) 100%
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: heroShine 3s ease-in-out 0.5s 1;
+            animation-fill-mode: forwards;
+        }
+        
+        /* Fallback for browsers that don't support background-clip: text */
+        @supports not (-webkit-background-clip: text) {
+            .hero-tagline {
+                color: white;
+                -webkit-text-fill-color: white;
+            }
+        }
+        
+        #rengastyot > *, #korjaustyot > *, #sisapuhdistus > * {
             position: relative;
             z-index: 1;
         }
         
         /* Improve text contrast in animated sections */
-        #rengastyot h2, #korjaustyot h2,
-        #rengastyot h4, #korjaustyot h4 {
+        #rengastyot h2, #korjaustyot h2, #sisapuhdistus h2,
+        #rengastyot h4, #korjaustyot h4, #sisapuhdistus h4 {
             color: #ffffff;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         
-        #rengastyot p, #korjaustyot p,
-        #rengastyot li, #korjaustyot li {
+        #rengastyot p, #korjaustyot p, #sisapuhdistus p,
+        #rengastyot li, #korjaustyot li, #sisapuhdistus li {
             color: #f5f5f5;
             text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
         }
         
-        #rengastyot strong, #korjaustyot strong {
+        #rengastyot strong, #korjaustyot strong, #sisapuhdistus strong {
             color: #ffffff;
         }
         
@@ -1421,6 +1467,18 @@
             }
         }
         
+        /* Past dates styling - light gray and disabled */
+        .fc-day-past {
+            background-color: #f5f5f5 !important;
+            color: #cccccc !important;
+            cursor: not-allowed !important;
+            opacity: 0.6;
+        }
+        
+        .fc-day-past .fc-daygrid-day-number {
+            color: #cccccc !important;
+        }
+        
         /* Weekend visual indication - light gray styling */
         .fc-day-sun, .fc-day-sat {
             background-color: #f0f0f0 !important;
@@ -1719,15 +1777,16 @@
                     text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
                     line-height: 1.2;
                     letter-spacing: 2px;
+                    font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
                 ">FIXNERO</h1>
-                <p style="
+                <p class="hero-tagline" style="
                     font-size: 1.8rem; 
                     line-height: 1.7; 
                     max-width: 800px; 
                     margin: 0 auto 60px auto;
-                    color: white;
                     text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
                     font-weight: 400;
+                    font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
                 ">
                     Ammattitaitoista autojen kunnostusta ja huoltoa.
                 </p>
@@ -3033,14 +3092,8 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             // Try to initialize FullCalendar
             calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridThreeWeeks',
+            initialView: 'dayGridMonth',
             locale: 'fi',
-            views: {
-                dayGridThreeWeeks: {
-                    type: 'dayGrid',
-                    duration: { weeks: 3 }
-                }
-            },
             selectable: true,
             selectOverlap: false,
             expandRows: true,
@@ -3070,6 +3123,16 @@ document.addEventListener('DOMContentLoaded', function () {
             // Mobile selection constraints - prevent row-wide selection
             // Allow selection of days
             selectAllow: function(selectInfo) {
+                const now = new Date();
+                now.setHours(0, 0, 0, 0);
+                const selectedDate = new Date(selectInfo.start);
+                selectedDate.setHours(0, 0, 0, 0);
+                
+                // Prevent selecting past dates
+                if (selectedDate < now) {
+                    return false;
+                }
+                
                 // Only allow weekday selections
                 const startDay = selectInfo.start.getDay(); // 0=Sunday, 1=Monday, etc.
                 return startDay >= 1 && startDay <= 5;
@@ -3079,32 +3142,51 @@ document.addEventListener('DOMContentLoaded', function () {
             eventDisplay: 'block',
             displayEventTime: true,
             headerToolbar: {
-                left: '',
+                left: 'prev',
                 center: 'title',
-                right: ''
+                right: 'next'
+            },
+            dayCellDidMount: function(info) {
+                const now = new Date();
+                now.setHours(0, 0, 0, 0);
+                const cellDate = new Date(info.date);
+                cellDate.setHours(0, 0, 0, 0);
+                
+                // Add past class to dates before today
+                if (cellDate < now) {
+                    info.el.classList.add('fc-day-past');
+                }
             },
             validRange: function() {
                 const now = new Date();
-                const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
                 
-                // Find start of current week (Monday)
-                const startOfWeek = new Date(now);
-                const daysToMonday = currentDay === 0 ? -6 : 1 - currentDay;
-                startOfWeek.setDate(now.getDate() + daysToMonday);
-                startOfWeek.setHours(0, 0, 0, 0);
+                // Start from today
+                const startDate = new Date(now);
+                startDate.setHours(0, 0, 0, 0);
                 
-                // End of next 3 weeks (show 3 weeks total)
-                const endOfThreeWeeks = new Date(startOfWeek);
-                endOfThreeWeeks.setDate(startOfWeek.getDate() + 21);
+                // End at the last day of next month
+                const endDate = new Date(now.getFullYear(), now.getMonth() + 2, 0);
+                endDate.setHours(23, 59, 59, 999);
                 
                 return {
-                    start: startOfWeek,
-                    end: endOfThreeWeeks
+                    start: startDate,
+                    end: endDate
                 };
             },
             select: function (info) {
                 let start = info.start;
                 const dayOfWeek = start.getDay();
+                const now = new Date();
+                now.setHours(0, 0, 0, 0);
+                const selectedDate = new Date(start);
+                selectedDate.setHours(0, 0, 0, 0);
+                
+                // Prevent selecting past dates
+                if (selectedDate < now) {
+                    if (calendar) calendar.unselect();
+                    document.getElementById('error').textContent = 'Et voi valita menneitä päiviä!';
+                    return;
+                }
                 
                 // Only allow weekday selections
                 if (dayOfWeek < 1 || dayOfWeek > 5) {
@@ -3145,6 +3227,17 @@ document.addEventListener('DOMContentLoaded', function () {
             dateClick: function(info) {
                 // Handle day/slot clicks - use same logic as select for consistency
                 const dayOfWeek = info.date.getDay();
+                const now = new Date();
+                now.setHours(0, 0, 0, 0);
+                const clickedDate = new Date(info.date);
+                clickedDate.setHours(0, 0, 0, 0);
+                
+                // Prevent clicking past dates
+                if (clickedDate < now) {
+                    document.getElementById('error').textContent = 'Et voi valita menneitä päiviä!';
+                    return;
+                }
+                
                 if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Only weekdays
                     if (isMobile) {
                         const dateStr = info.date.toISOString().split('T')[0];
