@@ -80,6 +80,10 @@
     </script>
     
     <link rel="preload" href="FXNR.png" as="image">
+    <!-- Preload hero images for faster loading -->
+    <link rel="preload" href="hero2-desktop.jpg" as="image" media="(min-width: 768px) and (max-width: 2559px)">
+    <link rel="preload" href="hero1-2k.jpg" as="image" media="(min-width: 2560px)">
+    <link rel="preload" href="hero3-mobile.jpg" as="image" media="(max-width: 767px)">
     <!-- FullCalendar CSS for booking -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
     <!-- Google reCAPTCHA v2 -->
@@ -255,6 +259,33 @@
                 background: linear-gradient(135deg, #555555, #333333) !important;
             }
         }
+        /* Hero section responsive background images */
+        /* Default hero image for all screens */
+        #hero {
+            background-image: url('hero2-desktop.jpg');
+        }
+        
+        /* Hero1: High-resolution screens (2K and above, > 2560px) */
+        @media (min-width: 2560px) {
+            #hero {
+                background-image: url('hero1-2k.jpg');
+            }
+        }
+        
+        /* Hero2: Desktop and laptop screens (768px - 2559px) */
+        @media (min-width: 768px) and (max-width: 2559px) {
+            #hero {
+                background-image: url('hero2-desktop.jpg');
+            }
+        }
+        
+        /* Hero3: Mobile devices and small screens (< 768px) */
+        @media (max-width: 767px) {
+            #hero {
+                background-image: url('hero3-mobile.jpg');
+            }
+        }
+        
         /* Hero section responsive styles */
         @media (max-width: 768px) {
             #hero {
@@ -439,6 +470,15 @@
         #hero {
             width: 100vw;
             margin-left: calc(-50vw + 50%);
+            /* Enhanced image rendering for high quality display */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            /* Smooth transitions when resizing */
+            transition: background-image 0.3s ease-in-out;
+            /* Optimize background attachment for better performance */
+            background-attachment: scroll;
+            /* Ensure proper image positioning and scaling */
+            will-change: background-image;
         }
         section {
             background: #fff;
@@ -1448,11 +1488,10 @@
         <a href="#hinnasto">Hinnasto</a>
         <a href="#yhteystiedot">Yhteystiedot</a>
     </nav>
-    <!-- Hero Section with Background Image -->
+    <!-- Hero Section with Responsive Background Images -->
     <section id="hero" style="
         position: relative;
         min-height: 100vh;
-        background-image: url('hero-background.PNG');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
