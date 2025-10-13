@@ -280,8 +280,8 @@
             #hero {
                 background-image: url('Hero2.jpg');
                 /* Fine-tune centering for desktop */
-                background-position: center center;
-                background-size: cover;
+                background-position: center center !important;
+                background-size: cover !important;
             }
         }
         
@@ -290,8 +290,8 @@
             #hero {
                 background-image: url('Hero1.png');
                 /* Optimize for large displays */
-                background-position: center center;
-                background-size: cover;
+                background-position: center center !important;
+                background-size: cover !important;
             }
         }
         
@@ -481,8 +481,7 @@
         
         /* Hero section - full width for all screen sizes with proper centering */
         #hero {
-            width: 100vw;
-            margin-left: calc(-50vw + 50%);
+            width: 100%;
             /* Ensure proper image positioning and scaling on all devices */
             background-attachment: scroll;
             /* Smooth transitions when resizing */
@@ -491,8 +490,6 @@
             will-change: background-image;
             /* Ensure perfect centering on all resolutions */
             position: relative;
-            left: 0;
-            right: 0;
         }
         section {
             background: #fff;
