@@ -2,7 +2,7 @@
 <html lang="fi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,user-scalable=yes">
     <meta name="description" content="Pesupalvelut, sisäpuhdistukset, rengastyöt, kiillotukset, tuulilasityöt. Fixnero parasta silmäterällesi.">
     <title>FIXNERO</title>
     
@@ -260,16 +260,13 @@
             }
         }
         /* Hero section responsive background images */
-        /* Default hero image for all screens */
+        /* Mobile-first approach: Default to mobile image */
         #hero {
-            background-image: url('hero2-desktop.jpg');
-        }
-        
-        /* Hero1: High-resolution screens (2K and above, > 2560px) */
-        @media (min-width: 2560px) {
-            #hero {
-                background-image: url('hero1-2k.jpg');
-            }
+            background-image: url('hero3-mobile.jpg');
+            /* Ensure proper centering on all devices */
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
         }
         
         /* Hero2: Desktop and laptop screens (768px - 2559px) */
@@ -279,10 +276,10 @@
             }
         }
         
-        /* Hero3: Mobile devices and small screens (< 768px) */
-        @media (max-width: 767px) {
+        /* Hero1: High-resolution screens (2K and above, >= 2560px) */
+        @media (min-width: 2560px) {
             #hero {
-                background-image: url('hero3-mobile.jpg');
+                background-image: url('hero1-2k.jpg');
             }
         }
         
@@ -466,18 +463,15 @@
             }
         }
         
-        /* Hero section - full width for all screen sizes */
+        /* Hero section - full width for all screen sizes with proper centering */
         #hero {
             width: 100vw;
             margin-left: calc(-50vw + 50%);
-            /* Enhanced image rendering for high quality display */
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
+            /* Ensure proper image positioning and scaling on all devices */
+            background-attachment: scroll;
             /* Smooth transitions when resizing */
             transition: background-image 0.3s ease-in-out;
-            /* Optimize background attachment for better performance */
-            background-attachment: scroll;
-            /* Ensure proper image positioning and scaling */
+            /* Optimize rendering for better performance */
             will-change: background-image;
         }
         section {
@@ -1561,9 +1555,6 @@
     <section id="hero" style="
         position: relative;
         min-height: 100vh;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
         margin-top: 0;
         display: flex;
         align-items: center;
