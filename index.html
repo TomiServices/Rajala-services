@@ -80,6 +80,10 @@
     </script>
     
     <link rel="preload" href="FXNR.png" as="image">
+    <!-- Preload hero images for faster loading -->
+    <link rel="preload" href="hero2-desktop.jpg" as="image" media="(min-width: 768px) and (max-width: 2559px)">
+    <link rel="preload" href="hero1-2k.jpg" as="image" media="(min-width: 2560px)">
+    <link rel="preload" href="hero3-mobile.jpg" as="image" media="(max-width: 767px)">
     <!-- FullCalendar CSS for booking -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
     <!-- Google reCAPTCHA v2 -->
@@ -99,7 +103,7 @@
         .top-banner {
             position: fixed;
             top: 0; left: 0; right: 0;
-            background: linear-gradient(90deg, #333333, #555555);
+            background: #000000;
             color: #fff;
             text-align: center;
             padding: 8px 0;
@@ -150,55 +154,63 @@
         .hamburger-menu {
             display: none;
             cursor: pointer;
-            padding: 8px;
-            background: rgba(0,0,0,0.8);
+            padding: 0;
+            background: linear-gradient(135deg, rgba(40,40,40,0.95), rgba(20,20,20,0.95));
             position: fixed;
-            top: 8px; right: 8px;
+            top: 12px; right: 12px;
             z-index: 1004;
-            border-radius: 6px;
-            width: 36px;
-            height: 36px;
-            transition: all 0.3s ease;
+            border-radius: 8px;
+            width: 48px;
+            height: 48px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.08);
         }
         .hamburger-menu:hover {
-            background: rgba(0,0,0,0.9);
+            background: linear-gradient(135deg, rgba(50,50,50,0.98), rgba(30,30,30,0.98));
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+            transform: translateY(-2px);
         }
         .hamburger-menu:active {
-            transform: scale(0.95);
+            transform: translateY(0) scale(0.96);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
         }
         .hamburger-menu span {
             display: block;
-            width: 18px; 
-            height: 2px;
-            margin: 3px auto;
-            background: #fff;
-            transition: all 0.3s ease;
-            border-radius: 1px;
+            width: 24px; 
+            height: 2.5px;
+            margin: 5.5px auto;
+            background: linear-gradient(90deg, #ffffff, #e0e0e0);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 2px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         .hamburger-menu.active {
-            background: rgba(0,0,0,0.9);
+            background: linear-gradient(135deg, rgba(30,30,30,0.98), rgba(10,10,10,0.98));
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12);
         }
         .hamburger-menu.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
+            transform: rotate(45deg) translate(8px, 8px);
         }
         .hamburger-menu.active span:nth-child(2) {
             opacity: 0;
+            transform: scale(0);
         }
         .hamburger-menu.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -6px);
+            transform: rotate(-45deg) translate(8px, -8px);
         }
         @media (max-width: 1279px) {
             .hamburger-menu { display: flex; align-items: center; justify-content: center; }
             nav {
                 flex-direction: column;
                 align-items: flex-start;
-                width: 280px;
+                width: 300px;
                 top: 0;
                 left: 0;
                 transform: translateX(-100%);
                 transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
                 height: 100%;
-                padding: 70px 0 20px 0;
+                padding: 0;
                 background: #000000;
                 box-shadow: 8px 0 40px rgba(0,0,0,0.6);
                 overflow-y: auto;
@@ -209,53 +221,71 @@
                 transform: translateX(0);
                 box-shadow: 8px 0 50px rgba(0,0,0,0.8);
             }
-            nav::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 60px;
-                background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(155, 89, 182, 0.2) 100%);
-                border-bottom: 1px solid rgba(255,255,255,0.1);
+            nav > a:first-child {
+                background: #ffffff;
+                padding: 20px;
+                text-align: center;
+                width: 100%;
+                border-bottom: 2px solid #000;
+                margin: 0;
             }
-            nav a {
-                border-bottom: 1px solid rgba(255,255,255,0.08);
+            nav > a:first-child img {
+                margin: 0;
+                max-width: 200px;
+                height: auto;
+            }
+            nav a:not(:first-child) {
                 color: #ecf0f1;
                 font-size: 16px;
                 font-weight: 500;
                 padding: 18px 25px;
                 text-align: left;
                 width: 100%;
-                transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                transition: all 0.3s ease;
                 margin: 0;
                 position: relative;
-                overflow: hidden;
+                border-bottom: 1px solid rgba(255,255,255,0.15);
+                background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
             }
-            nav a::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: -100%;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.3), transparent);
-                transition: left 0.5s ease;
+            nav a:not(:first-child):hover { 
+                background: linear-gradient(135deg, #666666, #444444) !important;
+                color: #fff !important;
+                transform: translateX(8px);
+                padding-left: 30px;
+                box-shadow: inset 0 0 20px rgba(255,255,255,0.05);
             }
-            nav a:hover::before {
-                left: 100%;
-            }
-            nav a:hover { 
-                background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(155, 89, 182, 0.2) 100%);
-                color: #fff;
-                transform: translateX(10px);
-                box-shadow: inset 3px 0 0 #3498db;
-                padding-left: 28px;
-            }
-            nav a:active {
-                transform: translateX(5px) scale(0.98);
+            nav a:not(:first-child):active {
+                transform: translateX(4px) scale(0.98);
+                background: linear-gradient(135deg, #555555, #333333) !important;
             }
         }
+        /* Hero section responsive background images */
+        /* Default hero image for all screens */
+        #hero {
+            background-image: url('hero2-desktop.jpg');
+        }
+        
+        /* Hero1: High-resolution screens (2K and above, > 2560px) */
+        @media (min-width: 2560px) {
+            #hero {
+                background-image: url('hero1-2k.jpg');
+            }
+        }
+        
+        /* Hero2: Desktop and laptop screens (768px - 2559px) */
+        @media (min-width: 768px) and (max-width: 2559px) {
+            #hero {
+                background-image: url('hero2-desktop.jpg');
+            }
+        }
+        
+        /* Hero3: Mobile devices and small screens (< 768px) */
+        @media (max-width: 767px) {
+            #hero {
+                background-image: url('hero3-mobile.jpg');
+            }
+        }
+        
         /* Hero section responsive styles */
         @media (max-width: 768px) {
             #hero {
@@ -303,6 +333,39 @@
             #hero a {
                 padding: 14px 28px !important;
                 font-size: 1rem !important;
+            }
+            
+            /* iPhone 15 Pro and similar small phones - optimize hamburger menu and logo */
+            nav {
+                width: 260px;
+            }
+            
+            nav > a:first-child {
+                padding: 15px 10px;
+            }
+            
+            nav > a:first-child img {
+                max-width: 160px;
+                height: auto;
+            }
+            
+            nav img {
+                height: 40px;
+            }
+            
+            /* Make service sections scale better on small phones */
+            .services-container section {
+                transform: scale(1.02);
+                transform-origin: center;
+                padding: 20px 15px;
+                margin: 20px auto;
+            }
+            
+            #pesupalvelut h2, 
+            .services-container section h2 {
+                font-size: 1.8rem;
+                color: #1a1a1a;
+                text-shadow: 0 1px 2px rgba(0,0,0,0.1);
             }
         }
         .categories-row {
@@ -403,12 +466,19 @@
             }
         }
         
-        /* Large screen hero section - full width for 1920px+ displays */
-        @media (min-width: 1920px) {
-            #hero {
-                width: 100vw;
-                margin-left: calc(-50vw + 50%);
-            }
+        /* Hero section - full width for all screen sizes */
+        #hero {
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            /* Enhanced image rendering for high quality display */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            /* Smooth transitions when resizing */
+            transition: background-image 0.3s ease-in-out;
+            /* Optimize background attachment for better performance */
+            background-attachment: scroll;
+            /* Ensure proper image positioning and scaling */
+            will-change: background-image;
         }
         section {
             background: #fff;
@@ -417,6 +487,23 @@
             max-width: 800px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             border-radius: 18px;
+            position: relative;
+        }
+        
+        /* Improve text contrast in sections */
+        section h2 {
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+        
+        section h4 {
+            color: #2a2a2a;
+            font-weight: 600;
+        }
+        
+        section p, section li {
+            color: #333333;
+            line-height: 1.7;
         }
         
         /* Services container */
@@ -429,6 +516,63 @@
         /* Ensure services sections within container have proper spacing */
         .services-container section {
             margin: 30px auto;
+        }
+        
+        /* Animated background pattern for rengastyöt and korjaustyöt sections */
+        #rengastyot, #korjaustyot {
+            background: #181c21;
+            overflow: hidden;
+        }
+        
+        #rengastyot::before, #korjaustyöt::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                135deg,
+                #232526 0px,
+                #232526 40px,
+                #23252699 50px,
+                #414345 90px
+            );
+            opacity: 0.15;
+            z-index: 0;
+            animation: patternMove 20s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes patternMove {
+            from {
+                transform: translateY(0) translateX(0);
+            }
+            to {
+                transform: translateY(-10%) translateX(-10%);
+            }
+        }
+        
+        #rengastyot > *, #korjaustyot > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Improve text contrast in animated sections */
+        #rengastyot h2, #korjaustyot h2,
+        #rengastyot h4, #korjaustyot h4 {
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        #rengastyot p, #korjaustyot p,
+        #rengastyot li, #korjaustyot li {
+            color: #f5f5f5;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+        }
+        
+        #rengastyot strong, #korjaustyot strong {
+            color: #ffffff;
         }
         
         /* Responsive design */
@@ -455,7 +599,7 @@
         .ajanvaraus-container {
             max-width: 800px;
             margin: 30px auto 20px auto;
-            background: #fff url('Tausta.PNG') center/cover;
+            background: #fff url('Elementti1.PNG') center/cover;
             border-radius: 14px;
             box-shadow: 0 2px 14px #0001, 0 8px 40px rgba(0,0,0,0.15);
             padding: 24px 20px 20px 20px;
@@ -470,7 +614,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.92);
             z-index: 1;
             pointer-events: none;
         }
@@ -488,20 +632,234 @@
             max-width: 700px;
             margin: 0 auto 20px auto;
             background: #fff;
-            border-radius: 16px;
+            border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
             overflow: hidden;
+            border: 2px solid #000000;
+        }
+        
+        /* Compact calendar styling */
+        #calendar .fc-daygrid-day {
+            cursor: pointer;
+        }
+        
+        #calendar .fc-daygrid-day:hover {
+            background: #f5f5f5;
+        }
+        
+        #calendar .fc-daygrid-day.fc-day-sat,
+        #calendar .fc-daygrid-day.fc-day-sun {
+            background: #f0f0f0;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        /* Time Selection Grid Styling */
+        .time-selection-container {
+            max-width: 750px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .time-selection-title {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .time-slots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .time-slot-box {
+            background: #ffffff;
+            border: 2px solid #333333;
+            color: #000000;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        
+        .time-slot-box:hover {
+            background: #f5f5f5;
+            border-color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .time-slot-box.selected {
+            background: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+        
+        .time-slot-box.booked {
+            background: #e0e0e0;
+            color: #999999;
+            border-color: #cccccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .time-slot-box.booked:hover {
+            transform: none;
+            box-shadow: none;
+            background: #e0e0e0;
+        }
+        
+        .time-slot-box.disabled {
+            background: #f0f0f0;
+            color: #cccccc;
+            border-color: #e0e0e0;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .time-slot-box.disabled:hover {
+            transform: none;
+            box-shadow: none;
+            background: #f0f0f0;
+        }
+        
+        /* Calendar header - modern professional style */
+        .fc-toolbar {
+            background: #000000 !important;
+            padding: 15px !important;
+            border-bottom: 2px solid #333333;
+        }
+        
+        .fc-toolbar-title {
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Calendar buttons - modern style */
+        .fc-button {
+            background: #333333 !important;
+            border: 2px solid #555555 !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.5px;
+            border-radius: 4px;
+        }
+        
+        .fc-button:hover {
+            background: #555555 !important;
+            border-color: #666666 !important;
+            transform: translateY(-1px);
+        }
+        
+        .fc-button:active {
+            transform: translateY(0);
+            background: #222222 !important;
+        }
+        
+        .fc-button-primary:disabled {
+            background: #cccccc !important;
+            border-color: #cccccc !important;
+            color: #888888 !important;
+            opacity: 0.6;
+        }
+        
+        /* Calendar day headers - modern professional look */
+        .fc-col-header-cell {
+            background: #333333 !important;
+            border-color: #555555 !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 12px 5px !important;
+            border-bottom: 2px solid #000000 !important;
+        }
+        
+        /* Time slots - clean professional style */
+        .fc-timegrid-slot {
+            border-color: #e0e0e0 !important;
+            background: #ffffff;
+        }
+        
+        .fc-timegrid-slot:hover {
+            background: #f5f5f5 !important;
+            border-color: #cccccc !important;
+        }
+        
+        /* Time labels - modern style */
+        .fc-timegrid-axis-cushion,
+        .fc-timegrid-slot-label-cushion {
+            color: #333333 !important;
+            font-weight: 600 !important;
+        }
+        
+        /* Available/booked slots with modern colors */
+        .fc-event {
+            background: #666666 !important;
+            border: 2px solid #555555 !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+        }
+        
+        /* Day grid cells */
+        .fc-daygrid-day {
+            background: #ffffff;
+            border-color: #e0e0e0 !important;
+        }
+        
+        .fc-daygrid-day:hover {
+            background: #f5f5f5 !important;
+        }
+        
+        .fc-daygrid-day.fc-day-today {
+            background: #f0f0f0 !important;
+            border: 2px solid #333333 !important;
+        }
+        
+        /* Scrollbar styling for calendar - industrial look */
+        #calendar ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        #calendar ::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        #calendar ::-webkit-scrollbar-thumb {
+            background: #cccccc;
+            border-radius: 5px;
+            border: 2px solid #f0f0f0;
+        }
+        
+        #calendar ::-webkit-scrollbar-thumb:hover {
+            background: #999999;
         }
         
         /* Enhanced calendar hover effects */
         .fc-timegrid-slot:hover {
-            background-color: rgba(0, 123, 255, 0.08) !important;
-            border-color: rgba(0, 123, 255, 0.3) !important;
+            background-color: #f5f5f5 !important;
+            border-color: #cccccc !important;
             transition: all 0.2s ease;
         }
         
         .fc-col-header-cell:hover {
-            background-color: rgba(0, 123, 255, 0.05) !important;
+            background-color: #555555 !important;
             transition: all 0.2s ease;
         }
         
@@ -512,7 +870,7 @@
         }
         
         .fc-daygrid-day:hover {
-            background-color: rgba(0, 123, 255, 0.05) !important;
+            background-color: #f5f5f5 !important;
             transition: all 0.2s ease;
         }
         
@@ -780,30 +1138,48 @@
         /* Mobile responsive styles for calendar */
         @media (max-width: 768px) {
             #calendar {
-                font-size: 0.8rem;
+                font-size: 0.9rem;
+                max-width: 100%;
+                margin: 0 auto 20px auto;
             }
             .fc-toolbar {
                 flex-wrap: wrap;
             }
             .fc-toolbar-title {
-                font-size: 1.1rem;
+                font-size: 1.2rem;
             }
             .fc-button {
-                padding: 0.2em 0.4em;
-                font-size: 0.9rem;
+                padding: 0.3em 0.5em;
+                font-size: 1rem;
             }
             .fc-timegrid-slot {
-                min-height: 3em;
+                min-height: 4em;
                 cursor: pointer;
             }
             .fc-timegrid-slot-lane {
-                min-height: 3em;
+                min-height: 4em;
             }
             .ajanvaraus-container {
                 padding: 16px 12px 12px 12px;
             }
             .booking-form {
                 padding: 15px 0 0 0;
+            }
+            
+            /* Mobile time selection grid */
+            .time-selection-container {
+                max-width: 100%;
+                padding: 15px;
+            }
+            
+            .time-slots-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+                gap: 8px;
+            }
+            
+            .time-slot-box {
+                padding: 10px 6px;
+                font-size: 0.9rem;
             }
             
             /* Mobile-specific: Improve day selection visibility */
@@ -813,7 +1189,7 @@
             }
             
             .fc-timegrid-col-frame:hover {
-                border-color: rgba(0, 123, 255, 0.3);
+                border-color: rgba(0, 0, 0, 0.2);
             }
             
             /* Visual feedback for mobile day selection */
@@ -881,10 +1257,10 @@
                 position: relative;
             }
             .fc-timegrid-slot:active {
-                background-color: rgba(0, 123, 255, 0.1);
+                background-color: rgba(0, 0, 0, 0.05);
             }
             .fc-timegrid-slot-lane:active {
-                background-color: rgba(0, 123, 255, 0.1);
+                background-color: rgba(0, 0, 0, 0.05);
             }
         }
         
@@ -916,8 +1292,8 @@
             
             .fc-timegrid-slot.fc-highlight,
             .fc-timegrid-slot:has(.fc-highlight) {
-                border-color: rgba(0, 123, 255, 0.3);
-                background-color: rgba(0, 123, 255, 0.1) !important;
+                border-color: rgba(0, 0, 0, 0.2);
+                background-color: rgba(0, 0, 0, 0.05) !important;
             }
             
             /* Prevent selection from expanding beyond single cell on touch */
@@ -1181,11 +1557,10 @@
         <a href="#hinnasto">Hinnasto</a>
         <a href="#yhteystiedot">Yhteystiedot</a>
     </nav>
-    <!-- Hero Section with Background Image -->
+    <!-- Hero Section with Responsive Background Images -->
     <section id="hero" style="
         position: relative;
         min-height: 100vh;
-        background-image: url('hero-background.PNG');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -1269,15 +1644,26 @@
     </section>
     
     <!-- Services Section with Categories -->
-    <section id="palvelumme" style="background: #fff url('Tausta.PNG') center/cover; margin: 30px auto; padding: 24px 18px 18px 18px; max-width: 1200px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 18px; position: relative; overflow: visible;">
+    <section id="palvelumme" style="background: #fff url('Elementti1.PNG') center/cover; margin: 30px auto; padding: 24px 18px 18px 18px; max-width: 1200px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 18px; position: relative; overflow: visible;">
         <!-- Background overlay for better text readability -->
-        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.85); z-index: 1; border-radius: 18px;"></div>
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.90); z-index: 1; border-radius: 18px;"></div>
         <div style="position: relative; z-index: 2;">
         <h2 style="text-align: center; margin-bottom: 30px; font-size: 2.2rem; color: #333; font-weight: 600;">Palvelumme</h2>
         
-        <!-- Company Logo -->
-        <div class="services-logo">
-            <img src="Logo.png.PNG" alt="Fixnero Company Logo" loading="lazy">
+        <!-- Service Introduction Text -->
+        <div style="text-align: center; max-width: 900px; margin: 0 auto 40px auto; padding: 0 20px;">
+            <p style="font-size: 1.15rem; line-height: 1.8; color: #444; margin-bottom: 25px; text-align: left;">
+                Hei, mahtavaa että löysit tiesi meille! Olemme Espoossa toimiva auton kunnostuksen ammattiliike. 
+                Tästä löydät meidän tarjoamat palvelut sinun silmäterällesi. Olemme vastuullinen yritys ja käytämme vain 
+                parhaita tuotteita parhaan lopputuloksen varmistamiseksi kaikissa tilanteissa. Tarjoamme laajan kirjon 
+                eri palveluita, jotta voit tuoda autosi aina samaan paikkaan sen tarvitessa huolenpitoa. 
+                Voit varata ajan jo tänään!
+            </p>
+            <!-- Company Logo as Guarantee Seal -->
+            <div style="display: inline-block; margin: 20px 0 15px 0;">
+                <img src="Logo.png.PNG" alt="Fixnero Takuu" loading="lazy" 
+                     style="max-width: 160px; height: auto; opacity: 0.9; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));">
+            </div>
         </div>
         
         <!-- Lighting Effect and Service Categories -->
@@ -1300,8 +1686,17 @@
     
     <!-- Booking Calendar Section -->
     <div class="ajanvaraus-container" id="ajanvaraus" style="border: 2px solid #000;">
-      <h2>Varaa aika kiillotukseen</h2>
+      <h2>Varaa aika silmäterällesi</h2>
       <div id="calendar"></div>
+      
+      <!-- Time Selection Grid -->
+      <div id="time-selection-grid" class="time-selection-container" style="display:none;">
+        <h3 class="time-selection-title">Valitse aika:</h3>
+        <div id="time-slots-grid" class="time-slots-grid">
+          <!-- Time slots will be dynamically generated here -->
+        </div>
+      </div>
+      
       <!-- Mock calendar for testing when FullCalendar CDN is blocked -->
       <div id="mock-calendar" style="display: none; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 8px;">
         <p style="text-align: center; color: #666; margin-bottom: 15px;">
@@ -1350,7 +1745,18 @@
         </div>
       </div>
 
-      <!-- Service Selection Dropdown - Now second in flow -->
+      <!-- Summary section -->
+      <div id="slot-summary"></div>
+      
+      <!-- Selected services list -->
+      <div id="selected-services-container" style="display:none; margin: 15px 0;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 10px;">Valitut palvelut:</h3>
+        <ul id="selected-services-list" style="list-style: none; padding: 0; margin: 0;">
+          <!-- Selected services will be added here -->
+        </ul>
+      </div>
+      
+      <!-- Service Selection Dropdown - Moved to appear between selected services and add button -->
       <div id="serviceSelection" class="available-slots-section" style="display:none;">
         <div class="available-slots-dropdown">
           <label for="serviceSelect">Valitse haluamasi palvelu:</label>
@@ -1365,7 +1771,7 @@
         </div>
       </div>
 
-      <!-- Task Selection Dropdown - Now third in flow -->
+      <!-- Task Selection Dropdown - Moved to appear between selected services and add button -->
       <div id="taskSelection" class="available-slots-section" style="display:none;">
         <div class="available-slots-dropdown">
           <label for="taskSelect">Valitse palvelun tyyppi:</label>
@@ -1375,8 +1781,17 @@
         </div>
       </div>
       
-      <!-- Summary section moved here to appear below dropdown lists -->
-      <div id="slot-summary"></div>
+      <!-- Add another service button -->
+      <div id="add-service-container" style="display:none; margin: 15px 0; text-align: center;">
+        <button id="add-service-btn" class="btn" type="button" style="background: #444; width: auto; padding: 10px 20px; display: inline-block;">
+          ➕ Lisää toinen palvelu
+        </button>
+      </div>
+      
+      <!-- Repair services disclaimer -->
+      <div id="repair-disclaimer" style="display:none; background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: center;">
+        <strong>Huomioithan että korjaustöiden hinnat ovat aina tapauskohtaisia. Voit olla meihin yhteydessä ennen korjausta hinta-arviota varten.</strong>
+      </div>
       
       <form class="booking-form" id="bookingForm" style="display:none;" autocomplete="off">
         <input type="hidden" name="aika" id="aika" />
@@ -1413,7 +1828,9 @@
     
     <!-- Services sections -->
     <div class="services-container">
-    <section id="pesupalvelut">
+    <section id="pesupalvelut" style="background: #fff url('Elementti2.PNG') center/cover; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(240,240,240,0.92); z-index: 1; border-radius: 18px;"></div>
+        <div style="position: relative; z-index: 2;">
         <h2>Pesupalvelut</h2>
         <p>Tarjoamme laadukkaita auton pesupalveluita: käsinpesu, vahaukset, pikapesut ja renkaiden pesut. Käytämme vain huolellisesti valittuja, laadukkaita aineita ja välineitä, jotka suojaavat ajoneuvon pintoja ja tekevät autostasi kiiltävän puhtaan.</p>
 
@@ -1440,6 +1857,7 @@
         <ul>
             <li>Pesun yhteydessä suihkutettava vettä ja likaa hylkivä pinnoite</li>
         </ul>
+        </div>
     </section>
     <section id="rengastyot">
         <h2>Rengastyöt</h2>
@@ -1525,7 +1943,7 @@
             <li>Keraaminen pinnoite (lisäpalvelu)</li>
         </ul>
 
-        <p>Varaa aika kiillotukseen <strong>varauskalenterista</strong> tai tule paikan päälle näyttämään ajoneuvoasi – annamme arvion ja suosittelemme sopivinta palvelua juuri sinun tarpeisiisi.</p>
+        <p>Varaa aika <strong>varauskalenterista</strong> tai tule paikan päälle näyttämään ajoneuvoasi – annamme arvion ja suosittelemme sopivinta palvelua juuri sinun tarpeisiisi.</p>
     </section>
     <section id="lasikorjaus">
         <h2>Lasikorjaus</h2>
@@ -1608,11 +2026,11 @@
             Pyydä tarjous viestin, sähköpostin tai puhelun kautta. Annamme realistisen arvion korjauskustannuksista ennen töiden aloittamista.
         </p>
         <ul>
-            <li>Iskunvaimentimien ja jousituksen uusiminen: pyydä tarjous</li>
-            <li>Tukivarsien, nivelien ja raidetankojen vaihto: pyydä tarjous</li>
-            <li>Jarrulevyjen ja palojen korjaukset: pyydä tarjous</li>
-            <li>Pakoputkistojen korjaukset: pyydä tarjous</li>
-            <li>Vikakoodien luku ja nollaus: pyydä tarjous</li>
+            <li>Vikakoodien luku ja nollaus: alkaen 40 €</li>
+            <li>Iskunvaimentimien ja jousituksen uusiminen</li>
+            <li>Tukivarsien, nivelien ja raidetankojen vaihto</li>
+            <li>Jarrulevyjen ja palojen korjaukset</li>
+            <li>Pakoputkistojen korjaukset</li>
         </ul>
 
         <p>Pyydä tarjous erityispalveluista tai suuremmista kokonaisuuksista!</p>
@@ -1697,6 +2115,105 @@ document.addEventListener('DOMContentLoaded', function () {
         return date.toISOString().split('T')[0];
     }
 
+    // Populate time selection grid with available times for current week
+    // Updated to populate for a specific selected date only
+    function populateTimeSelectionGrid(selectedDate, bookings) {
+        const gridContainer = document.getElementById('time-slots-grid');
+        const timeSelectionContainer = document.getElementById('time-selection-grid');
+        if (!gridContainer) return;
+        
+        gridContainer.innerHTML = '';
+        
+        // Get current date
+        const now = new Date();
+        
+        const dateKey = getDateKey(selectedDate);
+        const dayBookings = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey);
+        
+        // Get current hour for checking if slot is in the past
+        const isToday = getDateKey(now) === dateKey;
+        const currentHour = now.getHours();
+        
+        let hasAvailableSlots = false;
+        
+        // Generate time slots for business hours (9-17) - only for the selected day
+        for (let hour = 9; hour < 17; hour++) {
+            const slotTime = new Date(selectedDate);
+            slotTime.setHours(hour, 0, 0, 0);
+            
+            // Check if slot is in the past
+            const isPast = slotTime < now;
+            
+            // Check if specific slot is booked
+            const isSlotBooked = bookings.some(b => {
+                const bookingTime = new Date(b.aika);
+                return bookingTime.getTime() === slotTime.getTime();
+            });
+            
+            // Skip booked slots entirely (don't show them)
+            if (isSlotBooked || isPast) {
+                continue;
+            }
+            
+            hasAvailableSlots = true;
+            
+            const slotBox = document.createElement('div');
+            slotBox.className = 'time-slot-box';
+            
+            // Format display: "9:00", "10:00", etc.
+            slotBox.textContent = `${hour}:00`;
+            
+            // Available slot - add click handler
+            slotBox.dataset.datetime = slotTime.toISOString();
+            slotBox.dataset.date = dateKey;
+            slotBox.dataset.hour = hour;
+            
+            slotBox.addEventListener('click', function() {
+                // Remove previous selection
+                document.querySelectorAll('.time-slot-box.selected').forEach(box => {
+                    box.classList.remove('selected');
+                });
+                
+                // Select this slot
+                this.classList.add('selected');
+                
+                // Update the time dropdown
+                const selectElement = document.getElementById('availableTimesSelect');
+                const labelElement = document.getElementById('availableTimesLabel');
+                
+                // Clear and populate dropdown with this single time
+                selectElement.innerHTML = '';
+                const option = document.createElement('option');
+                const dayNames = ['Su', 'Ma', 'Ti', 'Ke', 'To', 'Pe', 'La'];
+                const dayName = dayNames[selectedDate.getDay()];
+                option.value = `${hour}:00`;
+                option.textContent = `${dayName} ${selectedDate.getDate()}.${selectedDate.getMonth() + 1}. klo ${hour}:00`;
+                option.dataset.date = slotTime.toISOString();
+                option.dataset.hour = hour;
+                option.selected = true;
+                selectElement.appendChild(option);
+                
+                labelElement.textContent = `Valittu aika: ${dayName} ${selectedDate.getDate()}.${selectedDate.getMonth() + 1}. klo ${hour}:00`;
+                
+                // Show the time dropdown and service selection
+                document.getElementById('availableSlots').style.display = 'block';
+                document.getElementById('serviceSelection').style.display = 'block';
+                
+                // Clear any errors
+                document.getElementById('error').textContent = '';
+            });
+            
+            gridContainer.appendChild(slotBox);
+        }
+        
+        // Show or hide the time selection container based on availability
+        if (timeSelectionContainer) {
+            timeSelectionContainer.style.display = hasAvailableSlots ? 'block' : 'none';
+        }
+        
+        return hasAvailableSlots;
+    }
+
     // Mobile device detection utility - enhanced for better mobile/touch detection
     function isMobileDevice() {
         // Primary detection: User agent check for known mobile devices
@@ -1740,8 +2257,19 @@ document.addEventListener('DOMContentLoaded', function () {
             return bookingDate.toDateString() === selectedDate.toDateString();
         });
         
+        // Get current date and time for comparison
+        const now = new Date();
+        const selectedDate = new Date(dateStr);
+        const isToday = selectedDate.toDateString() === now.toDateString();
+        const currentHour = now.getHours();
+        
         // Generate available time slots (9-17)
         for (let hour = 9; hour < 17; hour++) {
+            // Skip past time slots if it's today
+            if (isToday && hour <= currentHour) {
+                continue;
+            }
+            
             const isBooked = dayBookings.some(b => {
                 const bookingHour = new Date(b.aika).getHours();
                 return bookingHour === hour;
@@ -1808,8 +2336,18 @@ document.addEventListener('DOMContentLoaded', function () {
         
         let hasAvailableSlots = false;
         
+        // Get current date and time for comparison
+        const now = new Date();
+        const isToday = dateKey === getDateKey(now);
+        const currentHour = now.getHours();
+        
         // Generate time slots for the day (9-17)
         for (let hour = 9; hour < 17; hour++) {
+            // Skip past time slots if it's today
+            if (isToday && hour <= currentHour) {
+                continue;
+            }
+            
             const isBooked = dayBookings.some(b => {
                 const bookingHour = new Date(b.aika).getHours();
                 return bookingHour === hour;
@@ -1954,6 +2492,15 @@ document.addEventListener('DOMContentLoaded', function () {
     function initializeMockCalendarAndDropdowns() {
         // Get mock bookings for testing
         fetchBookings().then(bookings => {
+            // Populate the time selection grid
+            populateTimeSelectionGrid(bookings, null);
+            
+            // Show the time selection grid
+            const timeGridContainer = document.getElementById('time-selection-grid');
+            if (timeGridContainer) {
+                timeGridContainer.style.display = 'block';
+            }
+            
             // Connect mock calendar slots to our time selection function
             const mockSlots = document.querySelectorAll('.mock-slot[data-date]');
             mockSlots.forEach(slot => {
@@ -2007,12 +2554,12 @@ document.addEventListener('DOMContentLoaded', function () {
         repair: {
             name: 'Korjaustyöt',
             tasks: [
-                { id: 'shock-absorber', name: 'Iskunvaimentimien ja jousituksen uusiminen', price: 'pyydä tarjous' },
-                { id: 'suspension-parts', name: 'Tukivarsien, nivelien ja raidetankojen vaihto', price: 'pyydä tarjous' },
-                { id: 'stabilizer-bar', name: 'Vakaajatangon ja koiranluiden vaihto', price: 'pyydä tarjous' },
-                { id: 'brake-repair', name: 'Jarrulevyjen, palojen ja käsijarrujen korjaukset', price: 'pyydä tarjous' },
-                { id: 'exhaust-repair', name: 'Pakoputkistojen korjaukset', price: 'pyydä tarjous' },
-                { id: 'diagnostics', name: 'Vikakoodien luku ja nollaus', price: 'alkaen 40 €' }
+                { id: 'diagnostics', name: 'Vikakoodien luku ja nollaus', price: 'alkaen 40 €' },
+                { id: 'shock-absorber', name: 'Iskunvaimentimien ja jousituksen uusiminen', price: '' },
+                { id: 'suspension-parts', name: 'Tukivarsien, nivelien ja raidetankojen vaihto', price: '' },
+                { id: 'stabilizer-bar', name: 'Vakaajatangon ja koiranluiden vaihto', price: '' },
+                { id: 'brake-repair', name: 'Jarrulevyjen, palojen ja käsijarrujen korjaukset', price: '' },
+                { id: 'exhaust-repair', name: 'Pakoputkistojen korjaukset', price: '' }
             ]
         },
         washing: {
@@ -2053,6 +2600,99 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
+    // Multiple services management
+    let selectedServices = [];
+    
+    function addSelectedService(service, task) {
+        const serviceObj = serviceData[service];
+        const taskObj = serviceObj.tasks.find(t => t.id === task);
+        
+        if (!serviceObj || !taskObj) return;
+        
+        // Add to selected services array
+        selectedServices.push({
+            service: service,
+            serviceName: serviceObj.name,
+            task: task,
+            taskName: taskObj.name,
+            taskPrice: taskObj.price || ''
+        });
+        
+        updateSelectedServicesDisplay();
+    }
+    
+    function removeSelectedService(index) {
+        selectedServices.splice(index, 1);
+        updateSelectedServicesDisplay();
+        
+        // If no services left, hide the booking form
+        if (selectedServices.length === 0) {
+            document.getElementById('bookingForm').style.display = 'none';
+            document.getElementById('add-service-container').style.display = 'none';
+            document.getElementById('selected-services-container').style.display = 'none';
+            document.getElementById('repair-disclaimer').style.display = 'none';
+        } else {
+            // Update disclaimer visibility based on remaining services
+            updateRepairDisclaimer();
+        }
+    }
+    
+    function updateSelectedServicesDisplay() {
+        const container = document.getElementById('selected-services-container');
+        const list = document.getElementById('selected-services-list');
+        
+        if (selectedServices.length === 0) {
+            container.style.display = 'none';
+            return;
+        }
+        
+        container.style.display = 'block';
+        list.innerHTML = '';
+        
+        selectedServices.forEach((service, index) => {
+            const li = document.createElement('li');
+            li.style.cssText = 'padding: 10px; margin: 5px 0; background: #f8f9fa; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;';
+            
+            const serviceText = document.createElement('span');
+            if (service.taskPrice && service.taskPrice.trim() !== '') {
+                serviceText.textContent = `${service.serviceName} - ${service.taskName}: ${service.taskPrice}`;
+            } else {
+                serviceText.textContent = `${service.serviceName} - ${service.taskName}`;
+            }
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = '✕';
+            removeBtn.type = 'button';
+            removeBtn.style.cssText = 'background: #dc3545; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-weight: bold;';
+            removeBtn.onclick = () => removeSelectedService(index);
+            
+            li.appendChild(serviceText);
+            li.appendChild(removeBtn);
+            list.appendChild(li);
+        });
+    }
+    
+    function updateRepairDisclaimer() {
+        const repairDisclaimer = document.getElementById('repair-disclaimer');
+        const hasRepairService = selectedServices.some(s => s.service === 'repair');
+        
+        if (hasRepairService) {
+            repairDisclaimer.style.display = 'block';
+        } else {
+            repairDisclaimer.style.display = 'none';
+        }
+    }
+    
+    function resetServiceSelection() {
+        // Reset dropdowns
+        document.getElementById('serviceSelect').value = '';
+        document.getElementById('taskSelect').value = '';
+        document.getElementById('taskSelection').style.display = 'none';
+        
+        // Show service selection again
+        document.getElementById('serviceSelection').style.display = 'block';
+    }
+
     // Service selection event handler
     function setupServiceSelection() {
         const serviceSelect = document.getElementById('serviceSelect');
@@ -2073,7 +2713,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     serviceData[selectedService].tasks.forEach(task => {
                         const option = document.createElement('option');
                         option.value = task.id;
-                        option.textContent = `${task.name}: ${task.price}`;
+                        // Display price only if it exists and is not empty
+                        if (task.price && task.price.trim() !== '') {
+                            option.textContent = `${task.name}: ${task.price}`;
+                        } else {
+                            option.textContent = task.name;
+                        }
                         taskSelect.appendChild(option);
                     });
                     
@@ -2128,31 +2773,50 @@ document.addEventListener('DOMContentLoaded', function () {
         const selectedTask = taskSelect.value;
         
         if (selectedDateTime && selectedService && selectedTask) {
+            // Add service to the list if it's a new service
+            addSelectedService(selectedService, selectedTask);
+            
             selectedSlot = selectedDateTime;
             const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                 ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
             
-            // Get service and task names for display
-            let serviceInfo = '';
-            if (serviceData[selectedService]) {
-                const serviceObj = serviceData[selectedService];
-                const taskObj = serviceObj.tasks.find(task => task.id === selectedTask);
-                if (taskObj) {
-                    serviceInfo = `\nPalvelu: ${serviceObj.name} - ${taskObj.name}: ${taskObj.price}`;
-                }
-            }
-            
-            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt + serviceInfo;
+            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
             document.getElementById('aika').value = aikaTxt;
-            document.getElementById('service').value = selectedService;
-            document.getElementById('task').value = selectedTask;
+            
+            // Store all services as comma-separated values
+            const serviceValues = selectedServices.map(s => s.service).join(', ');
+            const taskValues = selectedServices.map(s => s.task).join(', ');
+            document.getElementById('service').value = serviceValues;
+            document.getElementById('task').value = taskValues;
+            
+            // Show repair disclaimer if any repair service is selected
+            updateRepairDisclaimer();
+            
+            // Show add service button and booking form
+            document.getElementById('add-service-container').style.display = 'block';
             document.getElementById('bookingForm').style.display = '';
             document.getElementById('error').textContent = '';
+            
+            // Hide service selection dropdowns after adding service (user can click button to add more)
+            document.getElementById('serviceSelection').style.display = 'none';
+            document.getElementById('taskSelection').style.display = 'none';
         }
     }
 
     // Call setupServiceSelection immediately
     setupServiceSelection();
+    
+    // Setup "Add another service" button
+    const addServiceBtn = document.getElementById('add-service-btn');
+    if (addServiceBtn) {
+        addServiceBtn.addEventListener('click', function() {
+            // Reset and show service selection dropdowns for adding another service
+            document.getElementById('serviceSelect').value = '';
+            document.getElementById('taskSelect').value = '';
+            document.getElementById('taskSelection').style.display = 'none';
+            document.getElementById('serviceSelection').style.display = 'block';
+        });
+    }
 
     // Initialize mock calendar and dropdown functionality
     initializeMockCalendarAndDropdowns();
@@ -2235,25 +2899,21 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             // Try to initialize FullCalendar
             calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'timeGridWeek',
+            initialView: 'dayGridTwoWeeks',
             locale: 'fi',
-            slotMinTime: '09:00:00',
-            slotMaxTime: '17:00:00',
-            allDaySlot: false,
+            views: {
+                dayGridTwoWeeks: {
+                    type: 'dayGrid',
+                    duration: { weeks: 2 }
+                }
+            },
             selectable: true,
             selectOverlap: false,
-            slotDuration: '01:00:00',
             expandRows: true,
             // Show all 7 days including weekends for visual indication
             hiddenDays: [], // Show all days including weekends
-            // Enhanced time slot display (fix for issue #2)
-            slotLabelFormat: {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false
-            },
-            slotLabelInterval: '01:00:00',
-            displayEventTime: true,
+            displayEventTime: false,
+            dayMaxEventRows: 3,
             // Update available slots when view changes
             viewDidMount: function(info) {
                 // Small delay to ensure view is fully rendered
@@ -2263,7 +2923,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             // Mobile-specific improvements
             height: 'auto',
-            contentHeight: 'auto',
+            contentHeight: window.innerWidth < 768 ? 500 : 400,
             dayMaxEvents: true,
             moreLinkClick: 'popover',
             selectMirror: true,
@@ -2274,82 +2934,79 @@ document.addEventListener('DOMContentLoaded', function () {
             longPressDelay: 1,
             eventLongPressDelay: 1,
             // Mobile selection constraints - prevent row-wide selection
-            selectConstraint: {
-                start: '09:00',
-                end: '17:00',
-                daysOfWeek: [1, 2, 3, 4, 5] // Mon-Fri only
-            },
-            snapDuration: '01:00:00', // Snap selections to 1-hour intervals
-            // Restrict selection to exactly one cell (one hour) - enhanced for mobile
+            // Allow selection of days
             selectAllow: function(selectInfo) {
-                const duration = selectInfo.end - selectInfo.start;
-                const oneHour = 60 * 60 * 1000; // One hour in milliseconds
-                
-                // Only allow exactly 1-hour selections during business hours on weekdays
-                const startHour = selectInfo.start.getHours();
+                // Only allow weekday selections
                 const startDay = selectInfo.start.getDay(); // 0=Sunday, 1=Monday, etc.
-                
-                return duration === oneHour && 
-                       startHour >= 9 && startHour < 17 && 
-                       startDay >= 1 && startDay <= 5;
-            },
-            selectConstraint: {
-                start: '09:00',
-                end: '17:00',
-                daysOfWeek: [1, 2, 3, 4, 5] // Restrict to weekdays
+                return startDay >= 1 && startDay <= 5;
             },
             // Better mobile responsiveness
             aspectRatio: window.innerWidth < 768 ? 1.2 : 1.35,
             eventDisplay: 'block',
             displayEventTime: true,
             headerToolbar: {
-                left: 'prev,next today',
+                left: '',
                 center: 'title',
                 right: ''
             },
-            validRange: {
-                start: new Date(),
-                end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+            validRange: function() {
+                const now = new Date();
+                const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+                
+                // Find start of current week (Monday)
+                const startOfWeek = new Date(now);
+                const daysToMonday = currentDay === 0 ? -6 : 1 - currentDay;
+                startOfWeek.setDate(now.getDate() + daysToMonday);
+                startOfWeek.setHours(0, 0, 0, 0);
+                
+                // End of next 2 weeks (show 2 weeks total)
+                const endOfTwoWeeks = new Date(startOfWeek);
+                endOfTwoWeeks.setDate(startOfWeek.getDate() + 14);
+                
+                return {
+                    start: startOfWeek,
+                    end: endOfTwoWeeks
+                };
             },
             select: function (info) {
                 let start = info.start;
-                let end = info.end;
-                const oneHour = 60 * 60 * 1000;
+                const dayOfWeek = start.getDay();
+                
+                // Only allow weekday selections
+                if (dayOfWeek < 1 || dayOfWeek > 5) {
+                    if (calendar) calendar.unselect();
+                    document.getElementById('error').textContent = 'Valitse arkipäivä (maanantai-perjantai)!';
+                    return;
+                }
 
                 // If on mobile device, show mobile modal instead of direct selection
                 if (isMobile) {
-                    // For mobile: show time modal for the selected day
-                    const dayOfWeek = start.getDay();
-                    if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Only weekdays
-                        const dateStr = start.toISOString().split('T')[0];
-                        showMobileTimeModal(dateStr, null, bookings);
-                    }
-                    // Unselect immediately since we're showing modal
+                    const dateStr = start.toISOString().split('T')[0];
+                    showMobileTimeModal(dateStr, null, bookings);
                     if (calendar) calendar.unselect();
                     return;
                 }
 
-                // Desktop behavior: Show time dropdown for selected date
-                const dayOfWeek = start.getDay();
-                if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Only weekdays
-                    const selectedDate = new Date(start);
-                    selectedDate.setHours(9, 0, 0, 0); // Set to start of business day
-                    
-                    // Populate time slots for the selected date
-                    const hasAvailableSlots = populateTimeSlotsForDate(selectedDate, bookings);
-                    
-                    if (hasAvailableSlots) {
-                        document.getElementById('error').textContent = '';
-                    } else {
-                        document.getElementById('error').textContent = 'Valitulle päivälle ei ole vapaita aikoja saatavilla.';
+                // Desktop behavior: Show time slots grid for selected date
+                const selectedDate = new Date(start);
+                selectedDate.setHours(9, 0, 0, 0);
+                
+                // Populate time selection grid with available slots for the selected date
+                const hasAvailableSlots = populateTimeSelectionGrid(selectedDate, bookings);
+                
+                if (hasAvailableSlots) {
+                    document.getElementById('error').textContent = '';
+                    // Scroll to time selection
+                    const timeGridContainer = document.getElementById('time-selection-grid');
+                    if (timeGridContainer) {
+                        timeGridContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     }
-                    
-                    // Unselect the calendar selection since user hasn't picked a time yet
-                    if (calendar) calendar.unselect();
                 } else {
-                    if (calendar) calendar.unselect();
-                    document.getElementById('error').textContent = 'Valitse arkipäivä (maanantai-perjantai)!';
+                    document.getElementById('error').textContent = 'Valitulle päivälle ei ole vapaita aikoja saatavilla.';
                 }
+                
+                // Unselect the calendar selection since user hasn't picked a time yet
+                if (calendar) calendar.unselect();
             },
             dateClick: function(info) {
                 // Handle day/slot clicks - use same logic as select for consistency
@@ -2359,14 +3016,19 @@ document.addEventListener('DOMContentLoaded', function () {
                         const dateStr = info.date.toISOString().split('T')[0];
                         showMobileTimeModal(dateStr, null, bookings);
                     } else {
-                        // For desktop, trigger the select behavior
+                        // For desktop, show time selection grid
                         const selectedDate = new Date(info.date);
                         selectedDate.setHours(9, 0, 0, 0);
                         
-                        const hasAvailableSlots = populateTimeSlotsForDate(selectedDate, bookings);
+                        const hasAvailableSlots = populateTimeSelectionGrid(selectedDate, bookings);
                         
                         if (hasAvailableSlots) {
                             document.getElementById('error').textContent = '';
+                            // Scroll to time selection
+                            const timeGridContainer = document.getElementById('time-selection-grid');
+                            if (timeGridContainer) {
+                                timeGridContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
                         } else {
                             document.getElementById('error').textContent = 'Valitulle päivälle ei ole vapaita aikoja saatavilla.';
                         }
@@ -2375,29 +3037,33 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             events: function (fetchInfo, successCallback) {
                 const evs = [];
-                for (const slot of getWeekdaySlots(fetchInfo.start, (fetchInfo.end - fetchInfo.start) / (24 * 60 * 60 * 1000))) {
-                    const dateKey = getDateKey(slot.start);
-                    const sameDayCount = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
-                    const isExactMatch = bookings.some(b => new Date(b.aika).toISOString() === slot.start.toISOString());
-                    const isBlocked = sameDayCount >= 2;
-                    if (isBlocked) {
-                        evs.push({
-                            title: 'Täynnä',
-                            start: slot.start.toISOString(),
-                            end: slot.end.toISOString(),
-                            color: '#f99',
-                            display: 'background'
-                        });
-                    } else if (isExactMatch) {
-                        evs.push({
-                            title: 'Varattu',
-                            start: slot.start.toISOString(),
-                            end: slot.end.toISOString(),
-                            color: '#ffd2d2',
-                            display: 'background'
-                        });
+                
+                // For dayGrid view, show booking count per day
+                const currentDate = new Date(fetchInfo.start);
+                const endDate = new Date(fetchInfo.end);
+                
+                while (currentDate < endDate) {
+                    const dayOfWeek = currentDate.getDay();
+                    // Only process weekdays
+                    if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+                        const dateKey = getDateKey(currentDate);
+                        const dayBookingsCount = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
+                        
+                        if (dayBookingsCount > 0) {
+                            const availableSlots = 8 - dayBookingsCount; // 8 slots per day (9-17)
+                            evs.push({
+                                title: `${availableSlots} paikkaa`,
+                                start: dateKey,
+                                allDay: true,
+                                color: availableSlots > 4 ? '#4CAF50' : availableSlots > 0 ? '#FFC107' : '#F44336',
+                                textColor: '#fff'
+                            });
+                        }
                     }
+                    
+                    currentDate.setDate(currentDate.getDate() + 1);
                 }
+                
                 successCallback(evs);
             }
         });
@@ -2409,6 +3075,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 findAndNavigateToNextAvailableWeek(calendar, bookings);
                 // Populate available slots for the current week
                 populateAvailableSlots(calendar, bookings);
+                // Don't show time selection grid initially - user must click a day first
+                const timeGridContainer = document.getElementById('time-selection-grid');
+                if (timeGridContainer) {
+                    timeGridContainer.style.display = 'none';
+                }
                 // Setup dropdown event listener
                 setupDropdownEventListener();
             }, 100); // Small delay to ensure calendar is fully rendered
@@ -2588,6 +3259,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             try {
+                // Build service description from selected services
+                const palveluText = selectedServices.map(s => s.serviceName).join(', ');
+                const palvelunTyyppiText = selectedServices.map(s => {
+                    if (s.taskPrice && s.taskPrice.trim() !== '') {
+                        return `${s.taskName}: ${s.taskPrice}`;
+                    }
+                    return s.taskName;
+                }).join(', ');
+                
                 // FIXED: Send booking to backend Firebase Function
                 const res = await fetch('https://us-central1-fxnr-web.cloudfunctions.net/book', {
                     method: 'POST',
@@ -2595,6 +3275,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     body: JSON.stringify({
                         name, email, phone,
                         aika: selectedSlot.toISOString(),
+                        palvelu: palveluText,
+                        palvelunTyyppi: palvelunTyyppiText,
                         recaptcha: recaptchaResponse
                     })
                 });
@@ -2604,7 +3286,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     grecaptcha.reset();
                     document.getElementById('bookingForm').style.display = 'none';
                     document.getElementById('slot-summary').textContent = '';
+                    document.getElementById('add-service-container').style.display = 'none';
+                    document.getElementById('selected-services-container').style.display = 'none';
+                    document.getElementById('repair-disclaimer').style.display = 'none';
                     selectedSlot = null;
+                    selectedServices = [];
                     bookings = await fetchBookings();
                     if (calendar) calendar.refetchEvents();
                 } else {
