@@ -514,6 +514,10 @@
         section h4 {
             color: #2a2a2a;
             font-weight: 600;
+            /* Apply same Serpentine-like font style as h2 */
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+            font-style: italic;
+            letter-spacing: 0.05em;
         }
         
         section p, section li {
@@ -533,10 +537,17 @@
             margin: 30px auto;
         }
         
-        /* Animated background pattern for rengastyöt and korjaustyöt sections */
+        /* Animated background pattern for rengastyöt, korjaustyöt, and sisäpuhdistus sections */
         #rengastyot, #korjaustyot {
             background: #181c21;
             overflow: hidden;
+        }
+        
+        /* Interior cleaning with slow-moving animated background */
+        #sisapuhdistus {
+            background: #f5f5f5;
+            overflow: hidden;
+            position: relative;
         }
         
         #rengastyot::before, #korjaustyöt::before {
@@ -559,12 +570,90 @@
             pointer-events: none;
         }
         
+        /* Slow-moving pattern for sisapuhdistus */
+        #sisapuhdistus::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                #e8e8e8 0px,
+                #e8e8e8 30px,
+                #f0f0f0 30px,
+                #f0f0f0 60px
+            );
+            opacity: 0.4;
+            z-index: 0;
+            animation: patternMoveSlowly 800s linear infinite;
+            pointer-events: none;
+        }
+        
+        #sisapuhdistus > * {
+            position: relative;
+            z-index: 1;
+        }
+        
         @keyframes patternMove {
             from {
                 transform: translateY(0) translateX(0);
             }
             to {
                 transform: translateY(-10%) translateX(-10%);
+            }
+        }
+        
+        /* Slow animation for sisapuhdistus background */
+        @keyframes patternMoveSlowly {
+            0% {
+                background-position: 0px 0%;
+            }
+            100% {
+                background-position: 0px -400%;
+            }
+        }
+        
+        /* Fallback if the operating system prefers reduced motion */
+        @media (prefers-reduced-motion) {
+            #sisapuhdistus::before {
+                animation: patternMoveSlowly 800s linear infinite;
+            }
+        }
+        
+        /* Shine animation for hero title */
+        @keyframes shine {
+            0% {
+                background-position: -200px;
+            }
+            100% {
+                background-position: 200px;
+            }
+        }
+        
+        .hero-title {
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.3) 0%,
+                rgba(255, 255, 255, 0.8) 50%,
+                rgba(255, 255, 255, 0.3) 100%
+            ) 0 0 no-repeat;
+            background-size: 150px 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 5s infinite;
+            /* Fallback for browsers that don't support background-clip */
+            color: white;
+        }
+        
+        /* Support for non-webkit browsers */
+        @supports not (-webkit-background-clip: text) {
+            .hero-title {
+                background: none;
+                -webkit-text-fill-color: white;
+                color: white;
             }
         }
         
@@ -667,6 +756,22 @@
             background: #f0f0f0;
             opacity: 0.6;
             cursor: not-allowed;
+        }
+        
+        /* Past days styling - light gray and unclickable */
+        #calendar .fc-daygrid-day.fc-day-past {
+            background: #e8e8e8;
+            opacity: 0.5;
+            cursor: not-allowed;
+            color: #999999;
+        }
+        
+        #calendar .fc-daygrid-day.fc-day-past:hover {
+            background: #e8e8e8;
+        }
+        
+        #calendar .fc-daygrid-day.fc-day-past .fc-daygrid-day-number {
+            color: #cccccc;
         }
         
         /* Calendar navigation buttons */
@@ -1711,7 +1816,7 @@
             color: white;
         ">
             <div style="margin-bottom: 40px;">
-                <h1 style="
+                <h1 class="hero-title" style="
                     font-size: 4.5rem; 
                     margin-bottom: 30px; 
                     font-weight: 700;
@@ -1719,6 +1824,8 @@
                     text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
                     line-height: 1.2;
                     letter-spacing: 2px;
+                    font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+                    font-style: italic;
                 ">FIXNERO</h1>
                 <p style="
                     font-size: 1.8rem; 
@@ -3032,13 +3139,15 @@ document.addEventListener('DOMContentLoaded', function () {
         
         try {
             // Try to initialize FullCalendar
+            // Mobile: 2 weeks view, Desktop: current month view
+            const isMobileView = window.innerWidth < 768;
             calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridThreeWeeks',
+            initialView: isMobileView ? 'dayGridTwoWeeks' : 'dayGridMonth',
             locale: 'fi',
             views: {
-                dayGridThreeWeeks: {
+                dayGridTwoWeeks: {
                     type: 'dayGrid',
-                    duration: { weeks: 3 }
+                    duration: { weeks: 2 }
                 }
             },
             selectable: true,
@@ -3085,25 +3194,32 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             validRange: function() {
                 const now = new Date();
-                const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
                 
-                // Find start of current week (Monday)
-                const startOfWeek = new Date(now);
-                const daysToMonday = currentDay === 0 ? -6 : 1 - currentDay;
-                startOfWeek.setDate(now.getDate() + daysToMonday);
-                startOfWeek.setHours(0, 0, 0, 0);
+                // Start from today
+                const startDate = new Date(now);
+                startDate.setHours(0, 0, 0, 0);
                 
-                // End of next 3 weeks (show 3 weeks total)
-                const endOfThreeWeeks = new Date(startOfWeek);
-                endOfThreeWeeks.setDate(startOfWeek.getDate() + 21);
+                // End date: end of next month (allows current month + next month)
+                const endDate = new Date(now.getFullYear(), now.getMonth() + 2, 0);
+                endDate.setHours(23, 59, 59, 999);
                 
                 return {
-                    start: startOfWeek,
-                    end: endOfThreeWeeks
+                    start: startDate,
+                    end: endDate
                 };
             },
             select: function (info) {
                 let start = info.start;
+                const now = new Date();
+                now.setHours(0, 0, 0, 0);
+                
+                // Prevent selection of past dates
+                if (start < now) {
+                    if (calendar) calendar.unselect();
+                    document.getElementById('error').textContent = 'Et voi valita mennyttä päivämäärää!';
+                    return;
+                }
+                
                 const dayOfWeek = start.getDay();
                 
                 // Only allow weekday selections
@@ -3143,6 +3259,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (calendar) calendar.unselect();
             },
             dateClick: function(info) {
+                const now = new Date();
+                now.setHours(0, 0, 0, 0);
+                
+                // Prevent selection of past dates
+                if (info.date < now) {
+                    document.getElementById('error').textContent = 'Et voi valita mennyttä päivämäärää!';
+                    return;
+                }
+                
                 // Handle day/slot clicks - use same logic as select for consistency
                 const dayOfWeek = info.date.getDay();
                 if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Only weekdays
@@ -3205,9 +3330,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (calendar) {
             calendar.render();
             
-            // Navigation button state management
-            let navigationCount = 0; // Track how many times user moved forward
-            const maxForwardNavigations = 2; // Can only go forward 2 times (4 weeks total)
+            // Navigation button state management for month view
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             
@@ -3216,36 +3339,56 @@ document.addEventListener('DOMContentLoaded', function () {
                 const nextBtn = document.getElementById('nextWeekBtn');
                 const currentDate = calendar.getDate();
                 
-                // Disable prev button if we're at or before today
-                if (currentDate <= today) {
+                // Get current month and year
+                const currentMonth = currentDate.getMonth();
+                const currentYear = currentDate.getFullYear();
+                const todayMonth = today.getMonth();
+                const todayYear = today.getFullYear();
+                
+                // Disable prev button if we're at current month
+                if (currentYear === todayYear && currentMonth <= todayMonth) {
                     prevBtn.disabled = true;
                 } else {
                     prevBtn.disabled = false;
                 }
                 
-                // Disable next button if we've reached max forward navigations
-                if (navigationCount >= maxForwardNavigations) {
+                // Disable next button if we're at next month (can only view current + next month)
+                const nextMonthDate = new Date(todayYear, todayMonth + 1, 1);
+                if (currentYear === nextMonthDate.getFullYear() && currentMonth >= nextMonthDate.getMonth()) {
                     nextBtn.disabled = true;
                 } else {
                     nextBtn.disabled = false;
                 }
             }
             
-            // Previous week button
+            // Previous month button
             document.getElementById('prevWeekBtn').addEventListener('click', function() {
-                calendar.prev();
-                if (navigationCount > 0) {
-                    navigationCount--;
+                const currentDate = calendar.getDate();
+                const currentMonth = currentDate.getMonth();
+                const currentYear = currentDate.getFullYear();
+                const todayMonth = today.getMonth();
+                const todayYear = today.getFullYear();
+                
+                // Only allow going back if not already at current month
+                if (!(currentYear === todayYear && currentMonth <= todayMonth)) {
+                    calendar.prev();
+                    updateNavigationButtons();
+                    populateAvailableSlots(calendar, bookings);
                 }
-                updateNavigationButtons();
-                populateAvailableSlots(calendar, bookings);
             });
             
-            // Next week button
+            // Next month button
             document.getElementById('nextWeekBtn').addEventListener('click', function() {
-                if (navigationCount < maxForwardNavigations) {
+                const currentDate = calendar.getDate();
+                const currentMonth = currentDate.getMonth();
+                const currentYear = currentDate.getFullYear();
+                const todayMonth = today.getMonth();
+                const todayYear = today.getFullYear();
+                
+                // Only allow going forward to next month (not beyond)
+                const nextMonthDate = new Date(todayYear, todayMonth + 1, 1);
+                if (!(currentYear === nextMonthDate.getFullYear() && currentMonth >= nextMonthDate.getMonth())) {
                     calendar.next();
-                    navigationCount++;
                     updateNavigationButtons();
                     populateAvailableSlots(calendar, bookings);
                 }
