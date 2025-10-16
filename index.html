@@ -556,6 +556,47 @@
             overflow: hidden;
         }
         
+        /* Tire services layout with image */
+        .tire-services-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+        
+        .tire-services-text {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .tire-services-image {
+            flex: 0 0 400px;
+            max-width: 400px;
+        }
+        
+        .tire-services-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            object-fit: cover;
+        }
+        
+        /* Mobile layout: stack vertically */
+        @media (max-width: 768px) {
+            .tire-services-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .tire-services-image {
+                flex: 1;
+                max-width: 100%;
+                order: -1;
+            }
+        }
+        
         /* Interior cleaning with slow-moving animated background */
         #sisapuhdistus {
             background: #f5f5f5;
@@ -2148,25 +2189,32 @@
     </section>
     <section id="rengastyot">
         <h2>Rengastyöt</h2>
-        <p>Kaikki rengastyöt ammattitaidolla – meiltä saat renkaiden vaihdot, tasapainotukset, paikkaukset sekä uusien renkaiden myynnin ja asennuksen. Huolehdimme, että renkaasi ovat turvalliset ja oikein asennetut jokaiseen vuodenaikaan.</p>
+        <div class="tire-services-content">
+            <div class="tire-services-text">
+                <p>Kaikki rengastyöt ammattitaidolla – meiltä saat renkaiden vaihdot, tasapainotukset, paikkaukset sekä uusien renkaiden myynnin ja asennuksen. Huolehdimme, että renkaasi ovat turvalliset ja oikein asennetut jokaiseen vuodenaikaan.</p>
 
-        <ul>
-            <li>Renkaiden vaihto auton alle (kesä-/talvirenkaat)</li>
-            <li>Renkaiden vaihto vanteille tai vanteilta irrotus</li>
-            <li>Tasapainotus</li>
-            <li>Renkaan paikkaus</li>
-            <li>Uusien renkaiden myynti ja asennus – pyydä tarjous puhelimitse tai sähköpostilla</li>
-        </ul>
+                <ul>
+                    <li>Renkaiden vaihto auton alle (kesä-/talvirenkaat)</li>
+                    <li>Renkaiden vaihto vanteille tai vanteilta irrotus</li>
+                    <li>Tasapainotus</li>
+                    <li>Renkaan paikkaus</li>
+                    <li>Uusien renkaiden myynti ja asennus – pyydä tarjous puhelimitse tai sähköpostilla</li>
+                </ul>
 
-        <h4>Rengashotelli</h4>
-        <p>Meillä voit myös jättää renkaasi <strong>rengashotelliin</strong>, joka sisältää renkaiden pesun ja asianmukaisen säilytyksen. Sinun ei tarvitse enää kantaa renkaita mukanasi – varaat vain ajan renkaiden vaihtoon, ja me:</p>
-        <ul>
-            <li>Haemme puhtaat renkaasi suoraan varastosta</li>
-            <li>Asennamme ne autosi alle</li>
-            <li>Tarkistamme ja säädämme ilmanpaineet</li>
-        </ul>
+                <h4>Rengashotelli</h4>
+                <p>Meillä voit myös jättää renkaasi <strong>rengashotelliin</strong>, joka sisältää renkaiden pesun ja asianmukaisen säilytyksen. Sinun ei tarvitse enää kantaa renkaita mukanasi – varaat vain ajan renkaiden vaihtoon, ja me:</p>
+                <ul>
+                    <li>Haemme puhtaat renkaasi suoraan varastosta</li>
+                    <li>Asennamme ne autosi alle</li>
+                    <li>Tarkistamme ja säädämme ilmanpaineet</li>
+                </ul>
 
-        <p>Rengaspalvelumme on nopea, huolellinen ja täysin vaivaton – kysy lisää tai varaa aika suoraan!</p>
+                <p>Rengaspalvelumme on nopea, huolellinen ja täysin vaivaton – kysy lisää tai varaa aika suoraan!</p>
+            </div>
+            <div class="tire-services-image">
+                <img src="Rengas.jpg" alt="Rengastyöt - Ammattitaitoinen renkaiden vaihto ja huolto" loading="lazy">
+            </div>
+        </div>
     </section>
     <section id="korjaustyot">
         <h2>Korjaustyöt</h2>
