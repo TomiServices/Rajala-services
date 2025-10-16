@@ -514,6 +514,7 @@
         section h4 {
             color: #2a2a2a;
             font-weight: 600;
+            font-size: 1.5rem;
             /* Apply same Serpentine-like font style as h2 */
             font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
             font-style: italic;
@@ -632,7 +633,7 @@
             }
         }
         
-        .hero-title {
+        .hero-subtitle {
             background: linear-gradient(
                 90deg,
                 rgba(255, 255, 255, 0.3) 0%,
@@ -650,7 +651,7 @@
         
         /* Support for non-webkit browsers */
         @supports not (-webkit-background-clip: text) {
-            .hero-title {
+            .hero-subtitle {
                 background: none;
                 -webkit-text-fill-color: white;
                 color: white;
@@ -1816,7 +1817,7 @@
             color: white;
         ">
             <div style="margin-bottom: 40px;">
-                <h1 class="hero-title" style="
+                <h1 style="
                     font-size: 4.5rem; 
                     margin-bottom: 30px; 
                     font-weight: 700;
@@ -1827,7 +1828,7 @@
                     font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
                     font-style: italic;
                 ">FIXNERO</h1>
-                <p style="
+                <p class="hero-subtitle" style="
                     font-size: 1.8rem; 
                     line-height: 1.7; 
                     max-width: 800px; 
@@ -1983,6 +1984,9 @@
         <ul id="selected-services-list" style="list-style: none; padding: 0; margin: 0;">
           <!-- Selected services will be added here -->
         </ul>
+        <div id="total-amount-container" style="display:none; margin-top: 15px; padding: 12px; background: #e8f4f8; border-radius: 8px; border: 2px solid #4a90e2;">
+          <strong style="font-size: 1.2rem; color: #1a5490;">Arvioitu kokonaishinta: <span id="total-amount">0 €</span></strong>
+        </div>
       </div>
       
       <!-- Service Selection Dropdown - Moved to appear between selected services and add button -->
@@ -2881,14 +2885,20 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateSelectedServicesDisplay() {
         const container = document.getElementById('selected-services-container');
         const list = document.getElementById('selected-services-list');
+        const totalContainer = document.getElementById('total-amount-container');
+        const totalAmountSpan = document.getElementById('total-amount');
         
         if (selectedServices.length === 0) {
             container.style.display = 'none';
+            totalContainer.style.display = 'none';
             return;
         }
         
         container.style.display = 'block';
         list.innerHTML = '';
+        
+        let totalMin = 0;
+        let hasVariablePricing = false;
         
         selectedServices.forEach((service, index) => {
             const li = document.createElement('li');
@@ -2897,8 +2907,19 @@ document.addEventListener('DOMContentLoaded', function () {
             const serviceText = document.createElement('span');
             if (service.taskPrice && service.taskPrice.trim() !== '') {
                 serviceText.textContent = `${service.serviceName} - ${service.taskName}: ${service.taskPrice}`;
+                
+                // Extract price for total calculation
+                const priceMatch = service.taskPrice.match(/(\d+)\s*€/);
+                if (priceMatch) {
+                    totalMin += parseInt(priceMatch[1]);
+                }
+                // Check if it says "alkaen" (starting from)
+                if (service.taskPrice.includes('alkaen') || service.taskPrice === '') {
+                    hasVariablePricing = true;
+                }
             } else {
                 serviceText.textContent = `${service.serviceName} - ${service.taskName}`;
+                hasVariablePricing = true;
             }
             
             const removeBtn = document.createElement('button');
@@ -2911,6 +2932,18 @@ document.addEventListener('DOMContentLoaded', function () {
             li.appendChild(removeBtn);
             list.appendChild(li);
         });
+        
+        // Display total if we have at least one priced service
+        if (totalMin > 0) {
+            totalContainer.style.display = 'block';
+            if (hasVariablePricing) {
+                totalAmountSpan.textContent = `alkaen ${totalMin} €`;
+            } else {
+                totalAmountSpan.textContent = `${totalMin} €`;
+            }
+        } else {
+            totalContainer.style.display = 'none';
+        }
     }
     
     function updateRepairDisclaimer() {
@@ -3339,22 +3372,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 const nextBtn = document.getElementById('nextWeekBtn');
                 const currentDate = calendar.getDate();
                 
-                // Get current month and year
-                const currentMonth = currentDate.getMonth();
-                const currentYear = currentDate.getFullYear();
-                const todayMonth = today.getMonth();
-                const todayYear = today.getFullYear();
+                // Get the view start date (first visible date in calendar)
+                const view = calendar.view;
+                const viewStart = view.currentStart;
                 
-                // Disable prev button if we're at current month
-                if (currentYear === todayYear && currentMonth <= todayMonth) {
+                // Disable prev button if view start is at or before today
+                const todayStart = new Date(today);
+                todayStart.setHours(0, 0, 0, 0);
+                
+                if (viewStart <= todayStart) {
                     prevBtn.disabled = true;
                 } else {
                     prevBtn.disabled = false;
                 }
                 
-                // Disable next button if we're at next month (can only view current + next month)
-                const nextMonthDate = new Date(todayYear, todayMonth + 1, 1);
-                if (currentYear === nextMonthDate.getFullYear() && currentMonth >= nextMonthDate.getMonth()) {
+                // Disable next button if we're at the valid range end
+                const validRangeEnd = new Date(today.getFullYear(), today.getMonth() + 2, 0);
+                const viewEnd = view.currentEnd;
+                
+                if (viewEnd >= validRangeEnd) {
                     nextBtn.disabled = true;
                 } else {
                     nextBtn.disabled = false;
@@ -3363,35 +3399,16 @@ document.addEventListener('DOMContentLoaded', function () {
             
             // Previous month button
             document.getElementById('prevWeekBtn').addEventListener('click', function() {
-                const currentDate = calendar.getDate();
-                const currentMonth = currentDate.getMonth();
-                const currentYear = currentDate.getFullYear();
-                const todayMonth = today.getMonth();
-                const todayYear = today.getFullYear();
-                
-                // Only allow going back if not already at current month
-                if (!(currentYear === todayYear && currentMonth <= todayMonth)) {
-                    calendar.prev();
-                    updateNavigationButtons();
-                    populateAvailableSlots(calendar, bookings);
-                }
+                calendar.prev();
+                updateNavigationButtons();
+                populateAvailableSlots(calendar, bookings);
             });
             
             // Next month button
             document.getElementById('nextWeekBtn').addEventListener('click', function() {
-                const currentDate = calendar.getDate();
-                const currentMonth = currentDate.getMonth();
-                const currentYear = currentDate.getFullYear();
-                const todayMonth = today.getMonth();
-                const todayYear = today.getFullYear();
-                
-                // Only allow going forward to next month (not beyond)
-                const nextMonthDate = new Date(todayYear, todayMonth + 1, 1);
-                if (!(currentYear === nextMonthDate.getFullYear() && currentMonth >= nextMonthDate.getMonth())) {
-                    calendar.next();
-                    updateNavigationButtons();
-                    populateAvailableSlots(calendar, bookings);
-                }
+                calendar.next();
+                updateNavigationButtons();
+                populateAvailableSlots(calendar, bookings);
             });
             
             // Navigate to week with next available booking slot
