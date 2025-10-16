@@ -124,11 +124,9 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 20px;
-            /* Navbar animation */
-            animation: navSlideIn 0.6s ease-out;
         }
         
-        /* Navbar slide-in animation from top */
+        /* Navbar slide-in animation from top - only for desktop */
         @keyframes navSlideIn {
             from {
                 transform: translateY(-100%);
@@ -137,6 +135,13 @@
             to {
                 transform: translateY(0);
                 opacity: 1;
+            }
+        }
+        
+        /* Apply navbar animation only on desktop (not mobile) */
+        @media (min-width: 1280px) {
+            nav {
+                animation: navSlideIn 0.6s ease-out;
             }
         }
         nav img {
@@ -585,8 +590,8 @@
         }
         
         .tire-services-image {
-            flex: 0 0 400px;
-            max-width: 400px;
+            flex: 0 0 450px;
+            max-width: 450px;
         }
         
         .tire-services-image img {
@@ -606,7 +611,7 @@
             
             .tire-services-image {
                 flex: 1;
-                max-width: 70%;
+                max-width: 75%;
                 margin: 0 auto;
                 order: -1;
             }
@@ -620,7 +625,7 @@
         /* Extra small mobile devices - make images even smaller */
         @media (max-width: 480px) {
             .tire-services-image {
-                max-width: 60%;
+                max-width: 65%;
             }
         }
         
@@ -740,14 +745,14 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 30%;
+            width: 20%;
             height: 100%;
             background: linear-gradient(
                 90deg,
                 transparent 0%,
-                rgba(255, 255, 255, 0.3) 20%,
-                rgba(255, 255, 255, 0.5) 50%,
-                rgba(255, 255, 255, 0.3) 80%,
+                rgba(255, 255, 255, 0.15) 20%,
+                rgba(255, 255, 255, 0.25) 50%,
+                rgba(255, 255, 255, 0.15) 80%,
                 transparent 100%
             );
             animation: shine 4s ease-in-out infinite;
