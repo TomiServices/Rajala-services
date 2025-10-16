@@ -635,13 +635,24 @@
             }
         }
         
-        /* Shine animation for hero title */
+        /* Shine animation for hero title - elegant and subtle */
         @keyframes shine {
             0% {
-                background-position: -200px;
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.6;
             }
             100% {
-                background-position: 200px;
+                transform: translateX(200%);
+                opacity: 0;
             }
         }
         
@@ -652,33 +663,35 @@
             -webkit-text-fill-color: white;
             position: relative;
             display: inline-block;
+            overflow: hidden;
         }
         
-        /* Shine overlay effect that moves across white text */
+        /* Elegant shine overlay effect that moves across white text */
         .hero-subtitle::after {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
+            width: 30%;
             height: 100%;
             background: linear-gradient(
                 90deg,
                 transparent 0%,
-                rgba(255, 255, 255, 0.7) 50%,
+                rgba(255, 255, 255, 0.3) 20%,
+                rgba(255, 255, 255, 0.5) 50%,
+                rgba(255, 255, 255, 0.3) 80%,
                 transparent 100%
             );
-            background-size: 200px 100%;
-            background-repeat: no-repeat;
-            animation: shine 5s infinite;
+            animation: shine 4s ease-in-out infinite;
             pointer-events: none;
-            mix-blend-mode: overlay;
+            will-change: transform, opacity;
         }
         
-        /* Support for browsers that don't support blend modes */
-        @supports not (mix-blend-mode: overlay) {
+        /* Support for browsers that don't support the animation */
+        @media (prefers-reduced-motion: reduce) {
             .hero-subtitle::after {
-                opacity: 0.5;
+                animation: none;
+                opacity: 0;
             }
         }
         
@@ -837,20 +850,25 @@
             max-width: 650px;
             margin: 20px auto 0 auto;
             width: 100%;
+            position: relative;
+            min-height: 35px;
         }
         
-        /* Loading animation bar (shown during booking) */
+        /* Loading animation bar (shown during booking) - sits on top of success bar */
         .progress {
             background: rgba(0,0,0,0.05);
             justify-content: flex-start;
             border-radius: 100px;
             align-items: center;
-            position: relative;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
             padding: 0 3px;
             display: none;
             height: 35px;
             width: 100%;
-            margin-bottom: 10px;
+            z-index: 10;
         }
         
         .progress.active {
@@ -2074,7 +2092,7 @@
         </div>
         <!-- Success Bar -->
         <div class="success-bar" id="successBar">
-          <div class="success-bar-value">Onnistui</div>
+          <div class="success-bar-value">✓ Varaus onnistui!</div>
         </div>
       </div>
     </div>
