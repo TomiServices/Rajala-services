@@ -697,7 +697,7 @@
         }
         
         /* Fallback if the operating system prefers reduced motion */
-        @media (prefers-reduced-motion) {
+        @media (prefers-reduced-motion: reduce) {
             #sisapuhdistus::before {
                 animation: patternMoveSlowly 800s linear infinite;
             }
@@ -789,6 +789,9 @@
         
         /* Disable animations for users who prefer reduced motion */
         @media (prefers-reduced-motion: reduce) {
+            nav {
+                animation: none;
+            }
             #hero h1, #hero p, #hero a {
                 animation: none;
             }
