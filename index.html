@@ -124,6 +124,20 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 20px;
+            /* Navbar animation */
+            animation: navSlideIn 0.6s ease-out;
+        }
+        
+        /* Navbar slide-in animation from top */
+        @keyframes navSlideIn {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
         nav img {
             height: 50px;
@@ -592,8 +606,21 @@
             
             .tire-services-image {
                 flex: 1;
-                max-width: 100%;
+                max-width: 70%;
+                margin: 0 auto;
                 order: -1;
+            }
+            
+            .tire-services-image img {
+                width: 100%;
+                height: auto;
+            }
+        }
+        
+        /* Extra small mobile devices - make images even smaller */
+        @media (max-width: 480px) {
+            .tire-services-image {
+                max-width: 60%;
             }
         }
         
@@ -733,6 +760,37 @@
             .hero-subtitle::after {
                 animation: none;
                 opacity: 0;
+            }
+        }
+        
+        /* Hero text animation - fade in with upward motion */
+        #hero h1 {
+            animation: heroTextFadeIn 1s ease-out;
+        }
+        
+        #hero p {
+            animation: heroTextFadeIn 1.2s ease-out;
+        }
+        
+        #hero a {
+            animation: heroTextFadeIn 1.4s ease-out;
+        }
+        
+        @keyframes heroTextFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Disable animations for users who prefer reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            #hero h1, #hero p, #hero a {
+                animation: none;
             }
         }
         
