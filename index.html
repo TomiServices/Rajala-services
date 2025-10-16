@@ -482,6 +482,9 @@
         /* Hero section - full width for all screen sizes with proper centering */
         #hero {
             width: 100%;
+            max-width: none;
+            margin-left: 0;
+            margin-right: 0;
             /* Ensure proper image positioning and scaling on all devices */
             background-attachment: scroll;
             /* Smooth transitions when resizing */
@@ -490,6 +493,15 @@
             will-change: background-image;
             /* Ensure perfect centering on all resolutions */
             position: relative;
+        }
+        
+        /* Override section default styles for hero */
+        section#hero {
+            margin: 0 !important;
+            padding: 0 !important;
+            max-width: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
         }
         section {
             background: #fff;
@@ -634,27 +646,39 @@
         }
         
         .hero-subtitle {
-            background: linear-gradient(
-                90deg,
-                rgba(255, 255, 255, 0.3) 0%,
-                rgba(255, 255, 255, 0.8) 50%,
-                rgba(255, 255, 255, 0.3) 100%
-            ) 0 0 no-repeat;
-            background-size: 150px 100%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 5s infinite;
-            /* Fallback for browsers that don't support background-clip */
-            color: white;
+            /* Base text is completely white */
+            color: white !important;
+            /* Remove transparency fill */
+            -webkit-text-fill-color: white;
+            position: relative;
+            display: inline-block;
         }
         
-        /* Support for non-webkit browsers */
-        @supports not (-webkit-background-clip: text) {
-            .hero-subtitle {
-                background: none;
-                -webkit-text-fill-color: white;
-                color: white;
+        /* Shine overlay effect that moves across white text */
+        .hero-subtitle::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.7) 50%,
+                transparent 100%
+            );
+            background-size: 200px 100%;
+            background-repeat: no-repeat;
+            animation: shine 5s infinite;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+        
+        /* Support for browsers that don't support blend modes */
+        @supports not (mix-blend-mode: overlay) {
+            .hero-subtitle::after {
+                opacity: 0.5;
             }
         }
         
