@@ -1127,9 +1127,9 @@
         .fc-toolbar-title::before {
             content: '';
             display: inline-block;
-            width: 24px;
-            height: 24px;
-            background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>');
+            width: 32px;
+            height: 32px;
+            background-image: url('Ajanvaraus.jpeg');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -3047,12 +3047,15 @@ document.addEventListener('DOMContentLoaded', function () {
         selectedServices.splice(index, 1);
         updateSelectedServicesDisplay();
         
-        // If no services left, hide the booking form
+        // If no services left, reset to initial state to allow new booking
         if (selectedServices.length === 0) {
             document.getElementById('bookingForm').style.display = 'none';
             document.getElementById('add-service-container').style.display = 'none';
             document.getElementById('selected-services-container').style.display = 'none';
             document.getElementById('repair-disclaimer').style.display = 'none';
+            
+            // Reset service selection dropdowns to allow new selections
+            resetServiceSelection();
         } else {
             // Update disclaimer visibility based on remaining services
             updateRepairDisclaimer();
