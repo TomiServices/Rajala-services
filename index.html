@@ -2858,8 +2858,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Update the time dropdown with all available times for the selected date
             const selectedDate = new Date(selectedMobileDate);
             // Get the current bookings to check availability
-            fetch('./get-bookings.php', { method: 'GET' })
-                .then(response => response.json())
+            fetchBookings()
                 .then(bookings => {
                     // Populate all available time slots for the selected date
                     populateTimeSlotsForDate(selectedDate, bookings);
