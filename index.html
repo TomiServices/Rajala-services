@@ -1118,6 +1118,21 @@
             color: #ffffff !important;
             font-weight: 600 !important;
             letter-spacing: 0.5px;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 10px;
+        }
+        
+        .fc-toolbar-title::before {
+            content: '';
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
         }
         
         /* Calendar buttons - modern style */
@@ -1517,6 +1532,10 @@
             }
             .fc-toolbar-title {
                 font-size: 1.2rem;
+            }
+            .fc-toolbar-title::before {
+                width: 20px;
+                height: 20px;
             }
             .fc-button {
                 padding: 0.3em 0.5em;
@@ -2130,9 +2149,6 @@
         <ul id="selected-services-list" style="list-style: none; padding: 0; margin: 0;">
           <!-- Selected services will be added here -->
         </ul>
-        <div id="total-amount-container" style="display:none; margin-top: 15px; padding: 12px; background: #e8f4f8; border-radius: 8px; border: 2px solid #4a90e2;">
-          <strong style="font-size: 1.2rem; color: #1a5490;">Arvioitu kokonaishinta: <span id="total-amount">0 €</span></strong>
-        </div>
       </div>
       
       <!-- Service Selection Dropdown - Moved to appear between selected services and add button -->
@@ -2165,6 +2181,11 @@
         <button id="add-service-btn" class="btn" type="button" style="background: #444; width: auto; padding: 10px 20px; display: inline-block;">
           ➕ Lisää toinen palvelu
         </button>
+      </div>
+      
+      <!-- Estimated total price -->
+      <div id="total-amount-container" style="display:none; margin: 20px 0; padding: 15px; background: #e8f4f8; border-radius: 8px; border: 2px solid #4a90e2; text-align: center;">
+        <strong style="font-size: 1.3rem; color: #1a5490;">Arvioitu kokonaishinta: <span id="total-amount">0 €</span></strong>
       </div>
       
       <!-- Repair services disclaimer -->
@@ -2510,7 +2531,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Helper functions for date handling
     function getDateKey(date) {
-        return date.toISOString().split('T')[0];
+        // Use local date to avoid timezone issues causing off-by-one day selection
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 
     // Populate time selection grid with available times for current week
@@ -2835,8 +2860,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Update the time dropdown with all available times for the selected date
             const selectedDate = new Date(selectedMobileDate);
             // Get the current bookings to check availability
-            fetch('./get-bookings.php', { method: 'GET' })
-                .then(response => response.json())
+            fetchBookings()
                 .then(bookings => {
                     // Populate all available time slots for the selected date
                     populateTimeSlotsForDate(selectedDate, bookings);
@@ -3417,7 +3441,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // If on mobile device, show mobile modal instead of direct selection
                 if (isMobile) {
-                    const dateStr = start.toISOString().split('T')[0];
+                    const dateStr = getDateKey(start);
                     showMobileTimeModal(dateStr, null, bookings);
                     if (calendar) calendar.unselect();
                     return;
@@ -3458,7 +3482,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const dayOfWeek = info.date.getDay();
                 if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Only weekdays
                     if (isMobile) {
-                        const dateStr = info.date.toISOString().split('T')[0];
+                        const dateStr = getDateKey(info.date);
                         showMobileTimeModal(dateStr, null, bookings);
                     } else {
                         // For desktop, show time selection grid
