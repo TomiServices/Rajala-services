@@ -855,9 +855,9 @@
         .ajanvaraus-container {
             max-width: 800px;
             margin: 30px auto 20px auto;
-            background: #fff url('Ajanvaraus.jpeg') center/cover;
+            background: #fff url('Ajanvaraus.jpeg') center top/cover;
             border-radius: 14px;
-            box-shadow: 0 2px 14px #0001, 0 8px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2), 0 8px 50px rgba(0,0,0,0.15), inset 0 0 0 2px rgba(0,0,0,0.05);
             padding: 24px 20px 20px 20px;
             position: relative;
             overflow: hidden;
@@ -870,7 +870,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255,255,255,0.92);
+            background: rgba(255,255,255,0.85);
             z-index: 1;
             pointer-events: none;
         }
@@ -883,6 +883,12 @@
             text-align: center;
             font-size: 1.25rem;
             margin-bottom: 18px;
+            /* Apply Serpentine-like font style (bold italic/oblique) to match service sections */
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+            font-style: italic;
+            letter-spacing: 0.05em;
+            color: #1a1a1a;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         #calendar {
             max-width: 650px;
@@ -2083,7 +2089,7 @@
     </section>
     
     <!-- Booking Calendar Section -->
-    <div class="ajanvaraus-container" id="ajanvaraus" style="border: 2px solid #000;">
+    <div class="ajanvaraus-container" id="ajanvaraus">
       <h2>Varaa aika silmäterällesi</h2>
       
       <!-- Calendar Navigation Buttons -->
