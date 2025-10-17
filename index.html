@@ -2510,7 +2510,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Helper functions for date handling
     function getDateKey(date) {
-        return date.toISOString().split('T')[0];
+        // Use local date to avoid timezone issues causing off-by-one day selection
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 
     // Populate time selection grid with available times for current week
@@ -3417,7 +3421,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // If on mobile device, show mobile modal instead of direct selection
                 if (isMobile) {
-                    const dateStr = start.toISOString().split('T')[0];
+                    const dateStr = getDateKey(start);
                     showMobileTimeModal(dateStr, null, bookings);
                     if (calendar) calendar.unselect();
                     return;
@@ -3458,7 +3462,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const dayOfWeek = info.date.getDay();
                 if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Only weekdays
                     if (isMobile) {
-                        const dateStr = info.date.toISOString().split('T')[0];
+                        const dateStr = getDateKey(info.date);
                         showMobileTimeModal(dateStr, null, bookings);
                     } else {
                         // For desktop, show time selection grid
