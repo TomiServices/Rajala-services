@@ -246,6 +246,48 @@
         .work-example:hover img {
             transform: scale(1.05);
         }
+        /* Combined image layout for before/after projects */
+        .work-images-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px;
+            position: relative;
+        }
+        .work-image-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+        .work-image-wrapper img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .work-example:hover .work-image-wrapper img {
+            transform: scale(1.05);
+        }
+        .image-label {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 1;
+            white-space: nowrap;
+        }
+        @media (max-width: 768px) {
+            .work-images-container {
+                grid-template-columns: 1fr;
+            }
+            .work-image-wrapper img {
+                height: 220px;
+            }
+        }
         .work-content {
             padding: 25px;
         }
@@ -452,27 +494,24 @@
             </div>
 
             <div class="work-example">
-                <img src="Asiakas1.jpg" alt="Uudet vanteet ja renkaat - ennen" loading="lazy">
-                <div class="work-content">
-                    <h3>Uudet Vanteet ja Renkaat</h3>
-                    <p>Asiakkaalle hankittiin uudet vanteet ja renkaat. Asennettiin paikalleen ja tasapainotettiin. Näyttävät vanteet saatiin paikoilleen ja tyytyväinen asiakas!</p>
-                    <div class="work-tags">
-                        <span class="tag">Rengastyöt</span>
-                        <span class="tag">Vanteet</span>
-                        <span class="tag">Tasapainotus</span>
+                <div class="work-images-container">
+                    <div class="work-image-wrapper">
+                        <img src="Asiakas1.jpg" alt="Uudet vanteet ja renkaat - ennen" loading="lazy">
+                        <div class="image-label">Ennen</div>
+                    </div>
+                    <div class="work-image-wrapper">
+                        <img src="Asiakas2.jpg" alt="Uudet vanteet ja renkaat - jälkeen" loading="lazy">
+                        <div class="image-label">Jälkeen</div>
                     </div>
                 </div>
-            </div>
-
-            <div class="work-example">
-                <img src="Asiakas2.jpg" alt="Uudet vanteet ja renkaat - jälkeen" loading="lazy">
                 <div class="work-content">
-                    <h3>Lopputulos</h3>
-                    <p>Asennuksen ja tasapainotuksen jälkeen auto näyttää upealta uusilla vanteilla ja renkailla. Ammattimainen työ ja tyytyväinen asiakas!</p>
+                    <h3>Uudet Vanteet ja Renkaat - Ennen & Jälkeen</h3>
+                    <p>Asiakkaalle hankittiin ja asennettiin uudet vanteet ja renkaat, jotka tasapainotettiin ammattimaisesti. Lopputulos puhuu puolestaan - auto näyttää upealta ja asiakas on tyytyväinen!</p>
                     <div class="work-tags">
                         <span class="tag">Rengastyöt</span>
                         <span class="tag">Vanteet</span>
                         <span class="tag">Asennus</span>
+                        <span class="tag">Tasapainotus</span>
                     </div>
                 </div>
             </div>
