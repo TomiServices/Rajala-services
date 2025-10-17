@@ -2149,9 +2149,6 @@
         <ul id="selected-services-list" style="list-style: none; padding: 0; margin: 0;">
           <!-- Selected services will be added here -->
         </ul>
-        <div id="total-amount-container" style="display:none; margin-top: 15px; padding: 12px; background: #e8f4f8; border-radius: 8px; border: 2px solid #4a90e2;">
-          <strong style="font-size: 1.2rem; color: #1a5490;">Arvioitu kokonaishinta: <span id="total-amount">0 €</span></strong>
-        </div>
       </div>
       
       <!-- Service Selection Dropdown - Moved to appear between selected services and add button -->
@@ -2184,6 +2181,11 @@
         <button id="add-service-btn" class="btn" type="button" style="background: #444; width: auto; padding: 10px 20px; display: inline-block;">
           ➕ Lisää toinen palvelu
         </button>
+      </div>
+      
+      <!-- Estimated total price -->
+      <div id="total-amount-container" style="display:none; margin: 20px 0; padding: 15px; background: #e8f4f8; border-radius: 8px; border: 2px solid #4a90e2; text-align: center;">
+        <strong style="font-size: 1.3rem; color: #1a5490;">Arvioitu kokonaishinta: <span id="total-amount">0 €</span></strong>
       </div>
       
       <!-- Repair services disclaimer -->
