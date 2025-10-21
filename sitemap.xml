@@ -7,6 +7,12 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://fixnero.fi/#ukk</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://fixnero.fi/pesupalvelut.html</loc>
     <lastmod>2025-10-21</lastmod>
     <changefreq>monthly</changefreq>
@@ -40,6 +46,18 @@
     <loc>https://fixnero.fi/tyonnaytteet.html</loc>
     <lastmod>2025-10-21</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fixnero.fi/blogi/</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fixnero.fi/blogi/milloin-vaihtaa-renkaat.html</loc>
+    <lastmod>2025-10-21</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 </urlset>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,user-scalable=yes">
+    <meta name="description" content="Fixnero blogi - Vinkkejä ja ohjeita auton hoitoon, huoltoon ja ylläpitoon Espoossa. Asiantuntija-artikkelit rengastöistä, pesusta, kiillotuksesta ja muusta autohuollosta.">
+    <meta name="keywords" content="autoblogi, auton hoito, autohuolto vinkit, renkaiden vaihto, auton pesu, Espoo">
+    <title>Blogi - Fixnero Autohuolto Espoo</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fixnero.fi/blogi/">
+    <meta property="og:title" content="Blogi - Fixnero Autohuolto Espoo">
+    <meta property="og:description" content="Asiantuntija-artikkelit auton hoidosta ja huollosta. Vinkkejä ja ohjeita autoilijoille Espoossa.">
+    <meta property="og:image" content="https://fixnero.fi/FXNR.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://fixnero.fi/blogi/">
+    <meta property="twitter:title" content="Blogi - Fixnero Autohuolto Espoo">
+    <meta property="twitter:description" content="Asiantuntija-artikkelit auton hoidosta ja huollosta. Vinkkejä ja ohjeita autoilijoille Espoossa.">
+    <meta property="twitter:image" content="https://fixnero.fi/FXNR.png">
+    
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://fixnero.fi/blogi/">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../Favicon.png">
+    
+    <!-- Blog Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Fixnero Blogi",
+        "description": "Asiantuntija-artikkelit auton hoidosta ja huollosta",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Fixnero Oy",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://fixnero.fi/FXNR.png"
+            }
+        },
+        "url": "https://fixnero.fi/blogi/"
+    }
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8f8f8 0%, #e0e0e0 100%);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background: #000;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-family: 'Bebas Neue', 'Arial Black', sans-serif;
+            font-size: 2.5rem;
+        }
+        header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        .back-link {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background: #000;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .back-link:hover {
+            background: #333;
+        }
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .blog-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .blog-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .blog-card-content {
+            padding: 20px;
+        }
+        .blog-card h2 {
+            margin: 0 0 10px 0;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: #000;
+        }
+        .blog-card .date {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .blog-card p {
+            color: #333;
+            margin: 0 0 15px 0;
+        }
+        .blog-card a {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #666666, #444444);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .blog-card a:hover {
+            background: linear-gradient(135deg, #555555, #333333);
+        }
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📰 Fixnero Blogi</h1>
+        <p>Vinkkejä ja ohjeita auton hoitoon ja huoltoon</p>
+    </header>
+    
+    <div class="container">
+        <a href="../index.html" class="back-link">← Takaisin etusivulle</a>
+        
+        <div class="blog-grid">
+            <!-- Blog Post 1 -->
+            <article class="blog-card">
+                <img src="../Rengas.jpg" alt="Renkaiden vaihto" loading="lazy">
+                <div class="blog-card-content">
+                    <h2>Milloin on aika vaihtaa renkaat?</h2>
+                    <span class="date">📅 21. lokakuuta 2025</span>
+                    <p>Renkaiden vaihto oikeaan aikaan on tärkeää sekä turvallisuuden että lain näkökulmasta. Lue vinkkimme oikea-aikaiseen renkaiden vaihtoon Espoossa.</p>
+                    <a href="milloin-vaihtaa-renkaat.html">Lue artikkeli →</a>
+                </div>
+            </article>
+            
+            <!-- Blog Post 2 -->
+            <article class="blog-card">
+                <img src="../kiilloitus.jpg" alt="Auton kiillotus" loading="lazy">
+                <div class="blog-card-content">
+                    <h2>Auton kiillotuksen hyödyt</h2>
+                    <span class="date">📅 18. lokakuuta 2025</span>
+                    <p>Miksi auton kiillotus kannattaa? Selvitämme kiillotuksen hyödyt ja kerromme, milloin kannattaa panostaa ammattilaiseen kiillotukseen.</p>
+                    <a href="auton-kiillotuksen-hyodyt.html">Lue artikkeli →</a>
+                </div>
+            </article>
+            
+            <!-- Blog Post 3 -->
+            <article class="blog-card">
+                <img src="../sisapuhdistus.jpg" alt="Sisäpuhdistus" loading="lazy">
+                <div class="blog-card-content">
+                    <h2>Auton sisäpuhdistuksen merkitys</h2>
+                    <span class="date">📅 15. lokakuuta 2025</span>
+                    <p>Puhdas autontila vaikuttaa ajomukavuuteen ja auton arvoon. Kerromme, miksi säännöllinen sisäpuhdistus on tärkeää.</p>
+                    <a href="sisapuhdistuksen-merkitys.html">Lue artikkeli →</a>
+                </div>
+            </article>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2024 Fixnero Oy. Kaikki oikeudet pidätetään.</p>
+        <p><a href="../index.html#yhteystiedot" style="color: #000; text-decoration: none;">Yhteystiedot</a> | <a href="../index.html" style="color: #000; text-decoration: none;">Etusivu</a></p>
+    </footer>
+</body>
+</html>
