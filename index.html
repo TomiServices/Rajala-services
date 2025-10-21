@@ -619,14 +619,14 @@
         @media (max-width: 768px) {
             .tire-services-content {
                 flex-direction: column;
-                gap: 20px;
+                gap: 25px;
             }
             
             .tire-services-image {
                 flex: 1;
-                max-width: 75%;
-                margin: 0 auto;
-                order: -1;
+                max-width: 70%;
+                margin: 20px auto 0 auto;
+                order: 1;
             }
             
             .tire-services-image img {
@@ -635,10 +635,11 @@
             }
         }
         
-        /* Extra small mobile devices - make images even smaller */
+        /* Extra small mobile devices - optimize layout for iPhone 15 Pro and similar */
         @media (max-width: 480px) {
             .tire-services-image {
-                max-width: 65%;
+                max-width: 60%;
+                margin: 15px auto 0 auto;
             }
         }
         
@@ -683,14 +684,14 @@
         @media (max-width: 768px) {
             .interior-cleaning-content {
                 flex-direction: column;
-                gap: 20px;
+                gap: 25px;
             }
             
             .interior-cleaning-image {
                 flex: 1;
-                max-width: 75%;
-                margin: 0 auto;
-                order: -1;
+                max-width: 70%;
+                margin: 20px auto 0 auto;
+                order: 1;
             }
             
             .interior-cleaning-image img {
@@ -699,10 +700,11 @@
             }
         }
         
-        /* Extra small mobile devices - make images even smaller */
+        /* Extra small mobile devices - optimize layout for iPhone 15 Pro and similar */
         @media (max-width: 480px) {
             .interior-cleaning-image {
-                max-width: 65%;
+                max-width: 60%;
+                margin: 15px auto 0 auto;
             }
         }
         
@@ -740,14 +742,14 @@
         @media (max-width: 768px) {
             .polishing-content {
                 flex-direction: column;
-                gap: 20px;
+                gap: 25px;
             }
             
             .polishing-image {
                 flex: 1;
-                max-width: 75%;
-                margin: 0 auto;
-                order: -1;
+                max-width: 70%;
+                margin: 20px auto 0 auto;
+                order: 1;
             }
             
             .polishing-image img {
@@ -756,10 +758,11 @@
             }
         }
         
-        /* Extra small mobile devices */
+        /* Extra small mobile devices - optimize layout for iPhone 15 Pro and similar */
         @media (max-width: 480px) {
             .polishing-image {
-                max-width: 65%;
+                max-width: 60%;
+                margin: 15px auto 0 auto;
             }
         }
         
@@ -1260,12 +1263,14 @@
         .fc-toolbar-title::before {
             content: '';
             display: inline-block;
-            width: 32px;
-            height: 32px;
+            width: 50px;
+            height: 50px;
             background-image: url('Ajanvaraus.jpeg');
-            background-size: contain;
+            background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
+            border-radius: 4px;
+            filter: contrast(1.1) brightness(1.05);
         }
         
         /* Calendar buttons - modern style */
@@ -2183,7 +2188,7 @@
             <!-- Company Logo as Guarantee Seal -->
             <div style="display: inline-block; margin: 20px 0 15px 0;">
                 <img src="Logo.png.PNG" alt="Fixnero Takuu" loading="lazy" 
-                     style="max-width: 160px; height: auto; opacity: 0.9; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));">
+                     style="max-width: 230px; height: auto; opacity: 0.9; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));">
             </div>
         </div>
         
