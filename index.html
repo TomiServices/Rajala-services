@@ -7,6 +7,9 @@
     <meta name="keywords" content="autohuolto Espoo, pesupalvelu Espoo, rengastyöt Espoo, kiillotus Espoo, Suomenoja, autonhuolto, auton pesu, sisäpuhdistus, tuulilasin korjaus">
     <title>Autohuolto Espoo - Pesupalvelut, Rengastyöt - Fixnero</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="Favicon.png">
+    
     <!-- Structured Data (Schema Markup) for better Google search results -->
     <script type="application/ld+json">
     {
@@ -692,8 +695,8 @@
         }
         
         .interior-cleaning-image {
-            flex: 0 0 450px;
-            max-width: 450px;
+            flex: 0 0 600px;
+            max-width: 600px;
             position: relative;
         }
         
@@ -703,8 +706,8 @@
             border-radius: 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             object-fit: cover;
-            /* Diagonal cut using clip-path */
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+            /* Diagonal cut using clip-path - full image with 45-degree angle */
+            clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%, 0 15%);
         }
         
         /* Mobile layout: stack vertically */
@@ -716,8 +719,8 @@
             
             .interior-cleaning-image {
                 flex: 1;
-                max-width: 70%;
-                margin: 20px auto 0 auto;
+                max-width: 100%;
+                margin: 20px 0 0 0;
                 order: 1;
             }
             
@@ -730,8 +733,8 @@
         /* Extra small mobile devices - optimize layout for iPhone 15 Pro and similar */
         @media (max-width: 480px) {
             .interior-cleaning-image {
-                max-width: 60%;
-                margin: 15px auto 0 auto;
+                max-width: 100%;
+                margin: 15px 0 0 0;
             }
         }
         
@@ -750,8 +753,8 @@
         }
         
         .polishing-image {
-            flex: 0 0 450px;
-            max-width: 450px;
+            flex: 0 0 600px;
+            max-width: 600px;
             position: relative;
         }
         
@@ -761,8 +764,8 @@
             border-radius: 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             object-fit: cover;
-            /* Diagonal cut using clip-path */
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+            /* Diagonal cut using clip-path - full image with 45-degree angle */
+            clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%, 0 15%);
         }
         
         /* Mobile layout: stack vertically */
@@ -774,8 +777,8 @@
             
             .polishing-image {
                 flex: 1;
-                max-width: 70%;
-                margin: 20px auto 0 auto;
+                max-width: 100%;
+                margin: 20px 0 0 0;
                 order: 1;
             }
             
@@ -788,8 +791,8 @@
         /* Extra small mobile devices - optimize layout for iPhone 15 Pro and similar */
         @media (max-width: 480px) {
             .polishing-image {
-                max-width: 60%;
-                margin: 15px auto 0 auto;
+                max-width: 100%;
+                margin: 15px 0 0 0;
             }
         }
         
@@ -2527,15 +2530,14 @@
                 </ul>
 
                 <p>Voit yhdistää sisäpuhdistuksen myös ulkopesuun tai kiillotukseen kokonaisvaltaista lopputulosta varten.</p>
-                
-                <p style="margin-top: 30px; text-align: center;">
-                    <a href="sisapuhdistus.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #666666, #444444); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">Lue lisää sisäpuhdistuksesta →</a>
-                </p>
             </div>
             <div class="interior-cleaning-image">
                 <img src="sisapuhdistus.jpg" alt="Sisäpuhdistus - Ammattitaitoinen sisätilojen puhdistus" loading="lazy">
             </div>
         </div>
+        <p style="margin-top: 30px; text-align: center;">
+            <a href="sisapuhdistus.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #666666, #444444); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">Lue lisää sisäpuhdistuksesta →</a>
+        </p>
     </section>
     <section id="kiilloitus">
         <h2>Kiilloitus ja pinnoitteet</h2>
@@ -2553,15 +2555,14 @@
                 </ul>
 
                 <p>Varaa aika <strong>varauskalenterista</strong> tai tule paikan päälle näyttämään ajoneuvoasi – annamme arvion ja suosittelemme sopivinta palvelua juuri sinun tarpeisiisi.</p>
-                
-                <p style="margin-top: 30px; text-align: center;">
-                    <a href="kiilloitus.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #666666, #444444); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">Lue lisää kiillotuksesta →</a>
-                </p>
             </div>
             <div class="polishing-image">
                 <img src="Tyonaytteet.PNG" alt="Kiilloitus ja pinnoitteet - Ammattitaitoinen auton kiillotus" loading="lazy">
             </div>
         </div>
+        <p style="margin-top: 30px; text-align: center;">
+            <a href="kiilloitus.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #666666, #444444); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">Lue lisää kiillotuksesta →</a>
+        </p>
     </section>
     <section id="lasikorjaus">
         <h2>Lasikorjaus</h2>
