@@ -3,75 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,user-scalable=yes">
-    <meta name="description" content="Pesupalvelut, sisäpuhdistukset, rengastyöt, kiillotukset, tuulilasityöt. Fixnero parasta silmäterällesi.">
-    <title>FIXNERO</title>
+    <meta name="description" content="Autohuolto Espoo - Pesupalvelut, sisäpuhdistukset, rengastyöt, kiillotukset ja tuulilasityöt Suomenojan alueella. Fixnero tarjoaa ammattitaitoista autohuoltoa Espoossa.">
+    <meta name="keywords" content="autohuolto Espoo, pesupalvelu Espoo, rengastyöt Espoo, kiillotus Espoo, Suomenoja, autonhuolto, auton pesu, sisäpuhdistus, tuulilasin korjaus">
+    <title>Autohuolto Espoo - Pesupalvelut, Rengastyöt - Fixnero</title>
     
     <!-- Structured Data (Schema Markup) for better Google search results -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "AutoRepair",
-        "name": "Fixnero",
+        "@type": ["AutoRepair", "LocalBusiness"],
+        "name": "Fixnero - Autohuolto Espoo",
+        "alternateName": "Fixnero",
         "image": "https://fixnero.fi/FXNR.png",
-        "description": "Pesupalvelut, sisäpuhdistukset, rengastyöt, kiillotukset, tuulilasityöt. Fixnero parasta silmäterällesi.",
+        "logo": "https://fixnero.fi/FXNR.png",
+        "description": "Ammattitaitoinen autohuolto Espoossa. Tarjoamme pesupalvelut, sisäpuhdistukset, rengastyöt, kiillotukset ja tuulilasityöt Suomenojan alueella.",
         "address": {
             "@type": "PostalAddress",
             "streetAddress": "Tiilenvalajantie 6",
             "addressLocality": "Espoo",
+            "addressRegion": "Uusimaa",
             "postalCode": "02330",
             "addressCountry": "FI"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "60.1699",
+            "longitude": "24.6384"
         },
         "telephone": "+358401935001",
         "email": "info@fixnero.fi",
         "url": "https://fixnero.fi",
         "openingHours": "Mo-Fr 09:00-17:00",
-        "priceRange": "€",
-        "areaServed": {
-            "@type": "Place",
-            "name": "Espoo, Helsinki metropolitan area"
-        },
+        "openingHoursSpecification": [
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                "opens": "09:00",
+                "closes": "17:00"
+            }
+        ],
+        "priceRange": "€€",
+        "areaServed": [
+            {
+                "@type": "City",
+                "name": "Espoo"
+            },
+            {
+                "@type": "City",
+                "name": "Helsinki"
+            },
+            {
+                "@type": "Place",
+                "name": "Suomenoja"
+            }
+        ],
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
-            "name": "Automotive Services",
+            "name": "Autohuoltopalvelut Espoo",
             "itemListElement": [
                 {
                     "@type": "Offer",
                     "itemOffered": {
                         "@type": "Service",
-                        "name": "Pesupalvelut",
-                        "description": "Käsinpesu, vahaukset, pikapesut ja renkaiden pesut"
+                        "name": "Pesupalvelut Espoo",
+                        "description": "Käsinpesu, vahaukset, pikapesut ja renkaiden pesut Espoossa"
                     }
                 },
                 {
                     "@type": "Offer",
                     "itemOffered": {
                         "@type": "Service",
-                        "name": "Sisäpuhdistus",
-                        "description": "Kattava sisätilojen puhdistus ja hoito"
+                        "name": "Sisäpuhdistus Espoo",
+                        "description": "Kattava sisätilojen puhdistus ja hoito Espoossa"
                     }
                 },
                 {
                     "@type": "Offer",
                     "itemOffered": {
                         "@type": "Service",
-                        "name": "Rengastyöt",
-                        "description": "Renkaiden vaihto, tasapainotus, paikkaus ja rengashotelli"
+                        "name": "Rengastyöt Espoo",
+                        "description": "Renkaiden vaihto, tasapainotus, paikkaus ja rengashotelli Espoossa"
                     }
                 },
                 {
                     "@type": "Offer",
                     "itemOffered": {
                         "@type": "Service",
-                        "name": "Kiilloitus ja pinnoitteet",
-                        "description": "Koneellinen kiillotus ja keraaminen pinnoitus"
+                        "name": "Kiilloitus Espoo",
+                        "description": "Koneellinen kiillotus ja keraaminen pinnoitus Espoossa"
                     }
                 },
                 {
                     "@type": "Offer",
                     "itemOffered": {
                         "@type": "Service",
-                        "name": "Tuulilasityöt",
-                        "description": "Tuulilasin korjaus ja vaihto"
+                        "name": "Tuulilasityöt Espoo",
+                        "description": "Tuulilasin korjaus ja vaihto Espoossa"
                     }
                 }
             ]
@@ -2407,6 +2434,10 @@
         <ul>
             <li>Pesun yhteydessä suihkutettava vettä ja likaa hylkivä pinnoite</li>
         </ul>
+        
+        <p style="margin-top: 30px; text-align: center;">
+            <a href="pesupalvelut.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #666666, #444444); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">Lue lisää pesupalveluista →</a>
+        </p>
         </div>
     </section>
     <section id="rengastyot">
@@ -2432,6 +2463,10 @@
                 </ul>
 
                 <p>Rengaspalvelumme on nopea, huolellinen ja täysin vaivaton – kysy lisää tai varaa aika suoraan!</p>
+                
+                <p style="margin-top: 30px; text-align: center;">
+                    <a href="rengastyot.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #666666, #444444); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">Lue lisää rengastöistä →</a>
+                </p>
             </div>
             <div class="tire-services-image">
                 <img src="Rengas.jpg" alt="Rengastyöt - Ammattitaitoinen renkaiden vaihto ja huolto" loading="lazy">
@@ -2455,6 +2490,10 @@
         <p>Korjaamme ajoneuvoja ammattitaidolla ja käytämme laadukkaita varaosia. Kaikki korjaustyöt tehdään huolellisesti ja takuulla.</p>
 
         <p>Epävarma mistä vika johtuu? Tuo autosi meille katsastettavaksi – selvitämme ongelman ja annamme realistisen arvion korjauskustannuksista ennen töiden aloittamista.</p>
+        
+        <p style="margin-top: 30px; text-align: center;">
+            <a href="autohuolto.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #999999, #777777); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">Lue lisää korjaustöistä →</a>
+        </p>
     </section>
     <section id="sisapuhdistus">
         <h2>Sisäpuhdistus</h2>
@@ -2488,6 +2527,10 @@
                 </ul>
 
                 <p>Voit yhdistää sisäpuhdistuksen myös ulkopesuun tai kiillotukseen kokonaisvaltaista lopputulosta varten.</p>
+                
+                <p style="margin-top: 30px; text-align: center;">
+                    <a href="sisapuhdistus.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #666666, #444444); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">Lue lisää sisäpuhdistuksesta →</a>
+                </p>
             </div>
             <div class="interior-cleaning-image">
                 <img src="sisapuhdistus.jpg" alt="Sisäpuhdistus - Ammattitaitoinen sisätilojen puhdistus" loading="lazy">
@@ -2510,6 +2553,10 @@
                 </ul>
 
                 <p>Varaa aika <strong>varauskalenterista</strong> tai tule paikan päälle näyttämään ajoneuvoasi – annamme arvion ja suosittelemme sopivinta palvelua juuri sinun tarpeisiisi.</p>
+                
+                <p style="margin-top: 30px; text-align: center;">
+                    <a href="kiilloitus.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #666666, #444444); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">Lue lisää kiillotuksesta →</a>
+                </p>
             </div>
             <div class="polishing-image">
                 <img src="Tyonaytteet.PNG" alt="Kiilloitus ja pinnoitteet - Ammattitaitoinen auton kiillotus" loading="lazy">

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,user-scalable=yes">
+    <meta name="description" content="Autohuolto Espoo - Fixnero tarjoaa korjaustyöt, katsastuskorjaukset ja huoltopalvelut Suomenojalla. Ammattitaitoinen autohuolto Espoossa kaikille automerkeille.">
+    <meta name="keywords" content="autohuolto Espoo, korjaustyöt Espoo, katsastuskorjaus, autonhuolto, Suomenoja">
+    <title>Autohuolto ja Korjaustyöt Espoo – Fixnero</title>
+    
+    <!-- Structured Data for Service Page -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "serviceType": "Autohuolto ja Korjaustyöt",
+        "provider": {
+            "@type": "AutoRepair",
+            "name": "Fixnero",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Tiilenvalajantie 6",
+                "addressLocality": "Espoo",
+                "postalCode": "02330",
+                "addressCountry": "FI"
+            },
+            "telephone": "+358401935001"
+        },
+        "areaServed": {
+            "@type": "City",
+            "name": "Espoo"
+        },
+        "description": "Ammattitaitoinen autohuolto Espoossa - korjaustyöt, katsastuskorjaukset ja huolto kaikille automerkeille"
+    }
+    </script>
+    
+    <link rel="preload" href="FXNR.png" as="image">
+    <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8f8f8 0%, #e0e0e0 100%);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .top-banner {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: #000000;
+            color: #fff;
+            text-align: center;
+            padding: 8px 0;
+            z-index: 1002;
+            font-weight: 500;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        nav {
+            position: fixed;
+            top: 32px; left: 0; right: 0;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1003;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        nav img {
+            height: 50px;
+            margin-left: 10px;
+            margin-right: 15px;
+            filter: brightness(1.1);
+            transition: all 0.3s ease;
+        }
+        nav img:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+        nav a {
+            color: #fff;
+            padding: 16px 18px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            display: block;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0 2px;
+        }
+        nav a:hover {
+            background: linear-gradient(135deg, #666666, #444444);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        .hamburger-menu {
+            display: none;
+            cursor: pointer;
+            padding: 0;
+            background: linear-gradient(135deg, rgba(40,40,40,0.95), rgba(20,20,20,0.95));
+            position: fixed;
+            top: 12px; right: 12px;
+            z-index: 1004;
+            border-radius: 8px;
+            width: 48px;
+            height: 48px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .hamburger-menu span {
+            display: block;
+            width: 24px; 
+            height: 2.5px;
+            margin: 5.5px auto;
+            background: linear-gradient(90deg, #ffffff, #e0e0e0);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 2px;
+        }
+        @media (max-width: 1279px) {
+            .hamburger-menu { display: flex; align-items: center; justify-content: center; }
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 300px;
+                top: 0;
+                left: 0;
+                transform: translateX(-100%);
+                transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                height: 100%;
+                padding: 0;
+                background: #000000;
+                box-shadow: 8px 0 40px rgba(0,0,0,0.6);
+                overflow-y: auto;
+            }
+            nav.active { 
+                transform: translateX(0);
+            }
+            nav > a:first-child {
+                background: #ffffff;
+                padding: 20px;
+                text-align: center;
+                width: 100%;
+                border-bottom: 2px solid #000;
+                margin: 0;
+            }
+            nav > a:first-child img {
+                margin: 0;
+                max-width: 200px;
+                height: auto;
+            }
+            nav a:not(:first-child) {
+                color: #ecf0f1;
+                font-size: 16px;
+                font-weight: 500;
+                padding: 18px 25px;
+                text-align: left;
+                width: 100%;
+                margin: 0;
+                border-bottom: 1px solid rgba(255,255,255,0.15);
+                background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            }
+            nav a:not(:first-child):hover { 
+                background: linear-gradient(135deg, #666666, #444444) !important;
+                color: #fff !important;
+                transform: translateX(8px);
+                padding-left: 30px;
+            }
+        }
+        .container {
+            max-width: 900px;
+            margin: 120px auto 40px;
+            padding: 40px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .back-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #666666, #444444);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', sans-serif;
+            font-style: italic;
+            letter-spacing: 0.05em;
+        }
+        h2 {
+            color: #2a2a2a;
+            font-size: 2rem;
+            margin-top: 30px;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', sans-serif;
+            font-style: italic;
+            letter-spacing: 0.05em;
+        }
+        h3 {
+            color: #2a2a2a;
+            font-size: 1.5rem;
+            margin-top: 25px;
+        }
+        p {
+            color: #333333;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        ul {
+            color: #333333;
+            line-height: 1.8;
+            padding-left: 20px;
+        }
+        ul li {
+            margin-bottom: 8px;
+        }
+        strong {
+            color: #1a1a1a;
+        }
+        .cta-section {
+            background: linear-gradient(135deg, #666666, #444444);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 40px 0;
+        }
+        .cta-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            margin: 10px;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .cta-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            .container {
+                margin: 100px 20px 40px;
+                padding: 25px;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-banner">
+        <a href="tel:+358401935001" style="color: inherit; text-decoration: none;">📞 Puhelin: 040 1935001</a> | 
+        <a href="mailto:info@fixnero.fi" style="color: inherit; text-decoration: none;">📧 info@fixnero.fi</a> | 
+        <a href="index.html#kartta" style="color: inherit; text-decoration: none;">📍 Tiilenvalajantie 6, 02330 Espoo</a>
+    </div>
+
+    <div class="hamburger-menu" role="button" tabindex="0" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+    </div>
+
+    <nav id="nav">
+        <a href="index.html#top"><img src="FXNR.png" alt="Fixnero logo"></a>
+        <a href="index.html#pesupalvelut">Pesupalvelut</a>
+        <a href="index.html#rengastyot">Rengastyöt</a>
+        <a href="index.html#korjaustyot">Korjaustyöt</a>
+        <a href="index.html#sisapuhdistus">Sisäpuhdistus</a>
+        <a href="index.html#kiilloitus">Kiilloitus</a>
+        <a href="index.html#lasikorjaus">Lasikorjaus</a>
+        <a href="index.html#hinnasto">Hinnasto</a>
+        <a href="index.html#yhteystiedot">Yhteystiedot</a>
+    </nav>
+
+    <div class="container">
+        <a href="index.html#korjaustyot" class="back-button">← Takaisin palveluihin</a>
+        
+        <h1>Autohuolto Espoo</h1>
+        
+        <p>Fixnero tarjoaa ammattitaitoista autohuoltoa ja korjaustyöpalveluita Espoossa, Suomenojan alueella. Korjaamme ajoneuvoja laajasti automerkeistä riippumatta käyttäen laadukkaita varaosia ja nykyaikaisia työkaluja. Palvelumme on luotettavaa, ja kaikki työt tehdään huolellisesti takuulla.</p>
+
+        <p>Erikoisalaamme kuuluvat katsastuskorjaukset – jos autosi sai hylätyn päätöksen katsastuksessa, tuo se meille, niin korjaamme viat ja saat autosi takaisin katsastuskuntoon nopeasti. Autamme myös selvittämään epäselvät viat ja annamme realistisen arvion korjauskustannuksista ennen töiden aloittamista, jotta et kohtaa ikäviä yllätyksiä.</p>
+
+        <h2>Korjaustyömme</h2>
+        
+        <h3>Jousitus ja alusta</h3>
+        <ul>
+            <li>Iskunvaimentimien ja jousituksen uusiminen</li>
+            <li>Tukivarsien, nivelien ja raidetankojen vaihto</li>
+            <li>Vakaajatangon ja koiranluiden vaihto</li>
+            <li>Alustan tarkistus ja huolto</li>
+        </ul>
+
+        <h3>Jarrujärjestelmä</h3>
+        <ul>
+            <li>Jarrulevyjen ja -palojen vaihto</li>
+            <li>Käsijarrujen säätö ja korjaus</li>
+            <li>Jarrunesteiden vaihto</li>
+            <li>Jarrujärjestelmän tarkistus ja huolto</li>
+        </ul>
+
+        <h3>Pakoputkisto</h3>
+        <ul>
+            <li>Pakoputkiston korjaukset</li>
+            <li>Katalysaattorin vaihto</li>
+            <li>Äänenvaimentimen vaihto</li>
+        </ul>
+
+        <h3>Diagnostiikka ja sähkötyöt</h3>
+        <ul>
+            <li>Vikakoodien luku ja nollaus</li>
+            <li>Auton diagnostiikka</li>
+            <li>Sähköjärjestelmän vianetsintä</li>
+        </ul>
+
+        <h2>Katsastuskorjaukset Espoo</h2>
+        <p>Erikoistumme katsastuksessa ilmenneiden vikojen korjaamiseen. Tuo autosi meille, niin korjaamme katsastusviat ammattitaidolla ja saat autosi takaisin katsastuskuntoon. Korjaustyöt tehdään nopeasti ja laadukkaasti, jotta voit viedä autosi uudelleen katsastettavaksi mahdollisimman pian.</p>
+
+        <p>Yleisimmät katsastuskorjaukset:</p>
+        <ul>
+            <li>Jarrujen korjaukset</li>
+            <li>Alustan korjaukset</li>
+            <li>Valojen ja sähköjärjestelmän korjaukset</li>
+            <li>Pakoputkiston korjaukset</li>
+            <li>Jousituksen ja iskunvaimentimien vaihto</li>
+        </ul>
+
+        <h2>Miksi valita Fixnero?</h2>
+        <ul>
+            <li><strong>Ammattitaito:</strong> Kokeneet asentajat ja nykyaikaiset työkalut</li>
+            <li><strong>Laadukkaat osat:</strong> Käytämme vain laadukkaita varaosia</li>
+            <li><strong>Takuu:</strong> Kaikki työt tehdään takuulla</li>
+            <li><strong>Läpinäkyvä hinnoittelu:</strong> Arvio kustannuksista ennen töiden aloittamista</li>
+            <li><strong>Nopea palvelu:</strong> Pyrimme saamaan autosi takaisin tielle mahdollisimman nopeasti</li>
+        </ul>
+
+        <div class="cta-section">
+            <h2>Tarvitsetko korjausapua?</h2>
+            <p>Ota yhteyttä, niin autamme sinua!</p>
+            <a href="tel:+358401935001" class="cta-button">📞 Soita meille</a>
+            <a href="mailto:info@fixnero.fi" class="cta-button">📧 Lähetä viesti</a>
+            <a href="index.html#ajanvaraus" class="cta-button">📅 Varaa aika</a>
+        </div>
+    </div>
+
+    <script>
+        const hamburger = document.querySelector('.hamburger-menu');
+        const nav = document.getElementById('nav');
+        hamburger.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1279) {
+                nav.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
