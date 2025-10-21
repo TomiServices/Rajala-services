@@ -643,7 +643,37 @@
             overflow: hidden;
         }
         
-        /* Tire services layout with image */
+        /* Service content layout with image - used for multiple sections */
+        .service-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+        
+        .service-text {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .service-image {
+            flex: 0 0 500px;
+            max-width: 500px;
+        }
+        
+        .service-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            object-fit: cover;
+            /* Diagonal cut from top center slanting down to bottom left corner */
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 50% 0);
+            clip-path: polygon(50% 0, 100% 0, 100% 100%, 0 100%, 0 0);
+        }
+        
+        /* Legacy class names for backward compatibility */
         .tire-services-content {
             display: flex;
             align-items: flex-start;
@@ -658,8 +688,8 @@
         }
         
         .tire-services-image {
-            flex: 0 0 450px;
-            max-width: 450px;
+            flex: 0 0 500px;
+            max-width: 500px;
         }
         
         .tire-services-image img {
@@ -668,24 +698,27 @@
             border-radius: 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             object-fit: cover;
-            /* Diagonal cut using clip-path - 30-degree angle from bottom-left to top-right */
-            clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
+            /* Diagonal cut from top center slanting down to bottom left corner */
+            clip-path: polygon(50% 0, 100% 0, 100% 100%, 0 100%, 0 0);
         }
         
         /* Mobile layout: stack vertically */
         @media (max-width: 768px) {
+            .service-content,
             .tire-services-content {
                 flex-direction: column;
                 gap: 25px;
             }
             
+            .service-image,
             .tire-services-image {
                 flex: 1;
-                max-width: 70%;
+                max-width: 85%;
                 margin: 20px auto 0 auto;
                 order: 1;
             }
             
+            .service-image img,
             .tire-services-image img {
                 width: 100%;
                 height: auto;
@@ -694,8 +727,9 @@
         
         /* Extra small mobile devices - optimize layout for iPhone 15 Pro and similar */
         @media (max-width: 480px) {
+            .service-image,
             .tire-services-image {
-                max-width: 60%;
+                max-width: 90%;
                 margin: 15px auto 0 auto;
             }
         }
@@ -722,8 +756,8 @@
         }
         
         .interior-cleaning-image {
-            flex: 0 0 600px;
-            max-width: 600px;
+            flex: 0 0 500px;
+            max-width: 500px;
             position: relative;
         }
         
@@ -733,8 +767,8 @@
             border-radius: 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             object-fit: cover;
-            /* Diagonal cut using clip-path - 30-degree angle from bottom-left to top-right */
-            clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%, 0 20%);
+            /* Diagonal cut from top center slanting down to bottom left corner */
+            clip-path: polygon(50% 0, 100% 0, 100% 100%, 0 100%, 0 0);
         }
         
         /* Mobile layout: stack vertically */
@@ -746,8 +780,8 @@
             
             .interior-cleaning-image {
                 flex: 1;
-                max-width: 100%;
-                margin: 20px 0 0 0;
+                max-width: 85%;
+                margin: 20px auto 0 auto;
                 order: 1;
             }
             
@@ -760,8 +794,8 @@
         /* Extra small mobile devices - optimize layout for iPhone 15 Pro and similar */
         @media (max-width: 480px) {
             .interior-cleaning-image {
-                max-width: 100%;
-                margin: 15px 0 0 0;
+                max-width: 90%;
+                margin: 15px auto 0 auto;
             }
         }
         
@@ -2451,31 +2485,39 @@
         <div style="position: relative; z-index: 2;">
         <img src="Pesupalvelut.PNG" alt="Pesupalvelut" class="section-icon" loading="lazy">
         <h2>Pesupalvelut</h2>
-        <p>Tarjoamme laadukkaita auton pesupalveluita: käsinpesu, vahaukset, pikapesut ja renkaiden pesut. Käytämme vain huolellisesti valittuja, laadukkaita aineita ja välineitä, jotka suojaavat ajoneuvon pintoja ja tekevät autostasi kiiltävän puhtaan.</p>
+        
+        <div class="service-content">
+            <div class="service-text">
+                <p>Tarjoamme laadukkaita auton pesupalveluita: käsinpesu, vahaukset, pikapesut ja renkaiden pesut. Käytämme vain huolellisesti valittuja, laadukkaita aineita ja välineitä, jotka suojaavat ajoneuvon pintoja ja tekevät autostasi kiiltävän puhtaan.</p>
 
-        <ul>
-            <li>Pikapesu</li>
-            <li>Käsinpesu</li>
-            <li>Vahaukset</li>
-            <li>Renkaiden pesu</li>
-        </ul>
+                <ul>
+                    <li>Pikapesu</li>
+                    <li>Käsinpesu</li>
+                    <li>Vahaukset</li>
+                    <li>Renkaiden pesu</li>
+                </ul>
 
-        <h4>Pikapesu</h4>
-        <p>Auton pintaan levitetään tehokas pesuaine, jonka jälkeen se huuhdellaan painepesurilla. Lopuksi kuivaus tehdään pehmeällä mikrokuituliinalla – nopea ja hellävarainen vaihtoehto ylläpitopesuun.</p>
+                <h4>Pikapesu</h4>
+                <p>Auton pintaan levitetään tehokas pesuaine, jonka jälkeen se huuhdellaan painepesurilla. Lopuksi kuivaus tehdään pehmeällä mikrokuituliinalla – nopea ja hellävarainen vaihtoehto ylläpitopesuun.</p>
 
-        <h4>Käsinpesu</h4>
-        <p>Auto huuhdellaan ensin kauttaaltaan. Tämän jälkeen pesuaine levitetään erittäin pehmeällä pesukintaalla, joka ei naarmuta maalipintaa. Lopuksi huuhdellaan painepesurilla ja kuivataan mikrokuituliinalla huolellisesti.</p>
+                <h4>Käsinpesu</h4>
+                <p>Auto huuhdellaan ensin kauttaaltaan. Tämän jälkeen pesuaine levitetään erittäin pehmeällä pesukintaalla, joka ei naarmuta maalipintaa. Lopuksi huuhdellaan painepesurilla ja kuivataan mikrokuituliinalla huolellisesti.</p>
 
-        <h4>Vahaukset</h4>
-        <p>Haluatko lisätä autosi kiiltoa ja suojata pintaa pesun yhteydessä? Voimme levittää vahashampoon, joka muodostaa pesun aikana suojaavan ja kiiltävän pinnan autollesi – nopea tapa parantaa ulkonäköä ja helpottaa jatkopesuja.</p>
+                <h4>Vahaukset</h4>
+                <p>Haluatko lisätä autosi kiiltoa ja suojata pintaa pesun yhteydessä? Voimme levittää vahashampoon, joka muodostaa pesun aikana suojaavan ja kiiltävän pinnan autollesi – nopea tapa parantaa ulkonäköä ja helpottaa jatkopesuja.</p>
 
-        <h4>Renkaiden pesu</h4>
-        <p>Jos tuot renkaat vaihdettavaksi (esim. kesärenkaat talvivaihdon yhteydessä), voit samalla tilata niille pesun. Näin saat puhtaat ja siistit renkaat mukaasi tai rengashotelliin varastoitavaksi.</p>
+                <h4>Renkaiden pesu</h4>
+                <p>Jos tuot renkaat vaihdettavaksi (esim. kesärenkaat talvivaihdon yhteydessä), voit samalla tilata niille pesun. Näin saat puhtaat ja siistit renkaat mukaasi tai rengashotelliin varastoitavaksi.</p>
 
-        <h4>Lisäpalvelut</h4>
-        <ul>
-            <li>Pesun yhteydessä suihkutettava vettä ja likaa hylkivä pinnoite</li>
-        </ul>
+                <h4>Lisäpalvelut</h4>
+                <ul>
+                    <li>Pesun yhteydessä suihkutettava vettä ja likaa hylkivä pinnoite</li>
+                </ul>
+            </div>
+            <div class="service-image">
+                <img src="Asiakas1.jpg" alt="Pesupalvelut - Ammattitaitoinen auton pesu" loading="lazy">
+            </div>
+        </div>
         
         <p style="margin-top: 30px; text-align: center;">
             <a href="pesupalvelut.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #666666, #444444); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">Lue lisää pesupalveluista →</a>
@@ -2517,21 +2559,28 @@
     </section>
     <section id="korjaustyot">
         <h2>Korjaustyöt</h2>
-        <p>Voit tuoda autosi meille myös korjaukseen jos esim. Katsastuksessa autosi sai hylätyn päätöksen. Teemme korjaustoimia laajasti merkistä riippumatta.</p>
+        <div class="service-content">
+            <div class="service-text">
+                <p>Voit tuoda autosi meille myös korjaukseen jos esim. Katsastuksessa autosi sai hylätyn päätöksen. Teemme korjaustoimia laajasti merkistä riippumatta.</p>
 
-        <h4>Yleisimmät korjaustyömme</h4>
-        <ul>
-            <li>Iskunvaimentimien ja jousituksen uusiminen</li>
-            <li>Tukivarsien, nivelien ja raidetankojen vaihto</li>
-            <li>Vakaajatangon ja koiranluiden vaihto</li>
-            <li>Jarrulevyjen, palojen ja käsijarrujen korjaukset</li>
-            <li>Pakoputkistojen korjaukset</li>
-            <li>Vikakoodien luku ja nollaus</li>
-        </ul>
+                <h4>Yleisimmät korjaustyömme</h4>
+                <ul>
+                    <li>Iskunvaimentimien ja jousituksen uusiminen</li>
+                    <li>Tukivarsien, nivelien ja raidetankojen vaihto</li>
+                    <li>Vakaajatangon ja koiranluiden vaihto</li>
+                    <li>Jarrulevyjen, palojen ja käsijarrujen korjaukset</li>
+                    <li>Pakoputkistojen korjaukset</li>
+                    <li>Vikakoodien luku ja nollaus</li>
+                </ul>
 
-        <p>Korjaamme ajoneuvoja ammattitaidolla ja käytämme laadukkaita varaosia. Kaikki korjaustyöt tehdään huolellisesti ja takuulla.</p>
+                <p>Korjaamme ajoneuvoja ammattitaidolla ja käytämme laadukkaita varaosia. Kaikki korjaustyöt tehdään huolellisesti ja takuulla.</p>
 
-        <p>Epävarma mistä vika johtuu? Tuo autosi meille katsastettavaksi – selvitämme ongelman ja annamme realistisen arvion korjauskustannuksista ennen töiden aloittamista.</p>
+                <p>Epävarma mistä vika johtuu? Tuo autosi meille katsastettavaksi – selvitämme ongelman ja annamme realistisen arvion korjauskustannuksista ennen töiden aloittamista.</p>
+            </div>
+            <div class="service-image">
+                <img src="Korjaustyot.PNG" alt="Korjaustyöt - Ammattitaitoinen auton huolto ja korjaus" loading="lazy">
+            </div>
+        </div>
         
         <p style="margin-top: 30px; text-align: center;">
             <a href="autohuolto.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #999999, #777777); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">Lue lisää korjaustöistä →</a>
