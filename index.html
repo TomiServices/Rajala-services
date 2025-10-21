@@ -2747,6 +2747,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Select this slot
                 this.classList.add('selected');
                 
+                // Store selected slot globally
+                selectedSlot = new Date(slotTime);
+                
                 // Update the time dropdown
                 const selectElement = document.getElementById('availableTimesSelect');
                 const labelElement = document.getElementById('availableTimesLabel');
@@ -2992,6 +2995,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const selectedDateTime = new Date(selectedMobileDate);
             selectedDateTime.setHours(selectedMobileTime, 0, 0, 0);
             
+            // Store selected slot globally
+            selectedSlot = selectedDateTime;
+            
             // Update the time dropdown to show selected time
             const selectElement = document.getElementById('availableTimesSelect');
             const labelElement = document.getElementById('availableTimesLabel');
@@ -3002,46 +3008,28 @@ document.addEventListener('DOMContentLoaded', function () {
             const hour = selectedDateTime.getHours();
             const minute = selectedDateTime.getMinutes();
             
+            // Directly set the selected time in the dropdown without repopulating
+            selectElement.innerHTML = '';
+            const option = document.createElement('option');
+            const dayNames = ['Su', 'Ma', 'Ti', 'Ke', 'To', 'Pe', 'La'];
+            const dayName = dayNames[selectedDateTime.getDay()];
+            option.value = `${hour}:00`;
+            option.textContent = `${dayName} ${day}.${month}. klo ${hour}:00`;
+            option.dataset.date = selectedDateTime.toISOString();
+            option.dataset.hour = hour;
+            option.selected = true;
+            selectElement.appendChild(option);
+            
             labelElement.textContent = `Valittu aika: ${day}.${month.toString().padStart(2, '0')} ${hour}:${minute.toString().padStart(2, '0')}`;
             
-            // Update the time dropdown with all available times for the selected date
-            const selectedDate = new Date(selectedMobileDate);
-            // Get the current bookings to check availability
-            fetchBookings()
-                .then(bookings => {
-                    // Populate all available time slots for the selected date
-                    populateTimeSlotsForDate(selectedDate, bookings);
-                    
-                    // Set the selected option in the dropdown
-                    const optionToSelect = Array.from(selectElement.options).find(option => 
-                        parseInt(option.dataset.hour) === selectedMobileTime
-                    );
-                    if (optionToSelect) {
-                        optionToSelect.selected = true;
-                        selectElement.value = optionToSelect.value;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching bookings for dropdown:', error);
-                    // Fallback to the original behavior if fetch fails
-                    selectElement.innerHTML = '<option value="">Valitse aika...</option>';
-                    const option = document.createElement('option');
-                    option.value = `${hour}:00`;
-                    option.textContent = `${hour}:00`;
-                    option.dataset.date = selectedDateTime.toISOString();
-                    option.dataset.hour = hour;
-                    option.selected = true;
-                    selectElement.appendChild(option);
-                });
-            
-            // Show the time dropdown and service selection
+            // Show the time dropdown and service selection - time is already selected
             document.getElementById('availableSlots').style.display = 'block';
             document.getElementById('serviceSelection').style.display = 'block';
             
             // Clear any errors
             document.getElementById('error').textContent = '';
             
-            // Critical fix for issue #3: Always hide the modal to ensure auto-close with 0.3s delay
+            // Hide the modal immediately after confirmation
             setTimeout(() => {
                 hideMobileTimeModal();
             }, 300);
