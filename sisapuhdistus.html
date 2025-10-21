@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,user-scalable=yes">
+    <meta name="description" content="Sisäpuhdistus Espoo - Fixnero tarjoaa ammattitaista sisätilojen puhdistusta, otsonontiа ja syväpuhdistusta Suomenojalla. Sisäpuhdistuspalvelut Espoossa.">
+    <meta name="keywords" content="sisäpuhdistus Espoo, auton sisäpuhdistus, otsonointi, syväpuhdistus, Suomenoja">
+    <title>Sisäpuhdistus Espoo – Fixnero</title>
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "serviceType": "Sisäpuhdistus",
+        "provider": {
+            "@type": "AutoRepair",
+            "name": "Fixnero",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Tiilenvalajantie 6",
+                "addressLocality": "Espoo",
+                "postalCode": "02330",
+                "addressCountry": "FI"
+            },
+            "telephone": "+358401935001"
+        },
+        "areaServed": {
+            "@type": "City",
+            "name": "Espoo"
+        },
+        "description": "Ammattitaitoinen sisäpuhdistus Espoossa - sisätilojen puhdistus, otsonointi ja syväpuhdistus"
+    }
+    </script>
+    
+    <link rel="preload" href="FXNR.png" as="image">
+    <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8f8f8 0%, #e0e0e0 100%);
+            margin: 0; padding: 0; line-height: 1.6;
+        }
+        .top-banner {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: #000000; color: #fff;
+            text-align: center; padding: 8px 0;
+            z-index: 1002; font-weight: 500;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        nav {
+            position: fixed; top: 32px; left: 0; right: 0;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1003;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        nav img { height: 50px; margin-left: 10px; margin-right: 15px; filter: brightness(1.1); transition: all 0.3s ease; }
+        nav img:hover { transform: scale(1.05); filter: brightness(1.2); }
+        nav a {
+            color: #fff; padding: 16px 18px; text-decoration: none;
+            font-size: 16px; font-weight: 500; display: block;
+            white-space: nowrap; transition: all 0.3s ease;
+            border-radius: 8px; margin: 0 2px;
+        }
+        nav a:hover {
+            background: linear-gradient(135deg, #666666, #444444);
+            color: #fff; transform: translateY(-2px);
+        }
+        .hamburger-menu {
+            display: none; cursor: pointer; padding: 0;
+            background: linear-gradient(135deg, rgba(40,40,40,0.95), rgba(20,20,20,0.95));
+            position: fixed; top: 12px; right: 12px;
+            z-index: 1004; border-radius: 8px;
+            width: 48px; height: 48px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .hamburger-menu span {
+            display: block; width: 24px; height: 2.5px;
+            margin: 5.5px auto;
+            background: linear-gradient(90deg, #ffffff, #e0e0e0);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 2px;
+        }
+        @media (max-width: 1279px) {
+            .hamburger-menu { display: flex; align-items: center; justify-content: center; }
+            nav {
+                flex-direction: column; align-items: flex-start;
+                width: 300px; top: 0; left: 0;
+                transform: translateX(-100%);
+                transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                height: 100%; padding: 0;
+                background: #000000;
+                box-shadow: 8px 0 40px rgba(0,0,0,0.6);
+                overflow-y: auto;
+            }
+            nav.active { transform: translateX(0); }
+            nav > a:first-child {
+                background: #ffffff; padding: 20px;
+                text-align: center; width: 100%;
+                border-bottom: 2px solid #000;
+                margin: 0;
+            }
+            nav > a:first-child img {
+                margin: 0; max-width: 200px; height: auto;
+            }
+            nav a:not(:first-child) {
+                color: #ecf0f1; font-size: 16px;
+                font-weight: 500; padding: 18px 25px;
+                text-align: left; width: 100%;
+                margin: 0;
+                border-bottom: 1px solid rgba(255,255,255,0.15);
+                background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            }
+            nav a:not(:first-child):hover { 
+                background: linear-gradient(135deg, #666666, #444444) !important;
+                color: #fff !important;
+                transform: translateX(8px);
+                padding-left: 30px;
+            }
+        }
+        .container {
+            max-width: 900px;
+            margin: 120px auto 40px;
+            padding: 40px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .back-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #666666, #444444);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .back-button:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        h1 {
+            color: #1a1a1a; font-size: 2.8rem; margin-bottom: 20px;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', sans-serif;
+            font-style: italic; letter-spacing: 0.05em;
+        }
+        h2 {
+            color: #2a2a2a; font-size: 2rem; margin-top: 30px;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', sans-serif;
+            font-style: italic; letter-spacing: 0.05em;
+        }
+        h3 { color: #2a2a2a; font-size: 1.5rem; margin-top: 25px; }
+        p { color: #333333; line-height: 1.8; margin-bottom: 15px; }
+        ul { color: #333333; line-height: 1.8; padding-left: 20px; }
+        ul li { margin-bottom: 8px; }
+        strong { color: #1a1a1a; }
+        .cta-section {
+            background: linear-gradient(135deg, #666666, #444444);
+            color: white; padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 40px 0;
+        }
+        .cta-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            margin: 10px;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .cta-button:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+        @media (max-width: 768px) {
+            .container { margin: 100px 20px 40px; padding: 25px; }
+            h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-banner">
+        <a href="tel:+358401935001" style="color: inherit; text-decoration: none;">📞 Puhelin: 040 1935001</a> | 
+        <a href="mailto:info@fixnero.fi" style="color: inherit; text-decoration: none;">📧 info@fixnero.fi</a> | 
+        <a href="index.html#kartta" style="color: inherit; text-decoration: none;">📍 Tiilenvalajantie 6, 02330 Espoo</a>
+    </div>
+
+    <div class="hamburger-menu" role="button" tabindex="0" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+    </div>
+
+    <nav id="nav">
+        <a href="index.html#top"><img src="FXNR.png" alt="Fixnero logo"></a>
+        <a href="index.html#pesupalvelut">Pesupalvelut</a>
+        <a href="index.html#rengastyot">Rengastyöt</a>
+        <a href="index.html#korjaustyot">Korjaustyöt</a>
+        <a href="index.html#sisapuhdistus">Sisäpuhdistus</a>
+        <a href="index.html#kiilloitus">Kiilloitus</a>
+        <a href="index.html#lasikorjaus">Lasikorjaus</a>
+        <a href="index.html#hinnasto">Hinnasto</a>
+        <a href="index.html#yhteystiedot">Yhteystiedot</a>
+    </nav>
+
+    <div class="container">
+        <a href="index.html#sisapuhdistus" class="back-button">← Takaisin palveluihin</a>
+        
+        <h1>Sisäpuhdistus Espoo</h1>
+        
+        <p>Fixnero tarjoaa ammattitaitoista sisäpuhdistuspalvelua Espoossa, Suomenojan alueella. Palvelumme varmistaa, että autosi sisätilat ovat raikkaita, puhtaita ja terveellisiä. Käytämme vain ammattikäyttöön tarkoitettuja, hajusteettomia pesuaineita, jotka puhdistavat tehokkaasti mutta hellävaraisesti – ne eivät kuluta tai vahingoita herkkiä pintoja kuten nahkaa, kangasta tai muovia.</p>
+
+        <p>Sisäpuhdistus on tärkeää sekä käyttömukavuuden että ajoneuvon arvon säilyttämisen kannalta. Puhdas sisustus tuntuu ja näyttää uudelta, ja se parantaa merkittävästi ajokokemusta. Palvelumme sopii kaikille ajoneuvotyypeille, ja voit räätälöidä sen juuri sinun tarpeisiisi sopivaksi.</p>
+
+        <h2>Perussisäpuhdistus</h2>
+        <p>Kattava sisäpuhdistuspalvelumme sisältää:</p>
+        <ul>
+            <li>Mattojen ja lattiapintojen imurointi</li>
+            <li>Kankaisten ja nahkaisten penkkien pesu</li>
+            <li>Kojelaudan ja keskikonsolin puhdistus</li>
+            <li>Ovipaneelien puhdistus</li>
+            <li>Lattiamattojen pesu ja desinfiointi</li>
+            <li>Sisäpuolisten ikkunoiden ja peilien puhdistus</li>
+        </ul>
+        <p><strong>Hinta: alkaen 49 €</strong></p>
+
+        <h3>Sisätila + käsinpesu</h3>
+        <p>Haluatko samalla myös ulkopesun? Yhdistelmäpakettimme sisältää sisäpuhdistuksen ja ulkopuolisen käsinpesun. <strong>Hinta: alkaen 65 €</strong></p>
+
+        <h2>Lisäpalvelut</h2>
+        
+        <h3>Otsonointi</h3>
+        <p>Otsonointi poistaa tehokkaasti epämiellyttävät hajut autosta. Menetelmä on tehokas ja turvallinen, ja se neutraloi hajuja molekyylitasolla. <strong>Hinta: alkaen 80 €</strong></p>
+
+        <h3>Syväpuhdistus (Detailing)</h3>
+        <p>Perusteellinen sisätilojen käsittely, jossa puhdistetaan myös vaikeapääsyiset kohdat ja pintaa myöten. Sopii erityisesti autoon, joka tarvitsee raikastusta. <strong>Hinta: alkaen 150 €</strong></p>
+
+        <h3>Nahkapenkkien hoito ja suojaus</h3>
+        <p>Nahkapenkit vaativat erityishoitoa säilyttääkseen kauneutensa ja kestävyytensä. Puhdistamme ja hoidamme nahkapinnat ammattituotteilla. <strong>Hinta: alkaen 75 €</strong></p>
+
+        <h3>Muut lisäpalvelut</h3>
+        <ul>
+            <li><strong>Kankaan puhdistus kangaspesurilla:</strong> Tehokas puhdistus syvemmälle kangaspintoihin. Hinta: alkaen 60 €</li>
+            <li><strong>Hajunpoisto erikoisaineilla:</strong> Pysyvien hajujen poistoon. Hinta: alkaen 70 €</li>
+            <li><strong>Allergiapuhdistus:</strong> Erityisen huolellinen puhdistus allergikoille. Hinta: alkaen 90 €</li>
+            <li><strong>Kangaspintojen suojaus:</strong> Suojaa verhoilua ja kangaspintoja lialta ja nesteiltä. Hinta: alkaen 85 €</li>
+        </ul>
+
+        <h2>Miksi valita Fixneron sisäpuhdistus?</h2>
+        <ul>
+            <li><strong>Ammattilaistuotteet:</strong> Käytämme vain laadukkaita, ammattikäyttöön tarkoitettuja tuotteita</li>
+            <li><strong>Hajusteettomat aineet:</strong> Tuotteet eivät sisällä voimakkaita hajusteita</li>
+            <li><strong>Hellävarainen puhdistus:</strong> Emme vahingoita herkkiä pintoja</li>
+            <li><strong>Räätälöity palvelu:</strong> Voit valita juuri sinulle sopivat palvelut</li>
+            <li><strong>Kokenut henkilökunta:</strong> Ammattitaitoiset työntekijät huolehtivat autostasi</li>
+        </ul>
+
+        <div class="cta-section">
+            <h2>Varaa aika sisäpuhdistukseen</h2>
+            <p>Ota yhteyttä tai varaa aika suoraan kalenteristamme!</p>
+            <a href="index.html#ajanvaraus" class="cta-button">📅 Varaa aika</a>
+            <a href="tel:+358401935001" class="cta-button">📞 Soita meille</a>
+            <a href="mailto:info@fixnero.fi" class="cta-button">📧 Lähetä viesti</a>
+        </div>
+    </div>
+
+    <script>
+        const hamburger = document.querySelector('.hamburger-menu');
+        const nav = document.getElementById('nav');
+        hamburger.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1279) {
+                nav.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
