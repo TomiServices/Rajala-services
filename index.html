@@ -391,7 +391,7 @@
             
             #pesupalvelut h2, 
             .services-container section h2 {
-                font-size: 1.8rem;
+                font-size: 2rem;
                 color: #1a1a1a;
                 text-shadow: 0 1px 2px rgba(0,0,0,0.1);
                 /* Apply Serpentine-like font style (bold italic/oblique) */
@@ -526,7 +526,7 @@
             background: #fff;
             margin: 30px auto;
             padding: 24px 18px 18px 18px;
-            max-width: 800px;
+            max-width: 900px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             border-radius: 18px;
             position: relative;
@@ -536,6 +536,7 @@
         section h2 {
             color: #1a1a1a;
             font-weight: 700;
+            font-size: 2.2rem;
             /* Apply Serpentine-like font style (bold italic/oblique) */
             font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
             font-style: italic;
@@ -545,7 +546,7 @@
         section h3 {
             color: #2a2a2a;
             font-weight: 600;
-            font-size: 1.8rem;
+            font-size: 2rem;
             /* Apply same Serpentine-like font style as h2 */
             font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
             font-style: italic;
@@ -555,7 +556,7 @@
         section h4 {
             color: #2a2a2a;
             font-weight: 600;
-            font-size: 1.5rem;
+            font-size: 1.7rem;
             /* Apply same Serpentine-like font style as h2 */
             font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
             font-style: italic;
@@ -607,9 +608,11 @@
         .tire-services-image img {
             width: 100%;
             height: auto;
-            border-radius: 12px;
+            border-radius: 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             object-fit: cover;
+            /* Diagonal cut using clip-path */
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
         }
         
         /* Mobile layout: stack vertically */
@@ -644,6 +647,120 @@
             background: #f5f5f5;
             overflow: hidden;
             position: relative;
+        }
+        
+        /* Sisäpuhdistus section layout with image */
+        .interior-cleaning-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+        
+        .interior-cleaning-text {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .interior-cleaning-image {
+            flex: 0 0 450px;
+            max-width: 450px;
+            position: relative;
+        }
+        
+        .interior-cleaning-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            object-fit: cover;
+            /* Diagonal cut using clip-path */
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+        }
+        
+        /* Mobile layout: stack vertically */
+        @media (max-width: 768px) {
+            .interior-cleaning-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .interior-cleaning-image {
+                flex: 1;
+                max-width: 75%;
+                margin: 0 auto;
+                order: -1;
+            }
+            
+            .interior-cleaning-image img {
+                width: 100%;
+                height: auto;
+            }
+        }
+        
+        /* Extra small mobile devices - make images even smaller */
+        @media (max-width: 480px) {
+            .interior-cleaning-image {
+                max-width: 65%;
+            }
+        }
+        
+        /* Kiilloitus section layout with image */
+        .polishing-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+        
+        .polishing-text {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .polishing-image {
+            flex: 0 0 450px;
+            max-width: 450px;
+            position: relative;
+        }
+        
+        .polishing-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            object-fit: cover;
+            /* Diagonal cut using clip-path */
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+        }
+        
+        /* Mobile layout: stack vertically */
+        @media (max-width: 768px) {
+            .polishing-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .polishing-image {
+                flex: 1;
+                max-width: 75%;
+                margin: 0 auto;
+                order: -1;
+            }
+            
+            .polishing-image img {
+                width: 100%;
+                height: auto;
+            }
+        }
+        
+        /* Extra small mobile devices */
+        @media (max-width: 480px) {
+            .polishing-image {
+                max-width: 65%;
+            }
         }
         
         #rengastyot::before, #korjaustyöt::before {
@@ -2336,49 +2453,63 @@
     </section>
     <section id="sisapuhdistus">
         <h2>Sisäpuhdistus</h2>
-        <p>Sisäpuhdistuspalvelumme varmistaa raikkaat ja puhtaat sisätilat, jolloin ajoneuvosi tuntuu ja näyttää jälleen uudelta. Palveluun sisältyy kattava puhdistus koko matkustamolle, ja se parantaa sekä käyttömukavuutta että ajoneuvon arvoa.</p>
+        <div class="interior-cleaning-content">
+            <div class="interior-cleaning-text">
+                <p>Sisäpuhdistuspalvelumme varmistaa raikkaat ja puhtaat sisätilat, jolloin ajoneuvosi tuntuu ja näyttää jälleen uudelta. Palveluun sisältyy kattava puhdistus koko matkustamolle, ja se parantaa sekä käyttömukavuutta että ajoneuvon arvoa.</p>
 
-        <p>Käytämme vain hajusteettomia ja ammattikäyttöön tarkoitettuja pesuaineita, jotka puhdistavat tehokkaasti mutta hellävaraisesti – ne eivät kuluta tai vahingoita herkkiä pintoja kuten nahkaa, kangasta tai muovia.</p>
+                <p>Käytämme vain hajusteettomia ja ammattikäyttöön tarkoitettuja pesuaineita, jotka puhdistavat tehokkaasti mutta hellävaraisesti – ne eivät kuluta tai vahingoita herkkiä pintoja kuten nahkaa, kangasta tai muovia.</p>
 
-        <p>Sisäpesupalveluun kuuluu muun muassa:</p>
-        <ul>
-            <li>Mattojen ja lattiapintojen imurointi</li>
-            <li>Kankaisten ja nahkaisten penkkien pesu</li>
-            <li>Kojelaudan ja keskikonsolin puhdistus</li>
-            <li>Ovipaneelien puhdistus</li>
-            <li>Lattiamattojen pesu ja desinfiointi</li>
-            <li>Sisäpuolisten ikkunoiden ja peilien puhdistus</li>
-        </ul>
+                <p>Sisäpesupalveluun kuuluu muun muassa:</p>
+                <ul>
+                    <li>Mattojen ja lattiapintojen imurointi</li>
+                    <li>Kankaisten ja nahkaisten penkkien pesu</li>
+                    <li>Kojelaudan ja keskikonsolin puhdistus</li>
+                    <li>Ovipaneelien puhdistus</li>
+                    <li>Lattiamattojen pesu ja desinfiointi</li>
+                    <li>Sisäpuolisten ikkunoiden ja peilien puhdistus</li>
+                </ul>
 
-        <p>Voit myös tarvittaessa räätälöidä palvelut juuri sinulle sopivaksi – kerro meille toiveesi, niin suunnittelemme sisäpesun niiden mukaan.</p>
+                <p>Voit myös tarvittaessa räätälöidä palvelut juuri sinulle sopivaksi – kerro meille toiveesi, niin suunnittelemme sisäpesun niiden mukaan.</p>
 
-        <h4>Lisäpalvelut</h4>
-        <ul>
-            <li>Otsonointi – poistaa tehokkaasti epämiellyttävät hajut</li>
-            <li>Syväpuhdistus (detailing) – perusteellinen käsittely pintaa myöten</li>
-            <li>Nahkapenkkien hoito ja suojaus</li>
-            <li>Kankaan puhdistus kangaspesurilla</li>
-            <li>Hajunpoisto erikoisaineilla</li>
-            <li>Allergiapuhdistus – soveltuu erityisesti herkille matkustajille</li>
-            <li>Kangaspintojen suojaus (esim. verhoilun kyllästys)</li>
-        </ul>
+                <h4>Lisäpalvelut</h4>
+                <ul>
+                    <li>Otsonointi – poistaa tehokkaasti epämiellyttävät hajut</li>
+                    <li>Syväpuhdistus (detailing) – perusteellinen käsittely pintaa myöten</li>
+                    <li>Nahkapenkkien hoito ja suojaus</li>
+                    <li>Kankaan puhdistus kangaspesurilla</li>
+                    <li>Hajunpoisto erikoisaineilla</li>
+                    <li>Allergiapuhdistus – soveltuu erityisesti herkille matkustajille</li>
+                    <li>Kangaspintojen suojaus (esim. verhoilun kyllästys)</li>
+                </ul>
 
-        <p>Voit yhdistää sisäpuhdistuksen myös ulkopesuun tai kiillotukseen kokonaisvaltaista lopputulosta varten.</p>
+                <p>Voit yhdistää sisäpuhdistuksen myös ulkopesuun tai kiillotukseen kokonaisvaltaista lopputulosta varten.</p>
+            </div>
+            <div class="interior-cleaning-image">
+                <img src="sisapuhdistus.jpg" alt="Sisäpuhdistus - Ammattitaitoinen sisätilojen puhdistus" loading="lazy">
+            </div>
+        </div>
     </section>
     <section id="kiilloitus">
         <h2>Kiilloitus ja pinnoitteet</h2>
-        <p>Koneellinen kiillotus palauttaa maalipinnan kiillon ja poistaa pienet naarmut tehokkaasti. Käytämme ammattilaisille tarkoitettuja huippulaatuisia tuotteita ja koneita, joilla taataan paras mahdollinen lopputulos.</p>
+        <div class="polishing-content">
+            <div class="polishing-text">
+                <p>Koneellinen kiillotus palauttaa maalipinnan kiillon ja poistaa pienet naarmut tehokkaasti. Käytämme ammattilaisille tarkoitettuja huippulaatuisia tuotteita ja koneita, joilla taataan paras mahdollinen lopputulos.</p>
 
-        <p>Meillä on laaja kokemus kiillotuksesta ja pinnoituksista eri ajoneuvotyypeille: henkilöautot, moottoripyörät, veneet sekä työkoneet. Jokainen kiillotus tehdään huolellisesti ajoneuvon maalipinnan kunnon ja toivotun lopputuloksen mukaan.</p>
+                <p>Meillä on laaja kokemus kiillotuksesta ja pinnoituksista eri ajoneuvotyypeille: henkilöautot, moottoripyörät, veneet sekä työkoneet. Jokainen kiillotus tehdään huolellisesti ajoneuvon maalipinnan kunnon ja toivotun lopputuloksen mukaan.</p>
 
-        <ul>
-            <li>Yhden tai useamman vaiheen konekiillotus (1-step, 2-step, 3-step)</li>
-            <li>Naarmujen poisto</li>
-            <li>Vahaus kiillotuksen yhteydessä</li>
-            <li>Keraaminen pinnoite (lisäpalvelu)</li>
-        </ul>
+                <ul>
+                    <li>Yhden tai useamman vaiheen konekiillotus (1-step, 2-step, 3-step)</li>
+                    <li>Naarmujen poisto</li>
+                    <li>Vahaus kiillotuksen yhteydessä</li>
+                    <li>Keraaminen pinnoite (lisäpalvelu)</li>
+                </ul>
 
-        <p>Varaa aika <strong>varauskalenterista</strong> tai tule paikan päälle näyttämään ajoneuvoasi – annamme arvion ja suosittelemme sopivinta palvelua juuri sinun tarpeisiisi.</p>
+                <p>Varaa aika <strong>varauskalenterista</strong> tai tule paikan päälle näyttämään ajoneuvoasi – annamme arvion ja suosittelemme sopivinta palvelua juuri sinun tarpeisiisi.</p>
+            </div>
+            <div class="polishing-image">
+                <img src="Tyonaytteet.PNG" alt="Kiilloitus ja pinnoitteet - Ammattitaitoinen auton kiillotus" loading="lazy">
+            </div>
+        </div>
     </section>
     <section id="lasikorjaus">
         <h2>Lasikorjaus</h2>
@@ -2615,6 +2746,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 
                 // Select this slot
                 this.classList.add('selected');
+                
+                // Store selected slot globally
+                selectedSlot = new Date(slotTime);
                 
                 // Update the time dropdown
                 const selectElement = document.getElementById('availableTimesSelect');
@@ -2861,6 +2995,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const selectedDateTime = new Date(selectedMobileDate);
             selectedDateTime.setHours(selectedMobileTime, 0, 0, 0);
             
+            // Store selected slot globally
+            selectedSlot = selectedDateTime;
+            
             // Update the time dropdown to show selected time
             const selectElement = document.getElementById('availableTimesSelect');
             const labelElement = document.getElementById('availableTimesLabel');
@@ -2871,46 +3008,28 @@ document.addEventListener('DOMContentLoaded', function () {
             const hour = selectedDateTime.getHours();
             const minute = selectedDateTime.getMinutes();
             
+            // Directly set the selected time in the dropdown without repopulating
+            selectElement.innerHTML = '';
+            const option = document.createElement('option');
+            const dayNames = ['Su', 'Ma', 'Ti', 'Ke', 'To', 'Pe', 'La'];
+            const dayName = dayNames[selectedDateTime.getDay()];
+            option.value = `${hour}:00`;
+            option.textContent = `${dayName} ${day}.${month}. klo ${hour}:00`;
+            option.dataset.date = selectedDateTime.toISOString();
+            option.dataset.hour = hour;
+            option.selected = true;
+            selectElement.appendChild(option);
+            
             labelElement.textContent = `Valittu aika: ${day}.${month.toString().padStart(2, '0')} ${hour}:${minute.toString().padStart(2, '0')}`;
             
-            // Update the time dropdown with all available times for the selected date
-            const selectedDate = new Date(selectedMobileDate);
-            // Get the current bookings to check availability
-            fetchBookings()
-                .then(bookings => {
-                    // Populate all available time slots for the selected date
-                    populateTimeSlotsForDate(selectedDate, bookings);
-                    
-                    // Set the selected option in the dropdown
-                    const optionToSelect = Array.from(selectElement.options).find(option => 
-                        parseInt(option.dataset.hour) === selectedMobileTime
-                    );
-                    if (optionToSelect) {
-                        optionToSelect.selected = true;
-                        selectElement.value = optionToSelect.value;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching bookings for dropdown:', error);
-                    // Fallback to the original behavior if fetch fails
-                    selectElement.innerHTML = '<option value="">Valitse aika...</option>';
-                    const option = document.createElement('option');
-                    option.value = `${hour}:00`;
-                    option.textContent = `${hour}:00`;
-                    option.dataset.date = selectedDateTime.toISOString();
-                    option.dataset.hour = hour;
-                    option.selected = true;
-                    selectElement.appendChild(option);
-                });
-            
-            // Show the time dropdown and service selection
+            // Show the time dropdown and service selection - time is already selected
             document.getElementById('availableSlots').style.display = 'block';
             document.getElementById('serviceSelection').style.display = 'block';
             
             // Clear any errors
             document.getElementById('error').textContent = '';
             
-            // Critical fix for issue #3: Always hide the modal to ensure auto-close with 0.3s delay
+            // Hide the modal immediately after confirmation
             setTimeout(() => {
                 hideMobileTimeModal();
             }, 300);
