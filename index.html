@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,user-scalable=yes">
-    <meta name="description" content="Autohuolto Espoo - Pesupalvelut, sisäpuhdistukset, rengastyöt, kiillotukset ja tuulilasityöt Suomenojan alueella. Fixnero tarjoaa ammattitaitoista autohuoltoa Espoossa.">
-    <meta name="keywords" content="autohuolto Espoo, pesupalvelu Espoo, rengastyöt Espoo, kiillotus Espoo, Suomenoja, autonhuolto, auton pesu, sisäpuhdistus, tuulilasin korjaus">
+    <meta name="description" content="Autohuolto Espoo - Pesupalvelut, sisäpuhdistukset, rengastyöt, kiillotukset ja tuulilasityöt Kivenlahdessa Espoossa. Fixnero tarjoaa ammattitaitoista autohuoltoa Espoossa.">
+    <meta name="keywords" content="autohuolto Espoo, pesupalvelu Espoo, rengastyöt Espoo, kiillotus Espoo, Kivenlahti, autonhuolto, auton pesu, sisäpuhdistus, tuulilasin korjaus">
     <title>Autohuolto Espoo - Pesupalvelut, Rengastyöt - Fixnero</title>
     
     <!-- Favicon -->
@@ -19,7 +19,7 @@
         "alternateName": "Fixnero",
         "image": "https://fixnero.fi/FXNR.png",
         "logo": "https://fixnero.fi/FXNR.png",
-        "description": "Ammattitaitoinen autohuolto Espoossa. Tarjoamme pesupalvelut, sisäpuhdistukset, rengastyöt, kiillotukset ja tuulilasityöt Suomenojan alueella.",
+        "description": "Ammattitaitoinen autohuolto Espoossa. Tarjoamme pesupalvelut, sisäpuhdistukset, rengastyöt, kiillotukset ja tuulilasityöt Kivenlahdessa Espoossa.",
         "address": {
             "@type": "PostalAddress",
             "streetAddress": "Tiilenvalajantie 6",
@@ -57,7 +57,7 @@
             },
             {
                 "@type": "Place",
-                "name": "Suomenoja"
+                "name": "Kivenlahti Espoo"
             }
         ],
         "hasOfferCatalog": {
@@ -189,7 +189,7 @@
             color: #fff;
             padding: 16px 18px;
             text-decoration: none;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 500;
             display: block;
             white-space: nowrap;
@@ -598,6 +598,18 @@
             line-height: 1.7;
         }
         
+        /* Section icon styling */
+        .section-icon {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        
         /* Services container */
         .services-container {
             margin: 30px auto;
@@ -608,6 +620,21 @@
         /* Ensure services sections within container have proper spacing */
         .services-container section {
             margin: 30px auto;
+        }
+        
+        /* 4K Resolution (2560px and above) - wider content */
+        @media (min-width: 2560px) {
+            section {
+                max-width: 1600px;
+            }
+            
+            .services-container {
+                max-width: 1800px;
+            }
+            
+            .categories-row {
+                max-width: 1600px;
+            }
         }
         
         /* Animated background pattern for rengastyöt, korjaustyöt, and sisäpuhdistus sections */
@@ -641,8 +668,8 @@
             border-radius: 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             object-fit: cover;
-            /* Diagonal cut using clip-path */
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+            /* Diagonal cut using clip-path - 30-degree angle from bottom-left to top-right */
+            clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
         }
         
         /* Mobile layout: stack vertically */
@@ -706,8 +733,8 @@
             border-radius: 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             object-fit: cover;
-            /* Diagonal cut using clip-path - full image with 45-degree angle */
-            clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%, 0 15%);
+            /* Diagonal cut using clip-path - 30-degree angle from bottom-left to top-right */
+            clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%, 0 20%);
         }
         
         /* Mobile layout: stack vertically */
@@ -764,8 +791,8 @@
             border-radius: 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             object-fit: cover;
-            /* Diagonal cut using clip-path - full image with 45-degree angle */
-            clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%, 0 15%);
+            /* Diagonal cut using clip-path - 30-degree angle from bottom-left to top-right */
+            clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%, 0 20%);
         }
         
         /* Mobile layout: stack vertically */
@@ -982,6 +1009,17 @@
         }
         
         /* Responsive design */
+        /* Full HD Resolution (1920px) - widen text sections */
+        @media (min-width: 1920px) {
+            section {
+                max-width: 1200px;
+            }
+            
+            .services-container {
+                max-width: 1400px;
+            }
+        }
+        
         @media (max-width: 1200px) {
             .services-container {
                 max-width: 900px;
@@ -2411,6 +2449,7 @@
     <section id="pesupalvelut" style="background: #fff url('Elementti2.PNG') center/cover; position: relative; overflow: hidden;">
         <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(240,240,240,0.92); z-index: 1; border-radius: 18px;"></div>
         <div style="position: relative; z-index: 2;">
+        <img src="Pesupalvelut.PNG" alt="Pesupalvelut" class="section-icon" loading="lazy">
         <h2>Pesupalvelut</h2>
         <p>Tarjoamme laadukkaita auton pesupalveluita: käsinpesu, vahaukset, pikapesut ja renkaiden pesut. Käytämme vain huolellisesti valittuja, laadukkaita aineita ja välineitä, jotka suojaavat ajoneuvon pintoja ja tekevät autostasi kiiltävän puhtaan.</p>
 
@@ -2565,7 +2604,8 @@
         </p>
     </section>
     <section id="lasikorjaus">
-        <h2>Lasikorjaus</h2>
+        <img src="lasikorjaus.jpg" alt="Lasienvaihdot ja korjaukset" class="section-icon" loading="lazy">
+        <h2>Lasienvaihdot ja korjaukset</h2>
         <p>Korjaamme ja vaihdamme autosi tuulilasin nopeasti ja turvallisesti. Pienet kiveniskemät voidaan usein korjata ilman koko lasin vaihtoa.</p>
 
         <p>Suoritamme tuulilasien vaihdot ja korjaukset kaikkiin henkilöautoihin, kuorma-autoihin sekä työkoneisiin. Meillä on laaja kokemus lasien vaihdoista ja korjauksista eri ajoneuvotyypeille.</p>
@@ -2580,8 +2620,13 @@
         <p><strong>Ota yhteyttä:</strong><br>
         📞 Soita: <a href="tel:+358401935001">040 1935001</a><br>
         📧 Sähköposti: <a href="mailto:info@fixnero.fi">info@fixnero.fi</a></p>
+        
+        <p style="margin-top: 30px; text-align: center;">
+            <a href="#yhteystiedot" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #666666, #444444); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">Tutustu lisää →</a>
+        </p>
     </section>
     <section id="hinnasto">
+        <img src="hinnasto.jpg" alt="Hinnasto" class="section-icon" loading="lazy">
         <h2>Hinnasto</h2>
         <p>Alta löydät yleisimmät palvelumme ja niiden hinnat. Lopullinen hinta määräytyy työn laajuuden ja auton koon mukaan.</p>
 
@@ -2658,6 +2703,7 @@
     <!-- End of services container -->
     
     <section id="yhteystiedot">
+        <img src="yhteystiedot.jpg" alt="Yhteystiedot" class="section-icon" loading="lazy">
         <h2>Yhteystiedot</h2>
         <p>Ota yhteyttä ja kysy lisää palveluistamme tai varaa aika!</p>
         <ul>
