@@ -745,6 +745,13 @@
             line-height: 1.7;
         }
         
+        /* Full HD Resolution (1920px) - reduce paragraph sizes */
+        @media (min-width: 1920px) {
+            section p, section li {
+                font-size: 0.95rem;
+            }
+        }
+        
         /* Section icon styling */
         .section-icon {
             width: 80px;
@@ -1234,6 +1241,13 @@
             box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
             overflow: hidden;
             border: 1px solid #e0e0e0;
+        }
+        
+        /* Full HD Resolution (1920px) - reduce calendar size */
+        @media (min-width: 1920px) {
+            #calendar {
+                max-width: 550px;
+            }
         }
         
         /* Compact calendar styling */
