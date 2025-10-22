@@ -786,8 +786,51 @@
         
         /* Animated background pattern for rengastyöt, korjaustyöt, and sisäpuhdistus sections */
         #rengastyot, #korjaustyot {
-            background: #181c21;
+            background: #f5f5f5;
             overflow: hidden;
+            position: relative;
+        }
+        
+        #rengastyot::before, #korjaustyot::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                #e8e8e8 0px,
+                #e8e8e8 30px,
+                #f0f0f0 30px,
+                #f0f0f0 60px
+            );
+            opacity: 0.4;
+            z-index: 0;
+            animation: patternMoveSlowly 800s linear infinite;
+            pointer-events: none;
+        }
+        
+        #rengastyot > *, #korjaustyot > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Update text colors for light background */
+        #rengastyot h2, #korjaustyot h2,
+        #rengastyot h4, #korjaustyot h4 {
+            color: #1a1a1a;
+            text-shadow: none;
+        }
+        
+        #rengastyot p, #korjaustyot p,
+        #rengastyot li, #korjaustyot li {
+            color: #333333;
+            text-shadow: none;
+        }
+        
+        #rengastyot strong, #korjaustyot strong {
+            color: #1a1a1a;
         }
         
         /* Tire services layout with image */
@@ -805,8 +848,9 @@
         }
         
         .tire-services-image {
-            flex: 0 0 450px;
-            max-width: 450px;
+            flex: 0 0 600px;
+            max-width: 600px;
+            position: relative;
         }
         
         .tire-services-image img {
@@ -815,8 +859,8 @@
             border-radius: 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             object-fit: cover;
-            /* Diagonal cut using clip-path - 30-degree angle from bottom-left to top-right */
-            clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
+            /* Diagonal cut using clip-path - same as polishing section */
+            clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%, 0 20%);
         }
         
         /* Mobile layout: stack vertically */
@@ -828,8 +872,8 @@
             
             .tire-services-image {
                 flex: 1;
-                max-width: 70%;
-                margin: 20px auto 0 auto;
+                max-width: 100%;
+                margin: 20px 0 0 0;
                 order: 1;
             }
             
@@ -842,8 +886,8 @@
         /* Extra small mobile devices - optimize layout for iPhone 15 Pro and similar */
         @media (max-width: 480px) {
             .tire-services-image {
-                max-width: 60%;
-                margin: 15px auto 0 auto;
+                max-width: 100%;
+                margin: 15px 0 0 0;
             }
         }
         
@@ -970,25 +1014,6 @@
             }
         }
         
-        #rengastyot::before, #korjaustyöt::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: repeating-linear-gradient(
-                135deg,
-                #232526 0px,
-                #232526 40px,
-                #23252699 50px,
-                #414345 90px
-            );
-            opacity: 0.15;
-            z-index: 0;
-            animation: patternMove 20s linear infinite;
-            pointer-events: none;
-        }
         
         /* Slow-moving pattern for sisapuhdistus */
         #sisapuhdistus::before {
@@ -1016,14 +1041,6 @@
             z-index: 1;
         }
         
-        @keyframes patternMove {
-            from {
-                transform: translateY(0) translateX(0);
-            }
-            to {
-                transform: translateY(-10%) translateX(-10%);
-            }
-        }
         
         /* Slow animation for sisapuhdistus background */
         @keyframes patternMoveSlowly {
@@ -1138,22 +1155,6 @@
             z-index: 1;
         }
         
-        /* Improve text contrast in animated sections */
-        #rengastyot h2, #korjaustyot h2,
-        #rengastyot h4, #korjaustyot h4 {
-            color: #ffffff;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        }
-        
-        #rengastyot p, #korjaustyot p,
-        #rengastyot li, #korjaustyot li {
-            color: #f5f5f5;
-            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
-        }
-        
-        #rengastyot strong, #korjaustyot strong {
-            color: #ffffff;
-        }
         
         /* Responsive design */
         /* Full HD Resolution (1920px) - widen text sections */
