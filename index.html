@@ -784,14 +784,14 @@
             }
         }
         
-        /* Animated background pattern for rengastyöt, korjaustyöt, and sisäpuhdistus sections */
-        #rengastyot, #korjaustyot {
+        /* Animated background pattern for all main sections */
+        #pesupalvelut, #rengastyot, #korjaustyot, #lasikorjaus, #hinnasto, #yhteystiedot {
             background: #f5f5f5;
             overflow: hidden;
             position: relative;
         }
         
-        #rengastyot::before, #korjaustyot::before {
+        #pesupalvelut::before, #rengastyot::before, #korjaustyot::before, #lasikorjaus::before, #hinnasto::before, #yhteystiedot::before {
             content: '';
             position: absolute;
             top: 0;
@@ -811,25 +811,26 @@
             pointer-events: none;
         }
         
-        #rengastyot > *, #korjaustyot > * {
+        #pesupalvelut > *, #rengastyot > *, #korjaustyot > *, #lasikorjaus > *, #hinnasto > *, #yhteystiedot > * {
             position: relative;
             z-index: 1;
         }
         
         /* Update text colors for light background */
-        #rengastyot h2, #korjaustyot h2,
-        #rengastyot h4, #korjaustyot h4 {
+        #pesupalvelut h2, #rengastyot h2, #korjaustyot h2, #lasikorjaus h2, #hinnasto h2, #yhteystiedot h2,
+        #pesupalvelut h3, #rengastyot h3, #korjaustyot h3, #lasikorjaus h3, #hinnasto h3, #yhteystiedot h3,
+        #pesupalvelut h4, #rengastyot h4, #korjaustyot h4, #lasikorjaus h4, #hinnasto h4, #yhteystiedot h4 {
             color: #1a1a1a;
             text-shadow: none;
         }
         
-        #rengastyot p, #korjaustyot p,
-        #rengastyot li, #korjaustyot li {
+        #pesupalvelut p, #rengastyot p, #korjaustyot p, #lasikorjaus p, #hinnasto p, #yhteystiedot p,
+        #pesupalvelut li, #rengastyot li, #korjaustyot li, #lasikorjaus li, #hinnasto li, #yhteystiedot li {
             color: #333333;
             text-shadow: none;
         }
         
-        #rengastyot strong, #korjaustyot strong {
+        #pesupalvelut strong, #rengastyot strong, #korjaustyot strong, #lasikorjaus strong, #hinnasto strong, #yhteystiedot strong {
             color: #1a1a1a;
         }
         
@@ -2286,12 +2287,7 @@
     <div class="top-banner">
         <a href="#kartta" style="color: #fff; text-decoration: none;">Tiilenvalajantie 6, 02330 Espoo</a>
     </div>
-    <button class="back-button" onclick="window.history.back()" aria-label="Takaisin">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-        </svg>
-        Takaisin
-    </button>
+
     <div class="hamburger-menu" tabindex="0" aria-label="Avaa valikko" aria-controls="nav">
         <span></span><span></span><span></span>
     </div>
@@ -2601,42 +2597,44 @@
     
     <!-- Services sections -->
     <div class="services-container">
-    <section id="pesupalvelut" style="background: #fff url('Elementti2.PNG') center/cover; position: relative; overflow: hidden;">
-        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(240,240,240,0.92); z-index: 1; border-radius: 18px;"></div>
-        <div style="position: relative; z-index: 2;">
-        <img src="Pesupalvelut.PNG" alt="Pesupalvelut" class="section-icon" loading="lazy">
+    <section id="pesupalvelut" style="background: #f5f5f5; position: relative; overflow: hidden;">
         <h2>Pesupalvelut</h2>
-        <p>Tarjoamme laadukkaita auton pesupalveluita: käsinpesu, vahaukset, pikapesut ja renkaiden pesut. Käytämme vain huolellisesti valittuja, laadukkaita aineita ja välineitä, jotka suojaavat ajoneuvon pintoja ja tekevät autostasi kiiltävän puhtaan.</p>
+        <div class="polishing-content">
+            <div class="polishing-text">
+                <p>Tarjoamme laadukkaita auton pesupalveluita: käsinpesu, vahaukset, pikapesut ja renkaiden pesut. Käytämme vain huolellisesti valittuja, laadukkaita aineita ja välineitä, jotka suojaavat ajoneuvon pintoja ja tekevät autostasi kiiltävän puhtaan.</p>
 
-        <ul>
-            <li>Pikapesu</li>
-            <li>Käsinpesu</li>
-            <li>Vahaukset</li>
-            <li>Renkaiden pesu</li>
-        </ul>
+                <ul>
+                    <li>Pikapesu</li>
+                    <li>Käsinpesu</li>
+                    <li>Vahaukset</li>
+                    <li>Renkaiden pesu</li>
+                </ul>
 
-        <h4>Pikapesu</h4>
-        <p>Auton pintaan levitetään tehokas pesuaine, jonka jälkeen se huuhdellaan painepesurilla. Lopuksi kuivaus tehdään pehmeällä mikrokuituliinalla – nopea ja hellävarainen vaihtoehto ylläpitopesuun.</p>
+                <h4>Pikapesu</h4>
+                <p>Auton pintaan levitetään tehokas pesuaine, jonka jälkeen se huuhdellaan painepesurilla. Lopuksi kuivaus tehdään pehmeällä mikrokuituliinalla – nopea ja hellävarainen vaihtoehto ylläpitopesuun.</p>
 
-        <h4>Käsinpesu</h4>
-        <p>Auto huuhdellaan ensin kauttaaltaan. Tämän jälkeen pesuaine levitetään erittäin pehmeällä pesukintaalla, joka ei naarmuta maalipintaa. Lopuksi huuhdellaan painepesurilla ja kuivataan mikrokuituliinalla huolellisesti.</p>
+                <h4>Käsinpesu</h4>
+                <p>Auto huuhdellaan ensin kauttaaltaan. Tämän jälkeen pesuaine levitetään erittäin pehmeällä pesukintaalla, joka ei naarmuta maalipintaa. Lopuksi huuhdellaan painepesurilla ja kuivataan mikrokuituliinalla huolellisesti.</p>
 
-        <h4>Vahaukset</h4>
-        <p>Haluatko lisätä autosi kiiltoa ja suojata pintaa pesun yhteydessä? Voimme levittää vahashampoon, joka muodostaa pesun aikana suojaavan ja kiiltävän pinnan autollesi – nopea tapa parantaa ulkonäköä ja helpottaa jatkopesuja.</p>
+                <h4>Vahaukset</h4>
+                <p>Haluatko lisätä autosi kiiltoa ja suojata pintaa pesun yhteydessä? Voimme levittää vahashampoon, joka muodostaa pesun aikana suojaavan ja kiiltävän pinnan autollesi – nopea tapa parantaa ulkonäköä ja helpottaa jatkopesuja.</p>
 
-        <h4>Renkaiden pesu</h4>
-        <p>Jos tuot renkaat vaihdettavaksi (esim. kesärenkaat talvivaihdon yhteydessä), voit samalla tilata niille pesun. Näin saat puhtaat ja siistit renkaat mukaasi tai rengashotelliin varastoitavaksi.</p>
+                <h4>Renkaiden pesu</h4>
+                <p>Jos tuot renkaat vaihdettavaksi (esim. kesärenkaat talvivaihdon yhteydessä), voit samalla tilata niille pesun. Näin saat puhtaat ja siistit renkaat mukaasi tai rengashotelliin varastoitavaksi.</p>
 
-        <h4>Lisäpalvelut</h4>
-        <ul>
-            <li>Pesun yhteydessä suihkutettava vettä ja likaa hylkivä pinnoite</li>
-        </ul>
-        
+                <h4>Lisäpalvelut</h4>
+                <ul>
+                    <li>Pesun yhteydessä suihkutettava vettä ja likaa hylkivä pinnoite</li>
+                </ul>
+            </div>
+            <div class="polishing-image">
+                <img src="Pesupalvelut.PNG" alt="Pesupalvelut - Ammattitaitoinen auton pesu" loading="lazy">
+            </div>
+        </div>
         <p style="margin-top: 30px; text-align: center;">
             <a href="pesupalvelut.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #666666, #444444); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 5px;">Lue lisää pesupalveluista →</a>
             <a href="#ajanvaraus" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #000000, #333333); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.3); margin: 5px;">📅 Varaa aika</a>
         </p>
-        </div>
     </section>
     <section id="rengastyot">
         <h2>Rengastyöt</h2>
@@ -2674,22 +2672,28 @@
     </section>
     <section id="korjaustyot">
         <h2>Korjaustyöt</h2>
-        <p>Voit tuoda autosi meille myös korjaukseen jos esim. Katsastuksessa autosi sai hylätyn päätöksen. Teemme korjaustoimia laajasti merkistä riippumatta.</p>
+        <div class="polishing-content">
+            <div class="polishing-text">
+                <p>Voit tuoda autosi meille myös korjaukseen jos esim. Katsastuksessa autosi sai hylätyn päätöksen. Teemme korjaustoimia laajasti merkistä riippumatta.</p>
 
-        <h4>Yleisimmät korjaustyömme</h4>
-        <ul>
-            <li>Iskunvaimentimien ja jousituksen uusiminen</li>
-            <li>Tukivarsien, nivelien ja raidetankojen vaihto</li>
-            <li>Vakaajatangon ja koiranluiden vaihto</li>
-            <li>Jarrulevyjen, palojen ja käsijarrujen korjaukset</li>
-            <li>Pakoputkistojen korjaukset</li>
-            <li>Vikakoodien luku ja nollaus</li>
-        </ul>
+                <h4>Yleisimmät korjaustyömme</h4>
+                <ul>
+                    <li>Iskunvaimentimien ja jousituksen uusiminen</li>
+                    <li>Tukivarsien, nivelien ja raidetankojen vaihto</li>
+                    <li>Vakaajatangon ja koiranluiden vaihto</li>
+                    <li>Jarrulevyjen, palojen ja käsijarrujen korjaukset</li>
+                    <li>Pakoputkistojen korjaukset</li>
+                    <li>Vikakoodien luku ja nollaus</li>
+                </ul>
 
-        <p>Korjaamme ajoneuvoja ammattitaidolla ja käytämme laadukkaita varaosia. Kaikki korjaustyöt tehdään huolellisesti ja takuulla.</p>
+                <p>Korjaamme ajoneuvoja ammattitaidolla ja käytämme laadukkaita varaosia. Kaikki korjaustyöt tehdään huolellisesti ja takuulla.</p>
 
-        <p>Epävarma mistä vika johtuu? Tuo autosi meille katsastettavaksi – selvitämme ongelman ja annamme realistisen arvion korjauskustannuksista ennen töiden aloittamista.</p>
-        
+                <p>Epävarma mistä vika johtuu? Tuo autosi meille katsastettavaksi – selvitämme ongelman ja annamme realistisen arvion korjauskustannuksista ennen töiden aloittamista.</p>
+            </div>
+            <div class="polishing-image">
+                <img src="Korjaustyot.PNG" alt="Korjaustyöt - Ammattitaitoinen autohuolto ja korjaukset" loading="lazy">
+            </div>
+        </div>
         <p style="margin-top: 30px; text-align: center;">
             <a href="autohuolto.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #999999, #777777); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 5px;">Lue lisää korjaustöistä →</a>
             <a href="#ajanvaraus" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #000000, #333333); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.3); margin: 5px;">📅 Varaa aika</a>
@@ -2764,90 +2768,101 @@
         </p>
     </section>
     <section id="lasikorjaus">
-        <img src="lasikorjaus.jpg" alt="Lasienvaihdot ja korjaukset" class="section-icon" loading="lazy">
         <h2>Lasienvaihdot ja korjaukset</h2>
-        <p>Korjaamme ja vaihdamme autosi tuulilasin nopeasti ja turvallisesti. Pienet kiveniskemät voidaan usein korjata ilman koko lasin vaihtoa.</p>
+        <div class="polishing-content">
+            <div class="polishing-text">
+                <p>Korjaamme ja vaihdamme autosi tuulilasin nopeasti ja turvallisesti. Pienet kiveniskemät voidaan usein korjata ilman koko lasin vaihtoa.</p>
 
-        <p>Suoritamme tuulilasien vaihdot ja korjaukset kaikkiin henkilöautoihin, kuorma-autoihin sekä työkoneisiin. Meillä on laaja kokemus lasien vaihdoista ja korjauksista eri ajoneuvotyypeille.</p>
-        
+                <p>Suoritamme tuulilasien vaihdot ja korjaukset kaikkiin henkilöautoihin, kuorma-autoihin sekä työkoneisiin. Meillä on laaja kokemus lasien vaihdoista ja korjauksista eri ajoneuvotyypeille.</p>
+            </div>
+            <div class="polishing-image">
+                <img src="lasikorjaus.jpg" alt="Lasienvaihdot ja korjaukset - Tuulilasin vaihto ja korjaus" loading="lazy">
+            </div>
+        </div>
         <p style="margin-top: 30px; text-align: center;">
             <a href="lasikorjaus.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #666666, #444444); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 5px;">Lue lisää lasikorjauksesta →</a>
             <a href="#ajanvaraus" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #000000, #333333); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.3); margin: 5px;">📅 Varaa aika</a>
         </p>
     </section>
     <section id="hinnasto">
-        <img src="hinnasto.jpg" alt="Hinnasto" class="section-icon" loading="lazy">
         <h2>Hinnasto</h2>
-        <p>Alta löydät yleisimmät palvelumme ja niiden hinnat. Lopullinen hinta määräytyy työn laajuuden ja auton koon mukaan.</p>
+        <div class="polishing-content">
+            <div class="polishing-text">
+                <p>Alta löydät yleisimmät palvelumme ja niiden hinnat. Lopullinen hinta määräytyy työn laajuuden ja auton koon mukaan.</p>
 
-        <h3>Pesupalvelut</h3>
-        <ul>
-            <li>Pikapesu: alkaen 20 €</li>
-            <li>Käsinpesu: alkaen 25 €</li>
-            <li>Renkaiden pesu: alkaen 15 €</li>
-            <li>Vahaukset: alkaen 35 €</li>
-            <li>Sisätilojen puhdistus: alkaen 49 €</li>
-            <li>Sisätila + käsinpesu: alkaen 65 €</li>
-        </ul>
+                <h3>Pesupalvelut</h3>
+                <ul>
+                    <li>Pikapesu: alkaen 20 €</li>
+                    <li>Käsinpesu: alkaen 25 €</li>
+                    <li>Renkaiden pesu: alkaen 15 €</li>
+                    <li>Vahaukset: alkaen 35 €</li>
+                    <li>Sisätilojen puhdistus: alkaen 49 €</li>
+                    <li>Sisätila + käsinpesu: alkaen 65 €</li>
+                </ul>
 
-        <h4>Pesupalveluiden lisäpalvelut</h4>
-        <ul>
-            <li>Kova vaha: alkaen 45 €</li>
-            <li>Ceramic spray -pinnoite: alkaen 60 €</li>
-            <li>Vettä ja likaa hylkivä pinnoite: alkaen 40 €</li>
-        </ul>
+                <h4>Pesupalveluiden lisäpalvelut</h4>
+                <ul>
+                    <li>Kova vaha: alkaen 45 €</li>
+                    <li>Ceramic spray -pinnoite: alkaen 60 €</li>
+                    <li>Vettä ja likaa hylkivä pinnoite: alkaen 40 €</li>
+                </ul>
 
-        <h3>Rengaspalvelut</h3>
-        <ul>
-            <li>Renkaiden alle vaihto: alkaen 35 €</li>
-            <li>Renkaiden vaihto 14–16 tuumaa: alkaen 40 €</li>
-            <li>Renkaiden vaihto 17–18 tuumaa: alkaen 45 €</li>
-            <li>Renkaiden vaihto 19–22 tuumaa: alkaen 50 €</li>
-            <li>Tasapainotus: 20 € / sarja</li>
-            <li>Renkaan paikkaus: alkaen 25 €</li>
-            <li>Rengashotelli: alkaen 55 € / kausi</li>
-        </ul>
+                <h3>Rengaspalvelut</h3>
+                <ul>
+                    <li>Renkaiden alle vaihto: alkaen 35 €</li>
+                    <li>Renkaiden vaihto 14–16 tuumaa: alkaen 40 €</li>
+                    <li>Renkaiden vaihto 17–18 tuumaa: alkaen 45 €</li>
+                    <li>Renkaiden vaihto 19–22 tuumaa: alkaen 50 €</li>
+                    <li>Tasapainotus: 20 € / sarja</li>
+                    <li>Renkaan paikkaus: alkaen 25 €</li>
+                    <li>Rengashotelli: alkaen 55 € / kausi</li>
+                </ul>
 
-        <h3>Sisäpuhdistuksen lisäpalvelut</h3>
-        <ul>
-            <li>Otsonointi: alkaen 80 €</li>
-            <li>Syväpuhdistus (detailing): alkaen 150 €</li>
-            <li>Nahkapenkkien hoito ja suojaus: alkaen 75 €</li>
-            <li>Kankaan puhdistus kangaspesurilla: alkaen 60 €</li>
-            <li>Hajunpoisto erikoisaineilla: alkaen 70 €</li>
-            <li>Allergiapuhdistus: alkaen 90 €</li>
-            <li>Kangaspintojen suojaus: alkaen 85 €</li>
-        </ul>
+                <h3>Sisäpuhdistuksen lisäpalvelut</h3>
+                <ul>
+                    <li>Otsonointi: alkaen 80 €</li>
+                    <li>Syväpuhdistus (detailing): alkaen 150 €</li>
+                    <li>Nahkapenkkien hoito ja suojaus: alkaen 75 €</li>
+                    <li>Kankaan puhdistus kangaspesurilla: alkaen 60 €</li>
+                    <li>Hajunpoisto erikoisaineilla: alkaen 70 €</li>
+                    <li>Allergiapuhdistus: alkaen 90 €</li>
+                    <li>Kangaspintojen suojaus: alkaen 85 €</li>
+                </ul>
 
-        <h3>Kiillotus ja pinnoitus</h3>
-        <ul>
-            <li>Vahaus: alkaen 80 €</li>
-            <li>1-step kiillotus: alkaen 120 €</li>
-            <li>2-step kiillotus: alkaen 180 €</li>
-            <li>3-step + keraaminen pinnoitus: alkaen 300 €</li>
-            <li>Naarmujen poisto: alkaen 50 € / paneeli</li>
-        </ul>
+                <h3>Kiillotus ja pinnoitus</h3>
+                <ul>
+                    <li>Vahaus: alkaen 80 €</li>
+                    <li>1-step kiillotus: alkaen 120 €</li>
+                    <li>2-step kiillotus: alkaen 180 €</li>
+                    <li>3-step + keraaminen pinnoitus: alkaen 300 €</li>
+                    <li>Naarmujen poisto: alkaen 50 € / paneeli</li>
+                </ul>
 
-        <h3>Lasipalvelut</h3>
-        <ul>
-            <li>Kiveniskemien korjaus: alkaen 50 €</li>
-            <li>Tuulilasin vaihto: pyydä tarjous</li>
-        </ul>
+                <h3>Lasipalvelut</h3>
+                <ul>
+                    <li>Kiveniskemien korjaus: alkaen 50 €</li>
+                    <li>Tuulilasin vaihto: pyydä tarjous</li>
+                </ul>
 
-        <h3>Korjaustyöt</h3>
-        <p style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
-            <strong>💬 Korjaustyöt räätälöidään tapauskohtaisesti.</strong><br>
-            Pyydä tarjous viestin, sähköpostin tai puhelun kautta. Annamme realistisen arvion korjauskustannuksista ennen töiden aloittamista.
-        </p>
-        <ul>
-            <li>Vikakoodien luku ja nollaus: alkaen 40 €</li>
-            <li>Iskunvaimentimien ja jousituksen uusiminen</li>
-            <li>Tukivarsien, nivelien ja raidetankojen vaihto</li>
-            <li>Jarrulevyjen ja palojen korjaukset</li>
-            <li>Pakoputkistojen korjaukset</li>
-        </ul>
+                <h3>Korjaustyöt</h3>
+                <p style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                    <strong>💬 Korjaustyöt räätälöidään tapauskohtaisesti.</strong><br>
+                    Pyydä tarjous viestin, sähköpostin tai puhelun kautta. Annamme realistisen arvion korjauskustannuksista ennen töiden aloittamista.
+                </p>
+                <ul>
+                    <li>Vikakoodien luku ja nollaus: alkaen 40 €</li>
+                    <li>Iskunvaimentimien ja jousituksen uusiminen</li>
+                    <li>Tukivarsien, nivelien ja raidetankojen vaihto</li>
+                    <li>Jarrulevyjen ja palojen korjaukset</li>
+                    <li>Pakoputkistojen korjaukset</li>
+                </ul>
 
-        <p>Pyydä tarjous erityispalveluista tai suuremmista kokonaisuuksista!</p>
+                <p>Pyydä tarjous erityispalveluista tai suuremmista kokonaisuuksista!</p>
+            </div>
+            <div class="polishing-image">
+                <img src="hinnasto.jpg" alt="Hinnasto - Palveluiden hinnat" loading="lazy">
+            </div>
+        </div>
     </section>
     </div>
     <!-- End of services container -->
@@ -2909,16 +2924,22 @@
     </section>
     
     <section id="yhteystiedot">
-        <img src="yhteystiedot.jpg" alt="Yhteystiedot" class="section-icon" loading="lazy">
         <h2>Yhteystiedot</h2>
-        <p>Ota yhteyttä ja kysy lisää palveluistamme tai varaa aika!</p>
-        <ul>
-            <li><strong>Puhelin:</strong> 040 1935001</li>
-            <li><strong>WhatsApp Viesti:</strong> <a href="https://wa.me/358401935001" target="_blank" style="color: #25D366; text-decoration: none;">📱 Lähetä viesti WhatsAppissa</a></li>
-            <li><strong>Sähköposti:</strong> <a href="mailto:info@fixnero.fi">info@fixnero.fi</a></li>
-            <li><strong>Osoite:</strong> Tiilenvalajantie 6, 02330 Espoo</li>
-            <li><strong>Aukioloajat:</strong> Arkisin 9:00-17:00, viikonloppuisin suljettu</li>
-        </ul>
+        <div class="polishing-content">
+            <div class="polishing-text">
+                <p>Ota yhteyttä ja kysy lisää palveluistamme tai varaa aika!</p>
+                <ul>
+                    <li><strong>Puhelin:</strong> 040 1935001</li>
+                    <li><strong>WhatsApp Viesti:</strong> <a href="https://wa.me/358401935001" target="_blank" style="color: #25D366; text-decoration: none;">📱 Lähetä viesti WhatsAppissa</a></li>
+                    <li><strong>Sähköposti:</strong> <a href="mailto:info@fixnero.fi">info@fixnero.fi</a></li>
+                    <li><strong>Osoite:</strong> Tiilenvalajantie 6, 02330 Espoo</li>
+                    <li><strong>Aukioloajat:</strong> Arkisin 9:00-17:00, viikonloppuisin suljettu</li>
+                </ul>
+            </div>
+            <div class="polishing-image">
+                <img src="yhteystiedot.jpg" alt="Yhteystiedot - Ota yhteyttä" loading="lazy">
+            </div>
+        </div>
     </section>
     <iframe
       id="kartta"
