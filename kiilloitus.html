@@ -198,16 +198,18 @@
         .cta-button {
             display: inline-block;
             padding: 12px 30px;
-            background: rgba(255,255,255,0.2);
+            background: linear-gradient(135deg, #666666, #444444);
             color: white;
             text-decoration: none;
             border-radius: 25px;
             font-weight: 600;
             margin: 10px;
             transition: all 0.3s ease;
-            border: 2px solid rgba(255,255,255,0.3);
         }
-        .cta-button:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+        .cta-button:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
         @media (max-width: 768px) {
             .container { margin: 100px 20px 40px; padding: 25px; }
             h1 { font-size: 2.2rem; }
