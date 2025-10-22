@@ -303,6 +303,38 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.4);
         }
+        .cta-section {
+            background: linear-gradient(135deg, #666666, #444444);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 40px 0;
+        }
+        .cta-section h2 {
+            color: #1a1a1a;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+            font-style: italic;
+            letter-spacing: 0.05em;
+        }
+        .cta-section p {
+            color: #333;
+        }
+        .cta-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #666666, #444444);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
         .appointment-section {
             background: #fff url('sisapuhdistus.jpg') center top/cover;
             max-width: 900px;
@@ -441,16 +473,16 @@
             <a href="index.html#yhteystiedot" class="cta-primary">Tutustu lisää →</a>
             <a href="index.html#ajanvaraus" class="cta-secondary">📅 Varaa aika</a>
         </div>
-    </section>
 
-    <!-- Book an Appointment Section -->
-    <section class="appointment-section">
-        <h2>Varaa aika lasikorjaukseen</h2>
-        <p>Ota yhteyttä tai varaa aika suoraan kalenteristamme!</p>
-        <div class="button-container">
-            <a href="index.html#ajanvaraus">📅 Varaa aika</a>
-            <a href="tel:+358401935001">📞 Soita meille</a>
-            <a href="mailto:info@fixnero.fi">📧 Lähetä viesti</a>
+        <div class="cta-section" style="background: #fff url('sisapuhdistus.jpg') center top/cover; position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.85); z-index: 1; pointer-events: none;"></div>
+            <div style="position: relative; z-index: 2;">
+                <h2>Varaa aika lasikorjaukseen</h2>
+                <p>Ota yhteyttä tai varaa aika suoraan kalenteristamme!</p>
+                <a href="index.html#ajanvaraus" class="cta-button">📅 Varaa aika</a>
+                <a href="tel:+358401935001" class="cta-button">📞 Soita meille</a>
+                <a href="mailto:info@fixnero.fi" class="cta-button">�� Lähetä viesti</a>
+            </div>
         </div>
     </section>
 
