@@ -303,6 +303,64 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.4);
         }
+        .appointment-section {
+            background: #fff url('sisapuhdistus.jpg') center top/cover;
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 40px 30px;
+            border-radius: 18px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .appointment-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.85);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .appointment-section > * {
+            position: relative;
+            z-index: 2;
+        }
+        .appointment-section h2 {
+            text-align: center;
+            color: #1a1a1a;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+            font-style: italic;
+            letter-spacing: 0.05em;
+        }
+        .appointment-section p {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 1.05rem;
+        }
+        .appointment-section .button-container {
+            text-align: center;
+        }
+        .appointment-section a {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #666666, #444444);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        .appointment-section a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
         .footer {
             background: #2c3e50;
             color: #ecf0f1;
@@ -386,16 +444,13 @@
     </section>
 
     <!-- Book an Appointment Section -->
-    <section style="background: #fff url('sisapuhdistus.jpg') center top/cover; max-width: 900px; margin: 30px auto; padding: 40px 30px; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); position: relative; overflow: hidden;">
-        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.85); z-index: 1; pointer-events: none;"></div>
-        <div style="position: relative; z-index: 2;">
-            <h2 style="text-align: center; color: #1a1a1a; font-size: 2rem; margin-bottom: 20px; font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif; font-style: italic; letter-spacing: 0.05em;">Varaa aika lasikorjaukseen</h2>
-            <p style="text-align: center; color: #333; margin-bottom: 30px; font-size: 1.05rem;">Ota yhteyttä tai varaa aika suoraan kalenteristamme!</p>
-            <div style="text-align: center;">
-                <a href="index.html#ajanvaraus" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #666666, #444444); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 10px; transition: all 0.3s ease;">📅 Varaa aika</a>
-                <a href="tel:+358401935001" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #666666, #444444); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 10px; transition: all 0.3s ease;">📞 Soita meille</a>
-                <a href="mailto:info@fixnero.fi" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #666666, #444444); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 10px; transition: all 0.3s ease;">📧 Lähetä viesti</a>
-            </div>
+    <section class="appointment-section">
+        <h2>Varaa aika lasikorjaukseen</h2>
+        <p>Ota yhteyttä tai varaa aika suoraan kalenteristamme!</p>
+        <div class="button-container">
+            <a href="index.html#ajanvaraus">📅 Varaa aika</a>
+            <a href="tel:+358401935001">📞 Soita meille</a>
+            <a href="mailto:info@fixnero.fi">📧 Lähetä viesti</a>
         </div>
     </section>
 
