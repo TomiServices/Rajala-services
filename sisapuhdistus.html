@@ -31,24 +31,54 @@
     {
         "@context": "https://schema.org",
         "@type": "Service",
+        "name": "Sisäpuhdistus Espoo",
         "serviceType": "Sisäpuhdistus",
+        "description": "Fixnero tarjoaa ammattimaisen auton sisäpuhdistuksen Espoossa. Sisältää sisätilojen puhdistuksen, otsonoinnin, syväpuhdistuksen ja allergiapuhdistuksen.",
         "provider": {
-            "@type": "AutoRepair",
-            "name": "Fixnero",
+            "@type": "LocalBusiness",
+            "name": "Fixnero / Rajala Services",
+            "telephone": "+358401935001",
+            "email": "info@fixnero.fi",
             "address": {
                 "@type": "PostalAddress",
                 "streetAddress": "Tiilenvalajantie 6",
                 "addressLocality": "Espoo",
                 "postalCode": "02330",
                 "addressCountry": "FI"
-            },
-            "telephone": "+358401935001"
+            }
         },
         "areaServed": {
-            "@type": "City",
+            "@type": "Place",
             "name": "Espoo"
-        },
-        "description": "Ammattitaitoinen sisäpuhdistus Espoossa - sisätilojen puhdistus, otsonointi ja syväpuhdistus"
+        }
+    }
+    </script>
+    
+    <!-- Breadcrumb Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Etusivu",
+                "item": "https://www.rajala-services.com"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Palvelut",
+                "item": "https://www.rajala-services.com/index.html#sisapuhdistus"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Sisäpuhdistus",
+                "item": "https://www.rajala-services.com/sisapuhdistus.html"
+            }
+        ]
     }
     </script>
     
