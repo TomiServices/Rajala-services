@@ -32,24 +32,54 @@
     {
         "@context": "https://schema.org",
         "@type": "Service",
-        "serviceType": "Autohuolto ja Korjaustyöt",
+        "name": "Autohuolto Espoo",
+        "serviceType": "Autohuolto",
+        "description": "Fixnero tarjoaa ammattimaisen autohuollon Espoossa. Sisältää korjaustyöt, katsastuskorjaukset, vikakoodien luvun ja huoltopalvelut kaikille automerkeille.",
         "provider": {
-            "@type": "AutoRepair",
-            "name": "Fixnero",
+            "@type": "LocalBusiness",
+            "name": "Fixnero / Rajala Services",
+            "telephone": "+358401935001",
+            "email": "info@fixnero.fi",
             "address": {
                 "@type": "PostalAddress",
                 "streetAddress": "Tiilenvalajantie 6",
                 "addressLocality": "Espoo",
                 "postalCode": "02330",
                 "addressCountry": "FI"
-            },
-            "telephone": "+358401935001"
+            }
         },
         "areaServed": {
-            "@type": "City",
+            "@type": "Place",
             "name": "Espoo"
-        },
-        "description": "Ammattitaitoinen autohuolto Espoossa - korjaustyöt, katsastuskorjaukset ja huolto kaikille automerkeille"
+        }
+    }
+    </script>
+    
+    <!-- Breadcrumb Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Etusivu",
+                "item": "https://www.rajala-services.com"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Palvelut",
+                "item": "https://www.rajala-services.com/index.html#korjaustyot"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Autohuolto",
+                "item": "https://www.rajala-services.com/autohuolto.html"
+            }
+        ]
     }
     </script>
     

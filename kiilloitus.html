@@ -31,24 +31,54 @@
     {
         "@context": "https://schema.org",
         "@type": "Service",
+        "name": "Kiilloitus Espoo",
         "serviceType": "Kiilloitus ja pinnoitteet",
+        "description": "Fixnero tarjoaa ammattimaisen auton kiillotuksen Espoossa. Sisältää koneellisen kiillotuksen, keraamisen pinnoitteen ja naarmujen poiston.",
         "provider": {
-            "@type": "AutoRepair",
-            "name": "Fixnero",
+            "@type": "LocalBusiness",
+            "name": "Fixnero / Rajala Services",
+            "telephone": "+358401935001",
+            "email": "info@fixnero.fi",
             "address": {
                 "@type": "PostalAddress",
                 "streetAddress": "Tiilenvalajantie 6",
                 "addressLocality": "Espoo",
                 "postalCode": "02330",
                 "addressCountry": "FI"
-            },
-            "telephone": "+358401935001"
+            }
         },
         "areaServed": {
-            "@type": "City",
+            "@type": "Place",
             "name": "Espoo"
-        },
-        "description": "Ammattitaitoinen auton kiilloitus Espoossa - koneellinen kiillotus, keraaminen pinnoite ja naarmujen poisto"
+        }
+    }
+    </script>
+    
+    <!-- Breadcrumb Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Etusivu",
+                "item": "https://www.rajala-services.com"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Palvelut",
+                "item": "https://www.rajala-services.com/index.html#kiilloitus"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Kiilloitus",
+                "item": "https://www.rajala-services.com/kiilloitus.html"
+            }
+        ]
     }
     </script>
     

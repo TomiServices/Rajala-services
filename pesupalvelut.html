@@ -32,24 +32,54 @@
     {
         "@context": "https://schema.org",
         "@type": "Service",
+        "name": "Autopesu Espoo",
         "serviceType": "Pesupalvelut",
+        "description": "Fixnero tarjoaa ammattimaiset autonpesupalvelut Espoossa. Sisältää käsinpesun, vahaukset, pikapesut, renkaiden pesut ja pinnoitteet.",
         "provider": {
-            "@type": "AutoRepair",
-            "name": "Fixnero",
+            "@type": "LocalBusiness",
+            "name": "Fixnero / Rajala Services",
+            "telephone": "+358401935001",
+            "email": "info@fixnero.fi",
             "address": {
                 "@type": "PostalAddress",
                 "streetAddress": "Tiilenvalajantie 6",
                 "addressLocality": "Espoo",
                 "postalCode": "02330",
                 "addressCountry": "FI"
-            },
-            "telephone": "+358401935001"
+            }
         },
         "areaServed": {
-            "@type": "City",
+            "@type": "Place",
             "name": "Espoo"
-        },
-        "description": "Laadukkaat auton pesupalvelut Espoossa - käsinpesu, vahaukset, pikapesut ja renkaiden pesut"
+        }
+    }
+    </script>
+    
+    <!-- Breadcrumb Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Etusivu",
+                "item": "https://www.rajala-services.com"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Palvelut",
+                "item": "https://www.rajala-services.com/index.html#pesupalvelut"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Pesupalvelut",
+                "item": "https://www.rajala-services.com/pesupalvelut.html"
+            }
+        ]
     }
     </script>
     
