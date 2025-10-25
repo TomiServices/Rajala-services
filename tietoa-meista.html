@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,user-scalable=yes">
+    <meta name="description" content="Tietoa meistä - Fixnero Autohuolto Espoo: Ammattitaitoinen autohuolto, pesupalvelut ja rengastyöt Kivenlahdessa. Tutustu palveluihimme ja lue asiakaskokemuksia.">
+    <meta name="keywords" content="Fixnero, tietoa meistä, autohuolto Espoo, yritys, Kivenlahti, asiakaskokemukset">
+    <title>Tietoa meistä – Fixnero Autohuolto Espoo</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/webp" href="Favicon.webp">
+    
+    <link rel="preload" href="FXNR.webp" as="image">
+    <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8f8f8 0%, #e0e0e0 100%);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .top-banner {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: #000000;
+            color: #fff;
+            text-align: center;
+            padding: 4px 0;
+            z-index: 1002;
+            font-weight: 400;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        nav {
+            position: fixed;
+            top: 20px; left: 0; right: 0;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1003;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        nav img {
+            height: 50px;
+            margin-left: 10px;
+            margin-right: 15px;
+            filter: brightness(1.1);
+            transition: all 0.3s ease;
+        }
+        nav img:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+        nav a {
+            color: #fff;
+            padding: 16px 18px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            display: block;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0 2px;
+        }
+        nav a:hover {
+            background: linear-gradient(135deg, #666666, #444444);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        .hamburger-menu {
+            display: none;
+            cursor: pointer;
+            padding: 0;
+            background: linear-gradient(135deg, rgba(40,40,40,0.95), rgba(20,20,20,0.95));
+            position: fixed;
+            top: 12px; right: 12px;
+            z-index: 1004;
+            border-radius: 8px;
+            width: 48px;
+            height: 48px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .hamburger-menu:hover {
+            background: linear-gradient(135deg, rgba(50,50,50,0.98), rgba(30,30,30,0.98));
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+        .hamburger-menu span {
+            display: block;
+            width: 24px; 
+            height: 2.5px;
+            margin: 5.5px auto;
+            background: linear-gradient(90deg, #ffffff, #e0e0e0);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 2px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .hamburger-menu.active {
+            background: linear-gradient(135deg, rgba(30,30,30,0.98), rgba(10,10,10,0.98));
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12);
+        }
+        .hamburger-menu.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+        .hamburger-menu.active span:nth-child(2) {
+            opacity: 0;
+            transform: scale(0);
+        }
+        .hamburger-menu.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+        @media (max-width: 1279px) {
+            .hamburger-menu { display: flex; align-items: center; justify-content: center; }
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 300px;
+                top: 0;
+                left: 0;
+                transform: translateX(-100%);
+                transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                height: 100%;
+                padding: 0;
+                background: #000000;
+                box-shadow: 8px 0 40px rgba(0,0,0,0.6);
+                overflow-y: auto;
+                backdrop-filter: blur(20px);
+                border-right: 1px solid rgba(255,255,255,0.1);
+            }
+            nav.active { 
+                transform: translateX(0);
+                box-shadow: 8px 0 50px rgba(0,0,0,0.8);
+            }
+            nav > a:first-child {
+                background: #ffffff;
+                padding: 20px;
+                text-align: center;
+                width: 100%;
+                border-bottom: 2px solid #000;
+                margin: 0;
+            }
+            nav > a:first-child img {
+                margin: 0;
+                max-width: 200px;
+                height: auto;
+            }
+            nav a:not(:first-child) {
+                color: #ecf0f1;
+                font-size: 16px;
+                font-weight: 500;
+                padding: 18px 25px;
+                text-align: left;
+                width: 100%;
+                transition: all 0.3s ease;
+                margin: 0;
+                position: relative;
+                border-bottom: 1px solid rgba(255,255,255,0.15);
+                background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            }
+            nav a:not(:first-child):hover { 
+                background: linear-gradient(135deg, #666666, #444444) !important;
+                color: #fff !important;
+                transform: translateX(8px);
+                padding-left: 30px;
+                box-shadow: inset 0 0 20px rgba(255,255,255,0.05);
+            }
+        }
+        .container {
+            max-width: 1200px;
+            margin: 120px auto 40px;
+            padding: 30px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .back-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #666666, #444444);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+        h1 {
+            color: #333333;
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-align: center;
+            background: linear-gradient(135deg, #333333, #555555);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+            font-style: italic;
+        }
+        h2 {
+            color: #333333;
+            font-size: 2rem;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+            font-style: italic;
+        }
+        .intro-text {
+            font-size: 1.2rem;
+            color: #555;
+            text-align: center;
+            margin-bottom: 40px;
+            line-height: 1.8;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .about-section {
+            margin: 40px 0;
+            padding: 30px;
+            background: #f9f9f9;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .about-section p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 15px;
+        }
+        .logo-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .logo-container img {
+            max-width: 250px;
+            height: auto;
+            opacity: 0.9;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+        }
+        .reviews-section {
+            margin: 50px 0;
+        }
+        .review-card {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-left: 4px solid #666666;
+        }
+        .review-stars {
+            color: #ffd700;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        .review-author {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        .review-text {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.6;
+            font-style: italic;
+        }
+        .links-section {
+            margin: 50px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .link-card {
+            background: linear-gradient(135deg, #666666, #444444);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        .link-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.5rem;
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        .link-card p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 0;
+            margin-top: 60px;
+        }
+        .footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+            margin: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        .footer-section a { color: #fff; text-decoration: underline; }
+        .footer-section h3, .footer-section h4, .footer-section p, .footer-section a {
+            margin: 8px 0;
+        }
+        @media (max-width: 768px) {
+            .footer { flex-direction: column; align-items: center; }
+            .footer-section { align-items: center; text-align: center; }
+            .container { margin: 100px 20px 40px; padding: 20px; }
+            h1 { font-size: 2.2rem; }
+            .links-section { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            nav {
+                width: 260px;
+            }
+            nav > a:first-child {
+                padding: 15px 10px;
+            }
+            nav > a:first-child img {
+                max-width: 160px;
+                height: auto;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .intro-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-banner">
+        <a href="tel:+358401935001" style="color: inherit; text-decoration: none;">📞 Puhelin: 040 1935001</a> | 
+        <a href="mailto:info@fixnero.fi" style="color: inherit; text-decoration: none;">📧 info@fixnero.fi</a> | 
+        <a href="#kartta" style="color: inherit; text-decoration: none;">📍 Tiilenvalajantie 6, 02330 Espoo</a>
+    </div>
+
+    <div class="hamburger-menu" role="button" tabindex="0" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+    </div>
+
+    <nav id="nav">
+        <a href="index.html#top"><img src="FXNR.webp" alt="Fixnero - Autohuolto Espoo"></a>
+        <a href="index.html#pesupalvelut">Pesupalvelut</a>
+        <a href="index.html#rengastyot">Rengastyöt</a>
+        <a href="index.html#korjaustyot">Korjaustyöt</a>
+        <a href="index.html#sisapuhdistus">Sisäpuhdistus</a>
+        <a href="index.html#kiilloitus">Kiilloitus</a>
+        <a href="index.html#lasikorjaus">Lasikorjaus</a>
+        <a href="index.html#hinnasto">Hinnasto</a>
+        <a href="index.html#yhteystiedot">Yhteystiedot</a>
+    </nav>
+
+    <div class="container">
+        <a href="index.html" class="back-button">← Takaisin etusivulle</a>
+        
+        <h1>Tietoa meistä</h1>
+        
+        <div class="intro-text">
+            Tervetuloa tutustumaan Fixneroon – ammattitaitoiseen autohuoltoliikkeeseen Espoon Kivenlahdessa!
+        </div>
+
+        <div class="about-section">
+            <p>
+                Hei, mahtavaa että löysit tiesi meille! Olemme Espoossa toimiva auton kunnostuksen ammattiliike. 
+                Tarjoamme laajan kirjon eri palveluita, jotta voit tuoda autosi aina samaan paikkaan sen tarvitessa huolenpitoa.
+            </p>
+            <p>
+                Olemme vastuullinen yritys ja käytämme vain parhaita tuotteita parhaan lopputuloksen varmistamiseksi 
+                kaikissa tilanteissa. Asiakastyytyväisyys on meille erittäin tärkeää, ja pyrimme aina ylittämään 
+                asiakkaidemme odotukset laadukkaalla työllä ja ammattitaitoisella palvelulla.
+            </p>
+            
+            <div class="logo-container">
+                <img src="Logo.png.webp" alt="Fixnero - Ammattitaitoinen autohuolto ja laatu takuu palveluille" loading="lazy">
+            </div>
+            
+            <p>
+                Löydät meidät osoitteesta Tiilenvalajantie 6, 02330 Espoo (Kivenlahti). Olemme avoinna arkisin 
+                maanantaista perjantaihin klo 9:00-17:00. Voit varata ajan kätevästi verkkosivuillamme, 
+                soittamalla numeroon 040 1935001, tai lähettämällä viestin WhatsAppilla.
+            </p>
+        </div>
+
+        <h2>Asiakkaidemme kokemuksia</h2>
+        <div class="reviews-section">
+            <div class="review-card">
+                <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                <div class="review-author">Mika Virtanen</div>
+                <div class="review-text">"Erinomaista palvelua! Auto näytti uudelta kiillotuksen jälkeen."</div>
+            </div>
+            
+            <div class="review-card">
+                <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                <div class="review-author">Laura Korhonen</div>
+                <div class="review-text">"Nopea ja ammattitaitoinen rengasvaihto. Suosittelen lämpimästi!"</div>
+            </div>
+            
+            <div class="review-card">
+                <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                <div class="review-author">Jari Mäkinen</div>
+                <div class="review-text">"Hinta-laatusuhde kohdallaan. Autoni sisätilat olivat todella puhtaat sisäpuhdistuksen jälkeen. Palaan varmasti uudestaan!"</div>
+            </div>
+        </div>
+
+        <h2>Tutustu palveluihimme</h2>
+        <div class="links-section">
+            <a href="tyonnaytteet.html" class="link-card">
+                <h3>📸 Työnäytteet</h3>
+                <p>Katso esimerkkejä ammattitaitoisesta työstämme ja tyytyväisten asiakkaidemme autoista.</p>
+            </a>
+            
+            <a href="blogi/" class="link-card">
+                <h3>📰 Blogi</h3>
+                <p>Lue hyödyllisiä vinkkejä ja ohjeita auton hoitoon, huoltoon ja ylläpitoon.</p>
+            </a>
+        </div>
+
+        <div class="about-section" style="background: linear-gradient(135deg, #666666, #444444); color: white; margin-top: 50px;">
+            <h2 style="color: white; margin-top: 0;">Ota yhteyttä</h2>
+            <p>
+                📞 <strong>Puhelin:</strong> <a href="tel:+358401935001" style="color: white;">040 1935001</a><br>
+                📧 <strong>Sähköposti:</strong> <a href="mailto:info@fixnero.fi" style="color: white;">info@fixnero.fi</a><br>
+                📍 <strong>Osoite:</strong> Tiilenvalajantie 6, 02330 Espoo (Kivenlahti)<br>
+                🕐 <strong>Aukioloajat:</strong> Ma-Pe 9:00-17:00
+            </p>
+            <p style="text-align: center; margin-top: 25px;">
+                <a href="index.html#ajanvaraus" style="display: inline-block; padding: 12px 30px; background: rgba(255,255,255,0.2); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; border: 2px solid rgba(255,255,255,0.3); transition: all 0.3s ease;">
+                    📅 Varaa aika
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer">
+            <div class="footer-section">
+                <a href="index.html#top"><img src="FXNR.webp" alt="Fixnero" style="max-width: 200px; height: auto; margin-bottom: 15px;"></a>
+                <p>Fixnero © 2024. All Rights Reserved.</p>
+                <p style="margin-top: 10px; font-size: 0.9rem;">
+                    <a href="cookie-policy.html" style="color: #ecf0f1; text-decoration: none;">Evästekäytäntö</a> | 
+                    <a href="tietosuojaseloste.html" style="color: #ecf0f1; text-decoration: none;">Tietosuojaseloste</a>
+                </p>
+            </div>
+            <div class="footer-section">
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Palvelumme</h3>
+                <a href="pesupalvelut.html">Pesupalvelut</a>
+                <a href="rengastyot.html">Rengastyöt</a>
+                <a href="autohuolto.html">Korjaustyöt</a>
+                <a href="sisapuhdistus.html">Sisäpuhdistus</a>
+                <a href="kiilloitus.html">Kiilloitus</a>
+                <a href="lasikorjaus.html">Lasikorjaus</a>
+                <a href="index.html#hinnasto">Hinnasto</a>
+            </div>
+            <div class="footer-section">
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Yhteystiedot</h3>
+                <p><strong>📞 Puhelin:</strong> <a href="tel:+358401935001" style="color: inherit; text-decoration: none;">040 1935001</a></p>
+                <p><strong>📧 Sähköposti:</strong> <a href="mailto:info@fixnero.fi">info@fixnero.fi</a></p>
+                <p><strong>🕐 Aukioloajat:</strong></p>
+                <p style="margin-left: 20px;">Ma-Pe: 9:00-17:00<br>La-Su: Suljettu</p>
+                <p><strong>📍 Osoite:</strong><br>Tiilenvalajantie 6<br>02330 Espoo (Kivenlahti)</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Hamburger and nav toggle
+        const hamburger = document.querySelector('.hamburger-menu');
+        const nav = document.getElementById('nav');
+        hamburger.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+        hamburger.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                nav.classList.toggle('active');
+                hamburger.classList.toggle('active');
+            }
+        });
+        
+        // Responsive nav close on resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1279) {
+                nav.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+    </script>
+    
+    <!-- Cookie Consent Banner - GDPR Compliant -->
+    <script src="cookie-consent.js"></script>
+</body>
+</html>
