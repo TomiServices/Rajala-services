@@ -2065,6 +2065,41 @@
                 opacity: 0.7;
                 white-space: nowrap;
             }
+            
+            /* Mobile optimization for "Miksi valita Fixnero" section */
+            #miksi-valita-meidat {
+                padding: 20px 15px !important;
+                margin: 20px auto !important;
+            }
+            
+            #miksi-valita-meidat h2 {
+                font-size: 1.5rem !important;
+                margin-bottom: 20px !important;
+            }
+            
+            #miksi-valita-meidat > div {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 12px !important;
+            }
+            
+            #miksi-valita-meidat > div > div {
+                padding: 15px 10px !important;
+            }
+            
+            #miksi-valita-meidat > div > div > div:first-child {
+                font-size: 2rem !important;
+                margin-bottom: 8px !important;
+            }
+            
+            #miksi-valita-meidat h3 {
+                font-size: 0.95rem !important;
+                margin-bottom: 6px !important;
+            }
+            
+            #miksi-valita-meidat p {
+                font-size: 0.8rem !important;
+                line-height: 1.4 !important;
+            }
         }
         
         /* Enhanced mobile touch improvements */
@@ -2413,7 +2448,7 @@
         <a href="#kiilloitus">Kiilloitus</a>
         <a href="lasikorjaus.html">Lasikorjaus</a>
         <a href="#hinnasto">Hinnasto</a>
-        <a href="blogi/">Blogi</a>
+        <a href="tietoa-meista.html">Tietoa meistä</a>
         <a href="#yhteystiedot">Yhteystiedot</a>
     </nav>
     <!-- Hero Section with Responsive Background Images -->
@@ -2548,6 +2583,40 @@
         </div>
     </section>
     
+    <!-- Services Section with Categories -->
+    <section id="palvelumme" style="background: #fff url('Elementti1.webp') center/cover; margin: 30px auto; padding: 24px 18px 18px 18px; max-width: 1200px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 18px; position: relative; overflow: visible;">
+        <!-- Background overlay for better text readability -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.90); z-index: 1; border-radius: 18px;"></div>
+        <div style="position: relative; z-index: 2;">
+        <h2 style="text-align: center; margin-bottom: 30px; font-size: 2.2rem; color: #333; font-weight: 600;">Palvelumme</h2>
+        
+        <!-- Service Introduction Text -->
+        <div style="text-align: center; max-width: 900px; margin: 0 auto 40px auto; padding: 0 20px;">
+            <!-- Company Logo as Guarantee Seal -->
+            <div style="display: inline-block; margin: 20px 0 15px 0;">
+                <img src="Logo.png.webp" alt="Fixnero Takuu - Ammattitaitoinen autohuolto ja laatu takuu palveluille" loading="lazy" 
+                     style="max-width: 230px; height: auto; opacity: 0.9; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));">
+            </div>
+        </div>
+        
+        <!-- Lighting Effect and Service Categories -->
+        <div class="services-lighting-effect">
+            <div class="categories-row">
+                <div class="category-box" style="background-image: url('Pesupalvelut.webp');" onclick="location.href='#pesupalvelut'">Pesupalvelut</div>
+                <div class="category-box" style="background-image: url('Rengastyot.webp');" onclick="location.href='#rengastyot'">Rengastyöt</div>
+                <div class="category-box" style="background-image: url('Korjaustyot.webp');" onclick="location.href='#korjaustyot'">Korjaustyöt</div>
+                <div class="category-box" style="background-image: url('sisapuhdistus.webp');" onclick="location.href='#sisapuhdistus'">Sisäpuhdistus</div>
+                <div class="category-box" style="background-image: url('kiilloitus.webp');" onclick="location.href='#kiilloitus'">Kiilloitus</div>
+                <div class="category-box" style="background-image: url('lasikorjaus.webp');" onclick="location.href='#lasikorjaus'">Lasikorjaus</div>
+                <div class="category-box" style="background-image: url('Tyonaytteet.webp');" onclick="location.href='tietoa-meista.html'">Tietoa meistä</div>
+                <div class="category-box" style="background-image: url('Ajanvaraus.webp');" onclick="location.href='#ajanvaraus'">Ajanvaraus</div>
+                <div class="category-box" style="background-image: url('hinnasto.webp');" onclick="location.href='#hinnasto'">Hinnasto</div>
+                <div class="category-box" style="background-image: url('yhteystiedot.webp');" onclick="location.href='#yhteystiedot'">Yhteystiedot</div>
+            </div>
+        </div>
+        </div>
+    </section>
+    
     <!-- Why Choose Us Section - "Miksi valita meidät" -->
     <section id="miksi-valita-meidat" style="background: linear-gradient(135deg, #f8f8f8, #e9e9e9); margin: 30px auto; padding: 40px 30px; max-width: 1200px; box-shadow: 0 0 15px rgba(0,0,0,0.1); border-radius: 18px;">
         <h2 style="text-align: center; margin-bottom: 40px; font-size: 2.2rem; color: #333; font-weight: 600; font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif; font-style: italic;">Miksi valita Fixnero?</h2>
@@ -2580,47 +2649,6 @@
                 <h3 style="color: #333; font-size: 1.4rem; margin-bottom: 12px; font-weight: 600;">Kilpailukykyiset hinnat</h3>
                 <p style="color: #666; line-height: 1.6; font-size: 1rem;">Tarjoamme laadukasta palvelua reiluun hintaan ilman piilokustannuksia.</p>
             </div>
-        </div>
-    </section>
-    
-    <!-- Services Section with Categories -->
-    <section id="palvelumme" style="background: #fff url('Elementti1.webp') center/cover; margin: 30px auto; padding: 24px 18px 18px 18px; max-width: 1200px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 18px; position: relative; overflow: visible;">
-        <!-- Background overlay for better text readability -->
-        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.90); z-index: 1; border-radius: 18px;"></div>
-        <div style="position: relative; z-index: 2;">
-        <h2 style="text-align: center; margin-bottom: 30px; font-size: 2.2rem; color: #333; font-weight: 600;">Palvelumme</h2>
-        
-        <!-- Service Introduction Text -->
-        <div style="text-align: center; max-width: 900px; margin: 0 auto 40px auto; padding: 0 20px;">
-            <p style="font-size: 1.15rem; line-height: 1.8; color: #444; margin-bottom: 25px; text-align: left;">
-                Hei, mahtavaa että löysit tiesi meille! Olemme Espoossa toimiva auton kunnostuksen ammattiliike. 
-                Tästä löydät meidän tarjoamat palvelut sinun silmäterällesi. Olemme vastuullinen yritys ja käytämme vain 
-                parhaita tuotteita parhaan lopputuloksen varmistamiseksi kaikissa tilanteissa. Tarjoamme laajan kirjon 
-                eri palveluita, jotta voit tuoda autosi aina samaan paikkaan sen tarvitessa huolenpitoa. 
-                Voit varata ajan jo tänään!
-            </p>
-            <!-- Company Logo as Guarantee Seal -->
-            <div style="display: inline-block; margin: 20px 0 15px 0;">
-                <img src="Logo.png.webp" alt="Fixnero Takuu - Ammattitaitoinen autohuolto ja laatu takuu palveluille" loading="lazy" 
-                     style="max-width: 230px; height: auto; opacity: 0.9; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));">
-            </div>
-        </div>
-        
-        <!-- Lighting Effect and Service Categories -->
-        <div class="services-lighting-effect">
-            <div class="categories-row">
-                <div class="category-box" style="background-image: url('Pesupalvelut.webp');" onclick="location.href='#pesupalvelut'">Pesupalvelut</div>
-                <div class="category-box" style="background-image: url('Rengastyot.webp');" onclick="location.href='#rengastyot'">Rengastyöt</div>
-                <div class="category-box" style="background-image: url('Korjaustyot.webp');" onclick="location.href='#korjaustyot'">Korjaustyöt</div>
-                <div class="category-box" style="background-image: url('sisapuhdistus.webp');" onclick="location.href='#sisapuhdistus'">Sisäpuhdistus</div>
-                <div class="category-box" style="background-image: url('kiilloitus.webp');" onclick="location.href='#kiilloitus'">Kiilloitus</div>
-                <div class="category-box" style="background-image: url('lasikorjaus.webp');" onclick="location.href='#lasikorjaus'">Lasikorjaus</div>
-                <div class="category-box" style="background-image: url('Tyonaytteet.webp');" onclick="location.href='tyonnaytteet.html'">Työnäytteet</div>
-                <div class="category-box" style="background-image: url('Ajanvaraus.webp');" onclick="location.href='#ajanvaraus'">Ajanvaraus</div>
-                <div class="category-box" style="background-image: url('hinnasto.webp');" onclick="location.href='#hinnasto'">Hinnasto</div>
-                <div class="category-box" style="background-image: url('yhteystiedot.webp');" onclick="location.href='#yhteystiedot'">Yhteystiedot</div>
-            </div>
-        </div>
         </div>
     </section>
     
