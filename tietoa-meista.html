@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,user-scalable=yes">
-    <meta name="description" content="Tietoa meistä - Fixnero Autohuolto Espoo: Ammattitaitoinen autohuolto, pesupalvelut ja rengastyöt Kivenlahdessa. Tutustu palveluihimme ja lue asiakaskokemuksia.">
-    <meta name="keywords" content="Fixnero, tietoa meistä, autohuolto Espoo, yritys, Kivenlahti, asiakaskokemukset">
+    <meta name="description" content="Fixnero - autohuolto ja auton kunnostus Espoossa. Laadukasta ja luotettavaa palvelua Kivenlahden alueella. Pesu, kiilloitus, rengastyöt, huollot ja korjauspalvelut.">
+    <meta name="keywords" content="Fixnero, autohuolto Espoo, auton kunnostus, Kivenlahti, pesupalvelut, kiilloitus, rengastyöt, tuulilasin vaihto, öljynvaihto, huolto Espoo">
     <title>Tietoa meistä – Fixnero Autohuolto Espoo</title>
     
     <!-- Favicon -->
@@ -345,6 +345,21 @@
             .container { margin: 100px 20px 40px; padding: 20px; }
             h1 { font-size: 2.2rem; }
             .links-section { grid-template-columns: 1fr; }
+            
+            /* Reduce review card size on mobile */
+            .review-card {
+                padding: 18px;
+                margin: 15px 0;
+            }
+            .review-stars {
+                font-size: 1rem;
+            }
+            .review-author {
+                font-size: 1rem;
+            }
+            .review-text {
+                font-size: 0.9rem;
+            }
         }
         @media (max-width: 480px) {
             nav {
@@ -362,6 +377,24 @@
             }
             .intro-text {
                 font-size: 1rem;
+            }
+            
+            /* Further reduce review card size on very small screens */
+            .review-card {
+                padding: 15px;
+                margin: 12px 0;
+            }
+            .review-stars {
+                font-size: 0.95rem;
+                margin-bottom: 8px;
+            }
+            .review-author {
+                font-size: 0.95rem;
+                margin-bottom: 8px;
+            }
+            .review-text {
+                font-size: 0.85rem;
+                line-height: 1.5;
             }
         }
     </style>
@@ -392,32 +425,74 @@
     <div class="container">
         <a href="index.html" class="back-button">← Takaisin etusivulle</a>
         
+        <!-- Logo at the top -->
+        <div class="logo-container">
+            <img src="FXNR.webp" alt="Fixnero Logo - Autohuolto Espoo" loading="lazy">
+            <img src="Favicon.webp" alt="Fixnero Kuvake" loading="lazy" style="max-width: 80px; margin-left: 20px;">
+        </div>
+        
         <h1>Tietoa meistä</h1>
         
         <div class="intro-text">
-            Tervetuloa tutustumaan Fixneroon – ammattitaitoiseen autohuoltoliikkeeseen Espoon Kivenlahdessa!
+            Tervetuloa Fixneroon, auton kunnostuksen ja huollon ammattilaisten luo Espoon Kivenlahteen.
         </div>
 
         <div class="about-section">
             <p>
-                Hei, mahtavaa että löysit tiesi meille! Olemme Espoossa toimiva auton kunnostuksen ammattiliike. 
-                Tarjoamme laajan kirjon eri palveluita, jotta voit tuoda autosi aina samaan paikkaan sen tarvitessa huolenpitoa.
+                Hienoa, että löysit tiesi meille ja haluat tutustua toimintaamme paremmin. Fixnero on Espoon Kivenlahdessa toimiva auton kunnostukseen ja huoltoon erikoistunut yritys. Tavoitteenamme on tarjota jokaiselle asiakkaalle laadukasta, luotettavaa ja vaivatonta palvelua. Meille voit tuoda autosi aina, kun se tarvitsee huolenpitoa.
             </p>
             <p>
-                Olemme vastuullinen yritys ja käytämme vain parhaita tuotteita parhaan lopputuloksen varmistamiseksi 
-                kaikissa tilanteissa. Asiakastyytyväisyys on meille erittäin tärkeää, ja pyrimme aina ylittämään 
-                asiakkaidemme odotukset laadukkaalla työllä ja ammattitaitoisella palvelulla.
+                Olemme pitkän kokemuksen omaava tiimi, joka panostaa laatuun, asiakastyytyväisyyteen ja tarkkaan työnjälkeen. Kehitämme jatkuvasti palveluitamme ja työtapojamme, jotta voimme taata parhaan mahdollisen lopputuloksen kaikissa tilanteissa.
             </p>
-            
-            <div class="logo-container">
-                <img src="Logo.png.webp" alt="Fixnero - Ammattitaitoinen autohuolto ja laatu takuu palveluille" loading="lazy">
-            </div>
-            
+        </div>
+
+        <h2>Palvelumme</h2>
+        <div class="about-section">
             <p>
-                Löydät meidät osoitteesta Tiilenvalajantie 6, 02330 Espoo (Kivenlahti). Olemme avoinna arkisin 
-                maanantaista perjantaihin klo 9:00-17:00. Voit varata ajan kätevästi verkkosivuillamme, 
-                soittamalla numeroon 040 1935001, tai lähettämällä viestin WhatsAppilla.
+                Meiltä saat monipuoliset palvelut auton hoitoon ja ylläpitoon. Tarjoamme muun muassa:
             </p>
+            <ul style="line-height: 1.8; font-size: 1.05rem; color: #444;">
+                <li>keraamisia pinnoitteita, kiillotuksia ja vahauksia</li>
+                <li>autopesuja ja sisäpesuja</li>
+                <li>renkaiden vaihdot ja tasapainotukset</li>
+                <li>tuulilasin vaihdot ja kiveniskemien korjaukset</li>
+                <li>öljynvaihdot, huollot ja muut korjaustyöt</li>
+                <li>lommojen oikaisut ja katsastuskorjaukset</li>
+            </ul>
+            <p>
+                Lisäksi pesemme ja kiillotamme myös veneitä, moottoripyöriä ja työkoneita.
+            </p>
+            <p>
+                Käytössämme ovat alan parhaat työkalut ja markkinoiden laadukkaimmat tarvikkeet, joilla varmistamme kestävän ja viimeistellyn lopputuloksen.
+            </p>
+        </div>
+
+        <h2>Laatu ja vastuullisuus</h2>
+        <div class="about-section">
+            <p>
+                Fixnero on vastuullinen ja asiakaslähtöinen yritys. Haluamme, että jokainen asiakas on tyytyväinen saamaansa palveluun. Käytämme vain luotettavia ja ympäristöystävällisiä tuotteita, ja teemme työn aina huolellisesti ja ammattitaidolla.
+            </p>
+        </div>
+
+        <h2>Ota yhteyttä</h2>
+        <div class="about-section" style="background: linear-gradient(135deg, #666666, #444444); color: white;">
+            <p style="color: white; line-height: 2; font-size: 1.1rem;">
+                📍 <strong>Osoite:</strong> Tiilenvalajantie 6, 02330 Espoo (Kivenlahti)<br>
+                🕒 <strong>Aukioloajat:</strong> maanantaista perjantaihin klo 9.00–17.00<br>
+                📞 <strong>Puhelin:</strong> <a href="tel:+358401935001" style="color: white; text-decoration: underline;">040 193 5001</a><br>
+                💬 <strong>WhatsApp:</strong> viestit myös kätevästi suoraan meille<br>
+                🌐 <strong>Ajanvaraus:</strong> onnistuu helposti verkkosivuillamme
+            </p>
+        </div>
+
+        <div class="about-section" style="text-align: center; background: linear-gradient(135deg, #f8f8f8, #e9e9e9); padding: 40px 30px;">
+            <h2 style="margin-top: 0; font-size: 1.8rem;">Fixnero on luotettava autohuollon ja kunnostuksen kumppani Espoossa.</h2>
+            <p style="font-size: 1.2rem; color: #555; margin: 20px 0;">
+                Tuo autosi meille ja anna ammattilaistemme tehdä siitä taas uudenveroinen.
+            </p>
+            <a href="index.html#ajanvaraus" style="display: inline-block; padding: 15px 40px; background: linear-gradient(135deg, #666666, #444444); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; margin-top: 20px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)';">
+                📅 Varaa aika nyt
+            </a>
         </div>
 
         <h2>Asiakkaidemme kokemuksia</h2>
@@ -439,34 +514,42 @@
                 <div class="review-author">Jari Mäkinen</div>
                 <div class="review-text">"Hinta-laatusuhde kohdallaan. Autoni sisätilat olivat todella puhtaat sisäpuhdistuksen jälkeen. Palaan varmasti uudestaan!"</div>
             </div>
+            
+            <div class="review-card">
+                <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                <div class="review-author">Sari Laine</div>
+                <div class="review-text">"Ystävällistä ja asiantuntevaa palvelua. Keraaminen pinnoitus ylitti odotukseni täysin!"</div>
+            </div>
+            
+            <div class="review-card">
+                <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                <div class="review-author">Petri Nieminen</div>
+                <div class="review-text">"Suosittelen ehdottomasti! Tuulilasin vaihto sujui nopeasti ja ammattimaisesti."</div>
+            </div>
         </div>
 
         <h2>Tutustu palveluihimme</h2>
         <div class="links-section">
-            <a href="tyonnaytteet.html" class="link-card">
-                <h3>📸 Työnäytteet</h3>
-                <p>Katso esimerkkejä ammattitaitoisesta työstämme ja tyytyväisten asiakkaidemme autoista.</p>
+            <a href="tyonnaytteet.html" class="link-card" style="background-image: url('Tyonaytteet.webp'); background-size: cover; background-position: center;">
+                <div style="background: rgba(0,0,0,0.6); padding: 30px; border-radius: 15px;">
+                    <h3>📸 Työnäytteet</h3>
+                    <p>Katso esimerkkejä ammattitaitoisesta työstämme ja tyytyväisten asiakkaidemme autoista.</p>
+                </div>
             </a>
             
-            <a href="blogi/" class="link-card">
-                <h3>📰 Blogi</h3>
-                <p>Lue hyödyllisiä vinkkejä ja ohjeita auton hoitoon, huoltoon ja ylläpitoon.</p>
+            <a href="blogi/" class="link-card" style="background-image: url('kiilloitus.webp'); background-size: cover; background-position: center;">
+                <div style="background: rgba(0,0,0,0.6); padding: 30px; border-radius: 15px;">
+                    <h3>📰 Blogi</h3>
+                    <p>Lue hyödyllisiä vinkkejä ja ohjeita auton hoitoon, huoltoon ja ylläpitoon.</p>
+                </div>
             </a>
-        </div>
-
-        <div class="about-section" style="background: linear-gradient(135deg, #666666, #444444); color: white; margin-top: 50px;">
-            <h2 style="color: white; margin-top: 0;">Ota yhteyttä</h2>
-            <p>
-                📞 <strong>Puhelin:</strong> <a href="tel:+358401935001" style="color: white;">040 1935001</a><br>
-                📧 <strong>Sähköposti:</strong> <a href="mailto:info@fixnero.fi" style="color: white;">info@fixnero.fi</a><br>
-                📍 <strong>Osoite:</strong> Tiilenvalajantie 6, 02330 Espoo (Kivenlahti)<br>
-                🕐 <strong>Aukioloajat:</strong> Ma-Pe 9:00-17:00
-            </p>
-            <p style="text-align: center; margin-top: 25px;">
-                <a href="index.html#ajanvaraus" style="display: inline-block; padding: 12px 30px; background: rgba(255,255,255,0.2); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; border: 2px solid rgba(255,255,255,0.3); transition: all 0.3s ease;">
-                    📅 Varaa aika
-                </a>
-            </p>
+            
+            <a href="index.html#yhteystiedot" class="link-card" style="background-image: url('sisapuhdistus.webp'); background-size: cover; background-position: center;">
+                <div style="background: rgba(0,0,0,0.6); padding: 30px; border-radius: 15px;">
+                    <h3>📞 Ota yhteyttä</h3>
+                    <p>Ota meihin yhteyttä ja kysy lisää palveluistamme tai varaa aika!</p>
+                </div>
+            </a>
         </div>
     </div>
 
