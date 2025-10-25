@@ -1204,6 +1204,27 @@
             }
         }
         
+        /* Scroll-triggered animations for sections */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        
+        .scroll-animate.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Disable scroll animations for users who prefer reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .scroll-animate {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+        }
+        
         #rengastyot > *, #korjaustyot > * {
             position: relative;
             z-index: 1;
@@ -2113,6 +2134,35 @@
                 font-size: 0.8rem !important;
                 line-height: 1.4 !important;
             }
+            
+            /* Mobile optimization for "Asiakasarvostelut" section */
+            #arvostelut {
+                padding: 30px 15px !important;
+                margin: 20px auto !important;
+                max-width: 100% !important;
+            }
+            
+            #arvostelut h2 {
+                font-size: 1.6rem !important;
+                margin-bottom: 10px !important;
+            }
+            
+            #arvostelut > p:first-of-type {
+                font-size: 0.9rem !important;
+                margin-bottom: 25px !important;
+            }
+            
+            #arvostelut > div:first-of-type {
+                gap: 15px !important;
+                grid-template-columns: 1fr !important;
+            }
+            
+            /* Smaller "Jätä arvostelu" button on mobile */
+            #arvostelut a {
+                padding: 10px 20px !important;
+                font-size: 0.85rem !important;
+                margin-top: 10px !important;
+            }
         }
         
         /* Enhanced mobile touch improvements */
@@ -2502,7 +2552,7 @@
             <div style="margin-bottom: 40px;">
                 <h1 style="
                     font-size: 3.8rem; 
-                    margin-bottom: 30px; 
+                    margin-bottom: 10px; 
                     font-weight: 700;
                     color: white;
                     text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
@@ -2511,17 +2561,17 @@
                     font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
                     font-style: italic;
                 ">FIXNERO</h1>
-                <p class="hero-subtitle" style="
-                    font-size: 1.8rem; 
-                    line-height: 1.7; 
-                    max-width: 800px; 
-                    margin: 0 auto 60px auto;
+                <h1 style="
+                    font-size: 3.8rem; 
+                    margin-bottom: 60px; 
+                    font-weight: 700;
                     color: white;
-                    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
-                    font-weight: 400;
-                ">
-                    - autojen kunnostusta Espoossa.
-                </p>
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+                    line-height: 1.2;
+                    letter-spacing: 1.5px;
+                    font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+                    font-style: italic;
+                ">AUTOJEN KUNNOSTUSTA ESPOOSSA</h1>
             </div>
             
             <!-- CTA Button -->
@@ -2555,14 +2605,14 @@
         <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.90); z-index: 1; border-radius: 18px;"></div>
         <div style="position: relative; z-index: 2;">
         
+        <h2 style="text-align: center; margin-bottom: 30px; font-size: 2.2rem; color: #333; font-weight: 600;">Palvelumme</h2>
+        
         <!-- Tietoa meistä introduction text -->
         <div style="text-align: center; max-width: 900px; margin: 0 auto 40px auto; padding: 0 20px;">
             <p style="font-size: 1.15rem; line-height: 1.8; color: #333; margin-bottom: 30px;">
                 Hei, mahtavaa että löysit tiesi meille! Olemme Espoossa toimiva auton kunnostuksen ammattilainen. Tarjoamme laajan kirjon eri palveluita, jotta voit tuoda autosi aina samaan paikkaan sen tarvitessa huolenpitoa. Voit tutustua alta palveluihimme tarkemmin ja varata ajan vaikka heti silmäterällesi!
             </p>
         </div>
-        
-        <h2 style="text-align: center; margin-bottom: 30px; font-size: 2.2rem; color: #333; font-weight: 600;">Palvelumme</h2>
         
         <!-- Service Introduction Text -->
         <div style="text-align: center; max-width: 900px; margin: 0 auto 40px auto; padding: 0 20px;">
@@ -2592,7 +2642,7 @@
     </section>
     
     <!-- Why Choose Us Section - "Miksi valita meidät" -->
-    <section id="miksi-valita-meidat" style="background: linear-gradient(135deg, #f8f8f8, #e9e9e9); margin: 30px auto; padding: 40px 30px; max-width: 1200px; box-shadow: 0 0 15px rgba(0,0,0,0.1); border-radius: 18px;">
+    <section id="miksi-valita-meidat" class="scroll-animate" style="background: linear-gradient(135deg, #f8f8f8, #e9e9e9); margin: 30px auto; padding: 40px 30px; max-width: 1200px; box-shadow: 0 0 15px rgba(0,0,0,0.1); border-radius: 18px;">
         <h2 style="text-align: center; margin-bottom: 40px; font-size: 2.2rem; color: #333; font-weight: 600; font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif; font-style: italic;">Miksi valita Fixnero?</h2>
         
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 1000px; margin: 0 auto;">
@@ -2627,7 +2677,7 @@
     </section>
     
     <!-- Customer Reviews Section -->
-    <section id="arvostelut" style="background: #f8f9fa; padding: 50px 20px; margin: 30px auto; max-width: 1000px; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+    <section id="arvostelut" class="scroll-animate" style="background: #f8f9fa; padding: 50px 20px; margin: 30px auto; max-width: 1000px; border-radius: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
         <h2 style="text-align: center; margin-bottom: 15px; font-size: 2.2rem; color: #1a1a1a; font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif; font-style: italic;">Asiakasarvostelut</h2>
         <p style="text-align: center; color: #666; margin-bottom: 40px; font-size: 1.1rem;">Lue mitä asiakkaamme sanovat palveluistamme</p>
         
@@ -2699,8 +2749,8 @@
         <p style="text-align: center; color: #999; font-size: 0.9rem; margin-bottom: 20px;"><em>Lähde: Google Maps</em></p>
         
         <div style="text-align: center;">
-            <a href="https://g.page/r/YOUR_GOOGLE_REVIEW_ID/review" target="_blank" rel="noopener" style="display: inline-block; background: linear-gradient(135deg, #666666, #444444); color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s; box-shadow: 0 3px 10px rgba(0,0,0,0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 3px 10px rgba(0,0,0,0.2)'">
-                Jätä arvostelu Google Mapsissa →
+            <a href="https://g.page/r/YOUR_GOOGLE_REVIEW_ID/review" target="_blank" rel="noopener" style="display: inline-block; background: linear-gradient(135deg, #666666, #444444); color: white; padding: 10px 22px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; box-shadow: 0 3px 10px rgba(0,0,0,0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 3px 10px rgba(0,0,0,0.2)'">
+                Jätä Google-arvostelu →
             </a>
         </div>
     </section>
@@ -4643,6 +4693,25 @@ window.addEventListener('resize', () => {
         nav.classList.remove('active');
         hamburger.classList.remove('active');
     }
+});
+
+// Scroll-triggered animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+        }
+    });
+}, observerOptions);
+
+// Observe elements with scroll-animate class
+document.querySelectorAll('.scroll-animate').forEach(element => {
+    observer.observe(element);
 });
 </script>
 
