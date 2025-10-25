@@ -236,9 +236,43 @@
         .about-section {
             margin: 40px 0;
             padding: 30px;
-            background: #f9f9f9;
+            background: #f5f5f5;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            position: relative;
+        }
+        .about-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                #e8e8e8 0px,
+                #e8e8e8 30px,
+                #f0f0f0 30px,
+                #f0f0f0 60px
+            );
+            opacity: 0.4;
+            z-index: 0;
+            animation: patternMoveSlowly 800s linear infinite;
+            pointer-events: none;
+            border-radius: 15px;
+        }
+        .about-section > * {
+            position: relative;
+            z-index: 1;
+        }
+        @keyframes patternMoveSlowly {
+            0% {
+                background-position: 0px 0%;
+            }
+            100% {
+                background-position: 0px -400%;
+            }
         }
         .about-section p {
             font-size: 1.1rem;
@@ -315,13 +349,13 @@
             font-size: 1rem;
         }
         footer {
-            background: #2c3e50;
+            background: #000000;
             color: white;
             padding: 0;
             margin-top: 60px;
         }
         .footer {
-            background: #2c3e50;
+            background: #000000;
             color: #ecf0f1;
             padding: 40px 20px;
             display: flex;
@@ -427,8 +461,8 @@
         
         <!-- Logo at the top -->
         <div class="logo-container">
-            <img src="FXNR.webp" alt="Fixnero Logo - Autohuolto Espoo" loading="lazy">
-            <img src="Favicon.webp" alt="Fixnero Kuvake" loading="lazy" style="max-width: 80px; margin-left: 20px;">
+            <img src="Logo.png.webp" alt="Fixnero Takuu - Ammattitaitoinen autohuolto ja laatu takuu palveluille" loading="lazy" 
+                 style="max-width: 230px; height: auto; opacity: 0.9; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));">
         </div>
         
         <h1>Tietoa meistä</h1>
@@ -475,14 +509,17 @@
         </div>
 
         <h2>Ota yhteyttä</h2>
-        <div class="about-section" style="background: linear-gradient(135deg, #666666, #444444); color: white;">
-            <p style="color: white; line-height: 2; font-size: 1.1rem;">
-                📍 <strong>Osoite:</strong> Tiilenvalajantie 6, 02330 Espoo (Kivenlahti)<br>
-                🕒 <strong>Aukioloajat:</strong> maanantaista perjantaihin klo 9.00–17.00<br>
-                📞 <strong>Puhelin:</strong> <a href="tel:+358401935001" style="color: white; text-decoration: underline;">040 193 5001</a><br>
-                💬 <strong>WhatsApp:</strong> viestit myös kätevästi suoraan meille<br>
-                🌐 <strong>Ajanvaraus:</strong> onnistuu helposti verkkosivuillamme
-            </p>
+        <div class="about-section" style="background: #f5f5f5 url('sisapuhdistus.webp') center/cover; position: relative;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.85); z-index: 1; border-radius: 15px;"></div>
+            <div style="position: relative; z-index: 2;">
+                <p style="color: #1a1a1a; line-height: 2; font-size: 1.1rem;">
+                    📍 <strong>Osoite:</strong> Tiilenvalajantie 6, 02330 Espoo (Kivenlahti)<br>
+                    🕒 <strong>Aukioloajat:</strong> maanantaista perjantaihin klo 9.00–17.00<br>
+                    📞 <strong>Puhelin:</strong> <a href="tel:+358401935001" style="color: #1a1a1a; text-decoration: underline;">040 193 5001</a><br>
+                    💬 <strong>WhatsApp:</strong> viestit myös kätevästi suoraan meille<br>
+                    🌐 <strong>Ajanvaraus:</strong> onnistuu helposti verkkosivuillamme
+                </p>
+            </div>
         </div>
 
         <div class="about-section" style="text-align: center; background: linear-gradient(135deg, #f8f8f8, #e9e9e9); padding: 40px 30px;">
@@ -530,6 +567,13 @@
 
         <h2>Tutustu palveluihimme</h2>
         <div class="links-section">
+            <a href="index.html" class="link-card" style="background-image: url('Tyonaytteet.webp'); background-size: cover; background-position: center;">
+                <div style="background: rgba(0,0,0,0.6); padding: 30px; border-radius: 15px;">
+                    <h3>🏢 Tutustu meihin</h3>
+                    <p>Lue lisää Fixnerosta ja tutustuu kokemukseen, arvoihin ja palveluihimme.</p>
+                </div>
+            </a>
+            
             <a href="tyonnaytteet.html" class="link-card" style="background-image: url('Tyonaytteet.webp'); background-size: cover; background-position: center;">
                 <div style="background: rgba(0,0,0,0.6); padding: 30px; border-radius: 15px;">
                     <h3>📸 Työnäytteet</h3>
@@ -541,6 +585,13 @@
                 <div style="background: rgba(0,0,0,0.6); padding: 30px; border-radius: 15px;">
                     <h3>📰 Blogi</h3>
                     <p>Lue hyödyllisiä vinkkejä ja ohjeita auton hoitoon, huoltoon ja ylläpitoon.</p>
+                </div>
+            </a>
+            
+            <a href="index.html#palvelumme" class="link-card" style="background-image: url('Hero2.webp'); background-size: cover; background-position: center;">
+                <div style="background: rgba(0,0,0,0.6); padding: 30px; border-radius: 15px;">
+                    <h3>🔧 Palvelumme</h3>
+                    <p>Tutustu kaikkiin palveluihimme ja löydä juuri autosi tarvitsema palvelu.</p>
                 </div>
             </a>
             
