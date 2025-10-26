@@ -32,6 +32,12 @@
     <link rel="icon" type="image/webp" href="Favicon.webp">
     <link rel="apple-touch-icon" href="Favicon.png">
     
+    <!-- Web App Manifest for PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    
     <!-- Resource Hints for third-party domains - Performance optimization -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -222,12 +228,13 @@
     </script>
     
     <link rel="preload" href="FXNR.webp" as="image">
-    <!-- Preload hero images for faster loading -->
-    <link rel="preload" href="Hero2.webp" as="image" media="(min-width: 768px) and (max-width: 2559px)">
+    <!-- Preload hero images for faster loading - responsive variants -->
+    <link rel="preload" href="Hero2-medium.webp" as="image" media="(min-width: 768px) and (max-width: 1199px)">
+    <link rel="preload" href="Hero2.webp" as="image" media="(min-width: 1200px) and (max-width: 2559px)">
     <link rel="preload" href="Hero1.webp" as="image" media="(min-width: 2560px)">
-    <link rel="preload" href="Hero3.webp" as="image" media="(max-width: 767px)">
-    <!-- FullCalendar CSS for booking -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
+    <link rel="preload" href="Hero3-small.webp" as="image" media="(max-width: 767px)">
+    <!-- FullCalendar CSS for booking - loaded conditionally -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" media="print" onload="this.media='all'" />
     <!-- Google Font for service titles - bold italic style similar to Serpentine -->
     <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
     <!-- Google reCAPTCHA v2 -->
@@ -241,14 +248,17 @@
     </style>
 </head>
 <body id="top">
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-to-content">Siirry pääsisältöön</a>
+    
     <div class="top-banner">
         <a href="#kartta" style="color: #fff; text-decoration: none;">Tiilenvalajantie 6, 02330 Espoo</a>
     </div>
 
-    <div class="hamburger-menu" tabindex="0" aria-label="Avaa valikko" aria-controls="nav">
+    <div class="hamburger-menu" tabindex="0" aria-label="Avaa valikko" aria-controls="nav" aria-expanded="false" role="button">
         <span></span><span></span><span></span>
     </div>
-    <nav id="nav">
+    <nav id="nav" aria-label="Päävalikko">
         <a href="#top"><img src="FXNR.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" width="1297" height="226" loading="lazy"></a>
         <a href="#pesupalvelut">Pesupalvelut</a>
         <a href="#rengastyot">Rengastyöt</a>
@@ -260,6 +270,10 @@
         <a href="tietoa-meista.html">Tietoa meistä</a>
         <a href="#yhteystiedot">Yhteystiedot</a>
     </nav>
+    
+    <!-- Main content area -->
+    <main id="main-content">
+    
     <!-- Hero Section with Responsive Background Images -->
     <section id="hero" style="
         position: relative;
@@ -971,7 +985,11 @@
       height="450"
       tabindex="0"
       title="Fixnero kartta"></iframe>
-    <footer>
+    
+    </main>
+    <!-- End of main content -->
+    
+    <footer role="contentinfo">
         <div class="footer">
             <div class="logo-container footer-section">
                 <a href="#top"><img src="FXNR.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut" width="1297" height="226"></a>
@@ -1015,8 +1033,66 @@
             </div>
         </div>
     </footer>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-<script type="module" src="js/booking.js"></script>
+<!-- Lazy load FullCalendar only when calendar section is visible -->
+<script>
+// Lazy load FullCalendar library when booking section comes into view
+(function() {
+    const calendarSection = document.getElementById('ajanvaraus');
+    if (!calendarSection) return;
+    
+    let isLoaded = false;
+    
+    const loadFullCalendar = () => {
+        if (isLoaded) return;
+        isLoaded = true;
+        
+        // Load FullCalendar library
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js';
+        script.onload = () => {
+            // Load booking.js after FullCalendar is loaded
+            const bookingScript = document.createElement('script');
+            bookingScript.type = 'module';
+            bookingScript.src = 'js/booking.js';
+            document.head.appendChild(bookingScript);
+        };
+        document.head.appendChild(script);
+    };
+    
+    // Use Intersection Observer to load when section is near viewport
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                loadFullCalendar();
+                observer.disconnect();
+            }
+        });
+    }, {
+        rootMargin: '200px' // Start loading 200px before section is visible
+    });
+    
+    observer.observe(calendarSection);
+})();
+</script>
+
+<!-- Register Service Worker for PWA and offline support -->
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+                console.log('Service Worker registered:', registration.scope);
+            })
+            .catch(error => {
+                console.log('Service Worker registration failed:', error);
+            });
+    });
+}
+</script>
+
+<!-- Core Web Vitals tracking -->
+<script src="js/web-vitals-tracking.js" defer></script>
+
 <script src="js/common.js" defer></script>
 
 <!-- Cookie Consent Banner - GDPR Compliant -->

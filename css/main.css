@@ -226,7 +226,7 @@
         /* Hero section responsive background images */
         /* Mobile-first approach: Default to mobile image */
         #hero {
-            background-image: url('Hero3.webp');
+            background-image: url('../Hero3-small.webp');
             /* Enhanced centering and positioning for all devices */
             background-size: cover;
             background-position: center center;
@@ -238,19 +238,28 @@
         }
         
         /* Hero2: Desktop and laptop screens (768px - 2559px) */
-        @media (min-width: 768px) and (max-width: 2559px) {
+        @media (min-width: 768px) and (max-width: 1199px) {
             #hero {
-                background-image: url('Hero2.webp');
+                background-image: url('../Hero2-medium.webp');
                 /* Fine-tune centering for desktop */
                 background-position: center center !important;
                 background-size: cover !important;
             }
+        
+        /* Hero2: Large screens (1200px-2559px) */
+        @media (min-width: 1200px) and (max-width: 2559px) {
+            #hero {
+                background-image: url('../Hero2.webp');
+                background-position: center center !important;
+                background-size: cover !important;
+            }
+        }
         }
         
         /* Hero1: High-resolution screens (2K and above, >= 2560px) */
         @media (min-width: 2560px) {
             #hero {
-                background-image: url('Hero1.webp');
+                background-image: url('../Hero1.webp');
                 /* Optimize for large displays */
                 background-position: center center !important;
                 background-size: cover !important;
@@ -2219,3 +2228,21 @@
                 max-width: 220px;
             }
         }
+
+/* Skip to content link for accessibility */
+.skip-to-content {
+    position: absolute;
+    left: -9999px;
+    z-index: 999;
+    padding: 1em;
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.skip-to-content:focus {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 10px;
+}
