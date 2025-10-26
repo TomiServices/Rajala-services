@@ -6,11 +6,31 @@
 (function() {
     'use strict';
     
-    // Cookie consent configuration
     const COOKIE_NAME = 'fixnero_cookie_consent';
     const COOKIE_EXPIRY_DAYS = 365;
     
-    // Check if user has already given consent
+    const translations = {
+        fi: {
+            title: '🍪 Evästeet',
+            message: 'Sivustomme käyttää evästeitä käyttökokemuksen parantamiseksi ja analytiikkaan. Hyväksymällä evästeet autat meitä kehittämään palveluitamme.',
+            accept: 'Hyväksy evästeet',
+            reject: 'Vain välttämättömät',
+            readMore: 'Lue lisää'
+        },
+        en: {
+            title: '🍪 Cookies',
+            message: 'Our website uses cookies to improve user experience and analytics. By accepting cookies, you help us develop our services.',
+            accept: 'Accept cookies',
+            reject: 'Essential only',
+            readMore: 'Read more'
+        }
+    };
+    
+    function detectLanguage() {
+        const browserLang = navigator.language || navigator.userLanguage;
+        return browserLang.startsWith('fi') ? 'fi' : 'en';
+    }
+    
     function getCookieConsent() {
         const cookies = document.cookie.split(';');
         for (let cookie of cookies) {
@@ -22,7 +42,6 @@
         return null;
     }
     
-    // Set cookie consent
     function setCookieConsent(value) {
         const date = new Date();
         date.setTime(date.getTime() + (COOKIE_EXPIRY_DAYS * 24 * 60 * 60 * 1000));
@@ -30,24 +49,18 @@
         document.cookie = COOKIE_NAME + "=" + value + ";" + expires + ";path=/;SameSite=Lax";
     }
     
-    // Initialize Google Analytics 4
     function initAnalytics() {
-        // Check if GA is already loaded
         if (window.gtag) {
-            console.log('Google Analytics already initialized');
             return;
         }
         
-        // GA4 Measurement ID - Replace with actual ID when available
-        const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX'; // TODO: Replace with actual GA4 ID
+        const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
         
-        // Load GA4 script
         const script = document.createElement('script');
         script.async = true;
         script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
         document.head.appendChild(script);
         
-        // Initialize gtag
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         window.gtag = gtag;
@@ -57,33 +70,31 @@
             'anonymize_ip': true,
             'cookie_flags': 'SameSite=Lax;Secure'
         });
-        
-        console.log('Google Analytics initialized');
     }
     
-    // Show cookie consent banner
     function showCookieBanner() {
-        // Create banner HTML
+        const lang = detectLanguage();
+        const t = translations[lang];
+        
         const banner = document.createElement('div');
         banner.id = 'cookie-consent-banner';
         banner.innerHTML = `
             <div class="cookie-consent-content">
                 <div class="cookie-consent-text">
                     <p>
-                        <strong>🍪 Evästeet</strong><br>
-                        Sivustomme käyttää evästeitä käyttökokemuksen parantamiseksi ja analytiikkaan. 
-                        Hyväksymällä evästeet autat meitä kehittämään palveluitamme.
+                        <strong>${t.title}</strong><br>
+                        ${t.message}
                     </p>
                 </div>
                 <div class="cookie-consent-buttons">
                     <button id="cookie-accept" class="cookie-btn cookie-btn-accept">
-                        Hyväksy evästeet
+                        ${t.accept}
                     </button>
                     <button id="cookie-reject" class="cookie-btn cookie-btn-reject">
-                        Vain välttämättömät
+                        ${t.reject}
                     </button>
                     <a href="cookie-policy.html" class="cookie-link">
-                        Lue lisää
+                        ${t.readMore}
                     </a>
                 </div>
             </div>
@@ -231,7 +242,6 @@
         document.head.appendChild(style);
         document.body.appendChild(banner);
         
-        // Add event listeners
         document.getElementById('cookie-accept').addEventListener('click', function() {
             setCookieConsent('accepted');
             removeBanner();
@@ -244,7 +254,6 @@
         });
     }
     
-    // Remove cookie banner
     function removeBanner() {
         const banner = document.getElementById('cookie-consent-banner');
         if (banner) {
@@ -255,7 +264,6 @@
         }
     }
     
-    // Add slideDown animation
     const slideDownStyle = document.createElement('style');
     slideDownStyle.textContent = `
         @keyframes slideDown {
@@ -271,21 +279,16 @@
     `;
     document.head.appendChild(slideDownStyle);
     
-    // Initialize on page load
     function init() {
         const consent = getCookieConsent();
         
         if (consent === null) {
-            // No consent yet, show banner
             showCookieBanner();
         } else if (consent === 'accepted') {
-            // User has accepted, initialize analytics
             initAnalytics();
         }
-        // If rejected, do nothing (only essential cookies)
     }
     
-    // Wait for DOM to be ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
