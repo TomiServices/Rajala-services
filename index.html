@@ -220,7 +220,7 @@
     <link rel="preload" href="Hero1.webp" as="image" media="(min-width: 2560px)">
     <link rel="preload" href="Hero3.webp" as="image" media="(max-width: 767px)">
     <!-- FullCalendar CSS for booking -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet" />
     <!-- Google Font for service titles - bold italic style similar to Serpentine -->
     <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
     <!-- Google reCAPTCHA v2 -->
@@ -3255,8 +3255,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Helper functions for date handling
     function getDateKey(date) {
-        // FIX: Ensure date is a valid Date object before calling getFullYear()
-        // This prevents TypeError when date is null, undefined, or not a Date object
+        // FIX: validated date in getDateKey
+        // If date is a string, attempt to convert it to a Date object
+        if (typeof date === 'string') {
+            date = new Date(date);
+        }
+        
+        // Validate the input to ensure it is a valid Date object
         if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
             console.error('getDateKey called with invalid date:', date);
             return null;
@@ -3294,6 +3299,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // Get current date
         const now = new Date();
+        
+        // FIX: null check before filter()
+        // Ensure bookings is not null or undefined before calling filter()
+        if (!bookings) {
+            bookings = [];
+        }
         
         const dateKey = getDateKey(selectedDate);
         const dayBookings = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey);
