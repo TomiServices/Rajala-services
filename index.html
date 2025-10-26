@@ -2822,16 +2822,19 @@
         <strong>Huomioithan että korjaustöiden hinnat ovat aina tapauskohtaisia. Voit olla meihin yhteydessä ennen korjausta hinta-arviota varten.</strong>
       </div>
       
-      <form class="booking-form" id="bookingForm" style="display:none;" autocomplete="off">
+      <form class="booking-form" id="bookingForm" style="display:none;" autocomplete="on">
         <input type="hidden" name="aika" id="aika" />
         <input type="hidden" name="service" id="service" />
         <input type="hidden" name="task" id="task" />
         <label for="name">Nimi</label>
-        <input type="text" id="name" name="name" required placeholder="Etunimi Sukunimi" />
+        <!-- FIX: Added autocomplete="name" to enable browser autofill for full name -->
+        <input type="text" id="name" name="name" required placeholder="Etunimi Sukunimi" autocomplete="name" />
         <label for="email">Sähköposti</label>
-        <input type="email" id="email" name="email" required placeholder="sinä@email.com" />
+        <!-- FIX: Added autocomplete="email" to enable browser autofill for email address -->
+        <input type="email" id="email" name="email" required placeholder="sinä@email.com" autocomplete="email" />
         <label for="phone">Puhelinnumero</label>
-        <input type="tel" id="phone" name="phone" required pattern="^\+358\s?\d{1,3}\s?\d{4,}$" placeholder="+358 401234567" />
+        <!-- FIX: Added autocomplete="tel" to enable browser autofill for phone number -->
+        <input type="tel" id="phone" name="phone" required pattern="^\+358\s?\d{1,3}\s?\d{4,}$" placeholder="+358 401234567" autocomplete="tel" />
         <div class="g-recaptcha" data-sitekey="6Lcb5pQrAAAAAMFL6-0S0SfLPwpgy4t8N9f1zaGR"></div>
         <button type="submit" class="btn">Vahvista varaus</button>
       </form>
@@ -3252,11 +3255,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Helper functions for date handling
     function getDateKey(date) {
+        // FIX: Ensure date is a valid Date object before calling getFullYear()
+        // This prevents TypeError when date is null, undefined, or not a Date object
+        if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+            console.error('getDateKey called with invalid date:', date);
+            return null;
+        }
+        
         // Use local date to avoid timezone issues causing off-by-one day selection
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
+    }
+
+    // FIX: Define populateAvailableSlots function to prevent ReferenceError
+    // This function is called when the calendar view changes to update available slot indicators
+    // The actual slot population for user selection is handled by populateTimeSelectionGrid
+    function populateAvailableSlots(calendar, bookings) {
+        // This function serves as a placeholder for future enhancements
+        // Currently, the calendar's events function handles displaying available slots
+        // and populateTimeSelectionGrid handles the actual time selection interface
+        
+        // Log for debugging purposes
+        if (calendar && bookings) {
+            console.log('Calendar view updated, available slots are displayed via calendar events');
+        }
     }
 
     // Populate time selection grid with available times for current week
