@@ -494,6 +494,12 @@
                 background-position: center !important;
                 background-repeat: no-repeat !important;
             }
+            #hero h2 {
+                font-size: 2.2rem !important;
+                margin-bottom: 15px !important;
+                line-height: 1.3 !important;
+                letter-spacing: 0.5px !important;
+            }
             #hero h1 {
                 font-size: 1.6rem !important;
                 margin-bottom: 40px !important;
@@ -516,6 +522,12 @@
                 background-size: cover !important;
                 background-position: center !important;
                 background-repeat: no-repeat !important;
+            }
+            #hero h2 {
+                font-size: 2rem !important;
+                margin-bottom: 12px !important;
+                line-height: 1.3 !important;
+                letter-spacing: 0.5px !important;
             }
             #hero h1 {
                 font-size: 1.4rem !important;
@@ -1113,6 +1125,10 @@
         }
         
         /* Hero text animation - fade in with upward motion */
+        #hero h2 {
+            animation: heroTextFadeIn 0.8s ease-out;
+        }
+        
         #hero h1 {
             animation: heroTextFadeIn 1s ease-out;
         }
@@ -1138,7 +1154,7 @@
         
         /* Disable animations for users who prefer reduced motion */
         @media (prefers-reduced-motion: reduce) {
-            #hero h1, #hero p, #hero a {
+            #hero h2, #hero h1, #hero p, #hero a {
                 animation: none;
             }
         }
@@ -2489,8 +2505,19 @@
             color: white;
         ">
             <div style="margin-bottom: 40px;">
+                <h2 class="brand-name" style="
+                    font-size: 3rem; 
+                    margin-bottom: 20px; 
+                    font-weight: 700;
+                    color: white;
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+                    line-height: 1.3;
+                    letter-spacing: 1px;
+                    font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+                    font-style: italic;
+                ">FIXNERO</h2>
                 <h1 style="
-                    font-size: 2.5rem; 
+                    font-size: 2rem; 
                     margin-bottom: 10px; 
                     font-weight: 700;
                     color: white;
@@ -2499,7 +2526,7 @@
                     letter-spacing: 1px;
                     font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
                     font-style: italic;
-                ">FIXNERO - Autopesut, kiillotukset, keraamiset pinnoitteet, lommojen oikaisu, renkaan vaihdot ja korjaustyöt Espoossa</h1>
+                ">Autopesut, kiillotukset, keraamiset pinnoitteet, lommojen oikaisu, renkaan vaihdot ja korjaustyöt Espoossa</h1>
             </div>
             
             <!-- CTA Button -->
