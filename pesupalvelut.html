@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,user-scalable=yes">
-    <meta name="description" content="Pesupalvelut Espoo - Fixnero tarjoaa käsinpesua, vahauksia, pikapesuja ja renkaiden pesuja Kivenlahdessa Espoossa. Ammattitaitoiset auton pesupalvelut Espoossa.">
-    <meta name="keywords" content="pesupalvelut Espoo, auton pesu Espoo, käsinpesu, vahaukset, Kivenlahti, autonpesu">
+    <meta name="description" content="Pesupalvelut Espoo - Fixnero tarjoaa ammattitaitoista auton käsinpesua, vahauksia, pikapesuja ja renkaiden pesuja Kivenlahdessa Espoossa. Laadukkaat pesupalvelut kaikille automerkeille. Varaa aika helposti verkossa tai soita 040 1935001.">
+    <meta name="keywords" content="pesupalvelut Espoo, auton pesu Espoo, käsinpesu Espoo, vahaukset, pikapesut, renkaiden pesu, Kivenlahti autopesu, ceramic spray pinnoite, kova vaha, autonpesu Espoo, autopesu lähellä, pesupalvelut Kivenlahti">
     <title>Pesupalvelut Espoo – Fixnero</title>
     
     <!-- Open Graph / Facebook -->
@@ -313,6 +313,36 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
+        .links-section {
+            margin: 50px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .link-card {
+            background: linear-gradient(135deg, #666666, #444444);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        .link-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.5rem;
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        .link-card p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1rem;
+        }
         @media (max-width: 768px) {
             .container {
                 margin: 100px 20px 40px;
@@ -320,6 +350,9 @@
             }
             h1 {
                 font-size: 2.2rem;
+            }
+            .links-section {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -386,6 +419,37 @@
                 <a href="tel:+358401935001" class="cta-button">📞 Soita meille</a>
                 <a href="mailto:info@fixnero.fi" class="cta-button">📧 Lähetä viesti</a>
             </div>
+        </div>
+
+        <h2>Tutustu Meihin</h2>
+        <div class="links-section">
+            <a href="tyonnaytteet.html" class="link-card" style="background-image: url('Tyonaytteet.webp'); background-size: cover; background-position: center;">
+                <div style="background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px;">
+                    <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">📸 Työnäytteet</h3>
+                    <p style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">Katso esimerkkejä ammattitaitoisesta työstämme ja tyytyväisten asiakkaidemme autoista.</p>
+                </div>
+            </a>
+            
+            <a href="blogi/" class="link-card" style="background-image: url('kiilloitus.webp'); background-size: cover; background-position: center;">
+                <div style="background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px;">
+                    <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">📰 Blogi</h3>
+                    <p style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">Lue hyödyllisiä vinkkejä ja ohjeita auton hoitoon, huoltoon ja ylläpitoon.</p>
+                </div>
+            </a>
+            
+            <a href="index.html#palvelumme" class="link-card" style="background-image: url('Hero2.webp'); background-size: cover; background-position: center;">
+                <div style="background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px;">
+                    <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">🔧 Palvelumme</h3>
+                    <p style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">Tutustu kaikkiin palveluihimme ja löydä juuri autosi tarvitsema palvelu.</p>
+                </div>
+            </a>
+            
+            <a href="index.html#yhteystiedot" class="link-card" style="background-image: url('sisapuhdistus.webp'); background-size: cover; background-position: center;">
+                <div style="background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px;">
+                    <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">📞 Ota yhteyttä</h3>
+                    <p style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">Ota meihin yhteyttä ja kysy lisää palveluistamme tai varaa aika!</p>
+                </div>
+            </a>
         </div>
     </div>
 
