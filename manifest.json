@@ -1,0 +1,29 @@
+{
+  "name": "Fixnero - Autohuolto Espoo",
+  "short_name": "Fixnero",
+  "description": "Ammattitaitoinen autohuolto Espoossa - pesupalvelut, rengastyöt, sisäpuhdistus, kiilloitus ja korjaustyöt",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/Favicon.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/FXNR.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["automotive", "business"],
+  "lang": "fi",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false
+}
