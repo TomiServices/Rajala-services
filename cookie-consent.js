@@ -27,7 +27,7 @@
     };
     
     function detectLanguage() {
-        const browserLang = navigator.language || navigator.userLanguage;
+        const browserLang = navigator.language;
         return browserLang.startsWith('fi') ? 'fi' : 'en';
     }
     
