@@ -85,6 +85,10 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.08);
+            /* Reset button styles */
+            font: inherit;
+            color: inherit;
+            outline: none;
         }
         .hamburger-menu:hover {
             background: linear-gradient(135deg, rgba(50,50,50,0.98), rgba(30,30,30,0.98));
@@ -458,9 +462,9 @@
         <a href="#kartta" style="color: inherit; text-decoration: none;">📍 Tiilenvalajantie 6, 02330 Espoo</a>
     </div>
 
-    <div class="hamburger-menu" role="button" tabindex="0" aria-label="Toggle navigation">
+    <button class="hamburger-menu" aria-label="Toggle navigation" aria-expanded="false">
         <span></span><span></span><span></span>
-    </div>
+    </button>
 
     <nav id="nav">
         <a href="index.html#top"><img src="FXNR.webp" alt="Fixnero - Työnäytteet, asiakasautot ja palvelut"></a>
@@ -485,6 +489,7 @@
 
         <!-- Latest work example - Tire service with customer images -->
         <div class="gallery">
+            <h2 style="margin-bottom: 30px;">Viimeisimmät työt</h2>
             <div class="work-example">
                 <div class="work-images-container">
                     <div class="work-image-wrapper">
@@ -576,8 +581,9 @@
         const hamburger = document.querySelector('.hamburger-menu');
         const nav = document.getElementById('nav');
         hamburger.addEventListener('click', () => {
-            nav.classList.toggle('active');
+            const isExpanded = nav.classList.toggle('active');
             hamburger.classList.toggle('active');
+            hamburger.setAttribute('aria-expanded', isExpanded);
         });
         hamburger.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -591,6 +597,7 @@
             if (window.innerWidth > 1279) {
                 nav.classList.remove('active');
                 hamburger.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
             }
         });
     </script>
