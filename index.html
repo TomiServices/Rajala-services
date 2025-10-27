@@ -229,6 +229,24 @@
     <!-- Google reCAPTCHA v2 - Loaded on demand to reduce initial page load -->
     <!-- Script will be loaded dynamically when user scrolls to booking section -->
     <style>
+        /* Font loading optimization: ensure text is visible immediately with fallback fonts */
+        /* This prevents FOIT (Flash of Invisible Text) and improves LCP */
+        @font-face {
+            font-family: 'Bebas Neue';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: local('Impact'), local('Arial Black');
+        }
+        
+        @font-face {
+            font-family: 'Yanone Kaffeesatz';
+            font-style: normal;
+            font-weight: 700;
+            font-display: swap;
+            src: local('Impact'), local('Arial Black');
+        }
+        
         /* --- your full original CSS pasted here, unchanged --- */
         html {
             scroll-behavior: smooth;
