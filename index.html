@@ -221,6 +221,8 @@
     <link rel="preload" href="Hero3.webp" as="image" media="(max-width: 767px)">
     <!-- FullCalendar styles are bundled in index.global.min.js, no separate CSS needed -->
     <!-- Google Font for service titles - bold italic style similar to Serpentine -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
     <!-- Google reCAPTCHA v2 -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -3185,7 +3187,7 @@
     <footer>
         <div class="footer">
             <div class="logo-container footer-section">
-                <a href="#top"><img src="FXNR.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut"></a>
+                <a href="#top"><img src="FXNR.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut" loading="lazy"></a>
                 <p>Fixnero © 2024. All Rights Reserved.</p>
                 <p style="margin-top: 10px; font-size: 0.9rem;">
                     <a href="cookie-policy.html" style="color: #ecf0f1; text-decoration: none;">Evästekäytäntö</a> | 
@@ -3226,12 +3228,12 @@
             </div>
         </div>
     </footer>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js" defer></script>
 <script type="module">
 // NOTE: No Firebase config in HTML for security. Use server endpoints instead.
 
 // Calendar booking logic (ready for backend API, e.g. Firebase Function)
-document.addEventListener('DOMContentLoaded', function () {
+window.addEventListener('load', function () {
     const calendarEl = document.getElementById('calendar');
     let selectedSlot = null;
 
@@ -4695,11 +4697,14 @@ document.querySelectorAll('nav a, .footer a').forEach(link => {
             const scrollToElement = document.querySelector(href);
             if (scrollToElement) {
                 e.preventDefault();
-                const offset = window.innerWidth <= 1279 ? 0 : 70;
-                const rect = scrollToElement.getBoundingClientRect();
-                const scrollTop = window.pageYOffset + rect.top - offset;
-                window.scrollTo({ top: scrollTop, behavior: 'smooth' });
-                nav.classList.remove('active'); // Close mobile nav
+                // Batch layout reads/writes using requestAnimationFrame
+                requestAnimationFrame(() => {
+                    const offset = window.innerWidth <= 1279 ? 0 : 70;
+                    const rect = scrollToElement.getBoundingClientRect();
+                    const scrollTop = window.pageYOffset + rect.top - offset;
+                    window.scrollTo({ top: scrollTop, behavior: 'smooth' });
+                    nav.classList.remove('active'); // Close mobile nav
+                });
             }
         }
     });
