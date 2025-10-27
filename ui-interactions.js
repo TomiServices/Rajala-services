@@ -4,13 +4,16 @@ function initializeUIInteractions() {
     const hamburger = document.querySelector('.hamburger-menu');
     const nav = document.getElementById('nav');
     hamburger.addEventListener('click', () => {
-        nav.classList.toggle('active');
+        const isExpanded = nav.classList.toggle('active');
         hamburger.classList.toggle('active');
+        hamburger.setAttribute('aria-expanded', isExpanded);
     });
     hamburger.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
-            nav.classList.toggle('active');
+            e.preventDefault();
+            const isExpanded = nav.classList.toggle('active');
             hamburger.classList.toggle('active');
+            hamburger.setAttribute('aria-expanded', isExpanded);
         }
     });
     // Smooth scroll for all anchor links in nav and footer
@@ -41,6 +44,7 @@ window.addEventListener('resize', () => {
         if (window.innerWidth > 1279) {
             nav.classList.remove('active');
             hamburger.classList.remove('active');
+            hamburger.setAttribute('aria-expanded', 'false');
         }
     }, 150);
 }, { passive: true });

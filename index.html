@@ -364,6 +364,10 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.08);
+            /* Reset button styles */
+            font: inherit;
+            color: inherit;
+            outline: none;
         }
         .hamburger-menu:hover {
             background: linear-gradient(135deg, rgba(50,50,50,0.98), rgba(30,30,30,0.98));
@@ -738,6 +742,13 @@
             font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
             font-style: italic;
             letter-spacing: 0.05em;
+        }
+        
+        /* Smaller h3 for service subsections (previously h4) */
+        .polishing-text h3,
+        .tire-services-text h3,
+        .interior-cleaning-text h3 {
+            font-size: 1.4rem;
         }
         
         section h4 {
@@ -2461,9 +2472,9 @@
         <a href="#kartta" style="color: #fff; text-decoration: none;">Tiilenvalajantie 6, 02330 Espoo</a>
     </div>
 
-    <div class="hamburger-menu" tabindex="0" aria-label="Avaa valikko" aria-controls="nav">
+    <button class="hamburger-menu" aria-label="Avaa valikko" aria-controls="nav" aria-expanded="false">
         <span></span><span></span><span></span>
-    </div>
+    </button>
     <nav id="nav">
         <a href="#top"><img src="FXNR.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" loading="lazy"></a>
         <a href="#pesupalvelut">Pesupalvelut</a>
@@ -2512,7 +2523,7 @@
             color: white;
         ">
             <div style="margin-bottom: 40px;">
-                <h2 class="brand-name" style="
+                <h1 class="brand-name" style="
                     font-size: 3rem; 
                     margin-bottom: 20px; 
                     font-weight: 700;
@@ -2522,8 +2533,8 @@
                     letter-spacing: 1px;
                     font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
                     font-style: italic;
-                ">FIXNERO</h2>
-                <h1 style="
+                ">FIXNERO</h1>
+                <p style="
                     font-size: 2rem; 
                     margin-bottom: 10px; 
                     font-weight: 700;
@@ -2533,7 +2544,7 @@
                     letter-spacing: 1px;
                     font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
                     font-style: italic;
-                ">Autopesut, kiillotukset, keraamiset pinnoitteet, lommojen oikaisu, renkaan vaihdot ja korjaustyöt Espoossa</h1>
+                ">Autopesut, kiillotukset, keraamiset pinnoitteet, lommojen oikaisu, renkaan vaihdot ja korjaustyöt Espoossa</p>
             </div>
             
             <!-- CTA Button -->
@@ -2649,11 +2660,11 @@
                 </div>
                 <div style="display: flex; align-items: center; margin-bottom: 10px; gap: 10px;">
                     <div style="color: #FFD700; font-size: 1.1rem;">★★★★★</div>
-                    <span style="color: #999; font-size: 0.85rem;">5/5</span>
+                    <span style="color: #757575; font-size: 0.85rem;">5/5</span>
                 </div>
                 <p style="color: #333; line-height: 1.5; margin-bottom: 10px; font-style: italic; font-size: 0.95rem;">"Auton pinnassa ollut kattomaali puhdistui täydellisesti auton mustalta maalipinnalta ja ikkunoista. Hyvää asiakaspalvelua!"</p>
                 <p style="color: #666; font-weight: 600; margin: 0; font-size: 0.9rem;">Veera Impiö</p>
-                <p style="font-size: 0.8rem; color: #888; margin-top: 5px;">3 vuotta sitten</p>
+                <p style="font-size: 0.8rem; color: #6e6e6e; margin-top: 5px;">3 vuotta sitten</p>
             </div>
             
             <!-- Review 2 - Authentic Google Review -->
@@ -2670,11 +2681,11 @@
                 </div>
                 <div style="display: flex; align-items: center; margin-bottom: 10px; gap: 10px;">
                     <div style="color: #FFD700; font-size: 1.1rem;">★★★★★</div>
-                    <span style="color: #999; font-size: 0.85rem;">5/5</span>
+                    <span style="color: #757575; font-size: 0.85rem;">5/5</span>
                 </div>
                 <p style="color: #333; line-height: 1.5; margin-bottom: 10px; font-style: italic; font-size: 0.95rem;">"Friendly chap, excellent attention to detail. Couldn't be happier with the results."</p>
                 <p style="color: #666; font-weight: 600; margin: 0; font-size: 0.9rem;">Tuomas Tenhunen</p>
-                <p style="font-size: 0.8rem; color: #888; margin-top: 5px;">Vuosi sitten</p>
+                <p style="font-size: 0.8rem; color: #6e6e6e; margin-top: 5px;">Vuosi sitten</p>
             </div>
             
             <!-- Review 3 - Authentic Google Review -->
@@ -2691,15 +2702,15 @@
                 </div>
                 <div style="display: flex; align-items: center; margin-bottom: 10px; gap: 10px;">
                     <div style="color: #FFD700; font-size: 1.1rem;">★★★★★</div>
-                    <span style="color: #999; font-size: 0.85rem;">5/5</span>
+                    <span style="color: #757575; font-size: 0.85rem;">5/5</span>
                 </div>
                 <p style="color: #333; line-height: 1.5; margin-bottom: 10px; font-style: italic; font-size: 0.95rem;">"Loistavaa palvelua!"</p>
                 <p style="color: #666; font-weight: 600; margin: 0; font-size: 0.9rem;">Jesse Korvenranta</p>
-                <p style="font-size: 0.8rem; color: #888; margin-top: 5px;">3 vuotta sitten</p>
+                <p style="font-size: 0.8rem; color: #6e6e6e; margin-top: 5px;">3 vuotta sitten</p>
             </div>
         </div>
         
-        <p style="text-align: center; color: #999; font-size: 0.9rem; margin-bottom: 20px;"><em>Lähde: Google Maps</em></p>
+        <p style="text-align: center; color: #757575; font-size: 0.9rem; margin-bottom: 20px;"><em>Lähde: Google Maps</em></p>
         
         <div style="text-align: center;">
             <a href="https://g.page/r/YOUR_GOOGLE_REVIEW_ID/review" target="_blank" rel="noopener" style="display: inline-block; background: linear-gradient(135deg, #666666, #444444); color: white; padding: 10px 22px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; box-shadow: 0 3px 10px rgba(0,0,0,0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 3px 10px rgba(0,0,0,0.2)'">
@@ -2892,19 +2903,19 @@
                     <li>Renkaiden pesu</li>
                 </ul>
 
-                <h4>Pikapesu</h4>
+                <h3>Pikapesu</h3>
                 <p>Auton pintaan levitetään tehokas pesuaine, jonka jälkeen se huuhdellaan painepesurilla. Lopuksi kuivaus tehdään pehmeällä mikrokuituliinalla – nopea ja hellävarainen vaihtoehto ylläpitopesuun.</p>
 
-                <h4>Käsinpesu</h4>
+                <h3>Käsinpesu</h3>
                 <p>Auto huuhdellaan ensin kauttaaltaan. Tämän jälkeen pesuaine levitetään erittäin pehmeällä pesukintaalla, joka ei naarmuta maalipintaa. Lopuksi huuhdellaan painepesurilla ja kuivataan mikrokuituliinalla huolellisesti.</p>
 
-                <h4>Vahaukset</h4>
+                <h3>Vahaukset</h3>
                 <p>Haluatko lisätä autosi kiiltoa ja suojata pintaa pesun yhteydessä? Voimme levittää vahashampoon, joka muodostaa pesun aikana suojaavan ja kiiltävän pinnan autollesi – nopea tapa parantaa ulkonäköä ja helpottaa jatkopesuja.</p>
 
-                <h4>Renkaiden pesu</h4>
+                <h3>Renkaiden pesu</h3>
                 <p>Jos tuot renkaat vaihdettavaksi (esim. kesärenkaat talvivaihdon yhteydessä), voit samalla tilata niille pesun. Näin saat puhtaat ja siistit renkaat mukaasi tai rengashotelliin varastoitavaksi.</p>
 
-                <h4>Lisäpalvelut</h4>
+                <h3>Lisäpalvelut</h3>
                 <ul>
                     <li>Pesun yhteydessä suihkutettava vettä ja likaa hylkivä pinnoite</li>
                 </ul>
@@ -2932,7 +2943,7 @@
                     <li>Uusien renkaiden myynti ja asennus – pyydä tarjous puhelimitse tai sähköpostilla</li>
                 </ul>
 
-                <h4>Rengashotelli</h4>
+                <h3>Rengashotelli</h3>
                 <p>Meillä voit myös jättää renkaasi <strong>rengashotelliin</strong>, joka sisältää renkaiden pesun ja asianmukaisen säilytyksen. Sinun ei tarvitse enää kantaa renkaita mukanasi – varaat vain ajan renkaiden vaihtoon, ja me:</p>
                 <ul>
                     <li>Haemme puhtaat renkaasi suoraan varastosta</li>
@@ -2958,7 +2969,7 @@
             <div class="polishing-text">
                 <p>Voit tuoda autosi meille myös korjaukseen jos esim. Katsastuksessa autosi sai hylätyn päätöksen. Teemme korjaustoimia laajasti merkistä riippumatta.</p>
 
-                <h4>Yleisimmät korjaustyömme</h4>
+                <h3>Yleisimmät korjaustyömme</h3>
                 <ul>
                     <li>Iskunvaimentimien ja jousituksen uusiminen</li>
                     <li>Tukivarsien, nivelien ja raidetankojen vaihto</li>
@@ -3001,7 +3012,7 @@
 
                 <p>Voit myös tarvittaessa räätälöidä palvelut juuri sinulle sopivaksi – kerro meille toiveesi, niin suunnittelemme sisäpesun niiden mukaan.</p>
 
-                <h4>Lisäpalvelut</h4>
+                <h3>Lisäpalvelut</h3>
                 <ul>
                     <li>Otsonointi – poistaa tehokkaasti epämiellyttävät hajut</li>
                     <li>Syväpuhdistus (detailing) – perusteellinen käsittely pintaa myöten</li>
