@@ -1479,15 +1479,20 @@ function initializeBookingSystem() {
     });
 }
 
-// Use requestIdleCallback to defer initialization until browser is idle
-// This reduces main-thread blocking and improves initial page load performance
-if ('requestIdleCallback' in window) {
-    window.addEventListener('load', function() {
-        requestIdleCallback(initializeBookingSystem, { timeout: 2000 });
-    });
-} else {
-    // Fallback for browsers without requestIdleCallback
-    window.addEventListener('load', function() {
-        setTimeout(initializeBookingSystem, 1);
-    });
+// Expose initialization function globally for dynamic loading
+window.initializeBookingSystem = initializeBookingSystem;
+
+// Auto-initialize if FullCalendar is already loaded
+// This handles both dynamic loading and direct script loading scenarios
+if (typeof FullCalendar !== 'undefined') {
+    if ('requestIdleCallback' in window) {
+        window.addEventListener('load', function() {
+            requestIdleCallback(initializeBookingSystem, { timeout: 2000 });
+        });
+    } else {
+        // Fallback for browsers without requestIdleCallback
+        window.addEventListener('load', function() {
+            setTimeout(initializeBookingSystem, 1);
+        });
+    }
 }
