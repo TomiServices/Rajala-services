@@ -221,9 +221,11 @@
     <link rel="preload" href="Hero3.webp" as="image" media="(max-width: 767px)">
     <!-- FullCalendar styles are bundled in index.global.min.js, no separate CSS needed -->
     <!-- Google Font for service titles - bold italic style similar to Serpentine -->
+    <!-- Optimized for performance: preconnect + preload + async load to eliminate render-blocking -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap"></noscript>
     <!-- Google reCAPTCHA v2 - Loaded on demand to reduce initial page load -->
     <!-- Script will be loaded dynamically when user scrolls to booking section -->
     <style>
@@ -298,24 +300,10 @@
             padding: 0 20px;
         }
         
-        /* Navbar slide-in animation from top - only for desktop */
-        @keyframes navSlideIn {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        /* Apply navbar animation only on desktop (not mobile) */
-        @media (min-width: 1280px) {
-            nav {
-                animation: navSlideIn 0.6s ease-out;
-            }
-        }
+        /* REMOVED: Navbar animation to improve LCP performance
+         * Entry animations can delay Largest Contentful Paint
+         * The navbar now appears immediately for better performance
+         */
         nav img {
             height: 50px;
             margin-left: 10px;
@@ -3228,7 +3216,52 @@
             </div>
         </div>
     </footer>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js" defer></script>
+<script>
+// Dynamically load FullCalendar only when booking section ("ajanvaraus") is visible
+// This reduces initial JavaScript bundle size and improves performance
+(function() {
+    let fullCalendarLoaded = false;
+    
+    function loadFullCalendar() {
+        if (fullCalendarLoaded) return;
+        fullCalendarLoaded = true;
+        
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js';
+        script.defer = true;
+        script.onload = function() {
+            // Trigger booking system initialization after FullCalendar loads
+            if (window.initializeBookingSystem) {
+                window.initializeBookingSystem();
+            }
+        };
+        document.head.appendChild(script);
+    }
+    
+    // Observe the booking section and load FullCalendar when it comes into view
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                loadFullCalendar();
+                observer.disconnect();
+            }
+        });
+    }, { rootMargin: '200px' });
+    
+    // Start observing when DOM is ready
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+            const bookingSection = document.getElementById('ajanvaraus');
+            if (bookingSection) observer.observe(bookingSection);
+        });
+    } else {
+        setTimeout(() => {
+            const bookingSection = document.getElementById('ajanvaraus');
+            if (bookingSection) observer.observe(bookingSection);
+        }, 100);
+    }
+})();
+</script>
 <script type="module" src="booking-system.js" defer></script>
 <script src="ui-interactions.js" defer></script>
 
