@@ -224,8 +224,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
-    <!-- Google reCAPTCHA v2 -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- Google reCAPTCHA v2 - Loaded on demand to reduce initial page load -->
+    <!-- Script will be loaded dynamically when user scrolls to booking section -->
     <style>
         /* --- your full original CSS pasted here, unchanged --- */
         html {
@@ -3232,8 +3232,45 @@
 <script type="module">
 // NOTE: No Firebase config in HTML for security. Use server endpoints instead.
 
+// Lazy load reCAPTCHA when user scrolls to booking section
+let recaptchaLoaded = false;
+function loadRecaptcha() {
+    if (recaptchaLoaded) return;
+    recaptchaLoaded = true;
+    
+    const script = document.createElement('script');
+    script.src = 'https://www.google.com/recaptcha/api.js';
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+}
+
+// Observe booking section visibility to lazy load reCAPTCHA
+const bookingObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            loadRecaptcha();
+            bookingObserver.disconnect(); // Only load once
+        }
+    });
+}, { rootMargin: '50px' });
+
+// Start observing when DOM is ready
+if ('requestIdleCallback' in window) {
+    requestIdleCallback(() => {
+        const calendarSection = document.getElementById('calendar');
+        if (calendarSection) bookingObserver.observe(calendarSection);
+    });
+} else {
+    setTimeout(() => {
+        const calendarSection = document.getElementById('calendar');
+        if (calendarSection) bookingObserver.observe(calendarSection);
+    }, 100);
+}
+
 // Calendar booking logic (ready for backend API, e.g. Firebase Function)
-window.addEventListener('load', function () {
+// Defer heavy initialization until after page load + idle time to minimize main-thread blocking
+function initializeBookingSystem() {
     const calendarEl = document.getElementById('calendar');
     let selectedSlot = null;
 
@@ -4672,28 +4709,42 @@ window.addEventListener('load', function () {
             }
         };
     });
-    
-});
+}
+
+// Use requestIdleCallback to defer initialization until browser is idle
+// This reduces main-thread blocking and improves initial page load performance
+if ('requestIdleCallback' in window) {
+    window.addEventListener('load', function() {
+        requestIdleCallback(initializeBookingSystem, { timeout: 2000 });
+    });
+} else {
+    // Fallback for browsers without requestIdleCallback
+    window.addEventListener('load', function() {
+        setTimeout(initializeBookingSystem, 1);
+    });
+}
 </script>
 <script>
-// Hamburger and nav toggle
-const hamburger = document.querySelector('.hamburger-menu');
-const nav = document.getElementById('nav');
-hamburger.addEventListener('click', () => {
-    nav.classList.toggle('active');
-    hamburger.classList.toggle('active');
-});
-hamburger.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+// Defer non-critical UI initialization to reduce main-thread blocking
+function initializeUIInteractions() {
+    // Hamburger and nav toggle
+    const hamburger = document.querySelector('.hamburger-menu');
+    const nav = document.getElementById('nav');
+    hamburger.addEventListener('click', () => {
         nav.classList.toggle('active');
         hamburger.classList.toggle('active');
-    }
-});
-// Smooth scroll for all anchor links in nav and footer
-document.querySelectorAll('nav a, .footer a').forEach(link => {
-    link.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        if (href.startsWith('#') && href.length > 1) {
+    });
+    hamburger.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+    });
+    // Smooth scroll for all anchor links in nav and footer
+    document.querySelectorAll('nav a, .footer a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href.startsWith('#') && href.length > 1) {
             const scrollToElement = document.querySelector(href);
             if (scrollToElement) {
                 e.preventDefault();
@@ -4709,32 +4760,48 @@ document.querySelectorAll('nav a, .footer a').forEach(link => {
         }
     });
 });
-// Responsive nav close on resize
+// Responsive nav close on resize - debounced to reduce main-thread work
+let resizeTimer;
 window.addEventListener('resize', () => {
-    if (window.innerWidth > 1279) {
-        nav.classList.remove('active');
-        hamburger.classList.remove('active');
-    }
-});
-
-// Scroll-triggered animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('active');
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        if (window.innerWidth > 1279) {
+            nav.classList.remove('active');
+            hamburger.classList.remove('active');
         }
-    });
-}, observerOptions);
+    }, 150);
+}, { passive: true });
 
-// Observe elements with scroll-animate class
-document.querySelectorAll('.scroll-animate').forEach(element => {
-    observer.observe(element);
-});
+    // Scroll-triggered animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, observerOptions);
+
+    // Observe elements with scroll-animate class
+    document.querySelectorAll('.scroll-animate').forEach(element => {
+        observer.observe(element);
+    });
+}
+
+// Initialize UI interactions after DOM content is loaded, using idle callback to reduce blocking
+if ('requestIdleCallback' in window) {
+    document.addEventListener('DOMContentLoaded', () => {
+        requestIdleCallback(initializeUIInteractions);
+    });
+} else {
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initializeUIInteractions, 0);
+    });
+}
 </script>
 
 <!-- Cookie Consent Banner - GDPR Compliant -->
