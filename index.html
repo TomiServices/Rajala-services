@@ -219,8 +219,7 @@
     <link rel="preload" href="Hero2.webp" as="image" media="(min-width: 768px) and (max-width: 2559px)">
     <link rel="preload" href="Hero1.webp" as="image" media="(min-width: 2560px)">
     <link rel="preload" href="Hero3.webp" as="image" media="(max-width: 767px)">
-    <!-- FullCalendar CSS for booking -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet" />
+    <!-- FullCalendar styles are bundled in index.global.min.js, no separate CSS needed -->
     <!-- Google Font for service titles - bold italic style similar to Serpentine -->
     <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
     <!-- Google reCAPTCHA v2 -->
@@ -3705,14 +3704,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function initializeMockCalendarAndDropdowns() {
         // Get mock bookings for testing
         fetchBookings().then(bookings => {
-            // Populate the time selection grid
-            populateTimeSelectionGrid(bookings, null);
-            
-            // Show the time selection grid
-            const timeGridContainer = document.getElementById('time-selection-grid');
-            if (timeGridContainer) {
-                timeGridContainer.style.display = 'block';
-            }
+            // Time selection grid will be populated when user selects a date
+            // No need to populate during initialization
             
             // Connect mock calendar slots to our time selection function
             const mockSlots = document.querySelectorAll('.mock-slot[data-date]');
