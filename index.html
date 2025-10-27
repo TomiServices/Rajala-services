@@ -3297,6 +3297,15 @@ document.addEventListener('DOMContentLoaded', function () {
         
         gridContainer.innerHTML = '';
         
+        // Validate selectedDate before proceeding
+        if (!selectedDate || !(selectedDate instanceof Date) || isNaN(selectedDate.getTime())) {
+            console.error('populateTimeSelectionGrid called with invalid date:', selectedDate);
+            if (timeSelectionContainer) {
+                timeSelectionContainer.style.display = 'none';
+            }
+            return false;
+        }
+        
         // Get current date
         const now = new Date();
         
@@ -3307,7 +3316,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         
         const dateKey = getDateKey(selectedDate);
-        const dayBookings = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey);
+        // Add null check for dateKey
+        if (!dateKey) {
+            console.error('Failed to generate dateKey for selectedDate:', selectedDate);
+            if (timeSelectionContainer) {
+                timeSelectionContainer.style.display = 'none';
+            }
+            return false;
+        }
+        const dayBookings = bookings.filter(b => {
+            const bookingDateKey = getDateKey(new Date(b.aika));
+            return bookingDateKey && bookingDateKey === dateKey;
+        });
         
         // Get current hour for checking if slot is in the past
         const isToday = getDateKey(now) === dateKey;
@@ -3319,6 +3339,12 @@ document.addEventListener('DOMContentLoaded', function () {
         for (let hour = 9; hour < 17; hour++) {
             const slotTime = new Date(selectedDate);
             slotTime.setHours(hour, 0, 0, 0);
+            
+            // Validate slotTime before using it
+            if (isNaN(slotTime.getTime())) {
+                console.error('Invalid slotTime generated for hour:', hour, 'from selectedDate:', selectedDate);
+                continue;
+            }
             
             // Check if slot is in the past
             const isPast = slotTime < now;
@@ -3343,6 +3369,7 @@ document.addEventListener('DOMContentLoaded', function () {
             slotBox.textContent = `${hour}:00`;
             
             // Available slot - add click handler
+            // Validate before calling toISOString to prevent RangeError
             slotBox.dataset.datetime = slotTime.toISOString();
             slotBox.dataset.date = dateKey;
             slotBox.dataset.hour = hour;
@@ -3499,6 +3526,12 @@ document.addEventListener('DOMContentLoaded', function () {
         
         if (!selectElement) return;
         
+        // Validate selectedDate before proceeding
+        if (!selectedDate || !(selectedDate instanceof Date) || isNaN(selectedDate.getTime())) {
+            console.error('populateTimeSlotsForDate called with invalid date:', selectedDate);
+            return false;
+        }
+        
         // Format the selected date for display
         const formattedDate = selectedDate.toLocaleDateString('fi-FI', { 
             weekday: 'long', 
@@ -3514,7 +3547,15 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // Get bookings for the selected date
         const dateKey = getDateKey(selectedDate);
-        const dayBookings = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey);
+        // Add null check for dateKey
+        if (!dateKey) {
+            console.error('Failed to generate dateKey for selectedDate:', selectedDate);
+            return false;
+        }
+        const dayBookings = bookings.filter(b => {
+            const bookingDateKey = getDateKey(new Date(b.aika));
+            return bookingDateKey && bookingDateKey === dateKey;
+        });
         
         let hasAvailableSlots = false;
         
@@ -3537,6 +3578,12 @@ document.addEventListener('DOMContentLoaded', function () {
             
             const timeSlot = new Date(selectedDate);
             timeSlot.setHours(hour, 0, 0, 0);
+            
+            // Validate timeSlot before using toISOString
+            if (isNaN(timeSlot.getTime())) {
+                console.error('Invalid timeSlot generated for hour:', hour, 'from selectedDate:', selectedDate);
+                continue;
+            }
             
             let slotText = `${hour}:00`;
             if (isBooked) {
@@ -4035,7 +4082,15 @@ document.addEventListener('DOMContentLoaded', function () {
             
             // Check if this day has available slots
             const dateKey = getDateKey(checkDate);
-            const dayBookingCount = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
+            // Skip if dateKey is null (invalid date)
+            if (!dateKey) {
+                console.error('Failed to generate dateKey for checkDate:', checkDate);
+                continue;
+            }
+            const dayBookingCount = bookings.filter(b => {
+                const bookingDateKey = getDateKey(new Date(b.aika));
+                return bookingDateKey && bookingDateKey === dateKey;
+            }).length;
             
             // If day has less than 2 bookings, it has available slots
             if (dayBookingCount < 2) {
@@ -4089,7 +4144,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         function getBookingsCountForDay(date) {
             const dateKey = getDateKey(date);
-            return bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
+            // Return 0 if dateKey is null (invalid date)
+            if (!dateKey) {
+                console.error('Failed to generate dateKey in getBookingsCountForDay for date:', date);
+                return 0;
+            }
+            return bookings.filter(b => {
+                const bookingDateKey = getDateKey(new Date(b.aika));
+                return bookingDateKey && bookingDateKey === dateKey;
+            }).length;
         }
         
         let calendar = null;
@@ -4189,7 +4252,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 // If on mobile device, show mobile modal instead of direct selection
                 if (isMobile) {
                     const dateStr = getDateKey(start);
-                    showMobileTimeModal(dateStr, null, bookings);
+                    // Check if dateStr is valid before showing modal
+                    if (dateStr) {
+                        showMobileTimeModal(dateStr, null, bookings);
+                    } else {
+                        console.error('Failed to generate dateKey for start date:', start);
+                        document.getElementById('error').textContent = 'Virhe päivämäärän käsittelyssä. Yritä uudelleen.';
+                    }
                     if (calendar) calendar.unselect();
                     return;
                 }
@@ -4230,7 +4299,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Only weekdays
                     if (isMobile) {
                         const dateStr = getDateKey(info.date);
-                        showMobileTimeModal(dateStr, null, bookings);
+                        // Check if dateStr is valid before showing modal
+                        if (dateStr) {
+                            showMobileTimeModal(dateStr, null, bookings);
+                        } else {
+                            console.error('Failed to generate dateKey for info.date:', info.date);
+                            document.getElementById('error').textContent = 'Virhe päivämäärän käsittelyssä. Yritä uudelleen.';
+                        }
                     } else {
                         // For desktop, show time selection grid
                         const selectedDate = new Date(info.date);
@@ -4263,7 +4338,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Only process weekdays
                     if (dayOfWeek >= 1 && dayOfWeek <= 5) {
                         const dateKey = getDateKey(currentDate);
-                        const dayBookingsCount = bookings.filter(b => getDateKey(new Date(b.aika)) === dateKey).length;
+                        // Skip if dateKey is null (invalid date)
+                        if (!dateKey) {
+                            currentDate.setDate(currentDate.getDate() + 1);
+                            continue;
+                        }
+                        const dayBookingsCount = bookings.filter(b => {
+                            const bookingDateKey = getDateKey(new Date(b.aika));
+                            return bookingDateKey && bookingDateKey === dateKey;
+                        }).length;
                         
                         if (dayBookingsCount > 0) {
                             const availableSlots = 8 - dayBookingsCount; // 8 slots per day (9-17)
