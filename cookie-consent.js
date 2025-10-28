@@ -147,10 +147,12 @@
                 margin: 0;
                 line-height: 1.6;
                 font-size: 0.95rem;
+                color: #ffffff;
             }
             
             .cookie-consent-text strong {
                 font-size: 1.1rem;
+                color: #ffffff;
             }
             
             .cookie-consent-buttons {
