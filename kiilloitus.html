@@ -84,6 +84,8 @@
     </script>
     
     <link rel="preload" href="FXNR.webp" as="image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
         html { scroll-behavior: smooth; }
@@ -130,7 +132,11 @@
             width: 48px; height: 48px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
+        
+        /* Reset button styles */
+        font: inherit;
+        color: inherit;
+        outline: none;}
         .hamburger-menu span {
             display: block; width: 24px; height: 2.5px;
             margin: 5.5px auto;
@@ -287,9 +293,9 @@
         <a href="index.html#kartta" style="color: inherit; text-decoration: none;">📍 Tiilenvalajantie 6, 02330 Espoo</a>
     </div>
 
-    <div class="hamburger-menu" role="button" tabindex="0" aria-label="Toggle navigation">
+    <button class="hamburger-menu" aria-label="Toggle navigation" aria-expanded="false">
         <span></span><span></span><span></span>
-    </div>
+    </button>
 
     <nav id="nav">
         <a href="index.html#top"><img src="FXNR.webp" alt="Fixnero - Kiilloitus ja pinnoitus Espoo, keraaminen pinnoitus"></a>
@@ -405,18 +411,20 @@
         const hamburger = document.querySelector('.hamburger-menu');
         const nav = document.getElementById('nav');
         hamburger.addEventListener('click', () => {
-            nav.classList.toggle('active');
+            const isExpanded = nav.classList.toggle('active');
             hamburger.classList.toggle('active');
+            hamburger.setAttribute('aria-expanded', isExpanded);
         });
         window.addEventListener('resize', () => {
             if (window.innerWidth > 1279) {
                 nav.classList.remove('active');
                 hamburger.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
             }
         });
     </script>
     
     <!-- Cookie Consent Banner - GDPR Compliant -->
-    <script src="cookie-consent.js"></script>
+    <script src="cookie-consent.min.js" defer></script>
 </body>
 </html>
