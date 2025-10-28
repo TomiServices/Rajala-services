@@ -67,6 +67,16 @@ window.addEventListener('resize', () => {
     document.querySelectorAll('.scroll-animate').forEach(element => {
         observer.observe(element);
     });
+
+    // Add keyboard accessibility to category boxes
+    document.querySelectorAll('.category-box').forEach(box => {
+        box.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                box.click();
+            }
+        });
+    });
 }
 
 // Initialize UI interactions after DOM content is loaded, using idle callback to reduce blocking
