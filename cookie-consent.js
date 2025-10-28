@@ -147,12 +147,12 @@
                 margin: 0;
                 line-height: 1.6;
                 font-size: 0.95rem;
-                color: #ffffff;
+                color: #FFA500; /* Updated to orange for better accessibility and brand consistency */
             }
             
             .cookie-consent-text strong {
                 font-size: 1.1rem;
-                color: #ffffff;
+                color: #FFA500; /* Updated to orange for better accessibility and brand consistency */
             }
             
             .cookie-consent-buttons {
@@ -174,35 +174,37 @@
             }
             
             .cookie-btn-accept {
-                background: #4CAF50;
-                color: #fff;
+                background: #FF8C00; /* Updated to orange for brand consistency */
+                color: #000; /* Black text for better contrast on orange background */
             }
             
             .cookie-btn-accept:hover {
-                background: #45a049;
+                background: #FFA500; /* Brighter orange on hover */
                 transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+                box-shadow: 0 4px 12px rgba(255, 140, 0, 0.4);
             }
             
             .cookie-btn-reject {
                 background: #666;
                 color: #fff;
+                border: 1px solid #FFA500; /* Orange border for visual consistency */
             }
             
             .cookie-btn-reject:hover {
                 background: #555;
                 transform: translateY(-2px);
+                border-color: #FFA500;
             }
             
             .cookie-link {
-                color: #fff;
+                color: #FFA500; /* Updated to orange for brand consistency */
                 text-decoration: underline;
                 font-size: 0.9rem;
                 transition: color 0.3s ease;
             }
             
             .cookie-link:hover {
-                color: #4CAF50;
+                color: #FFB347; /* Lighter orange on hover for better visibility */
             }
             
             /* Mobile responsiveness */
