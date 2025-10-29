@@ -972,10 +972,16 @@ function initializeBookingSystem() {
         
         let calendar = null;
         
-        // FIX: Verify FullCalendar library is loaded before initialization
+        // FIX: Enhanced verification of FullCalendar library and calendar element
         if (typeof FullCalendar === 'undefined' || typeof FullCalendar.Calendar !== 'function') {
             console.error('FullCalendar library not loaded. Skipping calendar initialization.');
             // Calendar will remain null, triggering fallback calendar
+            return;
+        }
+        
+        // FIX: Double-check calendar element exists and is in the DOM
+        if (!calendarEl || !document.body.contains(calendarEl)) {
+            console.error('Calendar element not found in DOM. Skipping calendar initialization.');
             return;
         }
         
@@ -1001,13 +1007,18 @@ function initializeBookingSystem() {
             dayMaxEventRows: 3,
             // Update available slots when view changes
             viewDidMount: function(info) {
-                // FIX: Check if calendar exists and is fully initialized before accessing
-                // Small delay to ensure view is fully rendered
+                // FIX: Enhanced check with try-catch to prevent getCellFromPoint errors
+                // Small delay to ensure view is fully rendered and DOM is stable
                 setTimeout(() => {
-                    if (calendar && typeof calendar.getDate === 'function') {
-                        populateAvailableSlots(calendar, bookings);
+                    try {
+                        if (calendar && typeof calendar.getDate === 'function' && info.view) {
+                            populateAvailableSlots(calendar, bookings);
+                        }
+                    } catch (error) {
+                        console.error('Error in viewDidMount:', error);
+                        // Gracefully handle the error without breaking the page
                     }
-                }, 50);
+                }, 100);
             },
             // Mobile-specific improvements
             height: 'auto',
@@ -1054,147 +1065,186 @@ function initializeBookingSystem() {
                 };
             },
             select: function (info) {
-                // FIX: Early return if calendar is not properly initialized
-                if (!calendar) {
-                    console.error('Calendar instance not available in select handler');
-                    return;
-                }
-                
-                let start = info.start;
-                const now = new Date();
-                now.setHours(0, 0, 0, 0);
-                
-                // Prevent selection of past dates
-                if (start < now) {
-                    calendar.unselect();
-                    document.getElementById('error').textContent = 'Et voi valita mennyttä päivämäärää!';
-                    return;
-                }
-                
-                const dayOfWeek = start.getDay();
-                
-                // Only allow weekday selections
-                if (dayOfWeek < 1 || dayOfWeek > 5) {
-                    calendar.unselect();
-                    document.getElementById('error').textContent = 'Valitse arkipäivä (maanantai-perjantai)!';
-                    return;
-                }
-
-                // If on mobile device, show mobile modal instead of direct selection
-                if (isMobile) {
-                    const dateStr = getDateKey(start);
-                    // Check if dateStr is valid before showing modal
-                    if (dateStr) {
-                        showMobileTimeModal(dateStr, null, bookings);
-                    } else {
-                        console.error('Failed to generate dateKey for start date:', start);
-                        document.getElementById('error').textContent = 'Virhe päivämäärän käsittelyssä. Yritä uudelleen.';
+                // FIX: Wrap entire select handler in try-catch to prevent getCellFromPoint errors
+                try {
+                    // FIX: Early return if calendar is not properly initialized
+                    if (!calendar || !info || !info.start) {
+                        console.error('Calendar instance or selection info not available in select handler');
+                        return;
                     }
-                    calendar.unselect();
-                    return;
-                }
-
-                // Desktop behavior: Show time slots grid for selected date
-                const selectedDate = new Date(start);
-                selectedDate.setHours(9, 0, 0, 0);
-                
-                // Populate time selection grid with available slots for the selected date
-                const hasAvailableSlots = populateTimeSelectionGrid(selectedDate, bookings);
-                
-                if (hasAvailableSlots) {
-                    document.getElementById('error').textContent = '';
-                    // Scroll to time selection
-                    const timeGridContainer = document.getElementById('time-selection-grid');
-                    if (timeGridContainer) {
-                        timeGridContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    
+                    let start = info.start;
+                    const now = new Date();
+                    now.setHours(0, 0, 0, 0);
+                    
+                    // Prevent selection of past dates
+                    if (start < now) {
+                        if (typeof calendar.unselect === 'function') {
+                            calendar.unselect();
+                        }
+                        document.getElementById('error').textContent = 'Et voi valita mennyttä päivämäärää!';
+                        return;
                     }
-                } else {
-                    document.getElementById('error').textContent = 'Valitulle päivälle ei ole vapaita aikoja saatavilla.';
-                }
-                
-                // Unselect the calendar selection since user hasn't picked a time yet
-                calendar.unselect();
-            },
-            dateClick: function(info) {
-                const now = new Date();
-                now.setHours(0, 0, 0, 0);
-                
-                // Prevent selection of past dates
-                if (info.date < now) {
-                    document.getElementById('error').textContent = 'Et voi valita mennyttä päivämäärää!';
-                    return;
-                }
-                
-                // Handle day/slot clicks - use same logic as select for consistency
-                const dayOfWeek = info.date.getDay();
-                if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Only weekdays
+                    
+                    const dayOfWeek = start.getDay();
+                    
+                    // Only allow weekday selections
+                    if (dayOfWeek < 1 || dayOfWeek > 5) {
+                        if (typeof calendar.unselect === 'function') {
+                            calendar.unselect();
+                        }
+                        document.getElementById('error').textContent = 'Valitse arkipäivä (maanantai-perjantai)!';
+                        return;
+                    }
+
+                    // If on mobile device, show mobile modal instead of direct selection
                     if (isMobile) {
-                        const dateStr = getDateKey(info.date);
+                        const dateStr = getDateKey(start);
                         // Check if dateStr is valid before showing modal
                         if (dateStr) {
                             showMobileTimeModal(dateStr, null, bookings);
                         } else {
-                            console.error('Failed to generate dateKey for info.date:', info.date);
+                            console.error('Failed to generate dateKey for start date:', start);
                             document.getElementById('error').textContent = 'Virhe päivämäärän käsittelyssä. Yritä uudelleen.';
                         }
+                        if (typeof calendar.unselect === 'function') {
+                            calendar.unselect();
+                        }
+                        return;
+                    }
+
+                    // Desktop behavior: Show time slots grid for selected date
+                    const selectedDate = new Date(start);
+                    selectedDate.setHours(9, 0, 0, 0);
+                    
+                    // Populate time selection grid with available slots for the selected date
+                    const hasAvailableSlots = populateTimeSelectionGrid(selectedDate, bookings);
+                    
+                    if (hasAvailableSlots) {
+                        document.getElementById('error').textContent = '';
+                        // Scroll to time selection
+                        const timeGridContainer = document.getElementById('time-selection-grid');
+                        if (timeGridContainer) {
+                            timeGridContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
                     } else {
-                        // For desktop, show time selection grid
-                        const selectedDate = new Date(info.date);
-                        selectedDate.setHours(9, 0, 0, 0);
-                        
-                        const hasAvailableSlots = populateTimeSelectionGrid(selectedDate, bookings);
-                        
-                        if (hasAvailableSlots) {
-                            document.getElementById('error').textContent = '';
-                            // Scroll to time selection
-                            const timeGridContainer = document.getElementById('time-selection-grid');
-                            if (timeGridContainer) {
-                                timeGridContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        document.getElementById('error').textContent = 'Valitulle päivälle ei ole vapaita aikoja saatavilla.';
+                    }
+                    
+                    // Unselect the calendar selection since user hasn't picked a time yet
+                    if (typeof calendar.unselect === 'function') {
+                        calendar.unselect();
+                    }
+                } catch (error) {
+                    console.error('Error in select handler:', error);
+                    // Gracefully handle the error
+                    document.getElementById('error').textContent = 'Virhe päivämäärän valinnassa. Yritä uudelleen.';
+                }
+            },
+            dateClick: function(info) {
+                // FIX: Wrap in try-catch for error handling
+                try {
+                    if (!info || !info.date) {
+                        console.error('Invalid dateClick info');
+                        return;
+                    }
+                    
+                    const now = new Date();
+                    now.setHours(0, 0, 0, 0);
+                    
+                    // Prevent selection of past dates
+                    if (info.date < now) {
+                        document.getElementById('error').textContent = 'Et voi valita mennyttä päivämäärää!';
+                        return;
+                    }
+                    
+                    // Handle day/slot clicks - use same logic as select for consistency
+                    const dayOfWeek = info.date.getDay();
+                    if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Only weekdays
+                        if (isMobile) {
+                            const dateStr = getDateKey(info.date);
+                            // Check if dateStr is valid before showing modal
+                            if (dateStr) {
+                                showMobileTimeModal(dateStr, null, bookings);
+                            } else {
+                                console.error('Failed to generate dateKey for info.date:', info.date);
+                                document.getElementById('error').textContent = 'Virhe päivämäärän käsittelyssä. Yritä uudelleen.';
                             }
                         } else {
-                            document.getElementById('error').textContent = 'Valitulle päivälle ei ole vapaita aikoja saatavilla.';
+                            // For desktop, show time selection grid
+                            const selectedDate = new Date(info.date);
+                            selectedDate.setHours(9, 0, 0, 0);
+                            
+                            const hasAvailableSlots = populateTimeSelectionGrid(selectedDate, bookings);
+                            
+                            if (hasAvailableSlots) {
+                                document.getElementById('error').textContent = '';
+                                // Scroll to time selection
+                                const timeGridContainer = document.getElementById('time-selection-grid');
+                                if (timeGridContainer) {
+                                    timeGridContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                }
+                            } else {
+                                document.getElementById('error').textContent = 'Valitulle päivälle ei ole vapaita aikoja saatavilla.';
+                            }
                         }
                     }
+                } catch (error) {
+                    console.error('Error in dateClick handler:', error);
+                    document.getElementById('error').textContent = 'Virhe päivämäärän valinnassa. Yritä uudelleen.';
                 }
             },
             events: function (fetchInfo, successCallback) {
-                const evs = [];
-                
-                // For dayGrid view, show booking count per day
-                const currentDate = new Date(fetchInfo.start);
-                const endDate = new Date(fetchInfo.end);
-                
-                while (currentDate < endDate) {
-                    const dayOfWeek = currentDate.getDay();
-                    // Only process weekdays
-                    if (dayOfWeek >= 1 && dayOfWeek <= 5) {
-                        const dateKey = getDateKey(currentDate);
-                        // Skip if dateKey is null (invalid date)
-                        if (!dateKey) {
-                            currentDate.setDate(currentDate.getDate() + 1);
-                            continue;
-                        }
-                        const dayBookingsCount = bookings.filter(b => {
-                            const bookingDateKey = getDateKey(new Date(b.aika));
-                            return bookingDateKey && bookingDateKey === dateKey;
-                        }).length;
-                        
-                        if (dayBookingsCount > 0) {
-                            const availableSlots = 8 - dayBookingsCount; // 8 slots per day (9-17)
-                            evs.push({
-                                title: `${availableSlots} paikkaa`,
-                                start: dateKey,
-                                allDay: true,
-                                color: availableSlots > 4 ? '#4CAF50' : availableSlots > 0 ? '#FFC107' : '#F44336',
-                                textColor: '#fff'
-                            });
-                        }
+                // FIX: Wrap in try-catch to prevent errors during event generation
+                try {
+                    if (!fetchInfo || !successCallback) {
+                        console.error('Invalid fetchInfo or successCallback in events function');
+                        if (successCallback) successCallback([]);
+                        return;
                     }
                     
-                    currentDate.setDate(currentDate.getDate() + 1);
+                    const evs = [];
+                    
+                    // For dayGrid view, show booking count per day
+                    const currentDate = new Date(fetchInfo.start);
+                    const endDate = new Date(fetchInfo.end);
+                    
+                    while (currentDate < endDate) {
+                        const dayOfWeek = currentDate.getDay();
+                        // Only process weekdays
+                        if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+                            const dateKey = getDateKey(currentDate);
+                            // Skip if dateKey is null (invalid date)
+                            if (!dateKey) {
+                                currentDate.setDate(currentDate.getDate() + 1);
+                                continue;
+                            }
+                            const dayBookingsCount = bookings.filter(b => {
+                                const bookingDateKey = getDateKey(new Date(b.aika));
+                                return bookingDateKey && bookingDateKey === dateKey;
+                            }).length;
+                            
+                            if (dayBookingsCount > 0) {
+                                const availableSlots = 8 - dayBookingsCount; // 8 slots per day (9-17)
+                                evs.push({
+                                    title: `${availableSlots} paikkaa`,
+                                    start: dateKey,
+                                    allDay: true,
+                                    color: availableSlots > 4 ? '#4CAF50' : availableSlots > 0 ? '#FFC107' : '#F44336',
+                                    textColor: '#fff'
+                                });
+                            }
+                        }
+                        
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    
+                    successCallback(evs);
+                } catch (error) {
+                    console.error('Error in events function:', error);
+                    // Return empty array on error to prevent calendar breaking
+                    if (successCallback) successCallback([]);
                 }
-                
-                successCallback(evs);
             }
         });
         
@@ -1202,95 +1252,119 @@ function initializeBookingSystem() {
         if (calendar) {
             // Wrap render in try-catch to handle any rendering errors gracefully
             try {
-                calendar.render();
-            } catch (renderError) {
-                console.error('FullCalendar render failed:', renderError);
-                calendar = null; // Reset calendar to null so fallback can activate
-                return; // Exit early to trigger fallback
+                // FIX: Add small delay to ensure DOM is fully ready
+                setTimeout(() => {
+                    try {
+                        calendar.render();
+                        
+                        // FIX: Move all post-render setup inside the timeout to ensure calendar is fully initialized
+                        // Navigation button state management for month view
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        
+                        function updateNavigationButtons() {
+                            // FIX: Verify calendar exists and has required methods
+                            if (!calendar || typeof calendar.getDate !== 'function') {
+                                console.error('Calendar not available for navigation button update');
+                                return;
+                            }
+                            
+                            const prevBtn = document.getElementById('prevWeekBtn');
+                            const nextBtn = document.getElementById('nextWeekBtn');
+                            
+                            if (!prevBtn || !nextBtn) {
+                                console.error('Navigation buttons not found');
+                                return;
+                            }
+                            
+                            const currentDate = calendar.getDate();
+                            
+                            // Get the view start date (first visible date in calendar)
+                            const view = calendar.view;
+                            if (!view) {
+                                console.error('Calendar view not available');
+                                return;
+                            }
+                            
+                            const viewStart = view.currentStart;
+                            
+                            // Disable prev button if view start is at or before today
+                            const todayStart = new Date(today);
+                            todayStart.setHours(0, 0, 0, 0);
+                            
+                            if (viewStart <= todayStart) {
+                                prevBtn.disabled = true;
+                            } else {
+                                prevBtn.disabled = false;
+                            }
+                            
+                            // Disable next button if we're at the valid range end
+                            const validRangeEnd = new Date(today.getFullYear(), today.getMonth() + 2, 0);
+                            const viewEnd = view.currentEnd;
+                            
+                            if (viewEnd >= validRangeEnd) {
+                                nextBtn.disabled = true;
+                            } else {
+                                nextBtn.disabled = false;
+                            }
+                        }
+                        
+                        // Previous month button
+                        const prevBtn = document.getElementById('prevWeekBtn');
+                        const nextBtn = document.getElementById('nextWeekBtn');
+                        
+                        if (prevBtn) {
+                            prevBtn.addEventListener('click', function() {
+                                // FIX: Verify calendar exists before calling methods
+                                if (calendar && typeof calendar.prev === 'function') {
+                                    calendar.prev();
+                                    updateNavigationButtons();
+                                    populateAvailableSlots(calendar, bookings);
+                                }
+                            });
+                        }
+                        
+                        // Next month button
+                        if (nextBtn) {
+                            nextBtn.addEventListener('click', function() {
+                                // FIX: Verify calendar exists before calling methods
+                                if (calendar && typeof calendar.next === 'function') {
+                                    calendar.next();
+                                    updateNavigationButtons();
+                                    populateAvailableSlots(calendar, bookings);
+                                }
+                            });
+                        }
+                        
+                        // Navigate to week with next available booking slot
+                        setTimeout(() => {
+                            // FIX: Verify calendar exists before navigation
+                            if (calendar && typeof calendar.gotoDate === 'function') {
+                                findAndNavigateToNextAvailableWeek(calendar, bookings);
+                                updateNavigationButtons();
+                                // Populate available slots for the current week
+                                populateAvailableSlots(calendar, bookings);
+                            }
+                            // Don't show time selection grid initially - user must click a day first
+                            const timeGridContainer = document.getElementById('time-selection-grid');
+                            if (timeGridContainer) {
+                                timeGridContainer.style.display = 'none';
+                            }
+                            // Setup dropdown event listener
+                            setupDropdownEventListener();
+                        }, 100); // Small delay to ensure calendar is fully rendered
+                        
+                    } catch (renderError) {
+                        console.error('FullCalendar render failed:', renderError);
+                        calendar = null; // Reset calendar to null so fallback can activate
+                        return; // Exit early to trigger fallback
+                    }
+                }, 50);
+            } catch (error) {
+                console.error('Error preparing calendar render:', error);
+                calendar = null;
+                return;
             }
-            
-            // Navigation button state management for month view
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            
-            function updateNavigationButtons() {
-                // FIX: Verify calendar exists and has required methods
-                if (!calendar || typeof calendar.getDate !== 'function') {
-                    console.error('Calendar not available for navigation button update');
-                    return;
-                }
-                
-                const prevBtn = document.getElementById('prevWeekBtn');
-                const nextBtn = document.getElementById('nextWeekBtn');
-                const currentDate = calendar.getDate();
-                
-                // Get the view start date (first visible date in calendar)
-                const view = calendar.view;
-                if (!view) {
-                    console.error('Calendar view not available');
-                    return;
-                }
-                
-                const viewStart = view.currentStart;
-                
-                // Disable prev button if view start is at or before today
-                const todayStart = new Date(today);
-                todayStart.setHours(0, 0, 0, 0);
-                
-                if (viewStart <= todayStart) {
-                    prevBtn.disabled = true;
-                } else {
-                    prevBtn.disabled = false;
-                }
-                
-                // Disable next button if we're at the valid range end
-                const validRangeEnd = new Date(today.getFullYear(), today.getMonth() + 2, 0);
-                const viewEnd = view.currentEnd;
-                
-                if (viewEnd >= validRangeEnd) {
-                    nextBtn.disabled = true;
-                } else {
-                    nextBtn.disabled = false;
-                }
-            }
-            
-            // Previous month button
-            document.getElementById('prevWeekBtn').addEventListener('click', function() {
-                // FIX: Verify calendar exists before calling methods
-                if (calendar && typeof calendar.prev === 'function') {
-                    calendar.prev();
-                    updateNavigationButtons();
-                    populateAvailableSlots(calendar, bookings);
-                }
-            });
-            
-            // Next month button
-            document.getElementById('nextWeekBtn').addEventListener('click', function() {
-                // FIX: Verify calendar exists before calling methods
-                if (calendar && typeof calendar.next === 'function') {
-                    calendar.next();
-                    updateNavigationButtons();
-                    populateAvailableSlots(calendar, bookings);
-                }
-            });
-            
-            // Navigate to week with next available booking slot
-            setTimeout(() => {
-                // FIX: Verify calendar exists before navigation
-                if (calendar && typeof calendar.gotoDate === 'function') {
-                    findAndNavigateToNextAvailableWeek(calendar, bookings);
-                    updateNavigationButtons();
-                    // Populate available slots for the current week
-                    populateAvailableSlots(calendar, bookings);
-                }
-                // Don't show time selection grid initially - user must click a day first
-                const timeGridContainer = document.getElementById('time-selection-grid');
-                if (timeGridContainer) {
-                    timeGridContainer.style.display = 'none';
-                }
-                // Setup dropdown event listener
-                setupDropdownEventListener();
-            }, 100); // Small delay to ensure calendar is fully rendered
         }
         
         } catch (error) {
