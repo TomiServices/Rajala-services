@@ -17,14 +17,37 @@ exports.book = functions.https.onRequest((req, res) => {
             return res.status(400).json({ error: "Missing required fields" });
         }
         
-        // Build formatted service list for email display
+        // Helper function to escape HTML to prevent XSS attacks
+        function escapeHtml(unsafe) {
+            if (typeof unsafe !== 'string') return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
+        // Helper function to sanitize text for email to prevent injection
+        function sanitizeText(text) {
+            if (typeof text !== 'string') return '';
+            // Remove any control characters and limit to printable characters
+            return text.replace(/[\x00-\x1F\x7F]/g, '').trim();
+        }
+        
+        // Build formatted service list for email display with proper escaping
         const serviceListHtml = services.map(service => 
-            `<li><strong>${service.serviceName}</strong> - ${service.taskName}: ${service.price}</li>`
+            `<li><strong>${escapeHtml(service.serviceName)}</strong> - ${escapeHtml(service.taskName)}: ${escapeHtml(service.price)}</li>`
         ).join('');
         
         const serviceListText = services.map(service => 
-            `  - ${service.serviceName} - ${service.taskName}: ${service.price}`
+            `  - ${sanitizeText(service.serviceName)} - ${sanitizeText(service.taskName)}: ${sanitizeText(service.price)}`
         ).join('\n');
+        
+        // Sanitize user inputs for email
+        const safeName = sanitizeText(name);
+        const safeAika = sanitizeText(aika);
+        const safeTotalPrice = sanitizeText(totalPrice);
         
         // Tallenna varaus Firestoreen with structured service data
         admin.firestore().collection("varaukset").add({
@@ -42,10 +65,10 @@ exports.book = functions.https.onRequest((req, res) => {
                 to: [email], // ARRAY, extension vaatii tätä!
                 message: {
                     subject: "Varausvahvistus – Fixnero",
-                    text: `Hei ${name},\n\nKiitos paljon tekemästäsi varauksesta! Sinulle on vahvistettu varaus ajalle ${aika}.\n\nValitut palvelut:\n${serviceListText}\n\nYhteensä: ${totalPrice}\n\nTervetuloa asiakkaaksemme!\n\nYstävällisin terveisin,\nFixnero-tiimi\n\nPuhelin: 040 1935001\nSähköposti: info@fixnero.fi\nOsoite: Tiilenvalajantie 6, 02330 Espoo\nAukioloajat: Arkisin 9:00-17:00, viikonloppuisin suljettu`,
+                    text: `Hei ${safeName},\n\nKiitos paljon tekemästäsi varauksesta! Sinulle on vahvistettu varaus ajalle ${safeAika}.\n\nValitut palvelut:\n${serviceListText}\n\nYhteensä: ${safeTotalPrice}\n\nTervetuloa asiakkaaksemme!\n\nYstävällisin terveisin,\nFixnero-tiimi\n\nPuhelin: 040 1935001\nSähköposti: info@fixnero.fi\nOsoite: Tiilenvalajantie 6, 02330 Espoo\nAukioloajat: Arkisin 9:00-17:00, viikonloppuisin suljettu`,
                     html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-                        <h2 style="color: #333;">Hei ${name},</h2>
-                        <p>Kiitos paljon tekemästäsi varauksesta! Sinulle on vahvistettu varaus ajalle <strong>${aika}</strong>.</p>
+                        <h2 style="color: #333;">Hei ${escapeHtml(safeName)},</h2>
+                        <p>Kiitos paljon tekemästäsi varauksesta! Sinulle on vahvistettu varaus ajalle <strong>${escapeHtml(safeAika)}</strong>.</p>
                         
                         <h3 style="color: #333; margin-top: 20px;">Valitut palvelut:</h3>
                         <ul style="list-style-type: none; padding: 0;">
@@ -53,7 +76,7 @@ exports.book = functions.https.onRequest((req, res) => {
                         </ul>
                         
                         <p style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-left: 4px solid #4CAF50; font-size: 16px;">
-                            <strong>Yhteensä:</strong> ${totalPrice}
+                            <strong>Yhteensä:</strong> ${escapeHtml(safeTotalPrice)}
                         </p>
                         
                         <p style="margin-top: 20px;">Tervetuloa asiakkaaksemme!</p>

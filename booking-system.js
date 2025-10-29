@@ -662,6 +662,49 @@ function initializeBookingSystem() {
         }
     }
     
+    // Helper function to calculate total price from selected services
+    // Returns object with totalMin (numeric), totalPriceString (formatted), and hasVariablePricing flag
+    function calculateTotalPrice(services) {
+        let totalMin = 0;
+        let hasVariablePricing = false;
+        
+        services.forEach(service => {
+            const taskPrice = service.taskPrice || service.price || '';
+            
+            if (taskPrice && taskPrice.trim() !== '') {
+                // Extract price for total calculation
+                const priceMatch = taskPrice.match(/(\d+)\s*€/);
+                if (priceMatch) {
+                    totalMin += parseInt(priceMatch[1]);
+                }
+                // Check if it says "alkaen" (starting from)
+                if (taskPrice.includes('alkaen') || taskPrice === '') {
+                    hasVariablePricing = true;
+                }
+            } else {
+                hasVariablePricing = true;
+            }
+        });
+        
+        // Format total price string
+        let totalPriceString = '';
+        if (totalMin > 0) {
+            if (hasVariablePricing) {
+                totalPriceString = `alkaen ${totalMin} €`;
+            } else {
+                totalPriceString = `${totalMin} €`;
+            }
+        } else {
+            totalPriceString = 'Hinta sovittaessa';
+        }
+        
+        return {
+            totalMin: totalMin,
+            totalPriceString: totalPriceString,
+            hasVariablePricing: hasVariablePricing
+        };
+    }
+    
     function updateSelectedServicesDisplay() {
         const container = document.getElementById('selected-services-container');
         const list = document.getElementById('selected-services-list');
@@ -677,9 +720,6 @@ function initializeBookingSystem() {
         container.style.display = 'block';
         list.innerHTML = '';
         
-        let totalMin = 0;
-        let hasVariablePricing = false;
-        
         selectedServices.forEach((service, index) => {
             const li = document.createElement('li');
             li.style.cssText = 'padding: 10px; margin: 5px 0; background: #f8f9fa; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;';
@@ -687,19 +727,8 @@ function initializeBookingSystem() {
             const serviceText = document.createElement('span');
             if (service.taskPrice && service.taskPrice.trim() !== '') {
                 serviceText.textContent = `${service.serviceName} - ${service.taskName}: ${service.taskPrice}`;
-                
-                // Extract price for total calculation
-                const priceMatch = service.taskPrice.match(/(\d+)\s*€/);
-                if (priceMatch) {
-                    totalMin += parseInt(priceMatch[1]);
-                }
-                // Check if it says "alkaen" (starting from)
-                if (service.taskPrice.includes('alkaen') || service.taskPrice === '') {
-                    hasVariablePricing = true;
-                }
             } else {
                 serviceText.textContent = `${service.serviceName} - ${service.taskName}`;
-                hasVariablePricing = true;
             }
             
             const removeBtn = document.createElement('button');
@@ -713,14 +742,12 @@ function initializeBookingSystem() {
             list.appendChild(li);
         });
         
-        // Display total if we have at least one priced service
-        if (totalMin > 0) {
+        // Calculate and display total using shared helper function
+        const totalInfo = calculateTotalPrice(selectedServices);
+        
+        if (totalInfo.totalMin > 0) {
             totalContainer.style.display = 'block';
-            if (hasVariablePricing) {
-                totalAmountSpan.textContent = `alkaen ${totalMin} €`;
-            } else {
-                totalAmountSpan.textContent = `${totalMin} €`;
-            }
+            totalAmountSpan.textContent = totalInfo.totalPriceString;
         } else {
             totalContainer.style.display = 'none';
         }
@@ -747,36 +774,13 @@ function initializeBookingSystem() {
             };
         });
         
-        // Calculate total price
-        let totalPrice = 0;
-        let hasVariablePricing = false;
-        
-        services.forEach(service => {
-            if (service.numericPrice !== null) {
-                totalPrice += service.numericPrice;
-            }
-            // Check if any service has variable pricing
-            if (service.price.includes('alkaen') || service.price === 'Hinta sovittaessa' || service.numericPrice === null) {
-                hasVariablePricing = true;
-            }
-        });
-        
-        // Format total price string
-        let totalPriceString = '';
-        if (totalPrice > 0) {
-            if (hasVariablePricing) {
-                totalPriceString = `alkaen ${totalPrice} €`;
-            } else {
-                totalPriceString = `${totalPrice} €`;
-            }
-        } else {
-            totalPriceString = 'Hinta sovittaessa';
-        }
+        // Use shared helper to calculate total price
+        const totalInfo = calculateTotalPrice(services);
         
         return {
             services: services,
-            totalPrice: totalPriceString,
-            totalNumericPrice: totalPrice
+            totalPrice: totalInfo.totalPriceString,
+            totalNumericPrice: totalInfo.totalMin
         };
     }
     
