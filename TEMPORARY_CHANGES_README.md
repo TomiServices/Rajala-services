@@ -4,10 +4,10 @@
 The category box background images on the main page (index.html) have been temporarily replaced with high-contrast gradient backgrounds to improve accessibility and meet WCAG contrast requirements.
 
 ## What Was Changed
-- **Location**: `index.html` lines 622-693 (approximately)
+- **Location**: `index.html` lines 648-700 (main gradient section) and lines 708-710 (hover overlay)
 - **Original images**: Dark background photos (Pesupalvelut.webp, Rengastyot.webp, etc.)
 - **Temporary replacement**: Vibrant CSS gradient backgrounds
-- **Overlay adjustment**: Reduced from 85% to 40% opacity for better text visibility
+- **Overlay adjustment**: Reduced from 75% to 40% opacity for better text visibility
 
 ## Why This Change Was Made
 The original background images were too dark and unclear, which:
