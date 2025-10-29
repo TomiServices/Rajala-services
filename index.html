@@ -369,7 +369,7 @@
         }
         
         .hamburger-menu {
-            display: none;
+            display: none !important;
             cursor: pointer;
             padding: 0;
             background: linear-gradient(135deg, rgba(40,40,40,0.95), rgba(20,20,20,0.95));
@@ -636,7 +636,7 @@
             justify-content: center;
             font-size: 1.2rem;
             font-weight: 700;
-            color: #E65100; /* Darker orange for better contrast and readability */
+            color: #fff; /* White color for better contrast against dark gradient */
             cursor: pointer;
             position: relative;
             overflow: hidden;
@@ -648,7 +648,7 @@
             content: "";
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.75) 60%, rgba(0,0,0,0.4) 100%);
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0.3) 100%);
             z-index: 1;
             transition: all 0.3s ease;
         }
@@ -659,7 +659,7 @@
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
         .category-box:hover::after {
-            background: linear-gradient(to top, rgba(0,0,0,0.65) 60%, rgba(0,0,0,0.35) 100%);
+            background: linear-gradient(to top, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.25) 100%);
         }
         .category-box span, .category-box {
             z-index: 2;
@@ -1461,7 +1461,7 @@
             left: 0;
             right: 0;
             padding: 0 3px;
-            display: none;
+            display: none !important;
             height: 35px;
             width: 100%;
             z-index: 10;
@@ -1488,7 +1488,7 @@
             align-items: center;
             position: relative;
             padding: 0 3px;
-            display: none;
+            display: none !important;
             height: 35px;
             width: 100%;
         }
@@ -1755,7 +1755,7 @@
         
         /* Mobile Time Selection Modal */
         .mobile-time-modal {
-            display: none;
+            display: none !important;
             position: fixed;
             top: 0;
             left: 0;
@@ -1929,7 +1929,7 @@
         }
         
         #slot-summary:empty {
-            display: none;
+            display: none !important;
         }
         
         /* Available Time Slots Dropdown Section */
@@ -2745,7 +2745,7 @@
     
     <!-- Booking Calendar Section -->
     <!-- TEMPORARILY CLOSED: Calendar disabled during development phase -->
-    <div class="ajanvaraus-container" id="ajanvaraus" style="display:none;">
+    <div class="ajanvaraus-container" id="ajanvaraus" style="display: none !important;" aria-hidden="true">
       <h2>Varaa aika silmäterällesi</h2>
       
       <!-- Calendar Navigation Buttons -->
@@ -2757,7 +2757,7 @@
       <div id="calendar"></div>
       
       <!-- Time Selection Grid -->
-      <div id="time-selection-grid" class="time-selection-container" style="display:none;">
+      <div id="time-selection-grid" class="time-selection-container" style="display: none !important;" aria-hidden="true">
         <h3 class="time-selection-title">Valitse aika:</h3>
         <div id="time-slots-grid" class="time-slots-grid">
           <!-- Time slots will be dynamically generated here -->
@@ -2765,7 +2765,7 @@
       </div>
       
       <!-- Mock calendar for testing when FullCalendar CDN is blocked -->
-      <div id="mock-calendar" style="display: none; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 8px;">
+      <div id="mock-calendar" style="display: none !important; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 8px;" aria-hidden="true">
         <p style="text-align: center; color: #FF8C00; margin-bottom: 15px;">
           <strong>Test Calendar with Weekend Enhancement</strong> (FullCalendar CDN blocked - using fallback for testing)
         </p>
@@ -2803,7 +2803,7 @@
       </div>
       
       <!-- Available Time Slots Dropdown - Now first in flow -->
-      <div id="availableSlots" class="available-slots-section" style="display:none;">
+      <div id="availableSlots" class="available-slots-section" style="display: none !important;" aria-hidden="true">
         <div class="available-slots-dropdown">
           <label for="availableTimesSelect" id="availableTimesLabel">Valitse aika valitulle päivälle:</label>
           <select id="availableTimesSelect" class="available-times-select">
@@ -2816,7 +2816,7 @@
       <div id="slot-summary"></div>
       
       <!-- Selected services list -->
-      <div id="selected-services-container" style="display:none; margin: 15px 0;">
+      <div id="selected-services-container" style="display: none !important; margin: 15px 0;" aria-hidden="true">
         <h3 style="font-size: 1.1rem; margin-bottom: 10px;">Valitut palvelut:</h3>
         <ul id="selected-services-list" style="list-style: none; padding: 0; margin: 0;">
           <!-- Selected services will be added here -->
@@ -2824,7 +2824,7 @@
       </div>
       
       <!-- Service Selection Dropdown - Moved to appear between selected services and add button -->
-      <div id="serviceSelection" class="available-slots-section" style="display:none;">
+      <div id="serviceSelection" class="available-slots-section" style="display: none !important;" aria-hidden="true">
         <div class="available-slots-dropdown">
           <label for="serviceSelect">Valitse haluamasi palvelu:</label>
           <select id="serviceSelect" class="available-times-select">
@@ -2839,7 +2839,7 @@
       </div>
 
       <!-- Task Selection Dropdown - Moved to appear between selected services and add button -->
-      <div id="taskSelection" class="available-slots-section" style="display:none;">
+      <div id="taskSelection" class="available-slots-section" style="display: none !important;" aria-hidden="true">
         <div class="available-slots-dropdown">
           <label for="taskSelect">Valitse palvelun tyyppi:</label>
           <select id="taskSelect" class="available-times-select">
@@ -2849,23 +2849,23 @@
       </div>
       
       <!-- Add another service button -->
-      <div id="add-service-container" style="display:none; margin: 15px 0; text-align: center;">
+      <div id="add-service-container" style="display: none !important; margin: 15px 0; text-align: center;" aria-hidden="true">
         <button id="add-service-btn" class="btn" type="button" style="background: #444; width: auto; padding: 10px 20px; display: inline-block;">
           ➕ Lisää toinen palvelu
         </button>
       </div>
       
       <!-- Estimated total price -->
-      <div id="total-amount-container" style="display:none; margin: 20px 0; padding: 15px; background: #e8f4f8; border-radius: 8px; border: 2px solid #4a90e2; text-align: center;">
+      <div id="total-amount-container" style="display: none !important; margin: 20px 0; padding: 15px; background: #e8f4f8; border-radius: 8px; border: 2px solid #4a90e2; text-align: center;" aria-hidden="true">
         <strong style="font-size: 1.3rem; color: #FF8C00;">Arvioitu kokonaishinta: <span id="total-amount">0 €</span></strong>
       </div>
       
       <!-- Repair services disclaimer -->
-      <div id="repair-disclaimer" style="display:none; background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: center;">
+      <div id="repair-disclaimer" style="display: none !important; background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: center;" aria-hidden="true">
         <strong>Huomioithan että korjaustöiden hinnat ovat aina tapauskohtaisia. Voit olla meihin yhteydessä ennen korjausta hinta-arviota varten.</strong>
       </div>
       
-      <form class="booking-form" id="bookingForm" style="display:none;" autocomplete="on">
+      <form class="booking-form" id="bookingForm" style="display: none !important;" autocomplete="on" aria-hidden="true">
         <input type="hidden" name="aika" id="aika" />
         <input type="hidden" name="service" id="service" />
         <input type="hidden" name="task" id="task" />
