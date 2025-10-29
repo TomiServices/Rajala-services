@@ -726,6 +726,60 @@ function initializeBookingSystem() {
         }
     }
     
+    // Helper function to prepare service data for backend submission
+    // Returns structured service array and calculated total price
+    function prepareServiceData() {
+        const services = selectedServices.map(service => {
+            // Extract numeric price from price string (e.g., "alkaen 35 €" -> 35)
+            let numericPrice = null;
+            if (service.taskPrice && service.taskPrice.trim() !== '') {
+                const priceMatch = service.taskPrice.match(/(\d+)\s*€/);
+                if (priceMatch) {
+                    numericPrice = parseInt(priceMatch[1]);
+                }
+            }
+            
+            return {
+                serviceName: service.serviceName,
+                taskName: service.taskName,
+                price: service.taskPrice || 'Hinta sovittaessa',
+                numericPrice: numericPrice
+            };
+        });
+        
+        // Calculate total price
+        let totalPrice = 0;
+        let hasVariablePricing = false;
+        
+        services.forEach(service => {
+            if (service.numericPrice !== null) {
+                totalPrice += service.numericPrice;
+            }
+            // Check if any service has variable pricing
+            if (service.price.includes('alkaen') || service.price === 'Hinta sovittaessa' || service.numericPrice === null) {
+                hasVariablePricing = true;
+            }
+        });
+        
+        // Format total price string
+        let totalPriceString = '';
+        if (totalPrice > 0) {
+            if (hasVariablePricing) {
+                totalPriceString = `alkaen ${totalPrice} €`;
+            } else {
+                totalPriceString = `${totalPrice} €`;
+            }
+        } else {
+            totalPriceString = 'Hinta sovittaessa';
+        }
+        
+        return {
+            services: services,
+            totalPrice: totalPriceString,
+            totalNumericPrice: totalPrice
+        };
+    }
+    
     function updateRepairDisclaimer() {
         const repairDisclaimer = document.getElementById('repair-disclaimer');
         const hasRepairService = selectedServices.some(s => s.service === 'repair');
@@ -1495,24 +1549,19 @@ function initializeBookingSystem() {
             }, 10);
             
             try {
-                // Build service description from selected services
-                const palveluText = selectedServices.map(s => s.serviceName).join(', ');
-                const palvelunTyyppiText = selectedServices.map(s => {
-                    if (s.taskPrice && s.taskPrice.trim() !== '') {
-                        return `${s.taskName}: ${s.taskPrice}`;
-                    }
-                    return s.taskName;
-                }).join(', ');
+                // Prepare structured service data with prices
+                const serviceData = prepareServiceData();
                 
-                // FIXED: Send booking to backend Firebase Function
+                // FIXED: Send booking to backend Firebase Function with structured service data
                 const res = await fetch('https://us-central1-fxnr-web.cloudfunctions.net/book', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         name, email, phone,
                         aika: selectedSlot.toISOString(),
-                        palvelu: palveluText,
-                        palvelunTyyppi: palvelunTyyppiText,
+                        services: serviceData.services, // Structured array of services
+                        totalPrice: serviceData.totalPrice, // Formatted total price string
+                        totalNumericPrice: serviceData.totalNumericPrice, // Numeric total for calculations
                         recaptcha: recaptchaResponse
                     })
                 });
