@@ -2752,11 +2752,11 @@
       
       <!-- Calendar Navigation Buttons -->
       <div class="calendar-nav-container">
-        <button id="prevWeekBtn" class="calendar-nav-btn">← Edellinen</button>
-        <button id="nextWeekBtn" class="calendar-nav-btn">Seuraava →</button>
+        <button id="prevWeekBtn" class="calendar-nav-btn" aria-label="Siirry edelliseen kuukauteen">← Edellinen</button>
+        <button id="nextWeekBtn" class="calendar-nav-btn" aria-label="Siirry seuraavaan kuukauteen">Seuraava →</button>
       </div>
       
-      <div id="calendar"></div>
+      <div id="calendar" role="application" aria-label="Ajanvarauskalenteri"></div>
       
       <!-- Time Selection Grid -->
       <div id="time-selection-grid" class="time-selection-container" style="display: none !important;" aria-hidden="true">
