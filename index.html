@@ -688,8 +688,9 @@
             .category-box { min-width: 130px; min-height: 90px; max-width: 48vw; }
         }
         
-        /* Enhanced mobile layout for devices like iPhone 15 Pro - force two-row layout */
-        @media (max-width: 430px) {
+        /* Enhanced mobile layout for devices like iPhone 15 Pro and Pro Max - force two-column layout */
+        /* iPhone 15 Pro: 393px, Pro Max: 430px, and similar devices */
+        @media (max-width: 480px) {
             .categories-row { 
                 gap: 8px !important; 
                 justify-content: space-between !important;
@@ -703,9 +704,10 @@
                 min-width: calc(50% - 4px) !important; 
                 max-width: calc(50% - 4px) !important;
                 width: calc(50% - 4px) !important;
-                min-height: 80px !important; 
-                font-size: 1rem !important;
+                min-height: 85px !important; 
+                font-size: 0.95rem !important;
                 box-sizing: border-box !important;
+                padding: 8px !important;
             }
         }
         
@@ -811,6 +813,30 @@
             margin: 30px auto;
         }
         
+        /* Full HD Resolution (1920px) - optimize image and content layout */
+        @media (min-width: 1920px) and (max-width: 2559px) {
+            .polishing-content,
+            .tire-services-content,
+            .interior-cleaning-content {
+                max-width: 1400px;
+                gap: 40px;
+            }
+            
+            .polishing-image,
+            .tire-services-image,
+            .interior-cleaning-image {
+                flex: 0 0 650px;
+                max-width: 650px;
+            }
+            
+            .polishing-image img,
+            .tire-services-image img,
+            .interior-cleaning-image img {
+                height: auto;
+                object-fit: cover;
+            }
+        }
+        
         /* 4K Resolution (2560px and above) - wider content */
         @media (min-width: 2560px) {
             section {
@@ -824,16 +850,30 @@
             .categories-row {
                 max-width: 1600px;
             }
+            
+            .polishing-content,
+            .tire-services-content,
+            .interior-cleaning-content {
+                max-width: 1600px;
+                gap: 50px;
+            }
+            
+            .polishing-image,
+            .tire-services-image,
+            .interior-cleaning-image {
+                flex: 0 0 700px;
+                max-width: 700px;
+            }
         }
         
         /* Animated background pattern for all main sections */
-        #pesupalvelut, #rengastyot, #korjaustyot, #lasikorjaus, #hinnasto, #yhteystiedot {
+        #pesupalvelut, #rengastyot, #korjaustyot, #sisapuhdistus, #kiilloitus, #lasikorjaus, #hinnasto, #yhteystiedot {
             background: #f5f5f5;
             overflow: hidden;
             position: relative;
         }
         
-        #pesupalvelut::before, #rengastyot::before, #korjaustyot::before, #lasikorjaus::before, #hinnasto::before, #yhteystiedot::before {
+        #pesupalvelut::before, #rengastyot::before, #korjaustyot::before, #sisapuhdistus::before, #kiilloitus::before, #lasikorjaus::before, #hinnasto::before, #yhteystiedot::before {
             content: '';
             position: absolute;
             top: 0;
@@ -853,26 +893,26 @@
             pointer-events: none;
         }
         
-        #pesupalvelut > *, #rengastyot > *, #korjaustyot > *, #lasikorjaus > *, #hinnasto > *, #yhteystiedot > * {
+        #pesupalvelut > *, #rengastyot > *, #korjaustyot > *, #sisapuhdistus > *, #kiilloitus > *, #lasikorjaus > *, #hinnasto > *, #yhteystiedot > * {
             position: relative;
             z-index: 1;
         }
         
         /* Update text colors for light background - Changed to orange for better contrast */
-        #pesupalvelut h2, #rengastyot h2, #korjaustyot h2, #lasikorjaus h2, #hinnasto h2, #yhteystiedot h2,
-        #pesupalvelut h3, #rengastyot h3, #korjaustyot h3, #lasikorjaus h3, #hinnasto h3, #yhteystiedot h3,
-        #pesupalvelut h4, #rengastyot h4, #korjaustyot h4, #lasikorjaus h4, #hinnasto h4, #yhteystiedot h4 {
+        #pesupalvelut h2, #rengastyot h2, #korjaustyot h2, #sisapuhdistus h2, #kiilloitus h2, #lasikorjaus h2, #hinnasto h2, #yhteystiedot h2,
+        #pesupalvelut h3, #rengastyot h3, #korjaustyot h3, #sisapuhdistus h3, #kiilloitus h3, #lasikorjaus h3, #hinnasto h3, #yhteystiedot h3,
+        #pesupalvelut h4, #rengastyot h4, #korjaustyot h4, #sisapuhdistus h4, #kiilloitus h4, #lasikorjaus h4, #hinnasto h4, #yhteystiedot h4 {
             color: #333333;
             text-shadow: none;
         }
         
-        #pesupalvelut p, #rengastyot p, #korjaustyot p, #lasikorjaus p, #hinnasto p, #yhteystiedot p,
-        #pesupalvelut li, #rengastyot li, #korjaustyot li, #lasikorjaus li, #hinnasto li, #yhteystiedot li {
+        #pesupalvelut p, #rengastyot p, #korjaustyot p, #sisapuhdistus p, #kiilloitus p, #lasikorjaus p, #hinnasto p, #yhteystiedot p,
+        #pesupalvelut li, #rengastyot li, #korjaustyot li, #sisapuhdistus li, #kiilloitus li, #lasikorjaus li, #hinnasto li, #yhteystiedot li {
             color: #333333;
             text-shadow: none;
         }
         
-        #pesupalvelut strong, #rengastyot strong, #korjaustyot strong, #lasikorjaus strong, #hinnasto strong, #yhteystiedot strong {
+        #pesupalvelut strong, #rengastyot strong, #korjaustyot strong, #sisapuhdistus strong, #kiilloitus strong, #lasikorjaus strong, #hinnasto strong, #yhteystiedot strong {
             color: #333333;
         }
         
@@ -2474,6 +2514,28 @@
             }
         }
         
+        /* Miksi Valita Fixnero section responsive layout */
+        .miksi-valita-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        /* Mobile: maintain 2x2 grid but with smaller gaps */
+        @media (max-width: 768px) {
+            .miksi-valita-grid {
+                gap: 20px;
+                padding: 0 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .miksi-valita-grid {
+                gap: 15px;
+                padding: 0;
+            }
+        }
+        
         /* Small mobile devices */
         @media (max-width: 375px) {
             .services-logo {
@@ -2633,34 +2695,34 @@
         <!-- Updated heading color to monochrome -->
         <h2 style="text-align: center; margin-bottom: 40px; font-size: 2.2rem; color: #1a1a1a; font-weight: 600; font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif; font-style: italic;">Miksi valita Fixnero?</h2>
         
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 1000px; margin: 0 auto;">
+        <div class="miksi-valita-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; max-width: 900px; margin: 0 auto;">
             <!-- Reason 1 -->
             <div style="background: white; padding: 30px 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
                 <div style="font-size: 3rem; margin-bottom: 15px;">👨‍🔧</div>
                 <!-- Updated text colors to monochrome -->
                 <h3 style="color: #1a1a1a; font-size: 1.4rem; margin-bottom: 12px; font-weight: 600;">Ammattitaitoinen palvelu</h3>
-                <p style="color: #333333; line-height: 1.6; font-size: 1rem;">Kokeneet ammattilaiset huolehtivat autostasi parhaan osaamisen mukaan.</p>
+                <p style="color: #333333; line-height: 1.6; font-size: 1rem;">Kokeneet ammattilaiset huolehtivat autostasi parhaan osaamisen mukaan. Meillä jokainen ajoneuvo saa asiantuntevaa hoitoa ja huolellista käsittelyä.</p>
             </div>
             
             <!-- Reason 2 -->
             <div style="background: white; padding: 30px 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
                 <div style="font-size: 3rem; margin-bottom: 15px;">⚡</div>
                 <h3 style="color: #1a1a1a; font-size: 1.4rem; margin-bottom: 12px; font-weight: 600;">Nopeat toimitusajat</h3>
-                <p style="color: #333333; line-height: 1.6; font-size: 1rem;">Saat palvelun nopeasti ja tehokkaasti, ilman pitkiä odotusaikoja.</p>
+                <p style="color: #333333; line-height: 1.6; font-size: 1rem;">Saat palvelun nopeasti ja tehokkaasti ilman pitkiä odotusaikoja. Arvostamme aikaasi ja tähtäämme joustavaan palveluun kaikissa tilanteissa.</p>
             </div>
             
             <!-- Reason 3 -->
             <div style="background: white; padding: 30px 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
                 <div style="font-size: 3rem; margin-bottom: 15px;">⭐</div>
                 <h3 style="color: #1a1a1a; font-size: 1.4rem; margin-bottom: 12px; font-weight: 600;">Korkea asiakastyytyväisyys</h3>
-                <p style="color: #333333; line-height: 1.6; font-size: 1rem;">Tyytyväiset asiakkaat ovat paras suosituksemme ja takuumme laadusta.</p>
+                <p style="color: #333333; line-height: 1.6; font-size: 1rem;">Tyytyväiset asiakkaat ovat paras suosituksemme ja takuumme laadusta. Erinomainen palvelu ja luotettavuus ovat meille kunnia-asia.</p>
             </div>
             
             <!-- Reason 4 -->
             <div style="background: white; padding: 30px 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
                 <div style="font-size: 3rem; margin-bottom: 15px;">💰</div>
                 <h3 style="color: #1a1a1a; font-size: 1.4rem; margin-bottom: 12px; font-weight: 600;">Kilpailukykyiset hinnat</h3>
-                <p style="color: #333333; line-height: 1.6; font-size: 1rem;">Tarjoamme laadukasta palvelua reiluun hintaan ilman piilokustannuksia.</p>
+                <p style="color: #333333; line-height: 1.6; font-size: 1rem;">Tarjoamme laadukasta palvelua reiluun hintaan ilman piilokustannuksia. Hinta-laatusuhteemme on erinomainen ja läpinäkyvä kaikissa palveluissa.</p>
             </div>
         </div>
     </section>
@@ -3044,7 +3106,7 @@
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
     </section>
-    <section id="sisapuhdistus">
+    <section id="sisapuhdistus" style="background: #f5f5f5; position: relative; overflow: hidden;">
         <h2>Sisäpuhdistus</h2>
         <div class="interior-cleaning-content">
             <div class="interior-cleaning-text">
@@ -3087,7 +3149,7 @@
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
     </section>
-    <section id="kiilloitus">
+    <section id="kiilloitus" style="background: #f5f5f5; position: relative; overflow: hidden;">
         <h2>Kiilloitus ja pinnoitteet</h2>
         <div class="polishing-content">
             <div class="polishing-text">
@@ -3213,20 +3275,23 @@
     <!-- End of services container -->
     
     <!-- FAQ Section - Link to Tietoa meistä page -->
-    <section id="ukk" style="background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%); border-left: 5px solid #333333; text-align: center; padding: 50px 30px;">
-        <!-- Updated heading and text colors to orange for better contrast -->
-        <h2 style="color: #333333;">Usein Kysytyt Kysymykset (UKK)</h2>
-        <p style="margin-bottom: 30px; font-size: 1.1rem; color: #333333;">Löydä vastaukset yleisimpiin kysymyksiin palveluistamme.</p>
-        
-        <a href="tietoa-meista.html#ukk" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #333333, #1a1a1a); color: #ffffff; text-decoration: none; border-radius: 30px; font-weight: 600; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);" 
-           onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(255,140,0,0.3)';" 
-           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255,140,0,0.2)';">
-            📋 Lue UKK sivulta
-        </a>
-        
-        <p style="margin-top: 25px; font-size: 0.95rem; color: #333333;">
-            Tai soita meille suoraan: <a href="tel:+358401935001" style="color: #333333; font-weight: 600; text-decoration: none;">📞 040 1935001</a>
-        </p>
+    <section id="ukk" style="background: #f5f5f5; position: relative; overflow: hidden; border-left: 5px solid #333333; text-align: center; padding: 50px 30px;">
+        <!-- Add animated background pattern -->
+        <div aria-hidden="true" style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(45deg, #e8e8e8 0px, #e8e8e8 30px, #f0f0f0 30px, #f0f0f0 60px); opacity: 0.4; z-index: 0; animation: patternMoveSlowly 800s linear infinite; pointer-events: none;"></div>
+        <div style="position: relative; z-index: 1;">
+            <h2 style="color: #333333;">Usein Kysytyt Kysymykset (UKK)</h2>
+            <p style="margin-bottom: 30px; font-size: 1.1rem; color: #333333;">Löydä vastaukset yleisimpiin kysymyksiin palveluistamme.</p>
+            
+            <a href="tietoa-meista.html#ukk" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #333333, #1a1a1a); color: #ffffff; text-decoration: none; border-radius: 30px; font-weight: 600; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);" 
+               onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.3)';" 
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.2)';">
+                📋 Lue UKK sivulta
+            </a>
+            
+            <p style="margin-top: 25px; font-size: 0.95rem; color: #333333;">
+                Tai soita meille suoraan: <a href="tel:+358401935001" style="color: #333333; font-weight: 600; text-decoration: none;">📞 040 1935001</a>
+            </p>
+        </div>
     </section>
     
     <section id="yhteystiedot">
