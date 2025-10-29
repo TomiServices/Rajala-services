@@ -1018,7 +1018,7 @@ function initializeBookingSystem() {
                         console.error('Error in viewDidMount:', error);
                         // Gracefully handle the error without breaking the page
                     }
-                }, 100);
+                }, 50);
             },
             // Mobile-specific improvements
             height: 'auto',
@@ -1252,7 +1252,7 @@ function initializeBookingSystem() {
         if (calendar) {
             // Wrap render in try-catch to handle any rendering errors gracefully
             try {
-                // FIX: Add small delay to ensure DOM is fully ready
+                // FIX: Minimal delay to ensure DOM is fully ready before render
                 setTimeout(() => {
                     try {
                         calendar.render();
@@ -1273,7 +1273,10 @@ function initializeBookingSystem() {
                             const nextBtn = document.getElementById('nextWeekBtn');
                             
                             if (!prevBtn || !nextBtn) {
-                                console.error('Navigation buttons not found');
+                                console.error('Navigation buttons not found in DOM:', {
+                                    prevBtn: !!prevBtn,
+                                    nextBtn: !!nextBtn
+                                });
                                 return;
                             }
                             
