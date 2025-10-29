@@ -40,6 +40,13 @@ if ('requestIdleCallback' in window) {
 // Defer heavy initialization until after page load + idle time to minimize main-thread blocking
 function initializeBookingSystem() {
     const calendarEl = document.getElementById('calendar');
+    
+    // FIX: Early return if calendar element doesn't exist
+    if (!calendarEl) {
+        console.error('Calendar element not found. FullCalendar initialization aborted.');
+        return;
+    }
+    
     let selectedSlot = null;
 
     // FIXED: Fetch bookings from your backend Firebase Function
@@ -443,8 +450,8 @@ function initializeBookingSystem() {
                     const serviceSelection = document.getElementById('serviceSelection');
                     serviceSelection.style.display = 'block';
                     
-                    // Update calendar selection (if calendar exists)
-                    if (window.calendar) {
+                    // Update calendar selection (if calendar exists) - FIX: Add null check
+                    if (window.calendar && typeof window.calendar.unselect === 'function' && typeof window.calendar.select === 'function') {
                         const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000);
                         window.calendar.unselect();
                         window.calendar.select(selectedDateTime, endTime);
@@ -498,9 +505,9 @@ function initializeBookingSystem() {
                 hideMobileTimeModal();
             }, 300);
             
-            // Trigger calendar selection for the confirmed time
+            // Trigger calendar selection for the confirmed time - FIX: Add null check
             const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000); // Add 1 hour
-            if (calendar) {
+            if (calendar && typeof calendar.select === 'function') {
                 calendar.select(selectedDateTime, endTime);
             }
             
@@ -870,6 +877,12 @@ function initializeBookingSystem() {
 
     // Function to find next available booking slot and navigate to that week
     function findAndNavigateToNextAvailableWeek(calendar, bookings) {
+        // FIX: Verify calendar exists before attempting navigation
+        if (!calendar || typeof calendar.gotoDate !== 'function') {
+            console.error('Calendar not available for navigation');
+            return null;
+        }
+        
         const today = new Date();
         const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
         
@@ -959,6 +972,13 @@ function initializeBookingSystem() {
         
         let calendar = null;
         
+        // FIX: Verify FullCalendar library is loaded before initialization
+        if (typeof FullCalendar === 'undefined' || typeof FullCalendar.Calendar !== 'function') {
+            console.error('FullCalendar library not loaded. Skipping calendar initialization.');
+            // Calendar will remain null, triggering fallback calendar
+            return;
+        }
+        
         try {
             // Try to initialize FullCalendar
             // Mobile: 2 weeks view, Desktop: current month view
@@ -981,9 +1001,12 @@ function initializeBookingSystem() {
             dayMaxEventRows: 3,
             // Update available slots when view changes
             viewDidMount: function(info) {
+                // FIX: Check if calendar exists and is fully initialized before accessing
                 // Small delay to ensure view is fully rendered
                 setTimeout(() => {
-                    populateAvailableSlots(calendar, bookings);
+                    if (calendar && typeof calendar.getDate === 'function') {
+                        populateAvailableSlots(calendar, bookings);
+                    }
                 }, 50);
             },
             // Mobile-specific improvements
@@ -1031,13 +1054,19 @@ function initializeBookingSystem() {
                 };
             },
             select: function (info) {
+                // FIX: Early return if calendar is not properly initialized
+                if (!calendar) {
+                    console.error('Calendar instance not available in select handler');
+                    return;
+                }
+                
                 let start = info.start;
                 const now = new Date();
                 now.setHours(0, 0, 0, 0);
                 
                 // Prevent selection of past dates
                 if (start < now) {
-                    if (calendar) calendar.unselect();
+                    calendar.unselect();
                     document.getElementById('error').textContent = 'Et voi valita mennyttä päivämäärää!';
                     return;
                 }
@@ -1046,7 +1075,7 @@ function initializeBookingSystem() {
                 
                 // Only allow weekday selections
                 if (dayOfWeek < 1 || dayOfWeek > 5) {
-                    if (calendar) calendar.unselect();
+                    calendar.unselect();
                     document.getElementById('error').textContent = 'Valitse arkipäivä (maanantai-perjantai)!';
                     return;
                 }
@@ -1061,7 +1090,7 @@ function initializeBookingSystem() {
                         console.error('Failed to generate dateKey for start date:', start);
                         document.getElementById('error').textContent = 'Virhe päivämäärän käsittelyssä. Yritä uudelleen.';
                     }
-                    if (calendar) calendar.unselect();
+                    calendar.unselect();
                     return;
                 }
 
@@ -1084,7 +1113,7 @@ function initializeBookingSystem() {
                 }
                 
                 // Unselect the calendar selection since user hasn't picked a time yet
-                if (calendar) calendar.unselect();
+                calendar.unselect();
             },
             dateClick: function(info) {
                 const now = new Date();
@@ -1169,20 +1198,39 @@ function initializeBookingSystem() {
             }
         });
         
+        // FIX: Verify calendar was created successfully before calling render
         if (calendar) {
-            calendar.render();
+            // Wrap render in try-catch to handle any rendering errors gracefully
+            try {
+                calendar.render();
+            } catch (renderError) {
+                console.error('FullCalendar render failed:', renderError);
+                calendar = null; // Reset calendar to null so fallback can activate
+                return; // Exit early to trigger fallback
+            }
             
             // Navigation button state management for month view
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             
             function updateNavigationButtons() {
+                // FIX: Verify calendar exists and has required methods
+                if (!calendar || typeof calendar.getDate !== 'function') {
+                    console.error('Calendar not available for navigation button update');
+                    return;
+                }
+                
                 const prevBtn = document.getElementById('prevWeekBtn');
                 const nextBtn = document.getElementById('nextWeekBtn');
                 const currentDate = calendar.getDate();
                 
                 // Get the view start date (first visible date in calendar)
                 const view = calendar.view;
+                if (!view) {
+                    console.error('Calendar view not available');
+                    return;
+                }
+                
                 const viewStart = view.currentStart;
                 
                 // Disable prev button if view start is at or before today
@@ -1208,24 +1256,33 @@ function initializeBookingSystem() {
             
             // Previous month button
             document.getElementById('prevWeekBtn').addEventListener('click', function() {
-                calendar.prev();
-                updateNavigationButtons();
-                populateAvailableSlots(calendar, bookings);
+                // FIX: Verify calendar exists before calling methods
+                if (calendar && typeof calendar.prev === 'function') {
+                    calendar.prev();
+                    updateNavigationButtons();
+                    populateAvailableSlots(calendar, bookings);
+                }
             });
             
             // Next month button
             document.getElementById('nextWeekBtn').addEventListener('click', function() {
-                calendar.next();
-                updateNavigationButtons();
-                populateAvailableSlots(calendar, bookings);
+                // FIX: Verify calendar exists before calling methods
+                if (calendar && typeof calendar.next === 'function') {
+                    calendar.next();
+                    updateNavigationButtons();
+                    populateAvailableSlots(calendar, bookings);
+                }
             });
             
             // Navigate to week with next available booking slot
             setTimeout(() => {
-                findAndNavigateToNextAvailableWeek(calendar, bookings);
-                updateNavigationButtons();
-                // Populate available slots for the current week
-                populateAvailableSlots(calendar, bookings);
+                // FIX: Verify calendar exists before navigation
+                if (calendar && typeof calendar.gotoDate === 'function') {
+                    findAndNavigateToNextAvailableWeek(calendar, bookings);
+                    updateNavigationButtons();
+                    // Populate available slots for the current week
+                    populateAvailableSlots(calendar, bookings);
+                }
                 // Don't show time selection grid initially - user must click a day first
                 const timeGridContainer = document.getElementById('time-selection-grid');
                 if (timeGridContainer) {
@@ -1237,7 +1294,13 @@ function initializeBookingSystem() {
         }
         
         } catch (error) {
-            console.log('FullCalendar failed to initialize:', error);
+            // FIX: Enhanced error logging and handling for FullCalendar initialization
+            console.error('FullCalendar failed to initialize:', error);
+            console.error('Error details:', {
+                message: error.message,
+                stack: error.stack,
+                name: error.name
+            });
             calendar = null;
         }
         
@@ -1330,7 +1393,10 @@ function initializeBookingSystem() {
                 if (newIsMobile !== isMobile) {
                     isMobile = newIsMobile;
                 }
-                if (calendar) calendar.updateSize();
+                // FIX: Verify calendar exists before calling updateSize
+                if (calendar && typeof calendar.updateSize === 'function') {
+                    calendar.updateSize();
+                }
             }, 250);
         });
         
@@ -1384,7 +1450,10 @@ function initializeBookingSystem() {
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
-                if (calendar) calendar.updateSize();
+                // FIX: Verify calendar exists before calling updateSize
+                if (calendar && typeof calendar.updateSize === 'function') {
+                    calendar.updateSize();
+                }
             }, 250);
         });
         
@@ -1463,7 +1532,10 @@ function initializeBookingSystem() {
                     selectedSlot = null;
                     selectedServices = [];
                     bookings = await fetchBookings();
-                    if (calendar) calendar.refetchEvents();
+                    // FIX: Verify calendar exists before calling refetchEvents
+                    if (calendar && typeof calendar.refetchEvents === 'function') {
+                        calendar.refetchEvents();
+                    }
                     
                     // Keep success bar visible (don't auto-hide)
                 } else {
@@ -1486,15 +1558,30 @@ window.initializeBookingSystem = initializeBookingSystem;
 
 // Auto-initialize if FullCalendar is already loaded
 // This handles both dynamic loading and direct script loading scenarios
+// FIX: Add additional checks to ensure proper initialization timing
 if (typeof FullCalendar !== 'undefined') {
     if ('requestIdleCallback' in window) {
         window.addEventListener('load', function() {
-            requestIdleCallback(initializeBookingSystem, { timeout: 2000 });
+            requestIdleCallback(() => {
+                // FIX: Double-check FullCalendar is still available before initializing
+                if (typeof FullCalendar !== 'undefined' && typeof FullCalendar.Calendar === 'function') {
+                    initializeBookingSystem();
+                } else {
+                    console.error('FullCalendar not available during initialization');
+                }
+            }, { timeout: 2000 });
         });
     } else {
         // Fallback for browsers without requestIdleCallback
         window.addEventListener('load', function() {
-            setTimeout(initializeBookingSystem, 1);
+            setTimeout(() => {
+                // FIX: Double-check FullCalendar is still available before initializing
+                if (typeof FullCalendar !== 'undefined' && typeof FullCalendar.Calendar === 'function') {
+                    initializeBookingSystem();
+                } else {
+                    console.error('FullCalendar not available during initialization');
+                }
+            }, 1);
         });
     }
 }
