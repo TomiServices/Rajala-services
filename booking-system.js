@@ -314,11 +314,13 @@ function initializeBookingSystem() {
         }
         
         modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
     }
     
     function hideMobileTimeModal() {
         const modal = document.getElementById('mobileTimeModal');
         modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
         selectedMobileDate = null;
         selectedMobileTime = null;
         document.getElementById('mobileTimeConfirm').disabled = true;
