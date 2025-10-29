@@ -678,7 +678,7 @@ function initializeBookingSystem() {
                     totalMin += parseInt(priceMatch[1]);
                 }
                 // Check if it says "alkaen" (starting from)
-                if (taskPrice.includes('alkaen') || taskPrice === '') {
+                if (taskPrice.includes('alkaen')) {
                     hasVariablePricing = true;
                 }
             } else {

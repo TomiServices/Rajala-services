@@ -19,8 +19,11 @@ exports.book = functions.https.onRequest((req, res) => {
         
         // Helper function to escape HTML to prevent XSS attacks
         function escapeHtml(unsafe) {
-            if (typeof unsafe !== 'string') return '';
-            return unsafe
+            // Handle null and undefined explicitly
+            if (unsafe === null || unsafe === undefined) return '';
+            // Convert to string if not already
+            const str = String(unsafe);
+            return str
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")
