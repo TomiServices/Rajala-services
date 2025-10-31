@@ -867,13 +867,13 @@
         }
         
         /* Animated background pattern for all main sections */
-        #pesupalvelut, #rengastyot, #korjaustyot, #sisapuhdistus, #kiilloitus, #lasikorjaus, #hinnasto, #yhteystiedot {
+        #pesupalvelut, #rengastyot, #korjaustyot, #sisapuhdistus, #kiilloitus, #lasikorjaus, #kolhukorjaus, #hinnasto, #yhteystiedot {
             background: #f5f5f5;
             overflow: hidden;
             position: relative;
         }
         
-        #pesupalvelut::before, #rengastyot::before, #korjaustyot::before, #sisapuhdistus::before, #kiilloitus::before, #lasikorjaus::before, #hinnasto::before, #yhteystiedot::before {
+        #pesupalvelut::before, #rengastyot::before, #korjaustyot::before, #sisapuhdistus::before, #kiilloitus::before, #lasikorjaus::before, #kolhukorjaus::before, #hinnasto::before, #yhteystiedot::before {
             content: '';
             position: absolute;
             top: 0;
@@ -893,26 +893,26 @@
             pointer-events: none;
         }
         
-        #pesupalvelut > *, #rengastyot > *, #korjaustyot > *, #sisapuhdistus > *, #kiilloitus > *, #lasikorjaus > *, #hinnasto > *, #yhteystiedot > * {
+        #pesupalvelut > *, #rengastyot > *, #korjaustyot > *, #sisapuhdistus > *, #kiilloitus > *, #lasikorjaus > *, #kolhukorjaus > *, #hinnasto > *, #yhteystiedot > * {
             position: relative;
             z-index: 1;
         }
         
         /* Update text colors for light background - Changed to orange for better contrast */
-        #pesupalvelut h2, #rengastyot h2, #korjaustyot h2, #sisapuhdistus h2, #kiilloitus h2, #lasikorjaus h2, #hinnasto h2, #yhteystiedot h2,
-        #pesupalvelut h3, #rengastyot h3, #korjaustyot h3, #sisapuhdistus h3, #kiilloitus h3, #lasikorjaus h3, #hinnasto h3, #yhteystiedot h3,
-        #pesupalvelut h4, #rengastyot h4, #korjaustyot h4, #sisapuhdistus h4, #kiilloitus h4, #lasikorjaus h4, #hinnasto h4, #yhteystiedot h4 {
+        #pesupalvelut h2, #rengastyot h2, #korjaustyot h2, #sisapuhdistus h2, #kiilloitus h2, #lasikorjaus h2, #kolhukorjaus h2, #hinnasto h2, #yhteystiedot h2,
+        #pesupalvelut h3, #rengastyot h3, #korjaustyot h3, #sisapuhdistus h3, #kiilloitus h3, #lasikorjaus h3, #kolhukorjaus h3, #hinnasto h3, #yhteystiedot h3,
+        #pesupalvelut h4, #rengastyot h4, #korjaustyot h4, #sisapuhdistus h4, #kiilloitus h4, #lasikorjaus h4, #kolhukorjaus h4, #hinnasto h4, #yhteystiedot h4 {
             color: #333333;
             text-shadow: none;
         }
         
-        #pesupalvelut p, #rengastyot p, #korjaustyot p, #sisapuhdistus p, #kiilloitus p, #lasikorjaus p, #hinnasto p, #yhteystiedot p,
-        #pesupalvelut li, #rengastyot li, #korjaustyot li, #sisapuhdistus li, #kiilloitus li, #lasikorjaus li, #hinnasto li, #yhteystiedot li {
+        #pesupalvelut p, #rengastyot p, #korjaustyot p, #sisapuhdistus p, #kiilloitus p, #lasikorjaus p, #kolhukorjaus p, #hinnasto p, #yhteystiedot p,
+        #pesupalvelut li, #rengastyot li, #korjaustyot li, #sisapuhdistus li, #kiilloitus li, #lasikorjaus li, #kolhukorjaus li, #hinnasto li, #yhteystiedot li {
             color: #333333;
             text-shadow: none;
         }
         
-        #pesupalvelut strong, #rengastyot strong, #korjaustyot strong, #sisapuhdistus strong, #kiilloitus strong, #lasikorjaus strong, #hinnasto strong, #yhteystiedot strong {
+        #pesupalvelut strong, #rengastyot strong, #korjaustyot strong, #sisapuhdistus strong, #kiilloitus strong, #lasikorjaus strong, #kolhukorjaus strong, #hinnasto strong, #yhteystiedot strong {
             color: #333333;
         }
         
@@ -2897,11 +2897,12 @@
         <div class="services-lighting-effect">
             <div class="categories-row">
                 <div class="category-box" style="background-image: url('Pesupalvelut.webp');" onclick="location.href='#pesupalvelut'" role="button" tabindex="0" aria-label="Siirry pesupalveluihin">Pesupalvelut</div>
+                <div class="category-box" style="background-image: url('sisapuhdistus.webp');" onclick="location.href='#sisapuhdistus'" role="button" tabindex="0" aria-label="Siirry sisäpuhdistukseen">Sisäputsi</div>
                 <div class="category-box" style="background-image: url('Rengastyot.webp');" onclick="location.href='#rengastyot'" role="button" tabindex="0" aria-label="Siirry rengastöihin">Rengastyöt</div>
-                <div class="category-box" style="background-image: url('Korjaustyot.webp');" onclick="location.href='#korjaustyot'" role="button" tabindex="0" aria-label="Siirry korjaustöihin">Korjaustyöt</div>
-                <div class="category-box" style="background-image: url('sisapuhdistus.webp');" onclick="location.href='#sisapuhdistus'" role="button" tabindex="0" aria-label="Siirry sisäpuhdistukseen">Sisäpuhdistus</div>
                 <div class="category-box" style="background-image: url('kiilloitus.webp');" onclick="location.href='#kiilloitus'" role="button" tabindex="0" aria-label="Siirry kiillotukseen">Kiilloitus</div>
+                <div class="category-box" style="background-image: url('Korjaustyot.webp');" onclick="location.href='#korjaustyot'" role="button" tabindex="0" aria-label="Siirry korjaustöihin">Korjaustyöt</div>
                 <div class="category-box" style="background-image: url('lasikorjaus.webp');" onclick="location.href='#lasikorjaus'" role="button" tabindex="0" aria-label="Siirry lasikorjaukseen">Lasikorjaus</div>
+                <div class="category-box" style="background-image: url('kolhukorjaus.webp');" onclick="location.href='#kolhukorjaus'" role="button" tabindex="0" aria-label="Siirry kolhukorjaukseen">Kolhukorjaus</div>
                 <div class="category-box" style="background-image: url('Tyonaytteet.webp');" onclick="location.href='tietoa-meista.html'" role="button" tabindex="0" aria-label="Siirry Tietoa meistä -sivulle">Tietoa meistä</div>
                 <div class="category-box" style="background-image: url('Ajanvaraus.webp');" onclick="location.href='#ajanvaraus'" role="button" tabindex="0" aria-label="Siirry ajanvaraukseen">Ajanvaraus</div>
                 <div class="category-box" style="background-image: url('hinnasto.webp');" onclick="location.href='#hinnasto'" role="button" tabindex="0" aria-label="Siirry hinnastoon">Hinnasto</div>
@@ -3262,71 +3263,6 @@
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
     </section>
-    <section id="rengastyot">
-        <h2>Rengastyöt</h2>
-        <div class="tire-services-content">
-            <div class="tire-services-text">
-                <p>Kaikki rengastyöt ammattitaidolla – meiltä saat renkaiden vaihdot, tasapainotukset, paikkaukset sekä uusien renkaiden myynnin ja asennuksen. Huolehdimme, että renkaasi ovat turvalliset ja oikein asennetut jokaiseen vuodenaikaan.</p>
-
-                <ul>
-                    <li>Renkaiden vaihto auton alle (kesä-/talvirenkaat)</li>
-                    <li>Renkaiden vaihto vanteille tai vanteilta irrotus</li>
-                    <li>Tasapainotus</li>
-                    <li>Renkaan paikkaus</li>
-                    <li>Uusien renkaiden myynti ja asennus – pyydä tarjous puhelimitse tai sähköpostilla</li>
-                </ul>
-
-                <h3>Rengashotelli</h3>
-                <p>Meillä voit myös jättää renkaasi <strong>rengashotelliin</strong>, joka sisältää renkaiden pesun ja asianmukaisen säilytyksen. Sinun ei tarvitse enää kantaa renkaita mukanasi – varaat vain ajan renkaiden vaihtoon, ja me:</p>
-                <ul>
-                    <li>Haemme puhtaat renkaasi suoraan varastosta</li>
-                    <li>Asennamme ne autosi alle</li>
-                    <li>Tarkistamme ja säädämme ilmanpaineet</li>
-                </ul>
-
-                <p>Rengaspalvelumme on nopea, huolellinen ja täysin vaivaton – kysy lisää tai varaa aika suoraan!</p>
-                
-                <p style="margin-top: 30px; text-align: center;">
-                    <a href="rengastyot.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #333333, #1a1a1a); color: #ffffff; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 5px;">Lue lisää rengastöistä →</a>
-                    <!-- Calendar temporarily closed during development -->
-                    <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
-                </p>
-            </div>
-            <div class="tire-services-image">
-                <img src="Rengas.webp" alt="Rengastyöt Espoo - Renkaiden vaihto, tasapainotus ja rengashotelli Kivenlahdessa" loading="lazy">
-            </div>
-        </div>
-    </section>
-    <section id="korjaustyot">
-        <h2>Korjaustyöt</h2>
-        <div class="polishing-content">
-            <div class="polishing-text">
-                <p>Voit tuoda autosi meille myös korjaukseen jos esim. Katsastuksessa autosi sai hylätyn päätöksen. Teemme korjaustoimia laajasti merkistä riippumatta.</p>
-
-                <h3>Yleisimmät korjaustyömme</h3>
-                <ul>
-                    <li>Iskunvaimentimien ja jousituksen uusiminen</li>
-                    <li>Tukivarsien, nivelien ja raidetankojen vaihto</li>
-                    <li>Vakaajatangon ja koiranluiden vaihto</li>
-                    <li>Jarrulevyjen, palojen ja käsijarrujen korjaukset</li>
-                    <li>Pakoputkistojen korjaukset</li>
-                    <li>Vikakoodien luku ja nollaus</li>
-                </ul>
-
-                <p>Korjaamme ajoneuvoja ammattitaidolla ja käytämme laadukkaita varaosia. Kaikki korjaustyöt tehdään huolellisesti ja takuulla.</p>
-
-                <p>Epävarma mistä vika johtuu? Tuo autosi meille katsastettavaksi – selvitämme ongelman ja annamme realistisen arvion korjauskustannuksista ennen töiden aloittamista.</p>
-            </div>
-            <div class="polishing-image">
-                <img src="Korjaustyot.webp" alt="Korjaustyöt Espoo - Auton korjaus, vikakoodit ja jousitus huolto" loading="lazy">
-            </div>
-        </div>
-        <p style="margin-top: 30px; text-align: center;">
-            <a href="autohuolto.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #333333, #1a1a1a); color: #ffffff; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 5px;">Lue lisää korjaustöistä →</a>
-            <!-- Calendar temporarily closed during development -->
-            <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
-        </p>
-    </section>
     <section id="sisapuhdistus" style="background: #f5f5f5; position: relative; overflow: hidden;">
         <h2>Sisäpuhdistus</h2>
         <div class="interior-cleaning-content">
@@ -3370,6 +3306,41 @@
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
     </section>
+    <section id="rengastyot">
+        <h2>Rengastyöt</h2>
+        <div class="tire-services-content">
+            <div class="tire-services-text">
+                <p>Kaikki rengastyöt ammattitaidolla – meiltä saat renkaiden vaihdot, tasapainotukset, paikkaukset sekä uusien renkaiden myynnin ja asennuksen. Huolehdimme, että renkaasi ovat turvalliset ja oikein asennetut jokaiseen vuodenaikaan.</p>
+
+                <ul>
+                    <li>Renkaiden vaihto auton alle (kesä-/talvirenkaat)</li>
+                    <li>Renkaiden vaihto vanteille tai vanteilta irrotus</li>
+                    <li>Tasapainotus</li>
+                    <li>Renkaan paikkaus</li>
+                    <li>Uusien renkaiden myynti ja asennus – pyydä tarjous puhelimitse tai sähköpostilla</li>
+                </ul>
+
+                <h3>Rengashotelli</h3>
+                <p>Meillä voit myös jättää renkaasi <strong>rengashotelliin</strong>, joka sisältää renkaiden pesun ja asianmukaisen säilytyksen. Sinun ei tarvitse enää kantaa renkaita mukanasi – varaat vain ajan renkaiden vaihtoon, ja me:</p>
+                <ul>
+                    <li>Haemme puhtaat renkaasi suoraan varastosta</li>
+                    <li>Asennamme ne autosi alle</li>
+                    <li>Tarkistamme ja säädämme ilmanpaineet</li>
+                </ul>
+
+                <p>Rengaspalvelumme on nopea, huolellinen ja täysin vaivaton – kysy lisää tai varaa aika suoraan!</p>
+                
+                <p style="margin-top: 30px; text-align: center;">
+                    <a href="rengastyot.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #333333, #1a1a1a); color: #ffffff; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 5px;">Lue lisää rengastöistä →</a>
+                    <!-- Calendar temporarily closed during development -->
+                    <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
+                </p>
+            </div>
+            <div class="tire-services-image">
+                <img src="Rengas.webp" alt="Rengastyöt Espoo - Renkaiden vaihto, tasapainotus ja rengashotelli Kivenlahdessa" loading="lazy">
+            </div>
+        </div>
+    </section>
     <section id="kiilloitus" style="background: #f5f5f5; position: relative; overflow: hidden;">
         <h2>Kiilloitus ja pinnoitteet</h2>
         <div class="polishing-content">
@@ -3397,6 +3368,36 @@
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
     </section>
+    <section id="korjaustyot">
+        <h2>Korjaustyöt</h2>
+        <div class="polishing-content">
+            <div class="polishing-text">
+                <p>Voit tuoda autosi meille myös korjaukseen jos esim. Katsastuksessa autosi sai hylätyn päätöksen. Teemme korjaustoimia laajasti merkistä riippumatta.</p>
+
+                <h3>Yleisimmät korjaustyömme</h3>
+                <ul>
+                    <li>Iskunvaimentimien ja jousituksen uusiminen</li>
+                    <li>Tukivarsien, nivelien ja raidetankojen vaihto</li>
+                    <li>Vakaajatangon ja koiranluiden vaihto</li>
+                    <li>Jarrulevyjen, palojen ja käsijarrujen korjaukset</li>
+                    <li>Pakoputkistojen korjaukset</li>
+                    <li>Vikakoodien luku ja nollaus</li>
+                </ul>
+
+                <p>Korjaamme ajoneuvoja ammattitaidolla ja käytämme laadukkaita varaosia. Kaikki korjaustyöt tehdään huolellisesti ja takuulla.</p>
+
+                <p>Epävarma mistä vika johtuu? Tuo autosi meille katsastettavaksi – selvitämme ongelman ja annamme realistisen arvion korjauskustannuksista ennen töiden aloittamista.</p>
+            </div>
+            <div class="polishing-image">
+                <img src="Korjaustyot.webp" alt="Korjaustyöt Espoo - Auton korjaus, vikakoodit ja jousitus huolto" loading="lazy">
+            </div>
+        </div>
+        <p style="margin-top: 30px; text-align: center;">
+            <a href="autohuolto.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #333333, #1a1a1a); color: #ffffff; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 5px;">Lue lisää korjaustöistä →</a>
+            <!-- Calendar temporarily closed during development -->
+            <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
+        </p>
+    </section>
     <section id="lasikorjaus">
         <h2>Lasienvaihdot ja korjaukset</h2>
         <div class="polishing-content">
@@ -3415,7 +3416,34 @@
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
     </section>
-    <section id="hinnasto">
+    <section id="kolhukorjaus" style="background: #f5f5f5; position: relative; overflow: hidden;">
+        <h2>Kolhukorjaus</h2>
+        <div class="polishing-content">
+            <div class="polishing-text">
+                <p>Korjaamme autosi pienet kolhut, naarmut ja lommat nopeasti ja kustannustehokkaasti. Usein myös niin, että alkuperäinen maali säilyy ehjänä ja auto näyttää taas siistiltä – usein jopa saman päivän aikana.</p>
+
+                <h3>Palvelut</h3>
+                <ul>
+                    <li>Pienet kolhut ja naarmut</li>
+                    <li>Lommojen oikaisu ilman maalausta</li>
+                    <li>Maalipinnan paikkaukset</li>
+                    <li>Puskurin ja lokasuojan korjaukset</li>
+                    <li>Ruostekorjaukset</li>
+                </ul>
+
+                <p>Ota yhteyttä, niin annamme sinulle tarkan arvion korjauksesta ja kustannuksista!</p>
+            </div>
+            <div class="polishing-image">
+                <img src="kolhukorjaus.webp" alt="Kolhukorjaus Espoo - Lommojen oikaisu ja maalipinnan korjaukset" loading="lazy">
+            </div>
+        </div>
+        <p style="margin-top: 30px; text-align: center;">
+            <a href="#yhteystiedot" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #333333, #1a1a1a); color: #ffffff; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 5px;">Lue lisää kolhujenkorjauksesta →</a>
+            <!-- Calendar temporarily closed during development -->
+            <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Varaa Aika</span>
+        </p>
+    </section>
+        <section id="hinnasto">
         <h2>Hinnasto</h2>
         <div class="polishing-content">
             <div class="polishing-text">
@@ -3744,6 +3772,34 @@
                             </tr>
                             <tr>
                                 <td style="padding: 10px; border: 1px solid #ddd;"><strong>Pakoputkistojen korjaukset</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                
+                <h3>🔨 Kolhujen korjaus</h3>
+                
+                <div style="overflow-x: auto; margin: 20px 0;">
+                    <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                        <thead>
+                            <tr style="background: #f0f0f0;">
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Palvelu</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Hinta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Pieni lommo</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Alk. 125 €</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Iso lommo</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Alk. 150 €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Maalipinnan jälkien hionta ja maalaus</strong></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
                             </tr>
                         </tbody>
