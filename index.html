@@ -2651,43 +2651,40 @@
                 font-weight: 600 !important;
             }
             
-            /* Add labels for 4-column tables (Service, Henkilöauto, Maasturi, Pakettiauto) */
-            /* Only add labels if there are 4 cells in the row */
-            #hinnasto table tbody tr td:nth-child(4) ~ td:first-child,
-            #hinnasto table tbody tr td:nth-child(2):nth-last-child(3) ~ td:nth-child(2)::before {
-                content: 'Henkilöauto: ';
+            /* Add labels based on table column count */
+            /* Note: Rules must be ordered from most specific to least specific */
+            
+            /* For 4-column tables (Service, Henkilöauto, Maasturi, Pakettiauto) */
+            #hinnasto table tbody tr td:nth-child(2):nth-last-child(3)::before {
+                content: 'Henkilöauto: ' !important;
                 font-weight: 600;
                 color: #666;
                 margin-right: 8px;
             }
             
-            #hinnasto table tbody tr td:nth-child(4) ~ td:first-child,
-            #hinnasto table tbody tr td:nth-child(2):nth-last-child(3) ~ td:nth-child(3)::before {
-                content: 'Maasturi: ';
+            #hinnasto table tbody tr td:nth-child(3):nth-last-child(2)::before {
+                content: 'Maasturi: ' !important;
                 font-weight: 600;
                 color: #666;
                 margin-right: 8px;
             }
             
-            #hinnasto table tbody tr td:nth-child(4):last-child::before {
-                content: 'Pakettiauto: ';
+            #hinnasto table tbody tr td:nth-child(4):nth-last-child(1)::before {
+                content: 'Pakettiauto: ' !important;
                 font-weight: 600;
                 color: #666;
                 margin-right: 8px;
             }
             
-            /* For 2-column tables, keep them simpler without labels */
-            /* Tables with only 2 cells per row don't need "before" content  */
+            /* For 3-column tables (Ajoneuvoluokka, Koko, Hinta) - no automatic labels */
+            #hinnasto table tbody tr td:nth-child(2):nth-last-child(2)::before,
+            #hinnasto table tbody tr td:nth-child(3):nth-last-child(1):not(:nth-child(4))::before {
+                content: '' !important;
+            }
+            
+            /* For 2-column tables (Service, Price) - no label needed */
             #hinnasto table tbody tr td:nth-child(2):last-child::before {
-                content: '';
-                font-weight: 600;
-                color: #666;
-                margin-right: 8px;
-            }
-            
-            /* For 3-column tables, show without automatic labels */
-            #hinnasto table tbody tr td:nth-child(3):last-child::before {
-                content: '';
+                content: '' !important;
             }
             
             /* Better spacing for h3 headers on mobile */
