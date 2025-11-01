@@ -214,7 +214,7 @@
     }
     </script>
     
-    <link rel="preload" href="FXNR.webp" as="image">
+    <link rel="preload" href="FXNRv.webp" as="image">
     <!-- Preload hero images for faster loading -->
     <link rel="preload" href="Hero2.webp" as="image" media="(min-width: 768px) and (max-width: 2559px)">
     <link rel="preload" href="Hero1.webp" as="image" media="(min-width: 2560px)">
@@ -656,12 +656,13 @@
         }
         .category-box:hover {
             transform: translateY(-8px) scale(1.05);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2), 0 0 30px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 50px rgba(63, 169, 245, 0.4), 0 0 30px rgba(63, 169, 245, 0.3);
             filter: brightness(1.1);
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 2px solid #3FA9F5;
         }
         .category-box:hover::after {
-            background: linear-gradient(to top, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.25) 100%);
+            background: linear-gradient(to top, rgba(63, 169, 245, 0.3) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.25) 100%);
         }
         .category-box span, .category-box {
             z-index: 2;
@@ -2801,7 +2802,7 @@
         <span></span><span></span><span></span>
     </button>
     <nav id="nav">
-        <a href="#top"><img src="FXNR.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" loading="lazy"></a>
+        <a href="#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" loading="lazy"></a>
         <a href="#pesupalvelut">Pesupalvelut</a>
         <a href="#rengastyot">Rengastyöt</a>
         <a href="#korjaustyot">Korjaustyöt</a>
@@ -3275,31 +3276,12 @@
         <h2>Pesupalvelut</h2>
         <div class="polishing-content">
             <div class="polishing-text">
-                <p>Tarjoamme laadukkaita pesupalveluita: käsinpesu, vahaukset, pikapesut ja renkaiden pesut. Käytämme laadukkaita aineita ja välineitä, jotka suojaavat pintoja ja tekevät autostasi kiiltävän puhtaan.</p>
+                <p>Tarjoamme ammattitaitoisia pesupalveluita, jotka pitävät autosi ulkonäön kiiltävän puhtaana ympäri vuoden. Käytämme laadukkaita aineita ja välineitä, jotka suojaavat pintoja ja säilyttävät autosi maalipinnan kunnossa. Palvelumme sisältävät käsinpesun, pikapesut, vahaukset sekä renkaiden pesun – kaikki räätälöitynä autosi tarpeisiin.</p>
 
-                <ul>
-                    <li>Pikapesu</li>
-                    <li>Käsinpesu</li>
-                    <li>Vahaukset</li>
-                    <li>Renkaiden pesu</li>
-                </ul>
+                <p>Valitse tarpeisiisi sopiva pesupalvelu tai yhdistä useampi palvelu kokonaisvaltaista tulosta varten. Kerro meille toiveesi, niin suunnittelemme parhaan ratkaisun juuri sinun autollesi.</p>
 
-                <h3>Pikapesu</h3>
-                <p>Auton pintaan levitetään tehokas pesuaine, jonka jälkeen se huuhdellaan painepesurilla. Lopuksi kuivaus tehdään pehmeällä mikrokuituliinalla – nopea ja hellävarainen vaihtoehto ylläpitopesuun.</p>
-
-                <h3>Käsinpesu</h3>
-                <p>Auto huuhdellaan ensin kauttaaltaan. Tämän jälkeen pesuaine levitetään erittäin pehmeällä pesukintaalla, joka ei naarmuta maalipintaa. Lopuksi huuhdellaan painepesurilla ja kuivataan mikrokuituliinalla huolellisesti.</p>
-
-                <h3>Vahaukset</h3>
-                <p>Haluatko lisätä autosi kiiltoa ja suojata pintaa pesun yhteydessä? Voimme levittää vahashampoon, joka muodostaa pesun aikana suojaavan ja kiiltävän pinnan autollesi – nopea tapa parantaa ulkonäköä ja helpottaa jatkopesuja.</p>
-
-                <h3>Renkaiden pesu</h3>
-                <p>Jos tuot renkaat vaihdettavaksi (esim. kesärenkaat talvivaihdon yhteydessä), voit samalla tilata niille pesun. Näin saat puhtaat ja siistit renkaat mukaasi tai rengashotelliin varastoitavaksi.</p>
-
-                <h3>Lisäpalvelut</h3>
-                <ul>
-                    <li>Pesun yhteydessä suihkutettava vettä ja likaa hylkivä pinnoite</li>
-                </ul>
+                <h3>Pesu lisäpalvelut</h3>
+                <p>Halutessasi voit täydentää pesupalvelun lisäpalveluilla, jotka tuovat lisäsuojaa ja kiiltoa autollesi. Tarjoamme pesun yhteydessä suihkutettavan vettä ja likaa hylkivän pinnoitteen, joka helpottaa auton puhtaana pitämistä ja pidentää pesun vaikutusta.</p>
             </div>
             <div class="polishing-image">
                 <img src="Pesupalvelut.webp" alt="Pesupalvelut Espoo - Ammattitaitoinen käsinpesu, vahaukset ja auton puhdistus" loading="lazy">
@@ -3332,15 +3314,7 @@
                 <p>Voit myös tarvittaessa räätälöidä palvelut juuri sinulle sopivaksi – kerro meille toiveesi, niin suunnittelemme sisäpesun niiden mukaan.</p>
 
                 <h3>Lisäpalvelut</h3>
-                <ul>
-                    <li>Otsonointi – poistaa tehokkaasti epämiellyttävät hajut</li>
-                    <li>Syväpuhdistus (detailing) – perusteellinen käsittely pintaa myöten</li>
-                    <li>Nahkapenkkien hoito ja suojaus</li>
-                    <li>Kankaan puhdistus kangaspesurilla</li>
-                    <li>Hajunpoisto erikoisaineilla</li>
-                    <li>Allergiapuhdistus – soveltuu erityisesti herkille matkustajille</li>
-                    <li>Kangaspintojen suojaus (esim. verhoilun kyllästys)</li>
-                </ul>
+                <p>Täydennä sisäpuhdistus lisäpalveluilla kuten otsonointi, syväpuhdistus (detailing), nahkapenkkien hoito, hajunpoisto tai allergiapuhdistus. Räätälöimme palvelun juuri sinun tarpeisiisi.</p>
 
                 <p>Voit yhdistää sisäpuhdistuksen myös ulkopesuun tai kiillotukseen kokonaisvaltaista lopputulosta varten.</p>
             </div>
@@ -3377,17 +3351,16 @@
                 </ul>
 
                 <p>Rengaspalvelumme on nopea, huolellinen ja täysin vaivaton – kysy lisää tai varaa aika suoraan!</p>
-                
-                <p style="margin-top: 30px; text-align: center;">
-                    <a href="rengastyot.html" class="btn-read-more">Lue lisää rengastöistä →</a>
-                    <!-- Calendar temporarily closed during development -->
-                    <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
-                </p>
             </div>
             <div class="tire-services-image">
                 <img src="Rengas.webp" alt="Rengastyöt Espoo - Renkaiden vaihto, tasapainotus ja rengashotelli Kivenlahdessa" loading="lazy">
             </div>
         </div>
+        <p style="margin-top: 30px; text-align: center;">
+            <a href="rengastyot.html" class="btn-read-more">Lue lisää rengastöistä →</a>
+            <!-- Calendar temporarily closed during development -->
+            <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
+        </p>
     </section>
     <section id="kiilloitus" style="background: #f5f5f5; position: relative; overflow: hidden;">
         <h2>Kiilloitus ja pinnoitteet</h2>
