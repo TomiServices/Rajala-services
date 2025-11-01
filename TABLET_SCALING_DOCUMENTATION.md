@@ -219,7 +219,7 @@ Potential improvements:
 
 ## Change Log
 
-### 2025-11-01
+### 2024-11-01
 - Initial implementation of tablet-specific scaling
 - Added Samsung A8 (85%), iPad Air (90%), iPad Pro (100%) support
 - Created test page for validation
