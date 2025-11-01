@@ -2795,7 +2795,7 @@
 </head>
 <body id="top">
     <div class="top-banner">
-        <a href="#kartta" style="color: #ffffff; text-decoration: none;">Tiilenvalajantie 6, 02330 Espoo</a>
+        <a href="#kartta" style="color: #ffffff; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.textShadow='0 0 10px rgba(255,255,255,0.8)'; this.style.transform='scale(1.05)'; this.style.display='inline-block'" onmouseout="this.style.textShadow='none'; this.style.transform='scale(1)'">Tiilenvalajantie 6, 02330 Espoo</a>
     </div>
 
     <button class="hamburger-menu" aria-label="Avaa valikko" aria-controls="nav" aria-expanded="false">
@@ -2804,13 +2804,13 @@
     <nav id="nav">
         <a href="#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" loading="lazy"></a>
         <a href="#pesupalvelut">Pesupalvelut</a>
-        <a href="#rengastyot">Rengastyöt</a>
-        <a href="#korjaustyot">Korjaustyöt</a>
         <a href="#sisapuhdistus">Sisäpuhdistus</a>
         <a href="#kiilloitus">Kiilloitus</a>
+        <a href="#kolhukorjaus">Kolhukorjaus</a>
+        <a href="#korjaustyot">Korjaustyöt</a>
+        <a href="#rengastyot">Rengastyöt</a>
         <a href="#lasikorjaus">Lasikorjaus</a>
         <a href="#hinnasto">Hinnasto</a>
-        <a href="#kolhukorjaus">Kolhukorjaus</a>
         <a href="#yhteystiedot">Yhteystiedot</a>
     </nav>
     <!-- Hero Section with Responsive Background Images -->
@@ -2891,7 +2891,7 @@
                     box-shadow: 0 6px 20px rgba(0,0,0,0.3);
                     text-shadow: none;
                     letter-spacing: 1px;
-                " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.3)'">
+                " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 20px 50px rgba(63, 169, 245, 0.4), 0 0 30px rgba(63, 169, 245, 0.3)'; this.style.border='2px solid #3FA9F5'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.3)'; this.style.border='2px solid transparent'">
                     Tutustu palveluihimme
                 </a>
             </div>
@@ -3244,7 +3244,7 @@
     
     <!-- Services sections -->
     <div class="services-container">
-    <section id="pesupalvelut" style="background: #f5f5f5; position: relative; overflow: hidden;">
+    <section id="pesupalvelut" style="background: #f5f5f5; position: relative; overflow: hidden;" class="scroll-animate">
         <h2>Pesupalvelut</h2>
         <div class="polishing-content">
             <div class="polishing-text">
@@ -3265,7 +3265,7 @@
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
     </section>
-    <section id="sisapuhdistus" style="background: #f5f5f5; position: relative; overflow: hidden;">
+    <section id="sisapuhdistus" style="background: #f5f5f5; position: relative; overflow: hidden;" class="scroll-animate">
         <h2>Sisäpuhdistus</h2>
         <div class="interior-cleaning-content">
             <div class="interior-cleaning-text">
@@ -3300,7 +3300,7 @@
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
     </section>
-    <section id="kiilloitus" style="background: #f5f5f5; position: relative; overflow: hidden;">
+    <section id="kiilloitus" style="background: #f5f5f5; position: relative; overflow: hidden;" class="scroll-animate">
         <h2>Kiilloitus ja pinnoitteet</h2>
         <div class="polishing-content">
             <div class="polishing-text">
@@ -3327,7 +3327,7 @@
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
     </section>
-    <section id="kolhukorjaus" style="background: #f5f5f5; position: relative; overflow: hidden;">
+    <section id="kolhukorjaus" style="background: #f5f5f5; position: relative; overflow: hidden;" class="scroll-animate">
         <h2>Kolhukorjaus</h2>
         <div class="polishing-content">
             <div class="polishing-text">
@@ -3354,7 +3354,7 @@
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Varaa Aika</span>
         </p>
     </section>
-    <section id="korjaustyot">
+    <section id="korjaustyot" class="scroll-animate">
         <h2>Korjaustyöt</h2>
         <div class="polishing-content">
             <div class="polishing-text">
@@ -3384,7 +3384,7 @@
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
     </section>
-    <section id="rengastyot">
+    <section id="rengastyot" class="scroll-animate">
         <h2>Rengastyöt</h2>
         <div class="tire-services-content">
             <div class="tire-services-text">
@@ -3418,7 +3418,7 @@
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
     </section>
-    <section id="lasikorjaus">
+    <section id="lasikorjaus" class="scroll-animate">
         <h2>Lasienvaihdot ja korjaukset</h2>
         <div class="polishing-content">
             <div class="polishing-text">
@@ -3436,7 +3436,7 @@
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
     </section>
-        <section id="hinnasto">
+        <section id="hinnasto" class="scroll-animate">
         <h2>Hinnasto</h2>
         <div class="polishing-content">
             <div class="polishing-text">
@@ -3855,7 +3855,7 @@
         </div>
     </section>
     
-    <section id="yhteystiedot">
+    <section id="yhteystiedot" class="scroll-animate">
         <h2>Yhteystiedot</h2>
         <div class="polishing-content">
             <div class="polishing-text">
