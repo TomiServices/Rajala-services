@@ -737,7 +737,7 @@
         }
         section {
             background: #fff;
-            margin: 30px auto;
+            margin: 50px auto;
             padding: 24px 18px 18px 18px;
             max-width: 850px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -803,14 +803,14 @@
         
         /* Services container */
         .services-container {
-            margin: 30px auto;
+            margin: 50px auto;
             max-width: 950px;
             padding: 0 20px;
         }
         
         /* Ensure services sections within container have proper spacing */
         .services-container section {
-            margin: 30px auto;
+            margin: 50px auto;
         }
         
         /* Full HD Resolution (1920px) - optimize image and content layout */
@@ -2770,6 +2770,26 @@
                 margin: 10px 0 !important;
             }
         }
+        
+        /* Modern button style with silver-blue highlight */
+        .btn-read-more {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #3FA9F5;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(63, 169, 245, 0.3);
+            margin: 5px;
+        }
+        
+        .btn-read-more:hover {
+            background: #5CB8FF;
+            box-shadow: 0 0 20px rgba(63, 169, 245, 0.6), 0 0 40px rgba(63, 169, 245, 0.4);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body id="top">
@@ -3221,6 +3241,34 @@
         </div>
     </div>
     
+    <!-- Meistä (About Us) Section -->
+    <section id="meista" style="background: #f5f5f5; position: relative; overflow: hidden;">
+        <h2>Meistä</h2>
+        <div style="max-width: 850px; margin: 0 auto;">
+            <h3 style="color: #333333; margin-top: 25px; margin-bottom: 15px;">Pieni historiamme – Miten Fixnero syntyi</h3>
+            
+            <p style="line-height: 1.8; margin-bottom: 20px;">
+                Fixnero sai alkunsa halusta tarjota Espoon alueella laadukkaita ja kokonaisvaltaisia autonhoidon ja kunnostuksen palveluita. Perustajamme <strong>Janne ja Eero</strong> ovat pitkän linjan autoalan ammattilaisia, joille on kertynyt yhteensä <strong>yli 50 vuoden kokemus</strong> autonkunnostuksesta.
+            </p>
+            
+            <p style="line-height: 1.8; margin-bottom: 20px;">
+                Vuosien varrella he ovat kehittäneet osaamistaan monipuolisesti muun muassa auton kiillotuksessa, tuulilasin vaihdoissa, renkaiden ja vanteiden käsittelyssä, pienkorjauksissa sekä kolhujen ja lommojen oikaisussa.
+            </p>
+            
+            <p style="line-height: 1.8; margin-bottom: 20px;">
+                Tavoitteenamme oli luoda yritys, joka erottuu <strong>laadulla, luotettavuudella ja aidosti asiakaslähtöisellä palvelulla</strong>. Halusimme, että jokaiselle asiakkaalle jää hyvä fiilis asioidessaan kanssamme, sekä tunne siitä, että oma auto on osaavissa käsissä.
+            </p>
+            
+            <p style="line-height: 1.8; margin-bottom: 20px;">
+                Näin syntyi <strong>Fixnero</strong>, joka toimii Espoon Kivenlahdessa ja palvelee asiakkaita jo usean vuoden kokemuksella.
+            </p>
+            
+            <p style="line-height: 1.8; margin-bottom: 20px; text-align: center; font-style: italic; font-size: 1.05rem;">
+                Kiitos, että tutustuit tarinaamme. Olet lämpimästi tervetullut Fixnerolle asiakkaaksi ja ystäväksi.
+            </p>
+        </div>
+    </section>
+    
     <!-- Services sections -->
     <div class="services-container">
     <section id="pesupalvelut" style="background: #f5f5f5; position: relative; overflow: hidden;">
@@ -3258,7 +3306,7 @@
             </div>
         </div>
         <p style="margin-top: 30px; text-align: center;">
-            <a href="pesupalvelut.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #333333, #1a1a1a); color: #ffffff; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 5px;">Lue lisää pesupalveluista →</a>
+            <a href="pesupalvelut.html" class="btn-read-more">Lue lisää pesupalveluista →</a>
             <!-- Calendar temporarily closed during development -->
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
@@ -3301,7 +3349,7 @@
             </div>
         </div>
         <p style="margin-top: 30px; text-align: center;">
-            <a href="sisapuhdistus.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #333333, #1a1a1a); color: #ffffff; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 5px;">Lue lisää sisäpuhdistuksesta →</a>
+            <a href="sisapuhdistus.html" class="btn-read-more">Lue lisää sisäpuhdistuksesta →</a>
             <!-- Calendar temporarily closed during development -->
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
@@ -3331,7 +3379,7 @@
                 <p>Rengaspalvelumme on nopea, huolellinen ja täysin vaivaton – kysy lisää tai varaa aika suoraan!</p>
                 
                 <p style="margin-top: 30px; text-align: center;">
-                    <a href="rengastyot.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #333333, #1a1a1a); color: #ffffff; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 5px;">Lue lisää rengastöistä →</a>
+                    <a href="rengastyot.html" class="btn-read-more">Lue lisää rengastöistä →</a>
                     <!-- Calendar temporarily closed during development -->
                     <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
                 </p>
@@ -3363,7 +3411,7 @@
             </div>
         </div>
         <p style="margin-top: 30px; text-align: center;">
-            <a href="kiilloitus.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #333333, #1a1a1a); color: #ffffff; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 5px;">Lue lisää kiillotuksesta →</a>
+            <a href="kiilloitus.html" class="btn-read-more">Lue lisää kiillotuksesta →</a>
             <!-- Calendar temporarily closed during development -->
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
@@ -3393,7 +3441,7 @@
             </div>
         </div>
         <p style="margin-top: 30px; text-align: center;">
-            <a href="autohuolto.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #333333, #1a1a1a); color: #ffffff; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 5px;">Lue lisää korjaustöistä →</a>
+            <a href="autohuolto.html" class="btn-read-more">Lue lisää korjaustöistä →</a>
             <!-- Calendar temporarily closed during development -->
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
@@ -3411,7 +3459,7 @@
             </div>
         </div>
         <p style="margin-top: 30px; text-align: center;">
-            <a href="lasikorjaus.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #333333, #1a1a1a); color: #ffffff; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 5px;">Lue lisää lasikorjauksesta →</a>
+            <a href="lasikorjaus.html" class="btn-read-more">Lue lisää lasikorjauksesta →</a>
             <!-- Calendar temporarily closed during development -->
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span>
         </p>
@@ -3438,7 +3486,7 @@
             </div>
         </div>
         <p style="margin-top: 30px; text-align: center;">
-            <a href="kolhukorjaus.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #333333, #1a1a1a); color: #ffffff; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 5px;">Lue lisää kolhujenkorjauksesta →</a>
+            <a href="kolhukorjaus.html" class="btn-read-more">Lue lisää kolhujenkorjauksesta →</a>
             <!-- Calendar temporarily closed during development -->
             <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Varaa Aika</span>
         </p>
