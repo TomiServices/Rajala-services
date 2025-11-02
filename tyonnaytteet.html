@@ -10,6 +10,58 @@
     <!-- Favicon -->
     <link rel="icon" type="image/webp" href="Favicon.webp">
     
+    <!-- Structured Data for CollectionPage -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Työnäytteet",
+        "description": "Katso esimerkkejä Fixneron ammattitaitoisista pesuista, rengastöistä ja korjauksista Kivenlahdessa Espoossa.",
+        "url": "https://fixnero.fi/tyonnaytteet.html",
+        "inLanguage": "fi",
+        "isPartOf": {
+            "@type": "WebSite",
+            "name": "Fixnero",
+            "url": "https://fixnero.fi"
+        },
+        "publisher": {
+            "@type": "LocalBusiness",
+            "name": "Fixnero Oy",
+            "url": "https://fixnero.fi",
+            "telephone": "+358401935001",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Tiilenvalajantie 6",
+                "addressLocality": "Espoo",
+                "postalCode": "02330",
+                "addressCountry": "FI"
+            }
+        }
+    }
+    </script>
+    
+    <!-- Breadcrumb Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Etusivu",
+                "item": "https://fixnero.fi"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Työnäytteet",
+                "item": "https://fixnero.fi/tyonnaytteet.html"
+            }
+        ]
+    }
+    </script>
+    
     <link rel="preload" href="FXNR.webp" as="image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
