@@ -46,6 +46,8 @@
     }
     </script>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
         html {
@@ -58,38 +60,74 @@
             padding: 0;
             line-height: 1.6;
         }
+        
+        /* Top banner - matching main page */
+        .top-banner {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: #000000;
+            color: #ffffff;
+            text-align: center;
+            padding: 4px 0;
+            z-index: 1002;
+            font-weight: 400;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Container with proper spacing for fixed banner */
         .container {
             max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        header {
-            background: #000;
-            color: white;
+            margin: 80px auto 40px;
             padding: 30px 20px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        header {
+            background: transparent;
+            color: #333333;
+            padding: 0 0 30px 0;
             text-align: center;
+            border-bottom: 3px solid #f0f0f0;
+            margin-bottom: 40px;
         }
         header h1 {
-            margin: 0;
-            font-family: 'Bebas Neue', 'Arial Black', sans-serif;
-            font-size: 2.5rem;
+            margin: 0 0 15px 0;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+            font-style: italic;
+            font-size: 2.8rem;
+            color: #1a1a1a;
+            letter-spacing: 0.05em;
+            background: linear-gradient(135deg, #333333, #555555);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         header p {
             margin: 10px 0 0 0;
+            color: #555555;
+            font-size: 1.1rem;
             opacity: 0.9;
         }
         .back-link {
             display: inline-block;
-            margin: 20px 0;
-            padding: 10px 20px;
-            background: #000;
+            margin: 0 0 30px 0;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #333333, #1a1a1a);
             color: white;
             text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         .back-link:hover {
-            background: #555;
+            background: linear-gradient(135deg, #444444, #222222);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         }
         .blog-grid {
             display: grid;
@@ -99,55 +137,105 @@
         }
         .blog-card {
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
             overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
         }
+        
+        /* Animated background pattern for blog cards */
+        .blog-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                #f8f8f8 0px,
+                #f8f8f8 30px,
+                #ffffff 30px,
+                #ffffff 60px
+            );
+            opacity: 0.3;
+            z-index: 0;
+            pointer-events: none;
+            border-radius: 15px;
+        }
+        
         .blog-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
         }
         .blog-card img {
             width: 100%;
-            height: 200px;
+            height: 220px;
             object-fit: cover;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        .blog-card:hover img {
+            transform: scale(1.05);
         }
         .blog-card-content {
-            padding: 20px;
+            padding: 25px;
+            position: relative;
+            z-index: 1;
         }
         .blog-card h2 {
-            margin: 0 0 10px 0;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.5rem;
-            color: #000;
+            margin: 0 0 12px 0;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+            font-style: italic;
+            font-size: 1.6rem;
+            color: #1a1a1a;
+            letter-spacing: 0.05em;
         }
         .blog-card .date {
-            color: #444;
+            color: #555555;
             font-size: 0.9rem;
             margin-bottom: 15px;
             display: block;
+            font-weight: 500;
         }
         .blog-card p {
-            color: #333;
-            margin: 0 0 15px 0;
+            color: #333333;
+            margin: 0 0 20px 0;
+            line-height: 1.7;
         }
         .blog-card a {
             display: inline-block;
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #555555, #333333);
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #333333, #1a1a1a);
             color: white;
             text-decoration: none;
-            border-radius: 5px;
-            transition: all 0.3s;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         .blog-card a:hover {
             background: linear-gradient(135deg, #444444, #222222);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
         footer {
+            background: #000000;
+            color: #ecf0f1;
             text-align: center;
             padding: 40px 20px;
-            color: #666;
+            margin-top: 60px;
+        }
+        footer a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        footer a:hover {
+            text-decoration: underline;
         }
         
         @media (max-width: 768px) {
@@ -155,19 +243,38 @@
                 grid-template-columns: 1fr;
             }
             header h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
+            }
+            .container {
+                margin: 70px 15px 30px;
+                padding: 20px 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            .blog-card img {
+                height: 180px;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>📰 Fixnero Blogi</h1>
-        <p>Vinkkejä ja ohjeita auton hoitoon ja huoltoon</p>
-    </header>
-    
+    <div class="top-banner">
+        <a href="tel:+358401935001" style="color: inherit; text-decoration: none;">📞 Puhelin: 040 1935001</a> | 
+        <a href="mailto:info@fixnero.fi" style="color: inherit; text-decoration: none;">📧 info@fixnero.fi</a> | 
+        <a href="../index.html#yhteystiedot" style="color: inherit; text-decoration: none;">📍 Tiilenvalajantie 6, 02330 Espoo</a>
+    </div>
+
     <div class="container">
         <a href="../index.html" class="back-link">← Takaisin etusivulle</a>
+        
+        <header>
+            <h1>📰 Fixnero Blogi</h1>
+            <p>Vinkkejä ja ohjeita auton hoitoon ja huoltoon</p>
+        </header>
         
         <div class="blog-grid">
             <!-- Blog Post 1 -->
@@ -206,8 +313,13 @@
     </div>
     
     <footer>
-        <p>&copy; 2024 Fixnero Oy. Kaikki oikeudet pidätetään.</p>
-        <p><a href="../index.html#yhteystiedot" style="color: #000; text-decoration: none;">Yhteystiedot</a> | <a href="../index.html" style="color: #000; text-decoration: none;">Etusivu</a></p>
+        <p style="margin-bottom: 15px; font-size: 1rem;">&copy; 2024 Fixnero Oy. Kaikki oikeudet pidätetään.</p>
+        <p style="margin: 0;">
+            <a href="../index.html#yhteystiedot" style="margin: 0 15px;">Yhteystiedot</a> | 
+            <a href="../index.html" style="margin: 0 15px;">Etusivu</a> | 
+            <a href="../tietoa-meista.html" style="margin: 0 15px;">Tietoa meistä</a> |
+            <a href="../cookie-policy.html" style="margin: 0 15px;">Evästekäytäntö</a>
+        </p>
     </footer>
     
     <!-- Cookie Consent Banner - GDPR Compliant -->
