@@ -333,6 +333,13 @@
             transform: scale(1.05);
             filter: brightness(1.2);
         }
+        /* Show desktop logo on desktop, hide mobile logo */
+        .nav-logo-mobile {
+            display: none;
+        }
+        .nav-logo-desktop {
+            display: block;
+        }
         nav a {
             color: #ffffff;
             padding: 16px 18px;
@@ -422,6 +429,13 @@
         }
         @media (max-width: 1279px) {
             .hamburger-menu { display: flex !important; align-items: center; justify-content: center; }
+            /* Hide desktop logo, show mobile logo on mobile */
+            .nav-logo-desktop {
+                display: none;
+            }
+            .nav-logo-mobile {
+                display: block;
+            }
             nav {
                 flex-direction: column;
                 align-items: flex-start;
@@ -450,7 +464,16 @@
                 border-bottom: 2px solid #000;
                 margin: 0;
             }
-            nav > a:first-child img {
+            nav > a:nth-child(2) {
+                background: #ffffff;
+                padding: 20px;
+                text-align: center;
+                width: 100%;
+                border-bottom: 2px solid #000;
+                margin: 0;
+            }
+            nav > a:first-child img,
+            nav > a:nth-child(2) img {
                 margin: 0;
                 max-width: 200px;
                 height: auto;
@@ -577,11 +600,13 @@
                 width: 260px;
             }
             
-            nav > a:first-child {
+            nav > a:first-child,
+            nav > a:nth-child(2) {
                 padding: 15px 10px;
             }
             
-            nav > a:first-child img {
+            nav > a:first-child img,
+            nav > a:nth-child(2) img {
                 max-width: 160px;
                 height: auto;
             }
@@ -2916,7 +2941,8 @@
         <span></span><span></span><span></span>
     </button>
     <nav id="nav">
-        <a href="#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" loading="lazy"></a>
+        <a href="#top" class="nav-logo-desktop"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" loading="lazy"></a>
+        <a href="#top" class="nav-logo-mobile"><img src="FXNR.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" loading="lazy"></a>
         <a href="#pesupalvelut">Pesupalvelut</a>
         <a href="#sisapuhdistus">Sisäpuhdistus</a>
         <a href="#kiilloitus">Kiilloitus</a>
@@ -3040,7 +3066,7 @@
                 <div class="category-box" style="background-image: url('Rengastyot.webp');" onclick="location.href='#rengastyot'" role="button" tabindex="0" aria-label="Siirry rengastöihin">Rengastyöt</div>
                 <div class="category-box" style="background-image: url('lasikorjaus.webp');" onclick="location.href='#lasikorjaus'" role="button" tabindex="0" aria-label="Siirry lasikorjaukseen">Lasikorjaus</div>
                 <div class="category-box" style="background-image: url('Tyonaytteet.webp');" onclick="location.href='tyonnaytteet.html'" role="button" tabindex="0" aria-label="Siirry työnäytteisiin">Työnäytteet</div>
-                <div class="category-box" style="background-image: url('Tyonaytteet.webp');" onclick="location.href='tietoa-meista.html'" role="button" tabindex="0" aria-label="Siirry Tietoa meistä -sivulle">Tietoa meistä</div>
+                <div class="category-box" style="background-image: url('FXNRv.webp');" onclick="location.href='tietoa-meista.html'" role="button" tabindex="0" aria-label="Siirry Tietoa meistä -sivulle">Tietoa meistä</div>
                 <div class="category-box" style="background-image: url('Ajanvaraus.webp');" onclick="location.href='#ajanvaraus'" role="button" tabindex="0" aria-label="Siirry ajanvaraukseen">Ajanvaraus</div>
                 <div class="category-box" style="background-image: url('hinnasto.webp');" onclick="location.href='#hinnasto'" role="button" tabindex="0" aria-label="Siirry hinnastoon">Hinnasto</div>
                 <div class="category-box" style="background-image: url('yhteystiedot.webp');" onclick="location.href='#yhteystiedot'" role="button" tabindex="0" aria-label="Siirry yhteystietoihin">Yhteystiedot</div>
