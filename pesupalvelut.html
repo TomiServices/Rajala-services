@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,user-scalable=yes">
-    <meta name="description" content="Pesupalvelut Espoo - Fixnero tarjoaa ammattitaitoista auton käsinpesua, vahauksia, pikapesuja ja renkaiden pesuja Kivenlahdessa Espoossa. Laadukkaat pesupalvelut kaikille automerkeille. Varaa aika helposti verkossa tai soita 040 1935001.">
-    <meta name="keywords" content="pesupalvelut Espoo, auton pesu Espoo, käsinpesu Espoo, vahaukset, pikapesut, renkaiden pesu, Kivenlahti autopesu, ceramic spray pinnoite, kova vaha, autonpesu Espoo, autopesu lähellä, pesupalvelut Kivenlahti">
-    <title>Pesupalvelut Espoo – Fixnero</title>
+    <meta name="description" content="Pesupalvelut Espoo: Ammattitaitoinen auton pesu, käsinpesu, vahaukset ja pinnoitteet Kivenlahdessa. Fixnero tarjoaa laadukkaat pesupalvelut kaikille ajoneuvotyypeille. Varaa aika verkossa tai soita 040 1935001.">
+    <meta name="keywords" content="pesupalvelut Espoo, autonpesu Espoo, käsinpesu, vahaukset, nanohoitopesu, pikakiillopesu, talvipesu, auton ulkopesu, Kivenlahti, Fixnero, keraaminen pinnoite, kovavaha, Ultra Shine">
+    <title>Pesupalvelut Espoo | Auton Pesu ja Vahaukset – Fixnero</title>
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://fixnero.fi/pesupalvelut.html">
-    <meta property="og:title" content="Pesupalvelut Espoo – Fixnero">
-    <meta property="og:description" content="Laadukkaat auton pesupalvelut Espoossa: käsinpesu, vahaukset, pikapesut. Ammattitaitoista palvelua Kivenlahdessa.">
+    <meta property="og:title" content="Pesupalvelut Espoo | Auton Pesu ja Vahaukset – Fixnero">
+    <meta property="og:description" content="Ammattitaitoinen auton pesu Espoossa. Käsinpesu, vahaukset ja pinnoitteet kaikille ajoneuvotyypeille. Laadukkaat materiaalit ja huolellinen palvelu Kivenlahdessa.">
     <meta property="og:image" content="https://fixnero.fi/Pesupalvelut.webp">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://fixnero.fi/pesupalvelut.html">
-    <meta property="twitter:title" content="Pesupalvelut Espoo – Fixnero">
-    <meta property="twitter:description" content="Laadukkaat auton pesupalvelut Espoossa: käsinpesu, vahaukset, pikapesut. Ammattitaitoista palvelua Kivenlahdessa.">
+    <meta property="twitter:title" content="Pesupalvelut Espoo | Auton Pesu ja Vahaukset – Fixnero">
+    <meta property="twitter:description" content="Ammattitaitoinen auton pesu Espoossa. Käsinpesu, vahaukset ja pinnoitteet kaikille ajoneuvotyypeille. Laadukkaat materiaalit ja huolellinen palvelu Kivenlahdessa.">
     <meta property="twitter:image" content="https://fixnero.fi/Pesupalvelut.webp">
     
     <meta name="robots" content="index, follow">
@@ -33,12 +33,12 @@
     {
         "@context": "https://schema.org",
         "@type": "Service",
-        "name": "Autopesu Espoo",
-        "serviceType": "Pesupalvelut",
-        "description": "Fixnero tarjoaa ammattimaiset autonpesupalvelut Espoossa. Sisältää käsinpesun, vahaukset, pikapesut, renkaiden pesut ja pinnoitteet.",
+        "name": "Pesupalvelut Espoo",
+        "serviceType": "Auton pesu ja hoito",
+        "description": "Fixnero tarjoaa ammattitaitoisen auton pesupalvelut Espoossa. Käsinpesu, vahaukset, pinnoitteet ja lisäpalvelut kaikille ajoneuvotyypeille.",
         "provider": {
             "@type": "LocalBusiness",
-            "name": "Fixnero / Rajala Services",
+            "name": "Fixnero",
             "telephone": "+358401935001",
             "email": "info@fixnero.fi",
             "address": {
@@ -50,7 +50,7 @@
             }
         },
         "areaServed": {
-            "@type": "Place",
+            "@type": "City",
             "name": "Espoo"
         }
     }
@@ -84,11 +84,28 @@
     }
     </script>
     
-    <link rel="preload" href="FXNR.webp" as="image">
+    <link rel="preload" href="FXNRv.webp" as="image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap"></noscript>
     <style>
+        /* Font loading optimization */
+        @font-face {
+            font-family: 'Bebas Neue';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: local('Impact'), local('Arial Black');
+        }
+        
+        @font-face {
+            font-family: 'Yanone Kaffeesatz';
+            font-style: normal;
+            font-weight: 700;
+            font-display: swap;
+            src: local('Impact'), local('Arial Black');
+        }
         html {
             scroll-behavior: smooth;
         }
@@ -103,16 +120,17 @@
             position: fixed;
             top: 0; left: 0; right: 0;
             background: #000000;
-            color: #fff;
+            color: #ffffff;
             text-align: center;
-            padding: 8px 0;
+            padding: 4px 0;
             z-index: 1002;
-            font-weight: 500;
+            font-weight: 400;
+            font-size: 0.85rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         nav {
             position: fixed;
-            top: 32px; left: 0; right: 0;
+            top: 20px; left: 0; right: 0;
             background: rgba(0,0,0,0.95);
             backdrop-filter: blur(10px);
             z-index: 1003;
@@ -134,10 +152,10 @@
             filter: brightness(1.2);
         }
         nav a {
-            color: #fff;
+            color: #ffffff;
             padding: 16px 18px;
             text-decoration: none;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 500;
             display: block;
             white-space: nowrap;
@@ -146,9 +164,26 @@
             margin: 0 2px;
         }
         nav a:hover {
-            background: linear-gradient(135deg, #666666, #444444);
-            color: #fff;
+            background: linear-gradient(135deg, #333333, #1a1a1a);
+            color: #ffffff;
             transform: translateY(-2px);
+        }
+        
+        /* Laptop screen adjustments (1280px - 1366px) to prevent navigation overflow */
+        @media (min-width: 1280px) and (max-width: 1366px) {
+            nav {
+                padding: 0 10px;
+            }
+            nav img {
+                height: 45px;
+                margin-left: 5px;
+                margin-right: 10px;
+            }
+            nav a {
+                font-size: 15px;
+                padding: 14px 12px;
+                margin: 0 1px;
+            }
         }
         .hamburger-menu {
             display: none;
@@ -162,12 +197,21 @@
             width: 48px;
             height: 48px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.08);
             /* Reset button styles */
-            border: none;
             font: inherit;
             color: inherit;
             outline: none;
+        }
+        .hamburger-menu:hover {
+            background: linear-gradient(135deg, rgba(50,50,50,0.98), rgba(30,30,30,0.98));
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+        .hamburger-menu:active {
+            transform: translateY(0) scale(0.96);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
         }
         .hamburger-menu span {
             display: block;
@@ -177,9 +221,24 @@
             background: linear-gradient(90deg, #ffffff, #e0e0e0);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 2px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .hamburger-menu.active {
+            background: linear-gradient(135deg, rgba(30,30,30,0.98), rgba(10,10,10,0.98));
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12);
+        }
+        .hamburger-menu.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+        .hamburger-menu.active span:nth-child(2) {
+            opacity: 0;
+            transform: scale(0);
+        }
+        .hamburger-menu.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
         }
         @media (max-width: 1279px) {
-            .hamburger-menu { display: flex; align-items: center; justify-content: center; }
+            .hamburger-menu { display: flex !important; align-items: center; justify-content: center; }
             nav {
                 flex-direction: column;
                 align-items: flex-start;
@@ -193,9 +252,12 @@
                 background: #000000;
                 box-shadow: 8px 0 40px rgba(0,0,0,0.6);
                 overflow-y: auto;
+                backdrop-filter: blur(20px);
+                border-right: 1px solid rgba(255,255,255,0.1);
             }
             nav.active { 
                 transform: translateX(0);
+                box-shadow: 8px 0 50px rgba(0,0,0,0.8);
             }
             nav > a:first-child {
                 background: #ffffff;
@@ -211,21 +273,27 @@
                 height: auto;
             }
             nav a:not(:first-child) {
-                color: #ecf0f1;
+                color: #ffffff;
                 font-size: 16px;
                 font-weight: 500;
                 padding: 18px 25px;
                 text-align: left;
                 width: 100%;
                 margin: 0;
+                position: relative;
                 border-bottom: 1px solid rgba(255,255,255,0.15);
-                background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+                background: linear-gradient(135deg, #000000 0%, #000000 100%);
             }
             nav a:not(:first-child):hover { 
-                background: linear-gradient(135deg, #666666, #444444) !important;
-                color: #fff !important;
+                background: linear-gradient(135deg, #333333, #1a1a1a) !important;
+                color: #ffffff !important;
                 transform: translateX(8px);
                 padding-left: 30px;
+                box-shadow: inset 0 0 20px rgba(255,255,255,0.05);
+            }
+            nav a:not(:first-child):active {
+                transform: translateX(4px) scale(0.98);
+                background: linear-gradient(135deg, #1a1a1a, #0a0a0a) !important;
             }
         }
         .container {
@@ -376,7 +444,7 @@
     </button>
 
     <nav id="nav">
-        <a href="index.html#top"><img src="FXNR.webp" alt="Fixnero - Pesupalvelut Espoo, ammattitaitoinen autopesu"></a>
+        <a href="index.html#top"><img src="FXNRv.webp" alt="Fixnero - Pesupalvelut Espoo, ammattitaitoinen autopesu"></a>
         <a href="index.html#pesupalvelut">Pesupalvelut</a>
         <a href="index.html#rengastyot">Rengastyöt</a>
         <a href="index.html#korjaustyot">Korjaustyöt</a>
@@ -392,69 +460,140 @@
         
         <h1>Pesupalvelut Espoo</h1>
         
-        <p>Fixnero tarjoaa ammattitaitoisia auton pesupalveluita Espoossa, Kivenlahdessa Espoossa. Käytämme vain laadukkaita pesuaineita ja -välineitä, jotka suojaavat autosi pintoja ja takaavat kiiltävän lopputuloksen. Palvelumme on suunniteltu sekä nopeille ylläpitopesuille että perusteellisemmille käsipesuille, ja voit räätälöidä palvelun juuri oman autosi tarpeiden mukaan.</p>
+        <p>Ammattitaitoinen auton pesu Kivenlahdessa, Espoossa. Fixnero tarjoaa laadukkaat pesupalvelut kaikille ajoneuvotyypeille huolellisella ja ammattitaitoisella tavalla. Käytämme parhaita pesuaineita ja laitteita, jotka varmistavat erinomaisen lopputuloksen samalla kun ne suojaavat autosi pintoja.</p>
 
-        <p>Palvelumme sopii kaikille ajoneuvotyypeille – oli kyseessä sitten henkilöauto, pakettiauto tai muu ajoneuvo. Pesemme autosi huolellisesti ja hellävaraisesti, jotta maalipinta säilyy ehjänä ja kiiltävänä. Auton pesu säännöllisesti pidentää maalipinnan käyttöikää ja auttaa säilyttämään ajoneuvon arvon.</p>
+        <p>Auton säännöllinen pesu ei ole vain ulkonäköseikka, vaan tärkeä osa ajoneuvon arvon säilyttämistä. Ammattitaitoinen pesupalvelu poistaa lian, suolan ja muut epäpuhtaudet, jotka voivat ajan mittaan vahingoittaa maalipintaa. Meillä saat luotettavaa palvelua, joka pitää autosi kunnossa vuodesta toiseen.</p>
 
-        <h2>Pesupalvelumme</h2>
+        <h2>Ulkopesut ja pikapesut</h2>
         
-        <h3>Pikapesu</h3>
-        <p>Nopea ja tehokas vaihtoehto auton ulkopuoliseen pesuun. Levitämme autoon tehokkaan pesuaineen, huuhdtelemme painepesurilla ja kuivaamme pehmeällä mikrokuituliinalla. Sopii erinomaisesti ylläpitopesuksi säännölliseen käyttöön. <strong>Hinta: alkaen 20 €</strong></p>
+        <p>Tarjoamme kattavan valikoiman ulkopesuja eri tarpeisiin. Kaikki ulkopesumme sisältävät perusteellisen koko auton ulkopintojen puhdistuksen, ja voit valita palvelutason tarpeidesi ja auton kunnon mukaan.</p>
 
         <h3>Käsinpesu</h3>
-        <p>Perusteellisempi pesupalvelu, jossa auto huuhdellaan ensin kauttaaltaan. Pesuaine levitetään pehmeällä pesukintaalla, joka ei naarmuta maalipintaa. Lopuksi auto huuhdellaan ja kuivataan mikrokuituliinalla. Käsinpesu on hellävarainen ja tehokas tapa pitää auto puhtaana. <strong>Hinta: alkaen 25 €</strong></p>
-
-        <h3>Vahaukset</h3>
-        <p>Haluatko lisäkilto ja suojaa autollesi? Vahashampoo muodostaa pesun aikana suojaavan ja kiiltävän kerroksen, joka auttaa pitämään auton puhtaana pidempään ja helpottaa seuraavia pesukertoja. <strong>Hinta: alkaen 35 €</strong></p>
-
-        <h3>Renkaiden pesu</h3>
-        <p>Kun tuot renkaat vaihdettavaksi, voit tilata niille samalla pesun. Saat puhtaat renkaat mukaasi tai rengashotelliin säilöön. <strong>Hinta: alkaen 15 €</strong></p>
-
-        <h2>Lisäpalvelut</h2>
+        <p>Käsinpesu on peruspesupalvelumme, jossa autosi pestään huolellisesti käyttäen laadukkaita pesuaineita ja pehmeää mikrokuituliinaa. Pesu suoritetaan hellävaraisesti, joten maalipinta ei naarmuunnu. Käsinpesu sopii erinomaisesti säännölliseen auton puhtaanapitoon.</p>
         <ul>
-            <li><strong>Kova vaha:</strong> Pitkäkestoisempi vaihtoehto tavalliselle vahalle. Hinta: alkaen 45 €</li>
-            <li><strong>Ceramic spray -pinnoite:</strong> Tehokas pinnoite, joka suojaa maalipintaa ja helpottaa pesua. Hinta: alkaen 60 €</li>
-            <li><strong>Vettä ja likaa hylkivä pinnoite:</strong> Nopea suihkutettava pinnoite pesun yhteydessä. Hinta: alkaen 40 €</li>
+            <li>Henkilöauto: <strong>23 €</strong></li>
+            <li>Maasturi: <strong>28 €</strong></li>
+            <li>Pakettiauto: <strong>38 €</strong></li>
         </ul>
 
-        <div class="cta-section" style="background: #fff url('sisapuhdistus.webp') center top/cover; position: relative; overflow: hidden;">
+        <h3>Nanohoitopesu</h3>
+        <p>Nanohoitopesu yhdistää perusteellisen pesun ja suojaavan nanopinnoitteen. Tämä palvelu antaa autollesi lisäsuojaa ja kiiltoa, ja se helpottaa lian poistumista tulevilla pesukerroilla. Nanopinnoite hylkii vettä ja likaa tehokkaasti.</p>
+        <ul>
+            <li>Henkilöauto: <strong>33 €</strong></li>
+            <li>Maasturi: <strong>38 €</strong></li>
+        </ul>
+
+        <h3>Pikakiillopesu</h3>
+        <p>Pikakiillopesu antaa autollesi heti kiiltävän ja siistin ulkonäön. Tämä palvelu sisältää pesun ja nopean kiillotuksen, joka palauttaa maalipinnan kiillon ja antaa autollesi näyttävän lopputuloksen.</p>
+        <ul>
+            <li>Henkilöauto: <strong>43 €</strong></li>
+            <li>Maasturi: <strong>48 €</strong></li>
+            <li>Pakettiauto: <strong>58 €</strong></li>
+        </ul>
+
+        <h3>Talvipesu</h3>
+        <p>Talvipesu on suunniteltu erityisesti talvikauden haasteisiin. Palvelu sisältää perusteellisen pesun, joka poistaa suolan, hiekan ja muut talven jättämät jäljet. Talvipesu suojaa autosi pintoja kovia olosuhteita vastaan ja auttaa ehkäisemään ruostevaurioita.</p>
+        <ul>
+            <li>Henkilöauto: <strong>48 €</strong></li>
+            <li>Maasturi: <strong>53 €</strong></li>
+            <li>Pakettiauto: <strong>63 €</strong></li>
+        </ul>
+
+        <h3>Moottoritilan pesu</h3>
+        <p>Moottoritilan pesu puhdistaa moottorin ja sen ympäristön öljystä, liasta ja muista epäpuhtauksista. Puhdas moottoritila helpottaa huoltotöiden tekemistä ja auttaa havaitsemaan mahdolliset vuodot tai ongelmat aikaisemmin.</p>
+        <ul>
+            <li>Kaikki ajoneuvot: <strong>23 €</strong></li>
+        </ul>
+
+        <h2>Vahaukset ja pintakäsittelyt</h2>
+        
+        <p>Vahaus on tehokas tapa suojata autosi maalipintaa ja pitää se kiiltävänä. Tarjoamme useita erilaisia vahauspalveluita, jotka sopivat erilaisiin tarpeisiin ja budjet teihin. Kaikki vahauks emme tehdään ammattitaitoisesti laadukkailla tuotteilla.</p>
+
+        <h3>Vahakäsittely</h3>
+        <p>Vahakäsittely antaa autollesi suojaa ja kiiltoa. Vaha muodostaa ohuen suojakerroksen maalipinnan päälle, joka hylkii vettä ja likaa. Vahakäsittely kestää useita viikkoja ja helpottaa auton puhtaanapitoa.</p>
+        <ul>
+            <li>Henkilöauto: <strong>98 €</strong></li>
+            <li>Maasturi: <strong>108 €</strong></li>
+            <li>Pakettiauto: <strong>118 €</strong></li>
+        </ul>
+
+        <h3>Kovavaha</h3>
+        <p>Kovavaha on kestävämpi vaihtoehto tavalliselle vahalle. Se antaa pitkäkestoisen suojan ja erinomaisen kiillon. Kovavaha kestää paremmin pesuja ja sääolosuhteita, ja se on ihanteellinen valinta, kun haluat maksimaalisen suojan autollesi.</p>
+        <ul>
+            <li>Henkilöauto: <strong>118 €</strong></li>
+            <li>Maasturi: <strong>128 €</strong></li>
+            <li>Pakettiauto: <strong>148 €</strong></li>
+        </ul>
+
+        <h3>Ultra Shine</h3>
+        <p>Ultra Shine on premium vahauskäsittely, joka antaa autollesi huippukiillon ja erinomaisen suojan. Tämä palvelu sisältää huolellisen esikäsittelyn, vahauksen ja viimeistelyn, jotka yhdessä tuottavat vertaansa vailla olevan lopputuloksen.</p>
+        <ul>
+            <li>Henkilöauto: <strong>168 €</strong></li>
+            <li>Maasturi: <strong>178 €</strong></li>
+            <li>Pakettiauto: <strong>198 €</strong></li>
+        </ul>
+
+        <h3>Keraaminen pinnoite</h3>
+        <p>Keraaminen pinnoite on markkinoiden tehokkain ja pitkäkestoisin suojakerrros autosi maalipinnalle. Se kestää vuosia ja tarjoaa erinomaisen suojan naarmuja, UV säteilyä ja ympäristön rasitteita vastaan. Keraaminen pinnoite antaa myös upean kiillon ja helpottaa huomattavasti auton pesua.</p>
+        <ul>
+            <li>Henkilöauto: <strong>Alk. 258 €</strong></li>
+            <li>Maasturi: <strong>Alk. 283 €</strong></li>
+        </ul>
+
+        <h2>Täyspalvelut</h2>
+
+        <h3>Täyshuoltopesu</h3>
+        <p>Täyshuoltopesu on kattavin pesupalvelumme, joka sisältää sekä ulkopesun että sisäpuhdistuksen. Tämä on täydellinen valinta, kun haluat autosi täysin puhtaaksi ja raikkaaksi sekä ulkoa että sisältä. Täyshuoltopesu antaa autollesi uutta vastaavan tunteen.</p>
+        <ul>
+            <li>Kaikki ajoneuvot: <strong>267 €</strong></li>
+        </ul>
+
+        <h2>Miksi valita Fixneron pesupalvelut?</h2>
+        
+        <p>Fixnerolla meillä on pitkä kokemus autojen pesusta ja hoidosta. Käytämme vain laadukkaita tuotteita ja ammattimaisilla laitteita, jotka varmistavat parhaan mahdollisen lopputuloksen. Jokainen auto pestään huolellisesti ja yksilöllisesti, jotta voimme tarjota juuri sinun autollesi sopivan palvelun.</p>
+
+        <p>Tiimimme koostuu ammattitaitoisista ja kokeneista henkilöistä, jotka ymmärtävät autojen hoidon tärkeyden. Olemme sitoutuneet tarjoamaan erinomaista asiakaspalvelua ja varmistamaan, että jokainen asiakas on tyytyväinen saamaansa palveluun.</p>
+
+        <p>Sijaintimme Kivenlahdessa, Espoossa on helposti saavutettavissa, ja tarjoamme myös joustavia aikavarausvaihtoehtoja. Ota yhteyttä, niin autamme sinua valitsemaan juuri sinulle sopivan pesupalvelun!</p>
+
+        <div class="cta-section" style="background: #fff url('Pesupalvelut.webp') center top/cover; position: relative; overflow: hidden;">
             <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.85); z-index: 1; pointer-events: none;"></div>
             <div style="position: relative; z-index: 2;">
                 <h2>Varaa aika pesupalveluun</h2>
-                <p>Ota yhteyttä tai varaa aika suoraan kalenteristamme!</p>
-                <a href="index.html#ajanvaraus" class="cta-button">📅 Varaa aika</a>
-                <a href="tel:+358401935001" class="cta-button">📞 Soita meille</a>
-                <a href="mailto:info@fixnero.fi" class="cta-button">📧 Lähetä viesti</a>
+                <p>Ota yhteyttä tai varaa aika suoraan!</p>
+                <a href="tel:+358401935001" class="cta-button">📞 Soita: 040 1935001</a>
+                <a href="mailto:info@fixnero.fi" class="cta-button">📧 Lähetä sähköposti</a>
+                <a href="index.html#yhteystiedot" class="cta-button">📍 Yhteystiedot</a>
             </div>
         </div>
 
-        <h2>Tutustu Meihin</h2>
+        <h2>Tutustu lisää palveluihimme</h2>
         <div class="links-section">
+            <a href="sisapuhdistus.html" class="link-card" style="background-image: url('sisapuhdistus.webp'); background-size: cover; background-position: center;">
+                <div style="background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px;">
+                    <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">🧽 Sisäpuhdistus</h3>
+                    <p style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">Kattava sisätilojen puhdistus ja hoito ammattimaisesti.</p>
+                </div>
+            </a>
+            
+            <a href="kiilloitus.html" class="link-card" style="background-image: url('kiilloitus.webp'); background-size: cover; background-position: center;">
+                <div style="background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px;">
+                    <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">✨ Kiilloitus</h3>
+                    <p style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">Koneellinen kiillotus ja keraaminen pinnoitus autollesi.</p>
+                </div>
+            </a>
+            
             <a href="tyonnaytteet.html" class="link-card" style="background-image: url('Tyonaytteet.webp'); background-size: cover; background-position: center;">
                 <div style="background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px;">
                     <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">📸 Työnäytteet</h3>
-                    <p style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">Katso esimerkkejä ammattitaitoisesta työstämme ja tyytyväisten asiakkaidemme autoista.</p>
+                    <p style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">Katso esimerkkejä ammattitaitoisesta työstämme.</p>
                 </div>
             </a>
             
-            <a href="blogi/" class="link-card" style="background-image: url('kiilloitus.webp'); background-size: cover; background-position: center;">
+            <a href="index.html#hinnasto" class="link-card" style="background-image: url('Hero2.webp'); background-size: cover; background-position: center;">
                 <div style="background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px;">
-                    <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">📰 Blogi</h3>
-                    <p style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">Lue hyödyllisiä vinkkejä ja ohjeita auton hoitoon, huoltoon ja ylläpitoon.</p>
-                </div>
-            </a>
-            
-            <a href="index.html#palvelumme" class="link-card" style="background-image: url('Hero2.webp'); background-size: cover; background-position: center;">
-                <div style="background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px;">
-                    <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">🔧 Palvelumme</h3>
-                    <p style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">Tutustu kaikkiin palveluihimme ja löydä juuri autosi tarvitsema palvelu.</p>
-                </div>
-            </a>
-            
-            <a href="index.html#yhteystiedot" class="link-card" style="background-image: url('sisapuhdistus.webp'); background-size: cover; background-position: center;">
-                <div style="background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px;">
-                    <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">📞 Ota yhteyttä</h3>
-                    <p style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">Ota meihin yhteyttä ja kysy lisää palveluistamme tai varaa aika!</p>
+                    <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">💰 Hinnasto</h3>
+                    <p style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">Tutustu kaikkiin palveluihimme ja hintoihimme.</p>
                 </div>
             </a>
         </div>
@@ -462,11 +601,11 @@
     <footer>
         <div class="footer">
             <div class="logo-container footer-section">
-                <a href="index.html#top"><img src="FXNR.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut" loading="lazy" style="max-width: 200px; height: auto; margin-bottom: 15px;"></a>
+                <a href="index.html#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut" loading="lazy" style="max-width: 200px; height: auto; margin-bottom: 15px;"></a>
                 <p>Fixnero © 2024. All Rights Reserved.</p>
                 <p style="margin-top: 10px; font-size: 0.9rem;">
-                    <a href="cookie-policy.html" style="color: #ecf0f1; text-decoration: none;">Evästekäytäntö</a> | 
-                    <a href="tietosuojaseloste.html" style="color: #ecf0f1; text-decoration: none;">Tietosuojaseloste</a>
+                    <a href="cookie-policy.html" style="color: #ffffff; text-decoration: none;">Evästekäytäntö</a> | 
+                    <a href="tietosuojaseloste.html" style="color: #ffffff; text-decoration: none;">Tietosuojaseloste</a>
                 </p>
                 <div class="social-media-links" style="margin-top: 15px;">
                     <p style="font-weight: 600; margin-bottom: 10px;">Seuraa meitä:</p>
@@ -508,13 +647,13 @@
     <style>
         footer {
             background: #000000;
-            color: white;
+            color: #ffffff;
             padding: 0;
             margin-top: 60px;
         }
         .footer {
             background: #000000;
-            color: #ecf0f1;
+            color: #ffffff;
             padding: 40px 20px;
             display: flex;
             justify-content: space-around;
@@ -527,8 +666,9 @@
             display: flex;
             flex-direction: column;
         }
-        .footer-section a { color: #fff; text-decoration: underline; }
-        .footer-section h3, .footer-section h4, .footer-section p, .footer-section a {
+        .footer-section a { color: #ffffff; text-decoration: underline; }
+        .footer-section h3, .footer-section h4, .footer-section p, .footer-section a, .footer-section strong, .footer-section small {
+            color: #ffffff;
             margin: 8px 0;
         }
         @media (max-width: 768px) {
