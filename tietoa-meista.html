@@ -119,6 +119,13 @@
             transform: scale(1.05);
             filter: brightness(1.2);
         }
+        /* Show desktop logo on desktop, hide mobile logo */
+        .nav-logo-mobile {
+            display: none;
+        }
+        .nav-logo-desktop {
+            display: block;
+        }
         nav a {
             color: #fff;
             padding: 16px 18px;
@@ -186,6 +193,13 @@
         }
         @media (max-width: 1279px) {
             .hamburger-menu { display: flex; align-items: center; justify-content: center; }
+            /* Hide desktop logo, show mobile logo on mobile */
+            .nav-logo-desktop {
+                display: none;
+            }
+            .nav-logo-mobile {
+                display: block;
+            }
             nav {
                 flex-direction: column;
                 align-items: flex-start;
@@ -214,11 +228,19 @@
                 border-bottom: 2px solid #000;
                 margin: 0;
             }
-            nav > a:first-child img {
+            nav > a:nth-child(2) {
+                background: #ffffff;
+                padding: 20px;
+                text-align: center;
+                width: 100%;
+                border-bottom: 2px solid #000;
+                margin: 0;
+            }
+            nav > a:first-child img,
+            nav > a:nth-child(2) img {
                 margin: 0;
                 max-width: 200px;
                 height: auto;
-                content: url('FXNR.webp');
             }
             nav a:not(:first-child) {
                 color: #ecf0f1;
@@ -464,13 +486,14 @@
             nav {
                 width: 260px;
             }
-            nav > a:first-child {
+            nav > a:first-child,
+            nav > a:nth-child(2) {
                 padding: 15px 10px;
             }
-            nav > a:first-child img {
+            nav > a:first-child img,
+            nav > a:nth-child(2) img {
                 max-width: 160px;
                 height: auto;
-                content: url('FXNR.webp');
             }
             h1 {
                 font-size: 1.8rem;
@@ -511,7 +534,8 @@
     </button>
 
     <nav id="nav">
-        <a href="index.html#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo"></a>
+        <a href="index.html#top" class="nav-logo-desktop"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo"></a>
+        <a href="index.html#top" class="nav-logo-mobile"><img src="FXNR.webp" alt="Fixnero - Autohuolto Espoo"></a>
         <a href="index.html#pesupalvelut">Pesupalvelut</a>
         <a href="index.html#rengastyot">Rengastyöt</a>
         <a href="index.html#korjaustyot">Korjaustyöt</a>
