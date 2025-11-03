@@ -2715,7 +2715,9 @@
                 text-rendering: optimizeLegibility;
                 /* Add subtle contrast boost for better definition */
                 filter: contrast(1.05);
-                /* Enhance text edge definition with subtle stroke */
+                /* Enhance text edge definition - cross-browser approach */
+                text-shadow: 0 0 1px rgba(255, 255, 255, 0.3),
+                             1px 1px 1px rgba(0, 0, 0, 0.3);
                 -webkit-text-stroke: 0.3px rgba(255, 255, 255, 0.3);
                 /* Slightly increase font weight for better clarity */
                 font-weight: 800;
@@ -2727,6 +2729,9 @@
                 -moz-osx-font-smoothing: grayscale;
                 text-rendering: optimizeLegibility;
                 filter: contrast(1.05);
+                /* Enhance text edge definition - cross-browser approach */
+                text-shadow: 0 0 1px rgba(255, 255, 255, 0.2),
+                             1px 1px 1px rgba(0, 0, 0, 0.3);
                 -webkit-text-stroke: 0.2px rgba(255, 255, 255, 0.2);
                 font-weight: 700;
             }
@@ -2737,7 +2742,9 @@
                 -moz-osx-font-smoothing: grayscale;
                 text-rendering: optimizeLegibility;
                 filter: contrast(1.08);
-                /* Sharper definition for dark text on light background */
+                /* Sharper definition for dark text on light background - cross-browser */
+                text-shadow: 0 0 0.5px rgba(0, 0, 0, 0.2),
+                             0.5px 0.5px 0.5px rgba(0, 0, 0, 0.15);
                 -webkit-text-stroke: 0.2px rgba(0, 0, 0, 0.15);
                 font-weight: 700;
             }
@@ -2748,6 +2755,9 @@
                 -moz-osx-font-smoothing: grayscale;
                 text-rendering: optimizeLegibility;
                 filter: contrast(1.06);
+                /* Subtle edge definition - cross-browser approach */
+                text-shadow: 0 0 0.3px rgba(0, 0, 0, 0.15),
+                             0.3px 0.3px 0.3px rgba(0, 0, 0, 0.1);
                 -webkit-text-stroke: 0.15px rgba(0, 0, 0, 0.1);
                 font-weight: 700;
             }
