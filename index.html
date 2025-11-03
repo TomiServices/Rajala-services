@@ -2699,6 +2699,60 @@
             }
         }
         
+        /* ========================================
+           DESKTOP TEXT CLARITY ENHANCEMENTS
+           Desktop-only improvements for heading sharpness and readability
+           Mobile styles remain completely unchanged
+           ======================================== */
+        
+        @media (min-width: 769px) {
+            /* Hero section heading enhancements - FIXNERO brand name */
+            #hero h1.brand-name,
+            #hero h1 {
+                /* Optimize font rendering for sharper text on desktop */
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                text-rendering: optimizeLegibility;
+                /* Add subtle contrast boost for better definition */
+                filter: contrast(1.05);
+                /* Enhance text edge definition with subtle stroke */
+                -webkit-text-stroke: 0.3px rgba(255, 255, 255, 0.3);
+                /* Slightly increase font weight for better clarity */
+                font-weight: 800;
+            }
+            
+            /* Hero section subtitle - service description */
+            #hero p {
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                text-rendering: optimizeLegibility;
+                filter: contrast(1.05);
+                -webkit-text-stroke: 0.2px rgba(255, 255, 255, 0.2);
+                font-weight: 700;
+            }
+            
+            /* "Miksi Valita Fixnero?" main heading */
+            #miksi-valita-meidat > h2 {
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                text-rendering: optimizeLegibility;
+                filter: contrast(1.08);
+                /* Sharper definition for dark text on light background */
+                -webkit-text-stroke: 0.2px rgba(0, 0, 0, 0.15);
+                font-weight: 700;
+            }
+            
+            /* Four icon card headings under "Miksi Valita Fixnero?" */
+            #miksi-valita-meidat h3 {
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                text-rendering: optimizeLegibility;
+                filter: contrast(1.06);
+                -webkit-text-stroke: 0.15px rgba(0, 0, 0, 0.1);
+                font-weight: 700;
+            }
+        }
+        
         /* Responsive Pricing Tables - Mobile First Approach */
         /* Base table styling */
         #hinnasto table {
