@@ -216,9 +216,8 @@
     
     <link rel="preload" href="FXNRv.webp" as="image">
     <!-- Preload hero images for faster loading -->
-    <link rel="preload" href="Hero2.webp" as="image" media="(min-width: 768px) and (max-width: 2559px)">
+    <link rel="preload" href="Hero2.webp" as="image" media="(max-width: 2559px)">
     <link rel="preload" href="Hero1.webp" as="image" media="(min-width: 2560px)">
-    <link rel="preload" href="Hero3.webp" as="image" media="(max-width: 767px)">
     <!-- FullCalendar styles are bundled in index.global.min.js, no separate CSS needed -->
     <!-- Google Font for service titles - bold italic style similar to Serpentine -->
     <!-- Optimized for performance: preconnect + preload + async load to eliminate render-blocking -->
@@ -504,9 +503,9 @@
             }
         }
         /* Hero section responsive background images */
-        /* Mobile-first approach: Default to mobile image */
+        /* Mobile-first approach: Default to Hero2 for all devices */
         #hero {
-            background-image: url('Hero3.webp');
+            background-image: url('Hero2.webp');
             /* Enhanced centering and positioning for all devices */
             background-size: cover;
             background-position: center center;
@@ -515,16 +514,6 @@
             background-attachment: scroll;
             /* Ensure no white space around hero */
             object-fit: cover;
-        }
-        
-        /* Hero2: Desktop and laptop screens (768px - 2559px) */
-        @media (min-width: 768px) and (max-width: 2559px) {
-            #hero {
-                background-image: url('Hero2.webp');
-                /* Fine-tune centering for desktop */
-                background-position: center center !important;
-                background-size: cover !important;
-            }
         }
         
         /* Hero1: High-resolution screens (2K and above, >= 2560px) */
