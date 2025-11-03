@@ -395,10 +395,11 @@
     <nav id="nav">
         <a href="index.html#top"><img src="FXNRv.webp" alt="Fixnero - Sisäpuhdistus Espoo, otsonointi ja syväpuhdistus"></a>
         <a href="index.html#pesupalvelut">Pesupalvelut</a>
-        <a href="index.html#rengastyot">Rengastyöt</a>
-        <a href="index.html#korjaustyot">Korjaustyöt</a>
         <a href="index.html#sisapuhdistus">Sisäpuhdistus</a>
         <a href="index.html#kiilloitus">Kiilloitus</a>
+        <a href="index.html#kolhukorjaus">Kolhukorjaus</a>
+        <a href="index.html#korjaustyot">Korjaustyöt</a>
+        <a href="index.html#rengastyot">Rengastyöt</a>
         <a href="index.html#lasikorjaus">Lasikorjaus</a>
         <a href="index.html#hinnasto">Hinnasto</a>
         <a href="index.html#yhteystiedot">Yhteystiedot</a>
@@ -517,7 +518,7 @@
     <footer>
         <div class="footer">
             <div class="logo-container footer-section">
-                <a href="index.html#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut" loading="lazy"></a>
+                <a href="index.html#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut" loading="lazy" style="max-width: 200px; height: auto; margin-bottom: 15px;"></a>
                 <p>Fixnero © 2024. All Rights Reserved.</p>
                 <p style="margin-top: 10px; font-size: 0.9rem;">
                     <a href="cookie-policy.html" style="color: #ffffff; text-decoration: none;">Evästekäytäntö</a> | 
@@ -569,7 +570,7 @@
         }
         .footer {
             background: #000000;
-            color: #ecf0f1;
+            color: #ffffff;
             padding: 40px 20px;
             display: flex;
             justify-content: space-around;
@@ -582,8 +583,9 @@
             display: flex;
             flex-direction: column;
         }
-        .footer-section a { color: #fff; text-decoration: underline; }
-        .footer-section h3, .footer-section h4, .footer-section p, .footer-section a {
+        .footer-section a { color: #ffffff; text-decoration: underline; }
+        .footer-section h3, .footer-section h4, .footer-section p, .footer-section a, .footer-section strong, .footer-section small {
+            color: #ffffff;
             margin: 8px 0;
         }
         @media (max-width: 768px) {
