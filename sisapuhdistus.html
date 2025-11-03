@@ -83,11 +83,28 @@
     }
     </script>
     
-    <link rel="preload" href="FXNR.webp" as="image">
+    <link rel="preload" href="FXNRv.webp" as="image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap"></noscript>
     <style>
+        /* Font loading optimization */
+        @font-face {
+            font-family: 'Bebas Neue';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: local('Impact'), local('Arial Black');
+        }
+        
+        @font-face {
+            font-family: 'Yanone Kaffeesatz';
+            font-style: normal;
+            font-weight: 700;
+            font-display: swap;
+            src: local('Impact'), local('Arial Black');
+        }
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
