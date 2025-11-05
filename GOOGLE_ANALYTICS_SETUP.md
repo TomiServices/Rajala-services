@@ -137,6 +137,14 @@ gtag('config', GA_MEASUREMENT_ID, {
 
 ## Troubleshooting
 
+### Test Page Available
+
+A test page is available at `/ga-test.html` to verify your Google Analytics setup:
+- Visit `https://yoursite.com/ga-test.html`
+- Follow the on-screen instructions
+- Test event tracking
+- Verify configuration
+
 ### Analytics not showing data?
 
 1. **Check the Measurement ID**: Ensure it's correct in `cookie-consent.js` and `cookie-consent.min.js`
