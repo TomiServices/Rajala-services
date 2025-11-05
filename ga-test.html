@@ -179,7 +179,9 @@
                 : '<span style="color: red;">✗ Not found</span>';
 
             // Try to get the GA ID from the cookie-consent script
-            fetch('cookie-consent.js')
+            // Try minified version first, then fall back to unminified
+            fetch('cookie-consent.min.js')
+                .catch(() => fetch('cookie-consent.js'))
                 .then(response => response.text())
                 .then(text => {
                     const match = text.match(/GA_MEASUREMENT_ID\s*=\s*['"]([^'"]+)['"]/);
@@ -206,7 +208,11 @@
                     }
                 })
                 .catch(error => {
-                    document.getElementById('current-id').innerHTML = '<span style="color: red;">Error loading config</span>';
+                    document.getElementById('current-id').innerHTML = '<span style="color: orange;">Unable to load config file</span>';
+                    document.getElementById('config-status').className = 'status warning';
+                    document.getElementById('config-status').innerHTML = 
+                        '<strong>⚠ Cannot Read Configuration</strong><br>' +
+                        'Unable to fetch cookie-consent script files. This is normal if running locally without a server.';
                 });
         }
 

@@ -40,9 +40,9 @@ Google Analytics 4 (GA4) infrastructure is **already integrated** into the Fixne
 
 ### Step 2: Update the Tracking ID
 
-Edit the file `cookie-consent.js` (line 57):
+Edit the file `cookie-consent.js`:
 
-**Current:**
+**Find the line containing:**
 ```javascript
 const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
 ```
@@ -51,6 +51,8 @@ const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
 ```javascript
 const GA_MEASUREMENT_ID = 'G-ABC123XYZ';  // Replace with your actual measurement ID
 ```
+
+**Tip:** Search for `GA_MEASUREMENT_ID` in the file to locate the configuration.
 
 ### Step 3: Rebuild the Minified Version
 

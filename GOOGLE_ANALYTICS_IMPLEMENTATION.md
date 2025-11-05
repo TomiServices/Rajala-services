@@ -112,7 +112,7 @@ function initAnalytics() {
 
 2. **Update cookie-consent.js**
    ```javascript
-   // Line 57 in cookie-consent.js
+   // Search for GA_MEASUREMENT_ID in cookie-consent.js
    const GA_MEASUREMENT_ID = 'G-YOUR-ACTUAL-ID';
    ```
 

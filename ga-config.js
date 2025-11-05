@@ -12,8 +12,3 @@
  */
 
 const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
-
-// Export for use in other scripts
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { GA_MEASUREMENT_ID };
-}
