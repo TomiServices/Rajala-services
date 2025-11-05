@@ -54,7 +54,7 @@
             return;
         }
         
-        const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+        const GA_MEASUREMENT_ID = 'G-SP5R1MN1H9';
         
         const script = document.createElement('script');
         script.async = true;
