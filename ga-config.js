@@ -1,14 +1,13 @@
 /**
  * Google Analytics Configuration
  * 
- * IMPORTANT: Replace 'G-XXXXXXXXXX' with your actual Google Analytics 4 Measurement ID
+ * Google Analytics 4 Measurement ID for tracking website activity
  * 
- * To get your Measurement ID:
- * 1. Go to https://analytics.google.com/
- * 2. Select Admin → Data Streams → Web
- * 3. Copy the Measurement ID (format: G-XXXXXXXXXX)
+ * Measurement ID: G-SP5R1MN1H9
+ * Setup date: November 2025
  * 
- * Example: const GA_MEASUREMENT_ID = 'G-ABC123XYZ4';
+ * Note: This configuration file is optional. The actual GA initialization
+ * happens in cookie-consent.js after user consent.
  */
 
-const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+const GA_MEASUREMENT_ID = 'G-SP5R1MN1H9';
