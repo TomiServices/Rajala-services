@@ -24,9 +24,14 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://fixnero.fi/sisapuhdistus.html">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/webp" href="Favicon.webp">
-    <link rel="apple-touch-icon" href="Favicon.png">
+    <!-- Favicon - Multiple formats for browser and search engine compatibility -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="theme-color" content="#000000">
     
     <script type="application/ld+json">
     {
@@ -359,6 +364,23 @@
             transform: translateY(-2px); 
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
+        .btn-read-more {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #3FA9F5;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(63, 169, 245, 0.3);
+            margin: 20px 5px;
+        }
+        .btn-read-more:hover {
+            background: #5CB8FF;
+            box-shadow: 0 0 20px rgba(63, 169, 245, 0.6), 0 0 40px rgba(63, 169, 245, 0.4);
+            transform: translateY(-2px);
+        }
         .links-section {
             margin: 50px 0;
             display: grid;
@@ -410,10 +432,10 @@
     </button>
 
     <nav id="nav">
-        <a href="index.html#top"><img src="FXNRv.webp" alt="Fixnero - Sisäpuhdistus Espoo, otsonointi ja syväpuhdistus"></a>
+        <a href="index.html#top"><img src="FXNR.webp" alt="Fixnero - Sisäpuhdistus Espoo, otsonointi ja syväpuhdistus"></a>
         <a href="index.html#pesupalvelut">Autopesu</a>
         <a href="index.html#sisapuhdistus">Sisäpuhdistus</a>
-        <a href="index.html#kiilloitus">Kiilloitus</a>
+        <a href="index.html#kiilloitus">Kiillotus</a>
         <a href="index.html#kolhukorjaus">Kolhukorjaus</a>
         <a href="index.html#korjaustyot">Korjaustyöt</a>
         <a href="index.html#rengastyot">Rengastyöt</a>
@@ -492,6 +514,10 @@
             <li><strong>Kilpailukykyiset hinnat:</strong> Tarjoamme laadukkaat palvelut kohtuulliseen hintaan</li>
         </ul>
 
+        <p style="margin-top: 30px; text-align: center;">
+            <a href="tyonnaytteet.html" class="btn-read-more">📸 Asiakkaiden ennen ja jälkeen kuvat</a>
+        </p>
+
         <h2>Yhdistä sisäpuhdistus muihin palveluihin</h2>
         <p>Voit yhdistää sisäpuhdistuksen myös ulkopesuun tai kiillotukseen kokonaisvaltaista lopputulosta varten. Kun auton sisä ja ulkopuoli ovat molemmat puhtaat, autosi on kuin uusi. Kysy meiltä yhdistelmäpaketeista ja saat parhaan vastineen rahoillesi.</p>
 
@@ -564,7 +590,7 @@
                 <a href="rengastyot.html" title="Rengastyöt Espoo - Renkaiden vaihto ja rengashotelli">Rengastyöt</a>
                 <a href="korjaustyot.html" title="Korjaustyöt Espoo - Autohuolto ja katsastuskorjaukset">Korjaustyöt</a>
                 <a href="sisapuhdistus.html" title="Sisäpuhdistus Espoo - Auton sisätilojen puhdistus">Sisäpuhdistus</a>
-                <a href="kiilloitus.html" title="Kiilloitus Espoo - Koneellinen kiillotus ja pinnoitus">Kiilloitus</a>
+                <a href="kiilloitus.html" title="Kiillotus Espoo - Koneellinen kiillotus ja pinnoitus">Kiillotus</a>
                 <a href="lasikorjaus.html">Lasikorjaus</a>
                 <a href="kolhukorjaus.html" title="Kolhukorjaus Espoo - Lommojen oikaisu ja ruostekorjaukset">Kolhukorjaus</a>
                 <a href="index.html#hinnasto">Hinnasto</a>
