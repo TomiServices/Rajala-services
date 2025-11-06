@@ -664,26 +664,29 @@
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             text-shadow: 0 2px 8px rgba(0,0,0,0.9), 0 1px 3px rgba(0,0,0,1);
             border: 2px solid rgba(255,255,255,0.1);
+            /* Enhanced brightness and contrast for better icon visibility */
+            filter: brightness(1.15) contrast(1.1);
         }
         
-        /* Dark overlay for better text contrast on background images */
+        /* Lighter overlay to show more of the background image while maintaining text readability */
         .category-box::after {
             content: "";
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 100%);
+            background: linear-gradient(to top, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.15) 100%);
             z-index: 1;
             transition: all 0.3s ease;
         }
         .category-box:hover {
             transform: translateY(-8px) scale(1.05);
             box-shadow: 0 20px 50px rgba(63, 169, 245, 0.4), 0 0 30px rgba(63, 169, 245, 0.3);
-            filter: brightness(1.1);
+            /* Enhanced brightness on hover for more vibrant appearance */
+            filter: brightness(1.25) contrast(1.15);
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             border: 2px solid #3FA9F5;
         }
         .category-box:hover::after {
-            background: linear-gradient(to top, rgba(63, 169, 245, 0.3) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.25) 100%);
+            background: linear-gradient(to top, rgba(63, 169, 245, 0.35) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.15) 100%);
         }
         .category-box span, .category-box {
             z-index: 2;
