@@ -2766,27 +2766,47 @@
             }
         }
         
-        /* Responsive Pricing Tables - Mobile First Approach */
-        /* Base table styling */
+        /* Responsive Pricing Tables - Enhanced Mobile-First Design */
+        
+        /* Base table styling - Desktop & Tablet */
         #hinnasto table {
             font-size: 14px;
-            min-width: 500px; /* Reduced from 600px for better mobile scaling */
+            min-width: 500px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            background: #ffffff;
         }
         
         #hinnasto th {
             font-weight: 600;
             color: #1a1a1a;
             white-space: nowrap;
+            background: linear-gradient(135deg, #f8f8f8 0%, #ececec 100%);
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
         }
         
         #hinnasto td {
             color: #333333;
+            transition: background-color 0.2s ease;
+        }
+        
+        #hinnasto tbody tr:hover {
+            background-color: #f9f9f9;
         }
         
         /* Allow first column (service names) to wrap on all devices */
         #hinnasto td:first-child {
             white-space: normal;
             min-width: 120px;
+            font-weight: 500;
+        }
+        
+        /* Add alternating row colors for better readability */
+        #hinnasto tbody tr:nth-child(even) {
+            background-color: #fafafa;
         }
         
         /* Tablet screens (768px - 991px) */
@@ -2802,12 +2822,12 @@
             }
         }
         
-        /* Mobile devices - Card-based layout (no horizontal scrolling) */
+        /* Mobile devices - Enhanced Card-based layout */
         @media (max-width: 768px) {
             /* Remove overflow containers */
             #hinnasto div[style*="overflow-x"] {
                 overflow-x: visible !important;
-                margin: 15px 0 !important;
+                margin: 20px 0 !important;
                 padding: 0 !important;
             }
             
@@ -2829,67 +2849,80 @@
                 display: none !important;
             }
             
-            /* Make each row a card */
+            /* Make each row a beautifully styled card */
             #hinnasto table tbody tr {
                 display: block !important;
-                margin-bottom: 15px !important;
-                border: 1px solid #ddd !important;
-                border-radius: 8px !important;
-                background: #ffffff !important;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+                margin-bottom: 16px !important;
+                border: 1px solid #e0e0e0 !important;
+                border-radius: 12px !important;
+                background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%) !important;
+                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06) !important;
                 overflow: hidden !important;
+                transition: all 0.3s ease !important;
+            }
+            
+            #hinnasto table tbody tr:hover {
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+                transform: translateY(-2px) !important;
             }
             
             /* Make each cell a block */
             #hinnasto table tbody td {
                 display: block !important;
                 text-align: left !important;
-                padding: 10px 15px !important;
+                padding: 12px 16px !important;
                 border: none !important;
-                border-bottom: 1px solid #f0f0f0 !important;
-                font-size: 14px !important;
+                border-bottom: 1px solid #f5f5f5 !important;
+                font-size: 14.5px !important;
+                color: #2c2c2c !important;
             }
             
             #hinnasto table tbody td:last-child {
                 border-bottom: none !important;
+                padding-bottom: 14px !important;
             }
             
-            /* Service name (first column) - highlighted */
+            /* Service name (first column) - enhanced header style */
             #hinnasto table tbody td:first-child {
-                background: #f8f8f8 !important;
-                font-weight: 600 !important;
-                font-size: 15px !important;
-                padding: 12px 15px !important;
-                border-bottom: 2px solid #e0e0e0 !important;
+                background: linear-gradient(135deg, #f5f5f5 0%, #ececec 100%) !important;
+                font-weight: 700 !important;
+                font-size: 15.5px !important;
+                padding: 14px 16px !important;
+                border-bottom: 2px solid #d0d0d0 !important;
+                color: #1a1a1a !important;
+                letter-spacing: 0.3px !important;
             }
             
             #hinnasto table tbody td:first-child strong {
-                font-weight: 600 !important;
+                font-weight: 700 !important;
             }
             
-            /* Add labels based on table column count */
+            /* Add labels based on table column count with improved styling */
             /* Note: Rules must be ordered from most specific to least specific */
             
             /* For 4-column tables (Service, Henkilöauto, Maasturi, Pakettiauto) */
             #hinnasto table tbody tr td:nth-child(2):nth-last-child(3)::before {
                 content: 'Henkilöauto: ' !important;
-                font-weight: 600;
-                color: #666;
-                margin-right: 8px;
+                font-weight: 700 !important;
+                color: #555 !important;
+                margin-right: 8px !important;
+                display: inline-block !important;
             }
             
             #hinnasto table tbody tr td:nth-child(3):nth-last-child(2)::before {
                 content: 'Maasturi: ' !important;
-                font-weight: 600;
-                color: #666;
-                margin-right: 8px;
+                font-weight: 700 !important;
+                color: #555 !important;
+                margin-right: 8px !important;
+                display: inline-block !important;
             }
             
             #hinnasto table tbody tr td:nth-child(4):nth-last-child(1)::before {
                 content: 'Pakettiauto: ' !important;
-                font-weight: 600;
-                color: #666;
-                margin-right: 8px;
+                font-weight: 700 !important;
+                color: #555 !important;
+                margin-right: 8px !important;
+                display: inline-block !important;
             }
             
             /* For 3-column tables (Ajoneuvoluokka, Koko, Hinta) - no automatic labels */
@@ -2903,11 +2936,20 @@
                 content: '' !important;
             }
             
-            /* Better spacing for h3 headers on mobile */
+            /* Enhanced spacing for h3 headers on mobile */
             #hinnasto h3 {
-                font-size: 1.3rem !important;
-                margin-top: 30px !important;
-                margin-bottom: 10px !important;
+                font-size: 1.35rem !important;
+                margin-top: 35px !important;
+                margin-bottom: 15px !important;
+                font-weight: 700 !important;
+                color: #1a1a1a !important;
+                padding-left: 8px !important;
+                border-left: 4px solid #333333 !important;
+            }
+            
+            /* First h3 should have less top margin */
+            #hinnasto h3:first-of-type {
+                margin-top: 20px !important;
             }
         }
         
@@ -2915,17 +2957,18 @@
         @media (max-width: 430px) {
             /* Card styling refinements for smaller screens */
             #hinnasto table tbody tr {
-                margin-bottom: 12px;
+                margin-bottom: 14px !important;
+                border-radius: 10px !important;
             }
             
             #hinnasto table tbody td {
-                padding: 9px 12px !important;
-                font-size: 13px !important;
+                padding: 11px 14px !important;
+                font-size: 14px !important;
             }
             
             #hinnasto table tbody td:first-child {
-                font-size: 14px !important;
-                padding: 11px 12px !important;
+                font-size: 15px !important;
+                padding: 12px 14px !important;
             }
             
             /* For 2-column tables on small screens */
@@ -2935,27 +2978,34 @@
             }
             
             #hinnasto table:has(thead th:nth-child(2):last-child) tbody td {
-                padding: 9px 6px !important;
-                font-size: 12px !important;
+                padding: 10px 8px !important;
+                font-size: 13px !important;
             }
             
             #hinnasto h3 {
-                font-size: 1.2rem;
-                margin-top: 25px;
+                font-size: 1.25rem !important;
+                margin-top: 28px !important;
+                padding-left: 6px !important;
+                border-left-width: 3px !important;
             }
         }
         
         /* Very small screens (iPhone SE, older devices) */
         @media (max-width: 375px) {
             /* Further refinements for very small screens */
+            #hinnasto table tbody tr {
+                margin-bottom: 12px !important;
+                border-radius: 8px !important;
+            }
+            
             #hinnasto table tbody td {
-                padding: 8px 10px !important;
-                font-size: 12px !important;
+                padding: 10px 12px !important;
+                font-size: 13.5px !important;
             }
             
             #hinnasto table tbody td:first-child {
-                font-size: 13px !important;
-                padding: 10px !important;
+                font-size: 14.5px !important;
+                padding: 11px 12px !important;
             }
             
             /* For 2-column tables */
@@ -2965,8 +3015,13 @@
             }
             
             #hinnasto table:has(thead th:nth-child(2):last-child) tbody td {
-                padding: 8px 5px !important;
-                font-size: 11px !important;
+                padding: 9px 6px !important;
+                font-size: 12px !important;
+            }
+            
+            #hinnasto h3 {
+                font-size: 1.2rem !important;
+                margin-top: 24px !important;
             }
         }
         
