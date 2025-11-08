@@ -118,7 +118,7 @@
         }
         nav {
             position: fixed;
-            top: 32px; left: 0; right: 0;
+            top: 20px; left: 0; right: 0;
             background: rgba(0,0,0,0.95);
             backdrop-filter: blur(10px);
             z-index: 1003;
@@ -140,10 +140,10 @@
             filter: brightness(1.2);
         }
         nav a {
-            color: #fff;
+            color: #ffffff;
             padding: 16px 18px;
             text-decoration: none;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 500;
             display: block;
             white-space: nowrap;
@@ -151,11 +151,33 @@
             border-radius: 8px;
             margin: 0 2px;
         }
-        nav a:hover {
-            background: linear-gradient(135deg, #666666, #444444);
-            color: #fff;
+        nav a:hover, nav a.nav-active {
+            background: linear-gradient(135deg, #333333, #1a1a1a);
+            color: #ffffff;
             transform: translateY(-2px);
         }
+        nav a.nav-active {
+            box-shadow: 0 0 15px rgba(63, 169, 245, 0.4);
+            border-bottom: 2px solid #3FA9F5;
+        }
+        
+        /* Laptop screen adjustments (1280px - 1366px) to prevent navigation overflow */
+        @media (min-width: 1280px) and (max-width: 1366px) {
+            nav {
+                padding: 0 10px;
+            }
+            nav img {
+                height: 45px;
+                margin-left: 5px;
+                margin-right: 10px;
+            }
+            nav a {
+                font-size: 15px;
+                padding: 14px 12px;
+                margin: 0 1px;
+            }
+        }
+        
         .hamburger-menu {
             display: none;
             cursor: pointer;
