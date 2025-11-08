@@ -309,6 +309,21 @@
         strong {
             color: #1a1a1a;
         }
+        .btn-read-more {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #333333, #1a1a1a);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .btn-read-more:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
         .cta-section {
             background: linear-gradient(135deg, #666666, #444444);
             color: white;
@@ -412,8 +427,8 @@
         <a href="index#rengastyot" class="back-button">← Takaisin palveluihin</a>
         
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap; margin-bottom: 25px;">
-            <h1 style="flex: 1; margin-bottom: 0;">Renkaiden vaihto Espoo - Renkaiden asennus, tasapainotus ja rengashotelli</h1>
-            <a href="lasikorjaus" class="btn-read-more" style="margin: 0; white-space: nowrap;">Lue Lasikorjaus palvelusta →</a>
+            <h1 style="flex: 1; min-width: 280px; margin-bottom: 0;">Renkaiden vaihto Espoo - Renkaiden asennus, tasapainotus ja rengashotelli</h1>
+            <a href="lasikorjaus" class="btn-read-more" style="margin: 0; white-space: nowrap; align-self: flex-start;">Lue Lasikorjaus palvelusta →</a>
         </div>
         
         <p>Fixnero tarjoaa ammattitaitoisia rengaspalveluita Kivenlahdessa, Espoossa. Huolehdimme siitä, että renkaasi ovat turvalliset, oikein asennetut ja tasapainotetut jokaiseen vuodenaikaan. Palvelumme kattaa renkaiden vaihdot, tasapainotukset, paikkaukset, uusien renkaiden myynnin ja asennuksen sekä rengashotellin. Kaikki työt tehdään huolellisesti nykyaikaisilla laitteilla ja kokeneiden ammattilaisten toimesta.</p>
@@ -603,7 +618,7 @@
         }
         .footer {
             background: #000000;
-            color: #ecf0f1;
+            color: #ffffff;
             padding: 40px 20px;
             display: flex;
             justify-content: space-around;

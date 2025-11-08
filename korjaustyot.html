@@ -336,6 +336,21 @@
             font-size: 1.05rem;
             color: #333;
         }
+        .btn-read-more {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #333333, #1a1a1a);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .btn-read-more:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
         .highlight-box {
             background: #fff3cd;
             padding: 20px;
@@ -445,8 +460,8 @@
         <a href="index#korjaustyot" class="back-button">← Takaisin palveluihin</a>
         
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap; margin-bottom: 25px;">
-            <h1 style="flex: 1; margin-bottom: 0;">Korjaustyöt Espoo - alustan, jarrujen korjaukset ja autohuolto Fixnerolta.</h1>
-            <a href="rengastyot" class="btn-read-more" style="margin: 0; white-space: nowrap;">Lue Rengastyöt palvelusta →</a>
+            <h1 style="flex: 1; min-width: 280px; margin-bottom: 0;">Korjaustyöt Espoo - alustan, jarrujen korjaukset ja autohuolto Fixnerolta.</h1>
+            <a href="rengastyot" class="btn-read-more" style="margin: 0; white-space: nowrap; align-self: flex-start;">Lue Rengastyöt palvelusta →</a>
         </div>
         
         <p>Fixnero tarjoaa ammattitaitoisia korjaustyöpalveluita Espoossa, Kivenlahdessa. Voit tuoda autosi meille korjattavaksi esimerkiksi silloin, kun katsastuksessa autosi sai hylätyn päätöksen tai kun huomaat jonkin vian ajoneuvossasi. Teemme korjaustyöt laajasti kaikille automerkeille ammattitaidolla ja laadukkailla varaosilla.</p>
