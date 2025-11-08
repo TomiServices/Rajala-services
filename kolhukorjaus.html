@@ -337,6 +337,21 @@
         strong {
             color: #1a1a1a;
         }
+        .btn-read-more {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #333333, #1a1a1a);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .btn-read-more:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
         .cta-section {
             background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
             color: #333333;
@@ -442,8 +457,8 @@
         <a href="index#kolhukorjaus" class="back-button">← Takaisin palveluihin</a>
         
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap; margin-bottom: 25px;">
-            <h1 style="flex: 1; margin-bottom: 0;">Kolhukorjaus Espoo - Lommojen oikaisu, paikka maalaukset, ruostekorjaukset.</h1>
-            <a href="korjaustyot" class="btn-read-more" style="margin: 0; white-space: nowrap;">Lue Korjaustyöt palvelusta →</a>
+            <h1 style="flex: 1; min-width: 280px; margin-bottom: 0;">Kolhukorjaus Espoo - Lommojen oikaisu, paikka maalaukset, ruostekorjaukset.</h1>
+            <a href="korjaustyot" class="btn-read-more" style="margin: 0; white-space: nowrap; align-self: flex-start;">Lue Korjaustyöt palvelusta →</a>
         </div>
         
         <p>Fixnero tarjoaa ammattitaitoista kolhukorjausta ja lommojen oikaisua Espoossa, Kivenlahdessa. Korjaamme autosi pienet ja isot kolhut, naarmut sekä lommat nopeasti ja kustannustehokkaasti. Useimmissa tapauksissa alkuperäinen maali säilyy ehjänä, ja autosi näyttää taas siistiltä. Monet korjaukset valmistuvat jopa saman päivän aikana.</p>
