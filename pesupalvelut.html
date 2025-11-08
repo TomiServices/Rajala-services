@@ -481,6 +481,26 @@
                 margin: 0 !important;
             }
         }
+        /* Enhanced mobile optimization for smaller devices (iPhone 15 Pro: 393px, etc.) */
+        @media (max-width: 480px) {
+            .container { 
+                margin: 90px 15px 30px; 
+                padding: 20px; 
+            }
+            h1 { font-size: 1.9rem; }
+            h2 { font-size: 1.6rem; }
+            .back-button {
+                font-size: 0.9rem;
+                padding: 12px 20px;
+            }
+            .btn-read-more {
+                font-size: 0.9rem;
+                padding: 12px 20px;
+            }
+            .container > div:first-child {
+                gap: 8px !important;
+            }
+        }
     </style>
 </head>
 <body>
