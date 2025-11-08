@@ -60,6 +60,18 @@
         ]
       }
     ],
+    "redirects": [
+      {
+        "source": "/:page.html",
+        "destination": "/:page",
+        "type": 301
+      },
+      {
+        "source": "/blogi/:page.html",
+        "destination": "/blogi/:page",
+        "type": 301
+      }
+    ],
     "rewrites": [],
     "cleanUrls": true,
     "trailingSlash": false

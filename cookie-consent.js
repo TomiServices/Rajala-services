@@ -93,7 +93,7 @@
                     <button id="cookie-reject" class="cookie-btn cookie-btn-reject">
                         ${t.reject}
                     </button>
-                    <a href="cookie-policy.html" class="cookie-link">
+                    <a href="cookie-policy" class="cookie-link">
                         ${t.readMore}
                     </a>
                 </div>
