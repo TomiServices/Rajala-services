@@ -167,10 +167,14 @@
             border-radius: 8px;
             margin: 0 2px;
         }
-        nav a:hover {
+        nav a:hover, nav a.nav-active {
             background: linear-gradient(135deg, #666666, #444444);
             color: #fff;
             transform: translateY(-2px);
+        }
+        nav a.nav-active {
+            box-shadow: 0 0 15px rgba(63, 169, 245, 0.4);
+            border-bottom: 2px solid #3FA9F5;
         }
         .hamburger-menu {
             display: none;
@@ -309,6 +313,22 @@
         strong {
             color: #1a1a1a;
         }
+        .btn-read-more {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #3FA9F5;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(63, 169, 245, 0.3);
+        }
+        .btn-read-more:hover {
+            background: #5CB8FF;
+            box-shadow: 0 0 20px rgba(63, 169, 245, 0.6), 0 0 40px rgba(63, 169, 245, 0.4);
+            transform: translateY(-2px);
+        }
         .cta-section {
             background: linear-gradient(135deg, #666666, #444444);
             color: white;
@@ -381,6 +401,18 @@
             .links-section {
                 grid-template-columns: 1fr;
             }
+            /* Stack buttons vertically on mobile for better spacing */
+            .container > div:first-child {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 10px !important;
+            }
+            .container > div:first-child .back-button,
+            .container > div:first-child .btn-read-more {
+                width: 100%;
+                text-align: center;
+                margin: 0 !important;
+            }
         }
     </style>
 </head>
@@ -396,7 +428,7 @@
     </button>
 
     <nav id="nav">
-        <a href="index#top"><img src="FXNR.webp" alt="Fixnero - Rengastyöt Espoo, renkaiden vaihto ja rengashotelli"></a>
+        <a href="index#top"><img src="FXNRv.webp" alt="Fixnero - Rengastyöt Espoo, renkaiden vaihto ja rengashotelli"></a>
         <a href="index#pesupalvelut">Autopesu</a>
         <a href="index#sisapuhdistus">Sisäpuhdistus</a>
         <a href="index#kiilloitus">Kiillotus</a>
@@ -409,9 +441,12 @@
     </nav>
 
     <div class="container">
-        <a href="index#rengastyot" class="back-button">← Takaisin palveluihin</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; margin-bottom: 25px;">
+            <a href="index#rengastyot" class="back-button" style="margin-bottom: 0;">← Takaisin palveluihin</a>
+            <a href="lasikorjaus" class="btn-read-more" style="margin: 0; white-space: nowrap;">Lue Lasikorjaus palvelusta →</a>
+        </div>
         
-        <h1>Renkaiden vaihto Espoo - Renkaiden asennus, tasapainotus ja rengashotelli</h1>
+        <h1 style="margin-bottom: 25px;">Renkaiden vaihto Espoo - Renkaiden asennus, tasapainotus ja rengashotelli</h1>
         
         <p>Fixnero tarjoaa ammattitaitoisia rengaspalveluita Kivenlahdessa, Espoossa. Huolehdimme siitä, että renkaasi ovat turvalliset, oikein asennetut ja tasapainotetut jokaiseen vuodenaikaan. Palvelumme kattaa renkaiden vaihdot, tasapainotukset, paikkaukset, uusien renkaiden myynnin ja asennuksen sekä rengashotellin. Kaikki työt tehdään huolellisesti nykyaikaisilla laitteilla ja kokeneiden ammattilaisten toimesta.</p>
 
@@ -600,7 +635,7 @@
         }
         .footer {
             background: #000000;
-            color: #ecf0f1;
+            color: #ffffff;
             padding: 40px 20px;
             display: flex;
             justify-content: space-around;

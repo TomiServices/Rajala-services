@@ -168,10 +168,14 @@
             border-radius: 8px;
             margin: 0 2px;
         }
-        nav a:hover {
+        nav a:hover, nav a.nav-active {
             background: linear-gradient(135deg, #333333, #1a1a1a);
             color: #ffffff;
             transform: translateY(-2px);
+        }
+        nav a.nav-active {
+            box-shadow: 0 0 15px rgba(63, 169, 245, 0.4);
+            border-bottom: 2px solid #3FA9F5;
         }
         .hamburger-menu {
             display: none;
@@ -336,6 +340,22 @@
             font-size: 1.05rem;
             color: #333;
         }
+        .btn-read-more {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #3FA9F5;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(63, 169, 245, 0.3);
+        }
+        .btn-read-more:hover {
+            background: #5CB8FF;
+            box-shadow: 0 0 20px rgba(63, 169, 245, 0.6), 0 0 40px rgba(63, 169, 245, 0.4);
+            transform: translateY(-2px);
+        }
         .highlight-box {
             background: #fff3cd;
             padding: 20px;
@@ -414,6 +434,18 @@
             h3 {
                 font-size: 1.3rem;
             }
+            /* Stack buttons vertically on mobile for better spacing */
+            .container > div:first-child {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 10px !important;
+            }
+            .container > div:first-child .back-button,
+            .container > div:first-child .btn-read-more {
+                width: 100%;
+                text-align: center;
+                margin: 0 !important;
+            }
         }
     </style>
 </head>
@@ -429,7 +461,7 @@
     </button>
 
     <nav id="nav">
-        <a href="index#top"><img src="FXNR.webp" alt="Fixnero - Korjaustyöt Espoo, autohuolto ja katsastuskorjaukset"></a>
+        <a href="index#top"><img src="FXNRv.webp" alt="Fixnero - Korjaustyöt Espoo, autohuolto ja katsastuskorjaukset"></a>
         <a href="index#pesupalvelut">Autopesu</a>
         <a href="index#sisapuhdistus">Sisäpuhdistus</a>
         <a href="index#kiilloitus">Kiillotus</a>
@@ -442,9 +474,12 @@
     </nav>
 
     <div class="container">
-        <a href="index#korjaustyot" class="back-button">← Takaisin palveluihin</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; margin-bottom: 25px;">
+            <a href="index#korjaustyot" class="back-button" style="margin-bottom: 0;">← Takaisin palveluihin</a>
+            <a href="rengastyot" class="btn-read-more" style="margin: 0; white-space: nowrap;">Lue Rengastyöt palvelusta →</a>
+        </div>
         
-        <h1>Korjaustyöt Espoo - alustan, jarrujen korjaukset ja autohuolto Fixnerolta.</h1>
+        <h1 style="margin-bottom: 25px;">Korjaustyöt Espoo - alustan, jarrujen korjaukset ja autohuolto Fixnerolta.</h1>
         
         <p>Fixnero tarjoaa ammattitaitoisia korjaustyöpalveluita Espoossa, Kivenlahdessa. Voit tuoda autosi meille korjattavaksi esimerkiksi silloin, kun katsastuksessa autosi sai hylätyn päätöksen tai kun huomaat jonkin vian ajoneuvossasi. Teemme korjaustyöt laajasti kaikille automerkeille ammattitaidolla ja laadukkailla varaosilla.</p>
 

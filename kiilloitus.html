@@ -142,9 +142,13 @@
             white-space: nowrap; transition: all 0.3s ease;
             border-radius: 8px; margin: 0 2px;
         }
-        nav a:hover {
+        nav a:hover, nav a.nav-active {
             background: linear-gradient(135deg, #666666, #444444);
             color: #fff; transform: translateY(-2px);
+        }
+        nav a.nav-active {
+            box-shadow: 0 0 15px rgba(63, 169, 245, 0.4);
+            border-bottom: 2px solid #3FA9F5;
         }
         .hamburger-menu {
             display: none; cursor: pointer; padding: 0;
@@ -322,6 +326,18 @@
             .links-section {
                 grid-template-columns: 1fr;
             }
+            /* Stack buttons vertically on mobile for better spacing */
+            .container > div:first-child {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 10px !important;
+            }
+            .container > div:first-child .back-button,
+            .container > div:first-child .btn-read-more {
+                width: 100%;
+                text-align: center;
+                margin: 0 !important;
+            }
         }
     </style>
 </head>
@@ -337,7 +353,7 @@
     </button>
 
     <nav id="nav">
-        <a href="index#top"><img src="FXNR.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" loading="lazy"></a>
+        <a href="index#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" loading="lazy"></a>
         <a href="index#pesupalvelut">Autopesu</a>
         <a href="index#sisapuhdistus">Sisäpuhdistus</a>
         <a href="index#kiilloitus">Kiillotus</a>
@@ -350,9 +366,12 @@
     </nav>
 
     <div class="container">
-        <a href="index#kiilloitus" class="back-button">← Takaisin palveluihin</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; margin-bottom: 25px;">
+            <a href="index#kiilloitus" class="back-button" style="margin-bottom: 0;">← Takaisin palveluihin</a>
+            <a href="kolhukorjaus" class="btn-read-more" style="margin: 0; white-space: nowrap;">Lue Kolhukorjaus palvelusta →</a>
+        </div>
         
-        <h1>Kiillotus ja pinnoitteet Espoo - koneellinen kiillotus, vahakäsittely ja keraamiset pinnoitteet Fixnerolta.</h1>
+        <h1 style="margin-bottom: 25px;">Kiillotus ja pinnoitteet Espoo - koneellinen kiillotus, vahakäsittely ja keraamiset pinnoitteet Fixnerolta.</h1>
         
         <p>Fixnero tarjoaa ammattitaitoista koneellista kiillotusta ja pinnoituspalveluita Espoossa, Kivenlahdessa. Kiillotus palauttaa maalipinnan kiillon, poistaa pienet naarmut tehokkaasti ja saa autosi näyttämään jälleen uudelta. Käytämme vain huippulaatuisia ammattilaistuotteita ja koneita, jotka takaavat parhaan mahdollisen lopputuloksen autollesi.</p>
 
