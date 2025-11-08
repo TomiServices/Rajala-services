@@ -36,6 +36,58 @@ function initializeUIInteractions() {
         }
     });
 });
+
+    // Highlight current page in navigation (for subpages)
+    const currentPage = window.location.pathname.split('/').pop().replace('.html', '');
+    const navLinks = document.querySelectorAll('nav a[href*="#"]');
+    
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        // Check if link matches current page (e.g., index#pesupalvelut when on pesupalvelut.html)
+        if (href.includes('#' + currentPage)) {
+            link.classList.add('nav-active');
+        }
+    });
+
+    // Scroll-based navigation highlighting (homepage only)
+    if (window.location.pathname === '/' || window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('index') || currentPage === '' || currentPage === 'index') {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('nav a[href^="#"]');
+        
+        function highlightNavigation() {
+            const scrollPosition = window.scrollY + 100; // Offset for better detection
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('nav-active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('nav-active');
+                        }
+                    });
+                }
+            });
+        }
+        
+        // Throttle scroll event for better performance
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (!scrollTimeout) {
+                scrollTimeout = setTimeout(() => {
+                    highlightNavigation();
+                    scrollTimeout = null;
+                }, 100);
+            }
+        }, { passive: true });
+        
+        // Initial highlight on page load
+        highlightNavigation();
+    }
+
 // Responsive nav close on resize - debounced to reduce main-thread work
 let resizeTimer;
 window.addEventListener('resize', () => {

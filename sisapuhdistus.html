@@ -163,10 +163,14 @@
             border-radius: 8px;
             margin: 0 2px;
         }
-        nav a:hover {
+        nav a:hover, nav a.nav-active {
             background: linear-gradient(135deg, #333333, #1a1a1a);
             color: #ffffff;
             transform: translateY(-2px);
+        }
+        nav a.nav-active {
+            box-shadow: 0 0 15px rgba(63, 169, 245, 0.4);
+            border-bottom: 2px solid #3FA9F5;
         }
         
         /* Laptop screen adjustments (1280px - 1366px) to prevent navigation overflow */
@@ -417,6 +421,18 @@
             .links-section {
                 grid-template-columns: 1fr;
             }
+            /* Stack buttons vertically on mobile for better spacing */
+            .container > div:first-child {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 10px !important;
+            }
+            .container > div:first-child .back-button,
+            .container > div:first-child .btn-read-more {
+                width: 100%;
+                text-align: center;
+                margin: 0 !important;
+            }
         }
     </style>
 </head>
@@ -445,12 +461,12 @@
     </nav>
 
     <div class="container">
-        <a href="index#sisapuhdistus" class="back-button">← Takaisin palveluihin</a>
-        
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap; margin-bottom: 25px;">
-            <h1 style="flex: 1; margin-bottom: 0;">Sisäpuhdistus Espoo - Auton sisäpuhdistus, kangaspesut ja allergiapuhdistus Fixnerolta.</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; margin-bottom: 25px;">
+            <a href="index#sisapuhdistus" class="back-button" style="margin-bottom: 0;">← Takaisin palveluihin</a>
             <a href="kiilloitus" class="btn-read-more" style="margin: 0; white-space: nowrap;">Lue Kiillotus palvelusta →</a>
         </div>
+        
+        <h1 style="margin-bottom: 25px;">Sisäpuhdistus Espoo - Auton sisäpuhdistus, kangaspesut ja allergiapuhdistus Fixnerolta.</h1>
         
         <p>Auton sisätilojen puhdistus on olennainen osa ajoneuvon huoltoa. Fixnero tarjoaa ammattitaitoista sisäpuhdistuspalvelua Espoossa, Kivenlahdessa. Palvelumme varmistaa, että autosi sisätilat ovat raikkaita, puhtaita ja terveellisiä. Käytämme vain ammattikäyttöön tarkoitettuja, hajusteettomia pesuaineita, jotka puhdistavat tehokkaasti mutta hellävaraisesti ilman, että ne kuluttavat tai vahingoittavat herkkiä pintoja kuten nahkaa, kangasta tai muovia.</p>
 

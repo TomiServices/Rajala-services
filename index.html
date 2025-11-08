@@ -359,10 +359,14 @@
             border-radius: 8px;
             margin: 0 2px;
         }
-        nav a:hover {
+        nav a:hover, nav a.nav-active {
             background: linear-gradient(135deg, #333333, #1a1a1a);
             color: #ffffff;
             transform: translateY(-2px);
+        }
+        nav a.nav-active {
+            box-shadow: 0 0 15px rgba(63, 169, 245, 0.4);
+            border-bottom: 2px solid #3FA9F5;
         }
         
         /* Laptop screen adjustments (1280px - 1366px) to prevent navigation overflow */
