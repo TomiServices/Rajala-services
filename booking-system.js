@@ -597,7 +597,7 @@ function initializeBookingSystem() {
             ]
         },
         polishing: {
-            name: 'Kiilloitus ja pinnoitteet',
+            name: 'Kiillotus ja pinnoitteet',
             tasks: [
                 { id: 'wax', name: 'Vahaus', price: 'alkaen 80 €' },
                 { id: '1-step-polish', name: '1-step kiillotus', price: 'alkaen 120 €' },
