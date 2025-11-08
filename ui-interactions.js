@@ -41,13 +41,29 @@ function initializeUIInteractions() {
     const currentPage = window.location.pathname.split('/').pop().replace('.html', '');
     const navLinks = document.querySelectorAll('nav a[href*="#"]');
     
-    navLinks.forEach(link => {
-        const href = link.getAttribute('href');
-        // Check if link matches current page (e.g., index#pesupalvelut when on pesupalvelut.html)
-        if (href.includes('#' + currentPage)) {
-            link.classList.add('nav-active');
-        }
-    });
+    // Map of subpage filenames to their corresponding navigation section IDs
+    const pageToSectionMap = {
+        'pesupalvelut': 'pesupalvelut',
+        'sisapuhdistus': 'sisapuhdistus',
+        'kiilloitus': 'kiilloitus',
+        'kolhukorjaus': 'kolhukorjaus',
+        'korjaustyot': 'korjaustyot',
+        'rengastyot': 'rengastyot',
+        'lasikorjaus': 'lasikorjaus',
+        'autohuolto': 'autohuolto'
+    };
+    
+    // Apply nav-active class to corresponding navigation link on subpages
+    if (currentPage && pageToSectionMap[currentPage]) {
+        const sectionId = pageToSectionMap[currentPage];
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            // Check if link matches current page section
+            if (href === `#${sectionId}` || href.includes(`#${sectionId}`)) {
+                link.classList.add('nav-active');
+            }
+        });
+    }
 
     // Scroll-based navigation highlighting (homepage only)
     if (window.location.pathname === '/' || window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('index') || currentPage === '' || currentPage === 'index') {
@@ -55,20 +71,31 @@ function initializeUIInteractions() {
         const navLinks = document.querySelectorAll('nav a[href^="#"]');
         
         function highlightNavigation() {
-            const scrollPosition = window.scrollY + 100; // Offset for better detection
+            // Refined offset: activates when section reaches middle of viewport
+            const scrollPosition = window.scrollY + (window.innerHeight / 2);
+            
+            let activeSection = null;
+            let closestDistance = Infinity;
             
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
                 const sectionHeight = section.offsetHeight;
                 const sectionId = section.getAttribute('id');
+                const sectionMiddle = sectionTop + (sectionHeight / 2);
                 
-                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                    navLinks.forEach(link => {
-                        link.classList.remove('nav-active');
-                        if (link.getAttribute('href') === `#${sectionId}`) {
-                            link.classList.add('nav-active');
-                        }
-                    });
+                // Find section closest to viewport center
+                const distance = Math.abs(scrollPosition - sectionMiddle);
+                if (distance < closestDistance && scrollPosition >= sectionTop - 100) {
+                    closestDistance = distance;
+                    activeSection = sectionId;
+                }
+            });
+            
+            // Update nav links
+            navLinks.forEach(link => {
+                link.classList.remove('nav-active');
+                if (activeSection && link.getAttribute('href') === `#${activeSection}`) {
+                    link.classList.add('nav-active');
                 }
             });
         }
