@@ -285,16 +285,16 @@
             background: #000000;
             color: #ffffff;
             border: none;
-            padding: 8px 16px;
+            padding: 6px 13px;
             border-radius: 6px;
-            font-size: 0.9rem;
+            font-size: 0.72rem;
             font-weight: 600;
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
         .back-button:hover {
             background: #333333;
@@ -308,8 +308,8 @@
             .back-button {
                 top: 68px;
                 left: 8px;
-                padding: 6px 12px;
-                font-size: 0.85rem;
+                padding: 5px 10px;
+                font-size: 0.68rem;
             }
         }
         nav {
@@ -1101,6 +1101,12 @@
             object-fit: cover;
             /* Diagonal cut using clip-path - 30-degree angle from bottom-left to top-right */
             clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%, 0 20%);
+        }
+        
+        /* Reduce image size for Lasikorjaus section specifically */
+        #lasikorjaus .polishing-image {
+            flex: 0 0 400px;
+            max-width: 400px;
         }
         
         /* Mobile layout: stack vertically */
@@ -3049,12 +3055,13 @@
         /* Modern button style with silver-blue highlight */
         .btn-read-more {
             display: inline-block;
-            padding: 12px 30px;
+            padding: 10px 24px;
             background: #3FA9F5;
             color: #ffffff;
             text-decoration: none;
             border-radius: 25px;
             font-weight: 600;
+            font-size: 0.85rem;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(63, 169, 245, 0.3);
             margin: 5px;
