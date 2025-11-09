@@ -3,6 +3,13 @@ function initializeUIInteractions() {
     // Hamburger and nav toggle
     const hamburger = document.querySelector('.hamburger-menu');
     const nav = document.getElementById('nav');
+    
+    // Check if hamburger menu exists before attaching listeners
+    if (!hamburger || !nav) {
+        console.warn('Hamburger menu or nav element not found, skipping initialization');
+        return;
+    }
+    
     hamburger.addEventListener('click', () => {
         const isExpanded = nav.classList.toggle('active');
         hamburger.classList.toggle('active');
