@@ -389,11 +389,24 @@
                 font-size: 2.2rem;
             }
             .back-button {
-                font-size: 0.76rem;
-                padding: 11px 22px;
+                font-size: 0.65rem;
+                padding: 8px 14px;
             }
             .links-section {
                 grid-template-columns: 1fr;
+            }
+        }
+        /* Enhanced mobile optimization for smaller devices (iPhone SE, small phones) */
+        @media (max-width: 480px) {
+            .container { 
+                margin: 90px 12px 30px; 
+                padding: 18px; 
+            }
+            h1 { font-size: 1.9rem; }
+            h2 { font-size: 1.6rem; }
+            .back-button {
+                font-size: 0.62rem;
+                padding: 7px 12px;
             }
         }
     </style>
