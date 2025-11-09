@@ -474,6 +474,10 @@
                 width: 100%;
                 text-align: center;
                 margin: 0 !important;
+                max-width: 100%;
+                white-space: normal;
+                word-wrap: break-word;
+                padding: 10px 15px;
             }
         }
         /* Enhanced mobile optimization for smaller devices (iPhone 15 Pro: 393px, etc.) */
@@ -486,11 +490,14 @@
             h2 { font-size: 1.6rem; }
             .back-button {
                 font-size: 0.8rem;
-                padding: 9px 16px;
+                padding: 10px 15px;
+                max-width: 100%;
             }
             .btn-read-more {
                 font-size: 0.8rem;
-                padding: 9px 16px;
+                padding: 10px 15px;
+                max-width: 100%;
+                white-space: normal;
             }
             .container > div:first-child {
                 gap: 8px !important;
@@ -745,23 +752,6 @@
 
 
 
-    <script>
-        const hamburger = document.querySelector('.hamburger-menu');
-        const nav = document.getElementById('nav');
-        hamburger.addEventListener('click', () => {
-            const isExpanded = nav.classList.toggle('active');
-            hamburger.classList.toggle('active');
-            hamburger.setAttribute('aria-expanded', isExpanded);
-        });
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 1279) {
-                nav.classList.remove('active');
-                hamburger.classList.remove('active');
-                hamburger.setAttribute('aria-expanded', 'false');
-            }
-        });
-    </script>
-    
     <!-- Cookie Consent Banner - GDPR Compliant -->
     <script src="cookie-consent.min.js" defer></script>
     <script src="ui-interactions.js" defer></script>
