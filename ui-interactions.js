@@ -58,8 +58,8 @@ function initializeUIInteractions() {
         const sectionId = pageToSectionMap[currentPage];
         navLinks.forEach(link => {
             const href = link.getAttribute('href');
-            // Check if link matches current page section
-            if (href === `#${sectionId}` || href.includes(`#${sectionId}`)) {
+            // Check if link matches current page section (handles both #section and index#section formats)
+            if (href === `#${sectionId}` || href === `index#${sectionId}` || href.endsWith(`#${sectionId}`)) {
                 link.classList.add('nav-active');
             }
         });
