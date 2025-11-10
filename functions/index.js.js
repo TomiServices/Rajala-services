@@ -1,12 +1,27 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
-const cors = require("cors")({ origin: true });
+// Configure CORS to explicitly allow the production domain
+const cors = require("cors")({
+    origin: [
+        "https://www.rajala-services.com",
+        "https://rajala-services.com",
+        "https://fxnr-web.web.app",
+        "https://fxnr-web.firebaseapp.com"
+    ],
+    credentials: true,
+    optionsSuccessStatus: 200
+});
 
 admin.initializeApp();
 
 // VARAUKSEN TEKO JA SÄHKÖPOSTI
 exports.book = functions.https.onRequest((req, res) => {
     cors(req, res, () => {
+        // Handle OPTIONS preflight request
+        if (req.method === "OPTIONS") {
+            return res.status(200).end();
+        }
+        
         if (req.method !== "POST") {
             return res.status(405).json({ error: "Method not allowed" });
         }
@@ -102,7 +117,11 @@ exports.book = functions.https.onRequest((req, res) => {
                 res.json({ success: true, id: doc.id, emailError: error.message });
             });
         }).catch(error => {
-            res.status(500).json({ error: error.message });
+            console.error("Error creating booking:", error);
+            res.status(500).json({ 
+                error: error.message,
+                timestamp: new Date().toISOString()
+            });
         });
     });
 });
@@ -110,18 +129,28 @@ exports.book = functions.https.onRequest((req, res) => {
 // KALENTERIN VARAUKSET
 exports.bookings = functions.https.onRequest((req, res) => {
     cors(req, res, async () => {
+        // Handle OPTIONS preflight request
+        if (req.method === "OPTIONS") {
+            return res.status(200).end();
+        }
+        
         if (req.method !== "GET") {
             return res.status(405).json({ error: "Method not allowed" });
         }
+        
         try {
             const snapshot = await admin.firestore().collection("varaukset").get();
             const bookings = [];
             snapshot.forEach(doc => {
                 bookings.push({ id: doc.id, ...doc.data() });
             });
+            
+            // Add cache control headers to reduce load
+            res.set('Cache-Control', 'public, max-age=60, s-maxage=300');
             res.json(bookings);
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error("Error fetching bookings:", error);
+            res.status(500).json({ error: error.message, timestamp: new Date().toISOString() });
         }
     });
 });
