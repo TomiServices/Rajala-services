@@ -4333,47 +4333,98 @@
         </div>
     </footer>
 <script>
-// Dynamically load FullCalendar only when booking section ("ajanvaraus") is visible
-// This reduces initial JavaScript bundle size and improves performance
+// FIX: Enhanced FullCalendar dynamic loading with error handling and retry logic
+// Dynamically loads FullCalendar only when booking section is visible to improve performance
+// Includes fallback mechanisms for when CDN is blocked by ad blockers or privacy tools
 (function() {
     let fullCalendarLoaded = false;
+    let loadAttempts = 0;
+    const MAX_LOAD_ATTEMPTS = 2;
     
+    /**
+     * Attempts to load FullCalendar from CDN with error handling
+     * FIX: Added retry logic and error detection for blocked resources
+     */
     function loadFullCalendar() {
         if (fullCalendarLoaded) return;
-        fullCalendarLoaded = true;
+        
+        loadAttempts++;
+        console.log(`Attempting to load FullCalendar (attempt ${loadAttempts}/${MAX_LOAD_ATTEMPTS})...`);
         
         const script = document.createElement('script');
         script.src = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js';
         script.defer = true;
+        
+        // FIX: Success handler - initialize booking system when FullCalendar loads
         script.onload = function() {
-            // Trigger booking system initialization after FullCalendar loads
-            if (window.initializeBookingSystem) {
-                window.initializeBookingSystem();
+            console.log('✓ FullCalendar loaded successfully');
+            fullCalendarLoaded = true;
+            
+            // Wait a moment for script to fully initialize before calling the booking system
+            setTimeout(() => {
+                if (window.initializeBookingSystem) {
+                    console.log('Initializing booking system...');
+                    window.initializeBookingSystem();
+                } else {
+                    console.error('initializeBookingSystem function not found');
+                }
+            }, 100);
+        };
+        
+        // FIX: Error handler - retry or show fallback calendar if loading fails
+        script.onerror = function(error) {
+            console.error(`✗ Failed to load FullCalendar (attempt ${loadAttempts}):`, error);
+            
+            // Retry if we haven't exceeded max attempts
+            if (loadAttempts < MAX_LOAD_ATTEMPTS) {
+                console.log('Retrying FullCalendar load in 1 second...');
+                setTimeout(loadFullCalendar, 1000);
+            } else {
+                console.error('FullCalendar failed to load after maximum attempts. Fallback calendar will be shown.');
+                fullCalendarLoaded = true; // Prevent further attempts
+                
+                // Trigger booking system initialization which will use fallback
+                if (window.initializeBookingSystem) {
+                    setTimeout(() => {
+                        window.initializeBookingSystem();
+                    }, 100);
+                }
             }
         };
+        
         document.head.appendChild(script);
     }
     
-    // Observe the booking section and load FullCalendar when it comes into view
+    // FIX: Observe the booking section and load FullCalendar when it comes into view
+    // This lazy loading improves initial page load performance
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
+                console.log('Booking section visible, loading FullCalendar...');
                 loadFullCalendar();
-                observer.disconnect();
+                observer.disconnect(); // Only trigger once
             }
         });
-    }, { rootMargin: '200px' });
+    }, { rootMargin: '200px' }); // Start loading slightly before section is visible
     
     // Start observing when DOM is ready
     if ('requestIdleCallback' in window) {
         requestIdleCallback(() => {
             const bookingSection = document.getElementById('ajanvaraus');
-            if (bookingSection) observer.observe(bookingSection);
+            if (bookingSection) {
+                observer.observe(bookingSection);
+            } else {
+                console.warn('Booking section not found, cannot lazy load FullCalendar');
+            }
         });
     } else {
         setTimeout(() => {
             const bookingSection = document.getElementById('ajanvaraus');
-            if (bookingSection) observer.observe(bookingSection);
+            if (bookingSection) {
+                observer.observe(bookingSection);
+            } else {
+                console.warn('Booking section not found, cannot lazy load FullCalendar');
+            }
         }, 100);
     }
 })();

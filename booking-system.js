@@ -5,9 +5,16 @@
 // ============================================================================
 
 /**
- * Validates and normalizes a date input
- * @param {Date|string} date - Date to validate
+ * Validates and normalizes a date input to ensure it's a valid Date object
+ * FIX: Critical validation function to prevent Invalid Date errors throughout the calendar
+ * 
+ * @param {Date|string} date - Date to validate (can be Date object or ISO string)
  * @returns {Date|null} - Valid Date object or null if invalid
+ * 
+ * @example
+ * validateDate('2024-12-01') // Returns Date object
+ * validateDate(new Date()) // Returns same Date object
+ * validateDate('invalid') // Returns null
  */
 function validateDate(date) {
     if (!date) return null;
@@ -17,7 +24,7 @@ function validateDate(date) {
         date = new Date(date);
     }
     
-    // Validate Date object
+    // Validate Date object - check if it's actually a Date and not Invalid Date
     if (!(date instanceof Date) || isNaN(date.getTime())) {
         return null;
     }
@@ -27,8 +34,14 @@ function validateDate(date) {
 
 /**
  * Gets a date key in YYYY-MM-DD format for consistent date comparison
+ * FIX: Standardizes date format to prevent timezone and comparison issues
+ * 
  * @param {Date|string} date - Date to convert
- * @returns {string|null} - Date key or null if invalid
+ * @returns {string|null} - Date key in YYYY-MM-DD format or null if invalid
+ * 
+ * @example
+ * getDateKey(new Date('2024-12-01')) // Returns '2024-12-01'
+ * getDateKey('2024-12-01T10:30:00') // Returns '2024-12-01'
  */
 function getDateKey(date) {
     const validDate = validateDate(date);
@@ -112,43 +125,93 @@ async function fetchWithRetry(url, options = {}, maxRetries = 3) {
 // LAZY LOADING
 // ============================================================================
 
-// Lazy load reCAPTCHA when user scrolls to booking section
-// Using FREE reCAPTCHA v2 (Checkbox), NOT Enterprise
-// API: https://www.google.com/recaptcha/api.js
+// FIX: Enhanced reCAPTCHA lazy loading with error handling and retry logic
+// Lazy loads reCAPTCHA v2 (FREE version) when user scrolls to booking section
+// This improves initial page load performance and complies with Google's usage guidelines
+// API Documentation: https://www.google.com/recaptcha/api.js
 let recaptchaLoaded = false;
+let recaptchaLoadAttempts = 0;
+const MAX_RECAPTCHA_ATTEMPTS = 2;
+
+/**
+ * Loads reCAPTCHA v2 script with error handling
+ * FIX: Added retry logic and error detection for blocked resources
+ */
 function loadRecaptcha() {
     if (recaptchaLoaded) return;
-    recaptchaLoaded = true;
+    
+    recaptchaLoadAttempts++;
+    console.log(`Loading reCAPTCHA (attempt ${recaptchaLoadAttempts}/${MAX_RECAPTCHA_ATTEMPTS})...`);
     
     const script = document.createElement('script');
     script.src = 'https://www.google.com/recaptcha/api.js'; // Free v2 API
     script.async = true;
     script.defer = true;
+    
+    // FIX: Success handler
+    script.onload = function() {
+        console.log('✓ reCAPTCHA loaded successfully');
+        recaptchaLoaded = true;
+    };
+    
+    // FIX: Error handler with retry logic
+    script.onerror = function(error) {
+        console.error(`✗ Failed to load reCAPTCHA (attempt ${recaptchaLoadAttempts}):`, error);
+        
+        if (recaptchaLoadAttempts < MAX_RECAPTCHA_ATTEMPTS) {
+            console.log('Retrying reCAPTCHA load in 1 second...');
+            setTimeout(loadRecaptcha, 1000);
+        } else {
+            console.error('reCAPTCHA failed to load after maximum attempts.');
+            recaptchaLoaded = true; // Prevent further attempts
+            
+            // Show helpful error message to user
+            const errorEl = document.getElementById('error');
+            if (errorEl) {
+                const existingContent = errorEl.innerHTML;
+                errorEl.innerHTML = existingContent + 
+                    '<br><br><strong>⚠️ Turvavarmennus ei latautunut</strong><br>' +
+                    'reCAPTCHA-turvavarmennus ei toiminut. Varaa aika puhelimitse tai sähköpostilla.';
+            }
+        }
+    };
+    
     document.head.appendChild(script);
 }
 
-// Observe booking section visibility to lazy load reCAPTCHA
+// FIX: Observe booking section visibility to lazy load reCAPTCHA when user scrolls near it
+// This improves initial page performance by deferring non-critical resource loading
 const bookingObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
+            console.log('Booking section approaching, loading reCAPTCHA...');
             loadRecaptcha();
             bookingObserver.disconnect(); // Only load once
         }
     });
-}, { rootMargin: '50px' });
+}, { rootMargin: '50px' }); // Start loading slightly before section is visible
 
 // Start observing when DOM is ready
 if ('requestIdleCallback' in window) {
     requestIdleCallback(() => {
         const calendarSection = document.getElementById('calendar');
-        if (calendarSection) bookingObserver.observe(calendarSection);
+        if (calendarSection) {
+            bookingObserver.observe(calendarSection);
+        } else {
+            console.warn('Calendar section not found for reCAPTCHA lazy loading');
+        }
     });
 } else {
     setTimeout(() => {
         const calendarSection = document.getElementById('calendar');
-        if (calendarSection) bookingObserver.observe(calendarSection);
+        if (calendarSection) {
+            bookingObserver.observe(calendarSection);
+        } else {
+            console.warn('Calendar section not found for reCAPTCHA lazy loading');
+        }
     }, 100);
 }
+
 
 // ============================================================================
 // BOOKING SYSTEM INITIALIZATION
@@ -1133,15 +1196,37 @@ function initializeBookingSystem() {
         
         let calendar = null;
         
-        // Check if FullCalendar library is loaded
+        // FIX: Enhanced error detection and user feedback when FullCalendar fails to load
+        // This helps users understand if their ad blocker or privacy settings are blocking the calendar
         if (typeof FullCalendar === 'undefined' || typeof FullCalendar.Calendar !== 'function') {
-            console.error('FullCalendar library not loaded. Skipping calendar initialization.');
+            console.error('FullCalendar library not loaded. This may be due to ad blockers or privacy extensions.');
+            
+            // Show user-friendly error message instead of silent failure
+            const errorEl = document.getElementById('error');
+            if (errorEl) {
+                errorEl.innerHTML = '<strong>⚠️ Kalenterin lataus epäonnistui</strong><br>' +
+                    'Kalenteri ei latautunut. Tämä voi johtua mainosten esto-ohjelmasta tai yksityisyysasetuksista.<br>' +
+                    'Voit silti varata ajan:<br>' +
+                    '📞 Soita: <a href="tel:+358401935001" style="color: #333; font-weight: bold;">040 1935001</a><br>' +
+                    '📧 Sähköposti: <a href="mailto:info@fixnero.fi" style="color: #333; font-weight: bold;">info@fixnero.fi</a>';
+                errorEl.style.display = 'block';
+                errorEl.style.backgroundColor = '#fff3cd';
+                errorEl.style.color = '#856404';
+                errorEl.style.padding = '20px';
+                errorEl.style.marginBottom = '20px';
+                errorEl.style.borderRadius = '8px';
+                errorEl.style.border = '1px solid #ffc107';
+                errorEl.style.textAlign = 'center';
+            }
+            
+            // Fallback will be triggered by the existing timeout handler below
             return;
         }
         
-        // Check if calendar element exists in DOM
+        // FIX: Validate calendar element exists before initializing
+        // Prevents runtime errors if DOM structure changes
         if (!calendarEl || !document.body.contains(calendarEl)) {
-            console.error('Calendar element not found in DOM. Skipping calendar initialization.');
+            console.error('Calendar element not found in DOM. Cannot initialize calendar.');
             return;
         }
         
@@ -1476,14 +1561,33 @@ function initializeBookingSystem() {
             calendar = null;
         }
         
-        // Fallback: If FullCalendar doesn't load (CDN blocked), show mock calendar
+        // FIX: Enhanced fallback mechanism - show mock calendar if FullCalendar fails to load
+        // This ensures users can still book appointments even if CDN is blocked by ad blockers
         setTimeout(() => {
             const calendarEl = document.getElementById('calendar');
             const mockCalendar = document.getElementById('mock-calendar');
             
-            // Check if FullCalendar actually rendered content or if it failed to initialize
+            // FIX: Improved detection of FullCalendar rendering failure
+            // Check multiple conditions to determine if fallback is needed
             if (!calendar || !calendarEl.innerHTML.trim() || calendarEl.children.length === 0) {
-                console.log('FullCalendar failed to load, showing mock calendar for testing');
+                console.log('FullCalendar failed to load or render. Activating fallback mock calendar.');
+                
+                // Show user-friendly message about using fallback
+                const errorEl = document.getElementById('error');
+                if (errorEl && !errorEl.innerHTML.includes('Kalenteri')) {
+                    errorEl.innerHTML = '<strong>ℹ️ Vaihtoehtoinen kalenteri käytössä</strong><br>' +
+                        'Pääkalenteri ei latautunut, mutta voit silti varata ajan alla olevasta kalenterista.<br>' +
+                        'Vaihtoehtoisesti soita: <a href="tel:+358401935001" style="color: #333; font-weight: bold;">040 1935001</a>';
+                    errorEl.style.display = 'block';
+                    errorEl.style.backgroundColor = '#d1ecf1';
+                    errorEl.style.color = '#0c5460';
+                    errorEl.style.padding = '15px';
+                    errorEl.style.marginBottom = '20px';
+                    errorEl.style.borderRadius = '8px';
+                    errorEl.style.border = '1px solid #bee5eb';
+                    errorEl.style.textAlign = 'center';
+                }
+                
                 mockCalendar.style.display = 'block';
                 
                 // Add click handlers to mock slots
