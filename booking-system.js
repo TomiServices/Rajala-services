@@ -112,42 +112,8 @@ async function fetchWithRetry(url, options = {}, maxRetries = 3) {
 // LAZY LOADING
 // ============================================================================
 
-// Lazy load reCAPTCHA when user scrolls to booking section
-let recaptchaLoaded = false;
-function loadRecaptcha() {
-    if (recaptchaLoaded) return;
-    recaptchaLoaded = true;
-    
-    const script = document.createElement('script');
-    script.src = 'https://www.google.com/recaptcha/api.js';
-    script.async = true;
-    script.defer = true;
-    document.head.appendChild(script);
-}
-
-// Observe booking section visibility to lazy load reCAPTCHA
-const bookingObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            loadRecaptcha();
-            bookingObserver.disconnect(); // Only load once
-        }
-    });
-}, { rootMargin: '50px' });
-
-// Start observing when DOM is ready
-if ('requestIdleCallback' in window) {
-    requestIdleCallback(() => {
-        const calendarSection = document.getElementById('calendar');
-        if (calendarSection) bookingObserver.observe(calendarSection);
-    });
-} else {
-    setTimeout(() => {
-        const calendarSection = document.getElementById('calendar');
-        if (calendarSection) bookingObserver.observe(calendarSection);
-    }, 100);
-}
-
+// ReCAPTCHA Enterprise is now loaded in HTML head
+// No need for lazy loading
 // ============================================================================
 // BOOKING SYSTEM INITIALIZATION
 // ============================================================================
@@ -1639,20 +1605,14 @@ function initializeBookingSystem() {
                 return;
             }
             
-            // Check if reCAPTCHA is loaded
-            if (typeof grecaptcha === 'undefined' || !grecaptcha.getResponse) {
-                document.getElementById('error').textContent = 'reCAPTCHA ei ole latautunut. Päivitä sivu ja yritä uudelleen.';
-                return;
-            }
-            
-            const recaptchaResponse = grecaptcha.getResponse();
-            if (!recaptchaResponse) {
-                document.getElementById('error').textContent = 'Vahvista että et ole robotti!';
-                return;
-            }
-            
             if (!selectedSlot || !name || !email || !phone) {
                 document.getElementById('error').textContent = 'Täytä kaikki kentät ja valitse aika!';
+                return;
+            }
+            
+            // Check if reCAPTCHA Enterprise is loaded
+            if (typeof grecaptcha === 'undefined' || !grecaptcha.enterprise) {
+                document.getElementById('error').textContent = 'reCAPTCHA ei ole latautunut. Päivitä sivu ja yritä uudelleen.';
                 return;
             }
             
@@ -1672,6 +1632,9 @@ function initializeBookingSystem() {
             }, 10);
             
             try {
+                // Get reCAPTCHA Enterprise token
+                const recaptchaResponse = await grecaptcha.enterprise.execute('6LejwAcsAAAAAP3lQrb8QdAbQnQYt4JZuVbIXsmF', {action: 'SUBMIT_BOOKING'});
+                
                 // Prepare structured service data with prices
                 const serviceData = prepareServiceData();
                 
@@ -1702,7 +1665,6 @@ function initializeBookingSystem() {
                     
                     document.getElementById('msg').innerHTML = "Varaus onnistui! <br>Saat varausvahvistuksen sähköpostiisi pian.";
                     document.getElementById('bookingForm').reset();
-                    grecaptcha.reset();
                     document.getElementById('bookingForm').style.display = 'none';
                     document.getElementById('slot-summary').textContent = '';
                     document.getElementById('add-service-container').style.display = 'none';

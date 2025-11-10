@@ -33,9 +33,11 @@ exports.book = functions.https.onRequest((req, res) => {
         }
         const { name, email, phone, aika, services, totalPrice, totalNumericPrice, recaptcha } = req.body;
         
-        // Validate reCAPTCHA if secret key is configured
+        // Validate reCAPTCHA Enterprise if secret key is configured
         if (RECAPTCHA_SECRET && recaptcha) {
             try {
+                // ReCAPTCHA Enterprise uses the same siteverify endpoint
+                // but provides additional data like score and action
                 const verifyUrl = `https://www.google.com/recaptcha/api/siteverify`;
                 const verifyResponse = await axios.post(verifyUrl, null, {
                     params: {
@@ -44,15 +46,22 @@ exports.book = functions.https.onRequest((req, res) => {
                     }
                 });
                 
+                // For Enterprise, check both success and score if available
                 if (!verifyResponse.data.success) {
-                    console.error("reCAPTCHA verification failed:", verifyResponse.data['error-codes']);
+                    console.error("reCAPTCHA Enterprise verification failed:", verifyResponse.data['error-codes']);
                     return res.status(401).json({ 
                         error: "reCAPTCHA verification failed",
                         details: verifyResponse.data['error-codes']
                     });
                 }
+                
+                // Log Enterprise-specific data for monitoring
+                if (verifyResponse.data.score !== undefined) {
+                    console.log("reCAPTCHA Enterprise score:", verifyResponse.data.score);
+                    console.log("reCAPTCHA Enterprise action:", verifyResponse.data.action);
+                }
             } catch (error) {
-                console.error("Error verifying reCAPTCHA:", error);
+                console.error("Error verifying reCAPTCHA Enterprise:", error);
                 // Log error but don't block booking if reCAPTCHA service is down
                 // In production, you might want to block the booking instead
                 console.warn("Proceeding with booking despite reCAPTCHA verification error");

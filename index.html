@@ -230,8 +230,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"></noscript>
-    <!-- Google reCAPTCHA v2 - Loaded on demand to reduce initial page load -->
-    <!-- Script will be loaded dynamically when user scrolls to booking section -->
+    <!-- Google reCAPTCHA Enterprise -->
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LejwAcsAAAAAP3lQrb8QdAbQnQYt4JZuVbIXsmF"></script>
     <style>
         /* Font loading optimization: ensure text is visible immediately with fallback fonts */
         /* This prevents FOIT (Flash of Invisible Text) and improves LCP */
@@ -3563,7 +3563,6 @@
         <label for="phone">Puhelinnumero</label>
         <!-- FIX: Added autocomplete="tel" to enable browser autofill for phone number -->
         <input type="tel" id="phone" name="phone" required pattern="^\+358\s?\d{1,3}\s?\d{4,}$" placeholder="+358 401234567" autocomplete="tel" />
-        <div class="g-recaptcha" data-sitekey="6Lcb5pQrAAAAAMFL6-0S0SfLPwpgy4t8N9f1zaGR"></div>
         <button type="submit" class="btn">Vahvista varaus</button>
       </form>
       <div id="msg" class="msg"></div>
