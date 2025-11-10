@@ -15,13 +15,39 @@ const RECAPTCHA_SITE_KEY = '6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM';
  */
 async function executeRecaptcha(action) {
     try {
-        if (typeof grecaptcha === 'undefined') {
-            throw new Error('reCAPTCHA not loaded');
+        // Check if grecaptcha is loaded
+        if (typeof grecaptcha === 'undefined' || !grecaptcha.ready) {
+            throw new Error('reCAPTCHA ei ole ladattu. Päivitä sivu ja yritä uudelleen.');
         }
         
-        await grecaptcha.ready();
-        const token = await grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: action });
-        return token;
+        // Wait for reCAPTCHA to be ready using callback-based approach
+        // grecaptcha.ready() accepts a callback function, not a Promise
+        return new Promise((resolve, reject) => {
+            try {
+                grecaptcha.ready(() => {
+                    try {
+                        grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: action })
+                            .then(token => {
+                                if (!token) {
+                                    reject(new Error('Turvavarmennus epäonnistui - token puuttuu'));
+                                } else {
+                                    resolve(token);
+                                }
+                            })
+                            .catch(executeError => {
+                                console.error('reCAPTCHA execute error:', executeError);
+                                reject(new Error('Turvavarmennus epäonnistui. Tarkista verkkoyhteytesi ja yritä uudelleen.'));
+                            });
+                    } catch (innerError) {
+                        console.error('reCAPTCHA inner execution error:', innerError);
+                        reject(new Error('Turvavarmennus epäonnistui. Päivitä sivu ja yritä uudelleen.'));
+                    }
+                });
+            } catch (readyError) {
+                console.error('reCAPTCHA ready error:', readyError);
+                reject(new Error('Turvavarmennus ei ole valmis. Päivitä sivu ja yritä uudelleen.'));
+            }
+        });
     } catch (error) {
         console.error('reCAPTCHA execution error:', error);
         throw error;
@@ -102,11 +128,24 @@ async function fetchWithRetry(url, options = {}, maxRetries = 3) {
             
             // Handle specific error codes with better messages
             if (response.status === 401) {
-                throw new Error(`Varmennusvirhe (401). Turvavarmennus epäonnistui. Yritä uudelleen.`);
+                // Try to get Finnish error message from backend
+                try {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Turvavarmennus epäonnistui. Yritä uudelleen.');
+                } catch (jsonError) {
+                    // If parsing fails, use generic message
+                    throw new Error('Turvavarmennus epäonnistui. Yritä uudelleen.');
+                }
             } else if (response.status === 503) {
                 throw new Error(`Palvelu ei ole tällä hetkellä saatavilla (503). Yritä hetken kuluttua uudelleen.`);
             } else if (response.status === 500) {
-                throw new Error(`Palvelinvirhe (500). Yritä hetken kuluttua uudelleen.`);
+                // Try to get error message from backend for 500 errors too
+                try {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Palvelinvirhe (500). Yritä hetken kuluttua uudelleen.');
+                } catch (jsonError) {
+                    throw new Error('Palvelinvirhe (500). Yritä hetken kuluttua uudelleen.');
+                }
             } else if (response.status === 0) {
                 throw new Error(`Yhteysongelma palvelimeen. Tarkista verkkoyhteytesi.`);
             } else {
@@ -128,9 +167,11 @@ async function fetchWithRetry(url, options = {}, maxRetries = 3) {
                 lastError = new Error('Yhteysongelma palvelimeen. Tarkista, että evästeet ovat sallittuja ja yritä uudelleen.');
             }
             
-            // Don't retry on authentication errors (401) or client errors (4xx)
-            if (error.message.includes('401') || error.message.includes('Varmennusvirhe')) {
-                console.error('Authentication error, not retrying:', error);
+            // Don't retry on authentication errors (401) or reCAPTCHA errors
+            if (error.message.includes('401') || 
+                error.message.includes('Turvavarmennus') ||
+                error.message.includes('Varmennusvirhe')) {
+                console.error('Authentication/reCAPTCHA error, not retrying:', error);
                 break;
             }
             

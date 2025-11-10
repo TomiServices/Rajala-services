@@ -170,6 +170,32 @@ firebase deploy
 
 ## Troubleshooting
 
+### Issue: "Invalid listener argument" Error
+
+**Symptoms:**
+- Console error: "Recaptcha execution error - invalid listener argument"
+- Form submission fails
+- User sees "Turvavarmennus epäonnistui" error message
+
+**Cause:** The `grecaptcha.ready()` function was being called with `await` instead of using the proper callback pattern
+
+**Fix:** This has been fixed in the latest version. The `executeRecaptcha` function now properly uses the callback pattern:
+
+```javascript
+grecaptcha.ready(() => {
+    grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: action })
+        .then(token => {
+            // Use token
+        });
+});
+```
+
+**If you still see this error:**
+1. Clear browser cache and reload
+2. Ensure you have the latest version of `booking-system.js`
+3. Check that the reCAPTCHA script is loading (Network tab in DevTools)
+4. Disable browser extensions that might interfere with reCAPTCHA
+
 ### Issue: "grecaptcha is not defined"
 
 **Cause:** Script not loading
