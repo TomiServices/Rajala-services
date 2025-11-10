@@ -3444,7 +3444,7 @@
       <div id="calendar" role="application" aria-label="Ajanvarauskalenteri"></div>
       
       <!-- Time Selection Grid -->
-      <div id="time-selection-grid" class="time-selection-container" style="display: none !important;" aria-hidden="true">
+      <div id="time-selection-grid" class="time-selection-container" style="display: none;" aria-hidden="true">
         <h3 class="time-selection-title">Valitse aika:</h3>
         <div id="time-slots-grid" class="time-slots-grid">
           <!-- Time slots will be dynamically generated here -->
@@ -3452,7 +3452,7 @@
       </div>
       
       <!-- Mock calendar for testing when FullCalendar CDN is blocked -->
-      <div id="mock-calendar" style="display: none !important; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 8px;" aria-hidden="true">
+      <div id="mock-calendar" style="display: none; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 8px;" aria-hidden="true">
         <p style="text-align: center; color: #333333; margin-bottom: 15px;">
           <strong>Test Calendar with Weekend Enhancement</strong> (FullCalendar CDN blocked - using fallback for testing)
         </p>
@@ -3490,7 +3490,7 @@
       </div>
       
       <!-- Available Time Slots Dropdown - Now first in flow -->
-      <div id="availableSlots" class="available-slots-section" style="display: none !important;" aria-hidden="true">
+      <div id="availableSlots" class="available-slots-section" style="display: none;" aria-hidden="true">
         <div class="available-slots-dropdown">
           <label for="availableTimesSelect" id="availableTimesLabel">Valitse aika valitulle päivälle:</label>
           <select id="availableTimesSelect" class="available-times-select">
@@ -3503,7 +3503,7 @@
       <div id="slot-summary"></div>
       
       <!-- Selected services list -->
-      <div id="selected-services-container" style="display: none !important; margin: 15px 0;" aria-hidden="true">
+      <div id="selected-services-container" style="display: none; margin: 15px 0;" aria-hidden="true">
         <h3 style="font-size: 1.1rem; margin-bottom: 10px;">Valitut palvelut:</h3>
         <ul id="selected-services-list" style="list-style: none; padding: 0; margin: 0;">
           <!-- Selected services will be added here -->
@@ -3511,7 +3511,7 @@
       </div>
       
       <!-- Service Selection Dropdown - Moved to appear between selected services and add button -->
-      <div id="serviceSelection" class="available-slots-section" style="display: none !important;" aria-hidden="true">
+      <div id="serviceSelection" class="available-slots-section" style="display: none;" aria-hidden="true">
         <div class="available-slots-dropdown">
           <label for="serviceSelect">Valitse haluamasi palvelu:</label>
           <select id="serviceSelect" class="available-times-select">
@@ -3526,7 +3526,7 @@
       </div>
 
       <!-- Task Selection Dropdown - Moved to appear between selected services and add button -->
-      <div id="taskSelection" class="available-slots-section" style="display: none !important;" aria-hidden="true">
+      <div id="taskSelection" class="available-slots-section" style="display: none;" aria-hidden="true">
         <div class="available-slots-dropdown">
           <label for="taskSelect">Valitse palvelun tyyppi:</label>
           <select id="taskSelect" class="available-times-select">
@@ -3536,23 +3536,23 @@
       </div>
       
       <!-- Add another service button -->
-      <div id="add-service-container" style="display: none !important; margin: 15px 0; text-align: center;" aria-hidden="true">
+      <div id="add-service-container" style="display: none; margin: 15px 0; text-align: center;" aria-hidden="true">
         <button id="add-service-btn" class="btn" type="button" style="background: #444; width: auto; padding: 10px 20px; display: inline-block;">
           ➕ Lisää toinen palvelu
         </button>
       </div>
       
       <!-- Estimated total price -->
-      <div id="total-amount-container" style="display: none !important; margin: 20px 0; padding: 15px; background: #e8f4f8; border-radius: 8px; border: 2px solid #4a90e2; text-align: center;" aria-hidden="true">
+      <div id="total-amount-container" style="display: none; margin: 20px 0; padding: 15px; background: #e8f4f8; border-radius: 8px; border: 2px solid #4a90e2; text-align: center;" aria-hidden="true">
         <strong style="font-size: 1.3rem; color: #333333;">Arvioitu kokonaishinta: <span id="total-amount">0 €</span></strong>
       </div>
       
       <!-- Repair services disclaimer -->
-      <div id="repair-disclaimer" style="display: none !important; background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: center;" aria-hidden="true">
+      <div id="repair-disclaimer" style="display: none; background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: center;" aria-hidden="true">
         <strong>Huomioithan että korjaustöiden hinnat ovat aina tapauskohtaisia. Voit olla meihin yhteydessä ennen korjausta hinta-arviota varten.</strong>
       </div>
       
-      <form class="booking-form" id="bookingForm" style="display: none !important;" autocomplete="on" aria-hidden="true">
+      <form class="booking-form" id="bookingForm" style="display: none;" autocomplete="on" aria-hidden="true">
         <input type="hidden" name="aika" id="aika" />
         <input type="hidden" name="service" id="service" />
         <input type="hidden" name="task" id="task" />
@@ -3585,7 +3585,7 @@
     </div>
     
     <!-- Temporary closure notice for booking calendar - HIDDEN -->
-    <section id="ajanvaraus-closed" style="display: none !important; background: #fff; margin: 30px auto; padding: 40px 30px; max-width: 850px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 18px; text-align: center;" aria-hidden="true">
+    <section id="ajanvaraus-closed" style="display: none; background: #fff; margin: 30px auto; padding: 40px 30px; max-width: 850px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 18px; text-align: center;" aria-hidden="true">
         <h2 style="color: #333333; margin-bottom: 20px;">📅 Ajanvarauskalenteri tilapäisesti suljettu</h2>
         <p style="font-size: 1.1rem; color: #333333; line-height: 1.8; margin-bottom: 25px;">
             Pahoittelemme, mutta online-ajanvarauskalenterimme on väliaikaisesti poissa käytöstä kehitystyön vuoksi.
