@@ -2,14 +2,14 @@
 
 ## Overview
 
-This guide has been updated to reflect the new **server-side reCAPTCHA validation** implemented in the Firebase Functions. The booking system now validates reCAPTCHA tokens on both the client and server side for enhanced security.
+This guide has been updated to reflect the **ReCAPTCHA Enterprise** implementation in the booking system. The system now uses ReCAPTCHA Enterprise for programmatic verification with both client-side and server-side validation for enhanced security.
 
 ## Current Configuration
 
 ### Site Key
-**Site Key:** `6Lcb5pQrAAAAAMFL6-0S0SfLPwpgy4t8N9f1zaGR`
+**Site Key:** `6LejwAcsAAAAAP3lQrb8QdAbQnQYt4JZuVbIXsmF`
 
-**Location:** `index.html` (line 3566)
+**Location:** `index.html` (line 234 - script tag in head section)
 
 ### Secret Key (Server-Side)
 **Configuration Method:** Firebase Functions config or environment variable
@@ -22,11 +22,13 @@ firebase functions:config:set recaptcha.secret="YOUR_SECRET_KEY_HERE"
 ```
 
 ### reCAPTCHA Version
-**Type:** reCAPTCHA v2 Checkbox ("I'm not a robot")
+**Type:** reCAPTCHA Enterprise (Programmatic execution)
+
+**Note:** This is a programmatic implementation without a visible checkbox widget. The reCAPTCHA verification happens automatically when the user submits the booking form.
 
 ## Required Domain Configuration
 
-The reCAPTCHA site key must be registered for the following domains in the [Google reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin):
+The reCAPTCHA Enterprise site key must be registered for the following domains in the [Google reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin):
 
 ### Production Domains (Required)
 - ✅ `rajala-services.com`
@@ -37,20 +39,46 @@ The reCAPTCHA site key must be registered for the following domains in the [Goog
 - `fxnr-web.firebaseapp.com`
 - `localhost` (for local testing)
 
-## Server-Side Validation (NEW)
+## ReCAPTCHA Enterprise Implementation
 
 ### How It Works
 
-1. **Client submits booking** with reCAPTCHA response token
-2. **Server validates token** with Google's reCAPTCHA API using the secret key
-3. **If validation fails**, server returns 401 Unauthorized error
-4. **If validation succeeds**, booking is processed normally
+1. **User fills booking form** and clicks submit
+2. **Client executes ReCAPTCHA Enterprise** programmatically: `grecaptcha.enterprise.execute()` with action 'SUBMIT_BOOKING'
+3. **Token is generated** and included in the booking request
+4. **Server validates token** with Google's reCAPTCHA API using the secret key
+5. **If validation fails**, server returns 401 Unauthorized error
+6. **If validation succeeds**, booking is processed normally
 
 ### Implementation Details
 
-**Location:** `functions/index.js.js` (lines 18-55)
+**Frontend Location:** `booking-system.js` (form submission handler)
 
-**Process:**
+**Frontend Process:**
+```javascript
+// 1. Check if ReCAPTCHA Enterprise is loaded
+if (typeof grecaptcha === 'undefined' || !grecaptcha.enterprise) {
+    document.getElementById('error').textContent = 'reCAPTCHA ei ole latautunut...';
+    return;
+}
+
+// 2. Execute ReCAPTCHA Enterprise and get token
+const recaptchaResponse = await grecaptcha.enterprise.execute(
+    '6LejwAcsAAAAAP3lQrb8QdAbQnQYt4JZuVbIXsmF', 
+    {action: 'SUBMIT_BOOKING'}
+);
+
+// 3. Include token in booking request
+const bookingData = {
+    name, email, phone, aika, services, 
+    totalPrice, totalNumericPrice,
+    recaptcha: recaptchaResponse
+};
+```
+
+**Backend Location:** `functions/index.js.js` (lines 36-67)
+
+**Backend Process:**
 ```javascript
 // 1. Extract reCAPTCHA response from request
 const { recaptcha } = req.body;
@@ -64,11 +92,16 @@ const verifyResponse = await axios.post(verifyUrl, null, {
     }
 });
 
-// 3. Check validation result
+// 3. Check validation result and score (Enterprise specific)
 if (!verifyResponse.data.success) {
     return res.status(401).json({ 
         error: "reCAPTCHA verification failed"
     });
+}
+
+// 4. Log Enterprise score for monitoring
+if (verifyResponse.data.score !== undefined) {
+    console.log("reCAPTCHA Enterprise score:", verifyResponse.data.score);
 }
 ```
 
@@ -96,10 +129,10 @@ The server will:
 
 1. Go to [Google reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin)
 2. Sign in with the Google account that owns the site key
-3. Look for site key: `6Lcb5pQrAAAAAMFL6-0S0SfLPwpgy4t8N9f1zaGR`
+3. Look for site key: `6LejwAcsAAAAAP3lQrb8QdAbQnQYt4JZuVbIXsmF`
 4. Click on the site key to view settings
 5. Verify the following:
-   - ✅ reCAPTCHA type: v2 Checkbox
+   - ✅ reCAPTCHA type: Enterprise (Programmatic)
    - ✅ Domains include: `rajala-services.com` and `www.rajala-services.com`
    - ✅ Site key is active (not disabled)
 
@@ -120,11 +153,10 @@ firebase functions:config:get recaptcha.secret
 3. Select a date and time
 4. Fill in the booking form
 5. Verify:
-   - ✅ reCAPTCHA widget loads and displays
+   - ✅ No visible reCAPTCHA widget (Enterprise is programmatic)
    - ✅ No console errors about reCAPTCHA
-   - ✅ reCAPTCHA checkbox can be checked
-   - ✅ Form submission works after completing reCAPTCHA
-   - ✅ Form submission fails WITHOUT completing reCAPTCHA
+   - ✅ Form submission works (reCAPTCHA executes automatically)
+   - ✅ Check Network tab for successful reCAPTCHA token generation
 
 ### 4. Check Browser Console for Errors
 
@@ -133,36 +165,35 @@ Open browser DevTools (F12) and check Console tab for:
 **Common reCAPTCHA Errors:**
 - `Invalid site key` - Site key is not registered for this domain
 - `Invalid domain for site key` - Domain not registered in reCAPTCHA Admin
-- `reCAPTCHA placeholder element must be empty` - Multiple reCAPTCHA instances
-- `reCAPTCHA has already been rendered` - Duplicate initialization
+- `grecaptcha is not defined` - Script failed to load
+- `grecaptcha.enterprise is undefined` - Wrong reCAPTCHA version loaded
 
 **No errors:** reCAPTCHA should load silently without errors
 
-### 5. Verify Server-Side Validation (NEW)
+### 5. Verify Server-Side Validation
 
-**Test 1: Submit without reCAPTCHA**
-1. Fill booking form
-2. DO NOT complete reCAPTCHA
-3. Try to submit
-4. Expected: Form validation prevents submission with message "Vahvista että et ole robotti!"
+**Test 1: Submit with valid form**
+1. Fill booking form completely
+2. Submit the form
+3. Expected: reCAPTCHA token is generated automatically and booking succeeds
 
-**Test 2: Submit with invalid reCAPTCHA**
-1. Use browser DevTools to modify reCAPTCHA response
+**Test 2: Submit with invalid reCAPTCHA token**
+1. Use browser DevTools to modify reCAPTCHA response in the request
 2. Submit booking
 3. Expected: 401 error from server
 
-**Test 3: Submit with valid reCAPTCHA**
-1. Complete reCAPTCHA correctly
-2. Submit booking
-3. Expected: Success response, booking created
+**Test 3: Verify Enterprise score logging**
+1. Submit a valid booking
+2. Check Firebase Functions logs for Enterprise score
 
 **Check Firebase Functions Logs:**
 ```bash
 firebase functions:log --only book
 
 # Look for:
-# - "reCAPTCHA verification failed" (if validation fails)
-# - "Error verifying reCAPTCHA" (if Google API is down)
+# - "reCAPTCHA Enterprise verification failed" (if validation fails)
+# - "reCAPTCHA Enterprise score: X.XX" (Enterprise-specific logging)
+# - "Error verifying reCAPTCHA Enterprise" (if Google API is down)
 # - "reCAPTCHA secret not configured" (if secret not set)
 ```
 
@@ -173,9 +204,10 @@ firebase functions:log --only book
 **Cause:** Site key is incorrect or not registered for this domain
 
 **Solutions:**
-1. Verify the site key in `index.html` matches the key in reCAPTCHA Admin Console
-2. Check for typos in the site key
-3. Ensure the domain is registered for this site key
+1. Verify the site key in `index.html` (line 234) matches the key in reCAPTCHA Admin Console
+2. Ensure you're using the correct Enterprise key: `6LejwAcsAAAAAP3lQrb8QdAbQnQYt4JZuVbIXsmF`
+3. Check for typos in the site key
+4. Ensure the domain is registered for this site key
 
 ### Error: "Invalid domain for site key"
 
@@ -192,13 +224,13 @@ firebase functions:log --only book
 **Cause:** Server-side reCAPTCHA validation failed
 
 **Solutions:**
-1. Ensure user completed reCAPTCHA before submitting
-2. Check that site key and secret key match (from same reCAPTCHA configuration)
+1. ReCAPTCHA Enterprise executes automatically on form submission
+2. Check that site key and secret key match (from same reCAPTCHA Enterprise configuration)
 3. Verify domains are correctly registered
 4. Check reCAPTCHA token hasn't expired (valid for ~2 minutes)
 5. Verify secret key is correctly configured in Firebase Functions
 
-### reCAPTCHA Widget Not Loading
+### reCAPTCHA Script Not Loading
 
 **Possible Causes:**
 1. Content Security Policy blocking Google domains
@@ -210,27 +242,29 @@ firebase functions:log --only book
 1. Check CSP in `firebase.json` allows `https://www.google.com` and `https://www.gstatic.com`
 2. Test in incognito mode or different browser
 3. Check browser console for blocked requests
-4. Verify script tag in HTML:
+4. Verify script tag in HTML head (line 234):
    ```html
-   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+   <script src="https://www.google.com/recaptcha/enterprise.js?render=6LejwAcsAAAAAP3lQrb8QdAbQnQYt4JZuVbIXsmF"></script>
    ```
 
 ### Form Submits Without reCAPTCHA Validation
 
-**Cause:** Frontend validation not working
+**Cause:** Frontend validation not working or reCAPTCHA Enterprise not loading
 
 **Solution:**
 Check that the validation code in `booking-system.js` is present:
 ```javascript
-if (typeof grecaptcha === 'undefined' || !grecaptcha.getResponse) {
+// Check if reCAPTCHA Enterprise is loaded
+if (typeof grecaptcha === 'undefined' || !grecaptcha.enterprise) {
     document.getElementById('error').textContent = 'reCAPTCHA ei ole latautunut...';
     return;
 }
-const recaptchaResponse = grecaptcha.getResponse();
-if (!recaptchaResponse) {
-    document.getElementById('error').textContent = 'Vahvista että et ole robotti!';
-    return;
-}
+
+// Execute ReCAPTCHA Enterprise
+const recaptchaResponse = await grecaptcha.enterprise.execute(
+    '6LejwAcsAAAAAP3lQrb8QdAbQnQYt4JZuVbIXsmF', 
+    {action: 'SUBMIT_BOOKING'}
+);
 ```
 
 ### Server Accepts Bookings Without reCAPTCHA (Security Issue)
@@ -238,9 +272,9 @@ if (!recaptchaResponse) {
 **Cause:** Secret key not configured in Firebase Functions
 
 **Solution:**
-Configure the secret key:
+Configure the Enterprise secret key:
 ```bash
-firebase functions:config:set recaptcha.secret="YOUR_SECRET_KEY"
+firebase functions:config:set recaptcha.secret="YOUR_ENTERPRISE_SECRET_KEY"
 firebase deploy --only functions
 ```
 
@@ -248,13 +282,13 @@ firebase deploy --only functions
 
 If the current site key is invalid or you need a new one:
 
-### 1. Create New Site Key
+### 1. Create New Enterprise Site Key
 
 1. Go to [Google reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin)
 2. Click "+" to add a new site
 3. Fill in the form:
-   - **Label:** Rajala Services Booking Calendar
-   - **reCAPTCHA type:** reCAPTCHA v2 → "I'm not a robot" Checkbox
+   - **Label:** Rajala Services Booking Calendar Enterprise
+   - **reCAPTCHA type:** reCAPTCHA Enterprise
    - **Domains:**
      - `rajala-services.com`
      - `www.rajala-services.com`
@@ -267,15 +301,20 @@ If the current site key is invalid or you need a new one:
 
 ### 2. Update Site Key in Code
 
-**Frontend (index.html):**
+**Frontend (index.html - line 234):**
 ```html
-<!-- Line 3566 -->
-<div class="g-recaptcha" data-sitekey="YOUR_NEW_SITE_KEY_HERE"></div>
+<script src="https://www.google.com/recaptcha/enterprise.js?render=YOUR_NEW_SITE_KEY_HERE"></script>
+```
+
+**Frontend (booking-system.js):**
+Update the site key in the `grecaptcha.enterprise.execute()` call:
+```javascript
+const recaptchaResponse = await grecaptcha.enterprise.execute('YOUR_NEW_SITE_KEY_HERE', {action: 'SUBMIT_BOOKING'});
 ```
 
 **Backend (Firebase Functions):**
 ```bash
-firebase functions:config:set recaptcha.secret="YOUR_NEW_SECRET_KEY_HERE"
+firebase functions:config:set recaptcha.secret="YOUR_NEW_ENTERPRISE_SECRET_KEY_HERE"
 ```
 
 ### 3. Redeploy
@@ -292,57 +331,69 @@ firebase deploy --only functions
 
 ### 1. Server-Side Validation (✅ IMPLEMENTED)
 
-The system now validates reCAPTCHA on both client and server:
-- ✅ Client-side validation prevents accidental submissions
-- ✅ Server-side validation prevents malicious bypassing
+The system now validates reCAPTCHA Enterprise on both client and server:
+- ✅ Client-side: Programmatic execution prevents form submission without token
+- ✅ Server-side: Validation prevents malicious bypassing
 - ✅ Secret Key never exposed to clients
+- ✅ Enterprise scoring provides additional bot detection
 
 ### 2. Secret Key Security
 
 **DO:**
-- ✅ Configure secret key in Firebase Functions config
+- ✅ Configure Enterprise secret key in Firebase Functions config
 - ✅ Use environment variables for local testing
 - ✅ Keep secret key confidential
+- ✅ Match secret key with the corresponding Enterprise site key
 
 **DON'T:**
 - ❌ Commit secret key to repository
 - ❌ Expose secret key in client-side code
 - ❌ Share secret key in public documentation
+- ❌ Mix v2 and Enterprise keys
 
-### 3. Rate Limiting (Recommended Future Enhancement)
+### 3. Monitor Enterprise Scores
+
+ReCAPTCHA Enterprise provides risk scores (0.0 to 1.0):
+- Monitor scores in Firebase Functions logs
+- Consider implementing score thresholds for high-risk actions
+- Scores near 1.0 indicate likely human interaction
+- Scores near 0.0 indicate likely bot activity
+
+### 4. Rate Limiting (Recommended Future Enhancement)
 
 Consider adding rate limiting to prevent abuse:
 - Limit submissions per IP address
 - Limit submissions per email/phone number
 - Use Firebase Functions quotas
 
-### 4. Monitor for Abuse
+### 5. Monitor for Abuse
 
 Check Firebase Console regularly for:
 - Unusual spike in bookings
 - Failed reCAPTCHA attempts (401 errors)
 - Repeated submissions from same source
+- Low Enterprise scores indicating bot activity
 
 ## Testing Checklist
 
 Before deploying to production:
 
 ### Client-Side Testing
-- [ ] Site key is registered for all production domains
-- [ ] reCAPTCHA widget loads without errors
-- [ ] reCAPTCHA can be completed successfully
-- [ ] Form submission requires reCAPTCHA completion
-- [ ] Error message appears if reCAPTCHA not completed
-- [ ] Error message appears if reCAPTCHA fails to load
+- [ ] Enterprise site key is registered for all production domains
+- [ ] ReCAPTCHA Enterprise script loads without errors
+- [ ] No visible widget (programmatic execution)
+- [ ] Form submission triggers automatic reCAPTCHA execution
+- [ ] Error message appears if reCAPTCHA script fails to load
+- [ ] Check browser console for `grecaptcha.enterprise` availability
 - [ ] Test on multiple browsers (Chrome, Firefox, Safari, Edge)
 - [ ] Test on mobile devices
 - [ ] Test with privacy extensions/ad blockers disabled
 
-### Server-Side Testing (NEW)
-- [ ] Secret key is configured in Firebase Functions
-- [ ] Valid reCAPTCHA submissions succeed
+### Server-Side Testing
+- [ ] Enterprise secret key is configured in Firebase Functions
+- [ ] Valid reCAPTCHA Enterprise submissions succeed
 - [ ] Invalid reCAPTCHA submissions fail with 401 error
-- [ ] Missing reCAPTCHA submissions fail with 401 error
+- [ ] Check Firebase Functions logs for Enterprise scores
 - [ ] Check Firebase Functions logs for validation errors
 - [ ] Verify error messages are user-friendly
 
