@@ -202,8 +202,8 @@ curl -H "Origin: https://www.rajala-services.com" \
 ## reCAPTCHA Configuration
 
 ### Current Configuration
-- **Site Key:** `6Lcb5pQrAAAAAMFL6-0S0SfLPwpgy4t8N9f1zaGR`
-- **Type:** reCAPTCHA v2 Checkbox
+- **Site Key:** `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
+- **Type:** reCAPTCHA v2 Checkbox (FREE version)
 - **Domains:** Should include:
   - `rajala-services.com`
   - `www.rajala-services.com`
