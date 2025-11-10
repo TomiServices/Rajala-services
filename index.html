@@ -3336,15 +3336,14 @@
     
     
      <!-- Booking Calendar Section -->
-  //   <!-- TEMPORARILY CLOSED: Calendar disabled during development phase -->
-   //  <div class="ajanvaraus-container" id="ajanvaraus" style="display: none !important;" aria-hidden="true">
-    //   <h2>Varaa aika silmäterällesi</h2>
+    <div class="ajanvaraus-container" id="ajanvaraus">
+      <h2>Varaa aika silmäterällesi</h2>
       
-    //   <!-- Calendar Navigation Buttons -->
-     //  <div class="calendar-nav-container">
-       //  <button id="prevWeekBtn" class="calendar-nav-btn" aria-label="Siirry edelliseen kuukauteen">← Edellinen</button>
-        // <button id="nextWeekBtn" class="calendar-nav-btn" aria-label="Siirry seuraavaan kuukauteen">Seuraava →</button>
-      // </div>
+      <!-- Calendar Navigation Buttons -->
+      <div class="calendar-nav-container">
+        <button id="prevWeekBtn" class="calendar-nav-btn" aria-label="Siirry edelliseen kuukauteen">← Edellinen</button>
+        <button id="nextWeekBtn" class="calendar-nav-btn" aria-label="Siirry seuraavaan kuukauteen">Seuraava →</button>
+      </div>
       
       <div id="calendar" role="application" aria-label="Ajanvarauskalenteri"></div>
       
@@ -3489,8 +3488,8 @@
       </div>
     </div>
     
-    <!-- Temporary closure notice for booking calendar -->
-    <section id="ajanvaraus-closed" style="background: #fff; margin: 30px auto; padding: 40px 30px; max-width: 850px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 18px; text-align: center;">
+    <!-- Temporary closure notice for booking calendar - HIDDEN -->
+    <section id="ajanvaraus-closed" style="display: none !important; background: #fff; margin: 30px auto; padding: 40px 30px; max-width: 850px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 18px; text-align: center;" aria-hidden="true">
         <h2 style="color: #333333; margin-bottom: 20px;">📅 Ajanvarauskalenteri tilapäisesti suljettu</h2>
         <p style="font-size: 1.1rem; color: #333333; line-height: 1.8; margin-bottom: 25px;">
             Pahoittelemme, mutta online-ajanvarauskalenterimme on väliaikaisesti poissa käytöstä kehitystyön vuoksi.
