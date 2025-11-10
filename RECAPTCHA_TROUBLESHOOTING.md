@@ -262,6 +262,15 @@ Error: Invalid site key or not loaded
 ```
 Solution: Verify site key in code matches reCAPTCHA Admin Console
 
+**"Invalid listener argument"**
+```
+Error: Recaptcha execution error - invalid listener argument
+```
+Solution: This error occurs when `grecaptcha.ready()` is called incorrectly. The function expects a callback, not a Promise with `await`. The fix:
+- Use callback pattern: `grecaptcha.ready(() => { ... })`
+- Or wrap it in a Promise that handles the callback correctly
+- Ensure the reCAPTCHA script is fully loaded before calling
+
 **"Timeout error"**
 ```
 Error: Timeout waiting for reCAPTCHA
@@ -273,6 +282,15 @@ Solution: Check network connectivity, try again
 Warning: reCAPTCHA action mismatch: expected 'booking', got 'unknown'
 ```
 Solution: This is just a warning, but ensure you're using the correct action parameter
+
+**"reCAPTCHA ei ole ladattu"** (reCAPTCHA not loaded)
+```
+Error: reCAPTCHA ei ole ladattu. Päivitä sivu ja yritä uudelleen.
+```
+Solution: The reCAPTCHA script hasn't loaded. Check:
+- Network tab for blocked requests
+- Ad blockers or privacy extensions
+- Content Security Policy settings
 
 ## Testing Your Fix
 

@@ -55,9 +55,20 @@ exports.book = functions.https.onRequest((req, res) => {
                 
                 if (!verifyResponse.data.success) {
                     console.error("reCAPTCHA verification failed:", verifyResponse.data['error-codes']);
+                    const errorCodes = verifyResponse.data['error-codes'] || [];
+                    let finnishError = "Turvavarmennus epäonnistui.";
+                    
+                    if (errorCodes.includes('timeout-or-duplicate')) {
+                        finnishError = "Turvavarmennus vanhentunut tai käytetty jo. Yritä uudelleen.";
+                    } else if (errorCodes.includes('invalid-input-response')) {
+                        finnishError = "Virheellinen turvavarmennustunnus. Päivitä sivu ja yritä uudelleen.";
+                    } else if (errorCodes.includes('missing-input-response')) {
+                        finnishError = "Turvavarmennus puuttuu. Päivitä sivu ja yritä uudelleen.";
+                    }
+                    
                     return res.status(401).json({ 
-                        error: "reCAPTCHA verification failed",
-                        details: verifyResponse.data['error-codes']
+                        error: finnishError,
+                        technicalDetails: verifyResponse.data['error-codes']
                     });
                 }
                 
@@ -71,8 +82,8 @@ exports.book = functions.https.onRequest((req, res) => {
                 if (score < RECAPTCHA_SCORE_THRESHOLD) {
                     console.warn(`reCAPTCHA score ${score} below threshold ${RECAPTCHA_SCORE_THRESHOLD}`);
                     return res.status(401).json({ 
-                        error: "reCAPTCHA verification failed - score too low",
-                        score: score
+                        error: "Turvavarmennus epäonnistui. Jos ongelma jatkuu, ota yhteyttä asiakaspalveluun.",
+                        technicalDetails: `Score ${score} below threshold ${RECAPTCHA_SCORE_THRESHOLD}`
                     });
                 }
                 
@@ -83,12 +94,19 @@ exports.book = functions.https.onRequest((req, res) => {
                 
             } catch (error) {
                 console.error("Error verifying reCAPTCHA:", error);
-                // Log error but don't block booking if reCAPTCHA service is down
-                // In production, you might want to block the booking instead
-                console.warn("Proceeding with booking despite reCAPTCHA verification error");
+                // Return error to user instead of silently proceeding
+                return res.status(500).json({
+                    error: "Turvavarmennuspalvelun yhteysvirhe. Yritä hetken kuluttua uudelleen.",
+                    technicalDetails: error.message
+                });
             }
         } else if (!RECAPTCHA_SECRET) {
             console.warn("reCAPTCHA secret not configured - skipping server-side validation");
+        } else if (!recaptcha) {
+            // No recaptcha token provided by frontend
+            return res.status(401).json({
+                error: "Turvavarmennus puuttuu. Päivitä sivu ja yritä uudelleen."
+            });
         }
         
         // Validate required fields - services should be an array
