@@ -1604,6 +1604,13 @@ function initializeBookingSystem() {
                 document.getElementById('error').textContent = 'Syötä puhelinnumero muodossa +358 401234567!';
                 return;
             }
+            // Development phase restriction: only allow specific phone number
+            const allowedPhone = '0458808551';
+            const normalizedPhone = phone.replace(/^\+358\s?/, '0').replace(/\s/g, '');
+            if (normalizedPhone !== allowedPhone) {
+                document.getElementById('error').textContent = 'Ajanvarauskalenteri on tilapäisesti kehitystyön vuoksi rajoitettu. Ole yhteydessä puhelimitse tai sähköpostilla varataksesi ajan.';
+                return;
+            }
             const recaptchaResponse = grecaptcha.getResponse();
             if (!recaptchaResponse) {
                 document.getElementById('error').textContent = 'Vahvista että et ole robotti!';

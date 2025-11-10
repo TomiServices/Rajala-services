@@ -312,13 +312,14 @@
         }
         .back-button {
             display: inline-block;
-            padding: 12px 24px;
+            padding: 8px 16px;
             background: linear-gradient(135deg, #666666, #444444);
             color: white;
             text-decoration: none;
             border-radius: 25px;
             margin-bottom: 30px;
             font-weight: 600;
+            font-size: 0.72rem;
             transition: all 0.3s ease;
         }
         .back-button:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
@@ -370,12 +371,13 @@
         }
         .btn-read-more {
             display: inline-block;
-            padding: 12px 30px;
+            padding: 8px 19px;
             background: #3FA9F5;
             color: #ffffff;
             text-decoration: none;
             border-radius: 25px;
             font-weight: 600;
+            font-size: 0.72rem;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(63, 169, 245, 0.3);
             margin: 20px 5px;
@@ -415,23 +417,91 @@
             opacity: 0.9;
             font-size: 1rem;
         }
+        /* Tablet and larger devices - center buttons with proper gap */
+        @media (min-width: 769px) {
+            .container > div:first-child {
+                justify-content: center !important;
+                gap: 20px !important;
+            }
+        }
         @media (max-width: 768px) {
-            .container { margin: 100px 20px 40px; padding: 25px; }
-            h1 { font-size: 2.2rem; }
+            .top-banner {
+                font-size: 0.75rem;
+                padding: 6px 0;
+            }
+            .container {
+                margin: 100px 20px 40px;
+                padding: 25px;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            .back-button {
+                font-size: 0.65rem;
+                padding: 8px 14px;
+            }
+            .btn-read-more {
+                font-size: 0.65rem;
+                padding: 8px 14px;
+            }
             .links-section {
                 grid-template-columns: 1fr;
             }
             /* Stack buttons vertically on mobile for better spacing */
             .container > div:first-child {
                 flex-direction: column;
-                align-items: stretch !important;
+                align-items: center !important;
                 gap: 10px !important;
             }
             .container > div:first-child .back-button,
             .container > div:first-child .btn-read-more {
-                width: 100%;
+                width: auto;
+                max-width: 85%;
                 text-align: center;
                 margin: 0 !important;
+                white-space: normal;
+                word-wrap: break-word;
+                padding: 9px 16px;
+            }
+        }
+        /* Enhanced mobile optimization for smaller devices (iPhone SE, small phones) */
+        @media (max-width: 480px) {
+            .container { 
+                margin: 90px 12px 30px; 
+                padding: 18px; 
+            }
+            h1 { font-size: 1.9rem; }
+            h2 { font-size: 1.6rem; }
+            .back-button {
+                font-size: 0.62rem;
+                padding: 7px 12px;
+                max-width: 80%;
+            }
+            .btn-read-more {
+                font-size: 0.62rem;
+                padding: 7px 12px;
+                max-width: 80%;
+                white-space: normal;
+            }
+            .container > div:first-child {
+                gap: 8px !important;
+            }
+        }
+            h1 { font-size: 1.9rem; }
+            h2 { font-size: 1.6rem; }
+            .back-button {
+                font-size: 0.8rem;
+                padding: 10px 15px;
+                max-width: 100%;
+            }
+            .btn-read-more {
+                font-size: 0.8rem;
+                padding: 10px 15px;
+                max-width: 100%;
+                white-space: normal;
+            }
+            .container > div:first-child {
+                gap: 8px !important;
             }
         }
     </style>
@@ -663,24 +733,8 @@
 
 
 
-    <script>
-        const hamburger = document.querySelector('.hamburger-menu');
-        const nav = document.getElementById('nav');
-        hamburger.addEventListener('click', () => {
-            const isExpanded = nav.classList.toggle('active');
-            hamburger.classList.toggle('active');
-            hamburger.setAttribute('aria-expanded', isExpanded);
-        });
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 1279) {
-                nav.classList.remove('active');
-                hamburger.classList.remove('active');
-                hamburger.setAttribute('aria-expanded', 'false');
-            }
-        });
-    </script>
-    
     <!-- Cookie Consent Banner - GDPR Compliant -->
     <script src="cookie-consent.min.js" defer></script>
+    <script src="ui-interactions.js" defer></script>
 </body>
 </html>
