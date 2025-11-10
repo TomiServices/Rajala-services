@@ -58,11 +58,23 @@ async function fetchWithRetry(url, options = {}, maxRetries = 3) {
                 return await response.json();
             }
             
-            // If response is not ok, throw error to trigger retry
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            // Handle specific error codes with better messages
+            if (response.status === 503) {
+                throw new Error(`Palvelu ei ole tällä hetkellä saatavilla (503). Yritä hetken kuluttua uudelleen.`);
+            } else if (response.status === 0) {
+                throw new Error(`Yhteysongelma palvelimeen. Tarkista verkkoyhteytesi.`);
+            } else {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
             
         } catch (error) {
             lastError = error;
+            
+            // Check for CORS errors
+            if (error.message.includes('CORS') || error.message.includes('NetworkError') || 
+                error.message.includes('Failed to fetch')) {
+                lastError = new Error('Yhteysongelma palvelimeen. Tarkista, että evästeet ovat sallittuja ja yritä uudelleen.');
+            }
             
             // Don't retry on last attempt
             if (attempt === maxRetries) {
@@ -1592,6 +1604,12 @@ function initializeBookingSystem() {
             
             if (!/^\+358\s?\d{1,3}\s?\d{4,}$/.test(phone)) {
                 document.getElementById('error').textContent = 'Syötä puhelinnumero muodossa +358 401234567!';
+                return;
+            }
+            
+            // Check if reCAPTCHA is loaded
+            if (typeof grecaptcha === 'undefined' || !grecaptcha.getResponse) {
+                document.getElementById('error').textContent = 'reCAPTCHA ei ole latautunut. Päivitä sivu ja yritä uudelleen.';
                 return;
             }
             
