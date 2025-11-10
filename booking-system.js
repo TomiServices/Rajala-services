@@ -424,7 +424,6 @@ function initializeBookingSystem() {
         
         // Get bookings for the selected date
         const dateKey = getDateKey(validDate);
-        const dateKey = getDateKey(validDate);
         if (!dateKey) {
             console.error('Failed to generate dateKey for selectedDate:', validDate);
             return false;
