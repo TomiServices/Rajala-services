@@ -1,8 +1,17 @@
 # reCAPTCHA Configuration Guide
 
+## ⚠️ IMPORTANT: FREE Version Implementation
+
+**This implementation uses the FREE reCAPTCHA v2 version, NOT reCAPTCHA Enterprise.**
+
+- ✅ FREE reCAPTCHA v2 Checkbox ("I'm not a robot")
+- ❌ NOT using reCAPTCHA Enterprise
+- ✅ Script: `https://www.google.com/recaptcha/api.js` (not enterprise.js)
+- ✅ Verification: `https://www.google.com/recaptcha/api/siteverify` (not Enterprise API)
+
 ## Overview
 
-This guide has been updated to reflect the new **server-side reCAPTCHA validation** implemented in the Firebase Functions. The booking system now validates reCAPTCHA tokens on both the client and server side for enhanced security.
+This guide has been updated to reflect the new **server-side reCAPTCHA validation** implemented in the Firebase Functions. The booking system now validates reCAPTCHA tokens on both the client and server side for enhanced security using the **FREE reCAPTCHA v2 version**.
 
 ## Current Configuration
 
