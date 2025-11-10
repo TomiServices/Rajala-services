@@ -1,5 +1,7 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const axios = require("axios");
+
 // Configure CORS to explicitly allow the production domain
 const cors = require("cors")({
     origin: [
@@ -14,9 +16,13 @@ const cors = require("cors")({
 
 admin.initializeApp();
 
+// reCAPTCHA Secret Key - should be stored in Firebase environment config
+// Set with: firebase functions:config:set recaptcha.secret="YOUR_SECRET_KEY"
+const RECAPTCHA_SECRET = functions.config().recaptcha?.secret || process.env.RECAPTCHA_SECRET;
+
 // VARAUKSEN TEKO JA SÄHKÖPOSTI
 exports.book = functions.https.onRequest((req, res) => {
-    cors(req, res, () => {
+    cors(req, res, async () => {
         // Handle OPTIONS preflight request
         if (req.method === "OPTIONS") {
             return res.status(200).end();
@@ -25,7 +31,35 @@ exports.book = functions.https.onRequest((req, res) => {
         if (req.method !== "POST") {
             return res.status(405).json({ error: "Method not allowed" });
         }
-        const { name, email, phone, aika, services, totalPrice, totalNumericPrice } = req.body;
+        const { name, email, phone, aika, services, totalPrice, totalNumericPrice, recaptcha } = req.body;
+        
+        // Validate reCAPTCHA if secret key is configured
+        if (RECAPTCHA_SECRET && recaptcha) {
+            try {
+                const verifyUrl = `https://www.google.com/recaptcha/api/siteverify`;
+                const verifyResponse = await axios.post(verifyUrl, null, {
+                    params: {
+                        secret: RECAPTCHA_SECRET,
+                        response: recaptcha
+                    }
+                });
+                
+                if (!verifyResponse.data.success) {
+                    console.error("reCAPTCHA verification failed:", verifyResponse.data['error-codes']);
+                    return res.status(401).json({ 
+                        error: "reCAPTCHA verification failed",
+                        details: verifyResponse.data['error-codes']
+                    });
+                }
+            } catch (error) {
+                console.error("Error verifying reCAPTCHA:", error);
+                // Log error but don't block booking if reCAPTCHA service is down
+                // In production, you might want to block the booking instead
+                console.warn("Proceeding with booking despite reCAPTCHA verification error");
+            }
+        } else if (!RECAPTCHA_SECRET) {
+            console.warn("reCAPTCHA secret not configured - skipping server-side validation");
+        }
         
         // Validate required fields - services should be an array
         if (!name || !email || !phone || !aika || !services || !Array.isArray(services) || services.length === 0) {

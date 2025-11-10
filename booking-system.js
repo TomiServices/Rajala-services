@@ -59,12 +59,22 @@ async function fetchWithRetry(url, options = {}, maxRetries = 3) {
             }
             
             // Handle specific error codes with better messages
-            if (response.status === 503) {
+            if (response.status === 401) {
+                throw new Error(`Varmennusvirhe (401). Tarkista, että reCAPTCHA on suoritettu oikein.`);
+            } else if (response.status === 503) {
                 throw new Error(`Palvelu ei ole tällä hetkellä saatavilla (503). Yritä hetken kuluttua uudelleen.`);
+            } else if (response.status === 500) {
+                throw new Error(`Palvelinvirhe (500). Yritä hetken kuluttua uudelleen.`);
             } else if (response.status === 0) {
                 throw new Error(`Yhteysongelma palvelimeen. Tarkista verkkoyhteytesi.`);
             } else {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                // Try to get error details from response
+                try {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+                } catch (jsonError) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
             }
             
         } catch (error) {
@@ -74,6 +84,12 @@ async function fetchWithRetry(url, options = {}, maxRetries = 3) {
             if (error.message.includes('CORS') || error.message.includes('NetworkError') || 
                 error.message.includes('Failed to fetch')) {
                 lastError = new Error('Yhteysongelma palvelimeen. Tarkista, että evästeet ovat sallittuja ja yritä uudelleen.');
+            }
+            
+            // Don't retry on authentication errors (401) or client errors (4xx)
+            if (error.message.includes('401') || error.message.includes('Varmennusvirhe')) {
+                console.error('Authentication error, not retrying:', error);
+                break;
             }
             
             // Don't retry on last attempt
@@ -158,17 +174,18 @@ function initializeBookingSystem() {
         );
         
         if (data) {
+            console.log(`Successfully fetched ${data.length} bookings from server`);
             return data;
         }
         
-        // Fallback mock data for testing when external APIs are blocked
-        console.warn('Using fallback mock data - API unavailable');
-        return [
-            { aika: '2024-12-06T10:00:00.000Z' },
-            { aika: '2024-12-06T14:00:00.000Z' },
-            { aika: '2024-12-07T11:00:00.000Z' },
-            { aika: '2024-12-09T15:00:00.000Z' }
-        ];
+        // Fallback to empty array instead of mock data for production
+        // Mock data can cause confusion and inconsistent state
+        console.error('Failed to fetch bookings from server - using empty array');
+        console.warn('Calendar will show all slots as available until server connection is restored');
+        
+        // Return empty array - this means all slots will appear available
+        // which is better than showing false bookings from mock data
+        return [];
     }
 
     // FIX: Define populateAvailableSlots function to prevent ReferenceError
@@ -1082,6 +1099,21 @@ function initializeBookingSystem() {
     fetchBookings().then(bookings => {
         // Ensure bookings is an array
         bookings = Array.isArray(bookings) ? bookings : [];
+        
+        // Display warning to user if bookings failed to load
+        if (bookings.length === 0) {
+            const errorEl = document.getElementById('error');
+            if (errorEl) {
+                errorEl.innerHTML = '<strong>Huomio:</strong> Varaustietoja ei voitu hakea palvelimelta. Kaikki ajat näytetään vapaina. Jos ongelma jatkuu, päivitä sivu tai ota yhteyttä asiakaspalveluun.';
+                errorEl.style.display = 'block';
+                errorEl.style.backgroundColor = '#fff3cd';
+                errorEl.style.color = '#856404';
+                errorEl.style.padding = '15px';
+                errorEl.style.marginBottom = '20px';
+                errorEl.style.borderRadius = '8px';
+                errorEl.style.border = '1px solid #ffc107';
+            }
+        }
         
         function isSlotBooked(slot) {
             return bookings.some(b => b.aika === slot.start.toISOString());
