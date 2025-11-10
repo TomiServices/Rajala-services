@@ -230,10 +230,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"></noscript>
-    <!-- Google reCAPTCHA v2 (FREE version, NOT Enterprise) - Loaded on demand to reduce initial page load -->
-    <!-- Script will be loaded dynamically when user scrolls to booking section -->
-    <!-- Script URL: https://www.google.com/recaptcha/api.js -->
+    <!-- Google reCAPTCHA v3 (FREE version, NOT Enterprise) -->
+    <!-- v3 runs invisibly in the background and generates a score (0.0-1.0) indicating likelihood of being a bot -->
+    <!-- Script is loaded automatically with the render parameter -->
     <!-- Site Key: 6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM" async defer></script>
     <style>
         /* Font loading optimization: ensure text is visible immediately with fallback fonts */
         /* This prevents FOIT (Flash of Invisible Text) and improves LCP */
@@ -3541,9 +3542,7 @@
         <label for="phone">Puhelinnumero</label>
         <!-- FIX: Added autocomplete="tel" to enable browser autofill for phone number -->
         <input type="tel" id="phone" name="phone" required pattern="^\+358\s?\d{1,3}\s?\d{4,}$" placeholder="+358 401234567" autocomplete="tel" />
-        <!-- reCAPTCHA v2 Checkbox - See RECAPTCHA_TROUBLESHOOTING.md if you see "invalid key type" error -->
-        <!-- Current implementation requires reCAPTCHA v2 Checkbox (NOT v3) -->
-        <div class="g-recaptcha" data-sitekey="6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM"></div>
+        <!-- reCAPTCHA v3 runs invisibly - no checkbox needed -->
         <button type="submit" class="btn">Vahvista varaus</button>
       </form>
       <div id="msg" class="msg"></div>

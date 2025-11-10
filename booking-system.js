@@ -1,6 +1,35 @@
 // NOTE: No Firebase config in HTML for security. Use server endpoints instead.
 
 // ============================================================================
+// RECAPTCHA v3 CONFIGURATION
+// ============================================================================
+// reCAPTCHA v3 runs invisibly and returns a score (0.0-1.0) indicating likelihood of being a bot
+// Higher scores (closer to 1.0) = more likely human, Lower scores (closer to 0.0) = more likely bot
+// The site key is embedded in the script tag in index.html
+const RECAPTCHA_SITE_KEY = '6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM';
+
+/**
+ * Executes reCAPTCHA v3 and returns a token
+ * @param {string} action - The action name for this reCAPTCHA check
+ * @returns {Promise<string>} - The reCAPTCHA token
+ */
+async function executeRecaptcha(action) {
+    try {
+        if (typeof grecaptcha === 'undefined') {
+            throw new Error('reCAPTCHA not loaded');
+        }
+        
+        await grecaptcha.ready();
+        const token = await grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: action });
+        return token;
+    } catch (error) {
+        console.error('reCAPTCHA execution error:', error);
+        throw error;
+    }
+}
+
+
+// ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
 
@@ -73,7 +102,7 @@ async function fetchWithRetry(url, options = {}, maxRetries = 3) {
             
             // Handle specific error codes with better messages
             if (response.status === 401) {
-                throw new Error(`Varmennusvirhe (401). Tarkista, että reCAPTCHA on suoritettu oikein.`);
+                throw new Error(`Varmennusvirhe (401). Turvavarmennus epäonnistui. Yritä uudelleen.`);
             } else if (response.status === 503) {
                 throw new Error(`Palvelu ei ole tällä hetkellä saatavilla (503). Yritä hetken kuluttua uudelleen.`);
             } else if (response.status === 500) {
@@ -120,98 +149,6 @@ async function fetchWithRetry(url, options = {}, maxRetries = 3) {
     console.error(`Fetch failed after ${maxRetries + 1} attempts:`, lastError);
     return null;
 }
-
-// ============================================================================
-// LAZY LOADING
-// ============================================================================
-
-// FIX: Enhanced reCAPTCHA lazy loading with error handling and retry logic
-// Lazy loads reCAPTCHA v2 (FREE version) when user scrolls to booking section
-// This improves initial page load performance and complies with Google's usage guidelines
-// API Documentation: https://www.google.com/recaptcha/api.js
-let recaptchaLoaded = false;
-let recaptchaLoadAttempts = 0;
-const MAX_RECAPTCHA_ATTEMPTS = 2;
-
-/**
- * Loads reCAPTCHA v2 script with error handling
- * FIX: Added retry logic and error detection for blocked resources
- */
-function loadRecaptcha() {
-    if (recaptchaLoaded) return;
-    
-    recaptchaLoadAttempts++;
-    console.log(`Loading reCAPTCHA (attempt ${recaptchaLoadAttempts}/${MAX_RECAPTCHA_ATTEMPTS})...`);
-    
-    const script = document.createElement('script');
-    script.src = 'https://www.google.com/recaptcha/api.js'; // Free v2 API
-    script.async = true;
-    script.defer = true;
-    
-    // FIX: Success handler
-    script.onload = function() {
-        console.log('✓ reCAPTCHA loaded successfully');
-        recaptchaLoaded = true;
-    };
-    
-    // FIX: Error handler with retry logic
-    script.onerror = function(error) {
-        console.error(`✗ Failed to load reCAPTCHA (attempt ${recaptchaLoadAttempts}):`, error);
-        
-        if (recaptchaLoadAttempts < MAX_RECAPTCHA_ATTEMPTS) {
-            console.log('Retrying reCAPTCHA load in 1 second...');
-            setTimeout(loadRecaptcha, 1000);
-        } else {
-            console.error('reCAPTCHA failed to load after maximum attempts.');
-            recaptchaLoaded = true; // Prevent further attempts
-            
-            // Show helpful error message to user
-            const errorEl = document.getElementById('error');
-            if (errorEl) {
-                const existingContent = errorEl.innerHTML;
-                errorEl.innerHTML = existingContent + 
-                    '<br><br><strong>⚠️ Turvavarmennus ei latautunut</strong><br>' +
-                    'reCAPTCHA-turvavarmennus ei toiminut. Varaa aika puhelimitse tai sähköpostilla.';
-            }
-        }
-    };
-    
-    document.head.appendChild(script);
-}
-
-// FIX: Observe booking section visibility to lazy load reCAPTCHA when user scrolls near it
-// This improves initial page performance by deferring non-critical resource loading
-const bookingObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            console.log('Booking section approaching, loading reCAPTCHA...');
-            loadRecaptcha();
-            bookingObserver.disconnect(); // Only load once
-        }
-    });
-}, { rootMargin: '50px' }); // Start loading slightly before section is visible
-
-// Start observing when DOM is ready
-if ('requestIdleCallback' in window) {
-    requestIdleCallback(() => {
-        const calendarSection = document.getElementById('calendar');
-        if (calendarSection) {
-            bookingObserver.observe(calendarSection);
-        } else {
-            console.warn('Calendar section not found for reCAPTCHA lazy loading');
-        }
-    });
-} else {
-    setTimeout(() => {
-        const calendarSection = document.getElementById('calendar');
-        if (calendarSection) {
-            bookingObserver.observe(calendarSection);
-        } else {
-            console.warn('Calendar section not found for reCAPTCHA lazy loading');
-        }
-    }, 100);
-}
-
 
 // ============================================================================
 // BOOKING SYSTEM INITIALIZATION
@@ -1745,18 +1682,6 @@ function initializeBookingSystem() {
                 return;
             }
             
-            // Check if reCAPTCHA is loaded
-            if (typeof grecaptcha === 'undefined' || !grecaptcha.getResponse) {
-                document.getElementById('error').textContent = 'reCAPTCHA ei ole latautunut. Päivitä sivu ja yritä uudelleen.';
-                return;
-            }
-            
-            const recaptchaResponse = grecaptcha.getResponse();
-            if (!recaptchaResponse) {
-                document.getElementById('error').textContent = 'Vahvista että et ole robotti!';
-                return;
-            }
-            
             if (!selectedSlot || !name || !email || !phone) {
                 document.getElementById('error').textContent = 'Täytä kaikki kentät ja valitse aika!';
                 return;
@@ -1778,6 +1703,14 @@ function initializeBookingSystem() {
             }, 10);
             
             try {
+                // Execute reCAPTCHA v3 to get token
+                let recaptchaToken;
+                try {
+                    recaptchaToken = await executeRecaptcha('booking');
+                } catch (recaptchaError) {
+                    throw new Error('Turvavarmennus epäonnistui. Päivitä sivu ja yritä uudelleen.');
+                }
+                
                 // Prepare structured service data with prices
                 const serviceData = prepareServiceData();
                 
@@ -1788,7 +1721,7 @@ function initializeBookingSystem() {
                     services: serviceData.services,
                     totalPrice: serviceData.totalPrice,
                     totalNumericPrice: serviceData.totalNumericPrice,
-                    recaptcha: recaptchaResponse
+                    recaptcha: recaptchaToken
                 };
                 
                 const result = await fetchWithRetry(
@@ -1808,7 +1741,6 @@ function initializeBookingSystem() {
                     
                     document.getElementById('msg').innerHTML = "Varaus onnistui! <br>Saat varausvahvistuksen sähköpostiisi pian.";
                     document.getElementById('bookingForm').reset();
-                    grecaptcha.reset();
                     document.getElementById('bookingForm').style.display = 'none';
                     document.getElementById('slot-summary').textContent = '';
                     document.getElementById('add-service-container').style.display = 'none';

@@ -16,11 +16,16 @@ const cors = require("cors")({
 
 admin.initializeApp();
 
-// reCAPTCHA Secret Key - FREE v2 version (NOT Enterprise)
+// reCAPTCHA Secret Key - FREE v3 version (NOT Enterprise)
 // Should be stored in Firebase environment config
 // Set with: firebase functions:config:set recaptcha.secret="YOUR_SECRET_KEY"
 // IMPORTANT: Secret key must match site key 6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM
 const RECAPTCHA_SECRET = functions.config().recaptcha?.secret || process.env.RECAPTCHA_SECRET;
+
+// reCAPTCHA v3 score threshold (0.0 - 1.0)
+// Lower threshold = more permissive, Higher threshold = more strict
+// Recommended: 0.5 for general use, adjust based on your needs
+const RECAPTCHA_SCORE_THRESHOLD = 0.5;
 
 // VARAUKSEN TEKO JA SÄHKÖPOSTI
 exports.book = functions.https.onRequest((req, res) => {
@@ -35,11 +40,11 @@ exports.book = functions.https.onRequest((req, res) => {
         }
         const { name, email, phone, aika, services, totalPrice, totalNumericPrice, recaptcha } = req.body;
         
-        // Validate reCAPTCHA if secret key is configured
-        // Using FREE reCAPTCHA v2 siteverify API (NOT Enterprise)
+        // Validate reCAPTCHA v3 if secret key is configured
+        // Using FREE reCAPTCHA v3 siteverify API (NOT Enterprise)
         if (RECAPTCHA_SECRET && recaptcha) {
             try {
-                // Free reCAPTCHA v2 verification endpoint
+                // Free reCAPTCHA v3 verification endpoint (same URL as v2)
                 const verifyUrl = `https://www.google.com/recaptcha/api/siteverify`;
                 const verifyResponse = await axios.post(verifyUrl, null, {
                     params: {
@@ -55,6 +60,27 @@ exports.book = functions.https.onRequest((req, res) => {
                         details: verifyResponse.data['error-codes']
                     });
                 }
+                
+                // v3 returns a score (0.0 - 1.0) indicating likelihood of being human
+                // Higher score = more likely human, lower score = more likely bot
+                const score = verifyResponse.data.score;
+                const action = verifyResponse.data.action;
+                
+                console.log(`reCAPTCHA v3 score: ${score}, action: ${action}`);
+                
+                if (score < RECAPTCHA_SCORE_THRESHOLD) {
+                    console.warn(`reCAPTCHA score ${score} below threshold ${RECAPTCHA_SCORE_THRESHOLD}`);
+                    return res.status(401).json({ 
+                        error: "reCAPTCHA verification failed - score too low",
+                        score: score
+                    });
+                }
+                
+                // Optional: Verify the action matches what we expect
+                if (action !== 'booking') {
+                    console.warn(`reCAPTCHA action mismatch: expected 'booking', got '${action}'`);
+                }
+                
             } catch (error) {
                 console.error("Error verifying reCAPTCHA:", error);
                 // Log error but don't block booking if reCAPTCHA service is down
