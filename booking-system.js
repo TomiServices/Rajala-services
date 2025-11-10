@@ -1,5 +1,89 @@
 // NOTE: No Firebase config in HTML for security. Use server endpoints instead.
 
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+/**
+ * Validates and normalizes a date input
+ * @param {Date|string} date - Date to validate
+ * @returns {Date|null} - Valid Date object or null if invalid
+ */
+function validateDate(date) {
+    if (!date) return null;
+    
+    // Convert string to Date if necessary
+    if (typeof date === 'string') {
+        date = new Date(date);
+    }
+    
+    // Validate Date object
+    if (!(date instanceof Date) || isNaN(date.getTime())) {
+        return null;
+    }
+    
+    return date;
+}
+
+/**
+ * Gets a date key in YYYY-MM-DD format for consistent date comparison
+ * @param {Date|string} date - Date to convert
+ * @returns {string|null} - Date key or null if invalid
+ */
+function getDateKey(date) {
+    const validDate = validateDate(date);
+    if (!validDate) return null;
+    
+    const year = validDate.getFullYear();
+    const month = String(validDate.getMonth() + 1).padStart(2, '0');
+    const day = String(validDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+/**
+ * Fetches data with retry logic using exponential backoff
+ * @param {string} url - URL to fetch
+ * @param {object} options - Fetch options
+ * @param {number} maxRetries - Maximum number of retries (default: 3)
+ * @returns {Promise<any>} - Response data or null on failure
+ */
+async function fetchWithRetry(url, options = {}, maxRetries = 3) {
+    let lastError;
+    
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            const response = await fetch(url, options);
+            
+            if (response.ok) {
+                return await response.json();
+            }
+            
+            // If response is not ok, throw error to trigger retry
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            
+        } catch (error) {
+            lastError = error;
+            
+            // Don't retry on last attempt
+            if (attempt === maxRetries) {
+                break;
+            }
+            
+            // Exponential backoff: wait 1s, 2s, 4s
+            const delay = Math.pow(2, attempt) * 1000;
+            console.log(`Fetch attempt ${attempt + 1} failed, retrying in ${delay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
+    }
+    
+    console.error(`Fetch failed after ${maxRetries + 1} attempts:`, lastError);
+    return null;
+}
+
+// ============================================================================
+// LAZY LOADING
+// ============================================================================
+
 // Lazy load reCAPTCHA when user scrolls to booking section
 let recaptchaLoaded = false;
 function loadRecaptcha() {
@@ -36,12 +120,16 @@ if ('requestIdleCallback' in window) {
     }, 100);
 }
 
+// ============================================================================
+// BOOKING SYSTEM INITIALIZATION
+// ============================================================================
+
 // Calendar booking logic (ready for backend API, e.g. Firebase Function)
 // Defer heavy initialization until after page load + idle time to minimize main-thread blocking
 function initializeBookingSystem() {
     const calendarEl = document.getElementById('calendar');
     
-    // FIX: Early return if calendar element doesn't exist
+    // Early return if calendar element doesn't exist
     if (!calendarEl) {
         console.error('Calendar element not found. FullCalendar initialization aborted.');
         return;
@@ -49,42 +137,26 @@ function initializeBookingSystem() {
     
     let selectedSlot = null;
 
-    // FIXED: Fetch bookings from your backend Firebase Function
+    // Fetch bookings from backend Firebase Function with retry logic
     async function fetchBookings() {
-        try {
-            const response = await fetch('https://us-central1-fxnr-web.cloudfunctions.net/bookings');
-            return response.ok ? await response.json() : [];
-        } catch (error) {
-            // Fallback mock data for testing when external APIs are blocked
-            console.log('Using fallback mock data for testing');
-            return [
-                { aika: '2024-12-06T10:00:00.000Z' },
-                { aika: '2024-12-06T14:00:00.000Z' },
-                { aika: '2024-12-07T11:00:00.000Z' },
-                { aika: '2024-12-09T15:00:00.000Z' }
-            ];
-        }
-    }
-
-    // Helper functions for date handling
-    function getDateKey(date) {
-        // FIX: validated date in getDateKey
-        // If date is a string, attempt to convert it to a Date object
-        if (typeof date === 'string') {
-            date = new Date(date);
+        const data = await fetchWithRetry(
+            'https://us-central1-fxnr-web.cloudfunctions.net/bookings',
+            {},
+            2 // Max 2 retries
+        );
+        
+        if (data) {
+            return data;
         }
         
-        // Validate the input to ensure it is a valid Date object
-        if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
-            console.error('getDateKey called with invalid date:', date);
-            return null;
-        }
-        
-        // Use local date to avoid timezone issues causing off-by-one day selection
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        // Fallback mock data for testing when external APIs are blocked
+        console.warn('Using fallback mock data - API unavailable');
+        return [
+            { aika: '2024-12-06T10:00:00.000Z' },
+            { aika: '2024-12-06T14:00:00.000Z' },
+            { aika: '2024-12-07T11:00:00.000Z' },
+            { aika: '2024-12-09T15:00:00.000Z' }
+        ];
     }
 
     // FIX: Define populateAvailableSlots function to prevent ReferenceError
@@ -106,12 +178,13 @@ function initializeBookingSystem() {
     function populateTimeSelectionGrid(selectedDate, bookings) {
         const gridContainer = document.getElementById('time-slots-grid');
         const timeSelectionContainer = document.getElementById('time-selection-grid');
-        if (!gridContainer) return;
+        if (!gridContainer) return false;
         
         gridContainer.innerHTML = '';
         
-        // Validate selectedDate before proceeding
-        if (!selectedDate || !(selectedDate instanceof Date) || isNaN(selectedDate.getTime())) {
+        // Validate selectedDate using centralized validation
+        const validDate = validateDate(selectedDate);
+        if (!validDate) {
             console.error('populateTimeSelectionGrid called with invalid date:', selectedDate);
             if (timeSelectionContainer) {
                 timeSelectionContainer.style.display = 'none';
@@ -122,42 +195,30 @@ function initializeBookingSystem() {
         // Get current date
         const now = new Date();
         
-        // FIX: null check before filter()
-        // Ensure bookings is not null or undefined before calling filter()
-        if (!bookings) {
-            bookings = [];
-        }
+        // Ensure bookings is an array
+        bookings = Array.isArray(bookings) ? bookings : [];
         
-        const dateKey = getDateKey(selectedDate);
-        // Add null check for dateKey
+        const dateKey = getDateKey(validDate);
         if (!dateKey) {
-            console.error('Failed to generate dateKey for selectedDate:', selectedDate);
+            console.error('Failed to generate dateKey for selectedDate:', validDate);
             if (timeSelectionContainer) {
                 timeSelectionContainer.style.display = 'none';
             }
             return false;
         }
+        
         const dayBookings = bookings.filter(b => {
-            const bookingDateKey = getDateKey(new Date(b.aika));
-            return bookingDateKey && bookingDateKey === dateKey;
+            const bookingDateKey = getDateKey(b.aika);
+            return bookingDateKey === dateKey;
         });
         
-        // Get current hour for checking if slot is in the past
         const isToday = getDateKey(now) === dateKey;
-        const currentHour = now.getHours();
-        
         let hasAvailableSlots = false;
         
         // Generate time slots for business hours (9-17) - only for the selected day
         for (let hour = 9; hour < 17; hour++) {
-            const slotTime = new Date(selectedDate);
+            const slotTime = new Date(validDate);
             slotTime.setHours(hour, 0, 0, 0);
-            
-            // Validate slotTime before using it
-            if (isNaN(slotTime.getTime())) {
-                console.error('Invalid slotTime generated for hour:', hour, 'from selectedDate:', selectedDate);
-                continue;
-            }
             
             // Check if slot is in the past
             const isPast = slotTime < now;
@@ -339,16 +400,17 @@ function initializeBookingSystem() {
         const selectElement = document.getElementById('availableTimesSelect');
         const labelElement = document.getElementById('availableTimesLabel');
         
-        if (!selectElement) return;
+        if (!selectElement) return false;
         
-        // Validate selectedDate before proceeding
-        if (!selectedDate || !(selectedDate instanceof Date) || isNaN(selectedDate.getTime())) {
+        // Validate selectedDate using centralized validation
+        const validDate = validateDate(selectedDate);
+        if (!validDate) {
             console.error('populateTimeSlotsForDate called with invalid date:', selectedDate);
             return false;
         }
         
         // Format the selected date for display
-        const formattedDate = selectedDate.toLocaleDateString('fi-FI', { 
+        const formattedDate = validDate.toLocaleDateString('fi-FI', { 
             weekday: 'long', 
             day: 'numeric', 
             month: 'numeric' 
@@ -361,15 +423,18 @@ function initializeBookingSystem() {
         selectElement.innerHTML = '<option value="">Valitse aika...</option>';
         
         // Get bookings for the selected date
-        const dateKey = getDateKey(selectedDate);
-        // Add null check for dateKey
+        const dateKey = getDateKey(validDate);
         if (!dateKey) {
-            console.error('Failed to generate dateKey for selectedDate:', selectedDate);
+            console.error('Failed to generate dateKey for selectedDate:', validDate);
             return false;
         }
+        
+        // Ensure bookings is an array
+        bookings = Array.isArray(bookings) ? bookings : [];
+        
         const dayBookings = bookings.filter(b => {
-            const bookingDateKey = getDateKey(new Date(b.aika));
-            return bookingDateKey && bookingDateKey === dateKey;
+            const bookingDateKey = getDateKey(b.aika);
+            return bookingDateKey === dateKey;
         });
         
         let hasAvailableSlots = false;
@@ -391,14 +456,8 @@ function initializeBookingSystem() {
                 return bookingHour === hour;
             });
             
-            const timeSlot = new Date(selectedDate);
+            const timeSlot = new Date(validDate);
             timeSlot.setHours(hour, 0, 0, 0);
-            
-            // Validate timeSlot before using toISOString
-            if (isNaN(timeSlot.getTime())) {
-                console.error('Invalid timeSlot generated for hour:', hour, 'from selectedDate:', selectedDate);
-                continue;
-            }
             
             let slotText = `${hour}:00`;
             if (isBooked) {
@@ -450,8 +509,8 @@ function initializeBookingSystem() {
                     const serviceSelection = document.getElementById('serviceSelection');
                     serviceSelection.style.display = 'block';
                     
-                    // Update calendar selection (if calendar exists) - FIX: Add null check
-                    if (window.calendar && typeof window.calendar.unselect === 'function' && typeof window.calendar.select === 'function') {
+                    // Update calendar selection (if calendar exists)
+                    if (window.calendar && window.calendar.unselect && window.calendar.select) {
                         const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000);
                         window.calendar.unselect();
                         window.calendar.select(selectedDateTime, endTime);
@@ -505,9 +564,9 @@ function initializeBookingSystem() {
                 hideMobileTimeModal();
             }, 300);
             
-            // Trigger calendar selection for the confirmed time - FIX: Add null check
-            const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000); // Add 1 hour
-            if (calendar && typeof calendar.select === 'function') {
+            // Trigger calendar selection for the confirmed time
+            const endTime = new Date(selectedDateTime.getTime() + 60 * 60 * 1000);
+            if (calendar && calendar.select) {
                 calendar.select(selectedDateTime, endTime);
             }
             
@@ -935,11 +994,13 @@ function initializeBookingSystem() {
 
     // Function to find next available booking slot and navigate to that week
     function findAndNavigateToNextAvailableWeek(calendar, bookings) {
-        // FIX: Verify calendar exists before attempting navigation
         if (!calendar || typeof calendar.gotoDate !== 'function') {
             console.error('Calendar not available for navigation');
             return null;
         }
+        
+        // Ensure bookings is an array
+        bookings = Array.isArray(bookings) ? bookings : [];
         
         const today = new Date();
         const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -955,26 +1016,21 @@ function initializeBookingSystem() {
             
             // Check if this day has available slots
             const dateKey = getDateKey(checkDate);
-            // Skip if dateKey is null (invalid date)
-            if (!dateKey) {
-                console.error('Failed to generate dateKey for checkDate:', checkDate);
-                continue;
-            }
+            if (!dateKey) continue; // Skip invalid dates
+            
             const dayBookingCount = bookings.filter(b => {
-                const bookingDateKey = getDateKey(new Date(b.aika));
-                return bookingDateKey && bookingDateKey === dateKey;
+                const bookingDateKey = getDateKey(b.aika);
+                return bookingDateKey === dateKey;
             }).length;
             
             // If day has less than 2 bookings, it has available slots
             if (dayBookingCount < 2) {
-                // Navigate calendar to the week containing this date
                 calendar.gotoDate(checkDate);
                 console.log('Navigated to week containing next available slot:', checkDate.toLocaleDateString('fi-FI'));
                 return checkDate;
             }
         }
         
-        // If no available slots found, stay on current week
         console.log('No available slots found in next 30 days');
         return null;
     }
@@ -1012,40 +1068,39 @@ function initializeBookingSystem() {
     }
 
     fetchBookings().then(bookings => {
+        // Ensure bookings is an array
+        bookings = Array.isArray(bookings) ? bookings : [];
+        
         function isSlotBooked(slot) {
             return bookings.some(b => b.aika === slot.start.toISOString());
         }
+        
         function getBookingsCountForDay(date) {
             const dateKey = getDateKey(date);
-            // Return 0 if dateKey is null (invalid date)
-            if (!dateKey) {
-                console.error('Failed to generate dateKey in getBookingsCountForDay for date:', date);
-                return 0;
-            }
+            if (!dateKey) return 0;
+            
             return bookings.filter(b => {
-                const bookingDateKey = getDateKey(new Date(b.aika));
-                return bookingDateKey && bookingDateKey === dateKey;
+                const bookingDateKey = getDateKey(b.aika);
+                return bookingDateKey === dateKey;
             }).length;
         }
         
         let calendar = null;
         
-        // FIX: Enhanced verification of FullCalendar library and calendar element
+        // Check if FullCalendar library is loaded
         if (typeof FullCalendar === 'undefined' || typeof FullCalendar.Calendar !== 'function') {
             console.error('FullCalendar library not loaded. Skipping calendar initialization.');
-            // Calendar will remain null, triggering fallback calendar
             return;
         }
         
-        // FIX: Double-check calendar element exists and is in the DOM
+        // Check if calendar element exists in DOM
         if (!calendarEl || !document.body.contains(calendarEl)) {
             console.error('Calendar element not found in DOM. Skipping calendar initialization.');
             return;
         }
         
         try {
-            // Try to initialize FullCalendar
-            // Mobile: 2 weeks view, Desktop: current month view
+            // Initialize FullCalendar
             const isMobileView = window.innerWidth < 768;
             calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: isMobileView ? 'dayGridTwoWeeks' : 'dayGridMonth',
@@ -1063,18 +1118,11 @@ function initializeBookingSystem() {
             hiddenDays: [], // Show all days including weekends
             displayEventTime: false,
             dayMaxEventRows: 3,
-            // Update available slots when view changes
             viewDidMount: function(info) {
-                // FIX: Enhanced check with try-catch to prevent getCellFromPoint errors
-                // Small delay to ensure view is fully rendered and DOM is stable
+                // Small delay to ensure view is fully rendered
                 setTimeout(() => {
-                    try {
-                        if (calendar && typeof calendar.getDate === 'function' && info.view) {
-                            populateAvailableSlots(calendar, bookings);
-                        }
-                    } catch (error) {
-                        console.error('Error in viewDidMount:', error);
-                        // Gracefully handle the error without breaking the page
+                    if (calendar && info && info.view) {
+                        populateAvailableSlots(calendar, bookings);
                     }
                 }, 50);
             },
@@ -1123,11 +1171,9 @@ function initializeBookingSystem() {
                 };
             },
             select: function (info) {
-                // FIX: Wrap entire select handler in try-catch to prevent getCellFromPoint errors
                 try {
-                    // FIX: Early return if calendar is not properly initialized
                     if (!calendar || !info || !info.start) {
-                        console.error('Calendar instance or selection info not available in select handler');
+                        console.error('Calendar instance or selection info not available');
                         return;
                     }
                     
@@ -1137,9 +1183,7 @@ function initializeBookingSystem() {
                     
                     // Prevent selection of past dates
                     if (start < now) {
-                        if (typeof calendar.unselect === 'function') {
-                            calendar.unselect();
-                        }
+                        if (calendar.unselect) calendar.unselect();
                         document.getElementById('error').textContent = 'Et voi valita mennyttä päivämäärää!';
                         return;
                     }
@@ -1148,9 +1192,7 @@ function initializeBookingSystem() {
                     
                     // Only allow weekday selections
                     if (dayOfWeek < 1 || dayOfWeek > 5) {
-                        if (typeof calendar.unselect === 'function') {
-                            calendar.unselect();
-                        }
+                        if (calendar.unselect) calendar.unselect();
                         document.getElementById('error').textContent = 'Valitse arkipäivä (maanantai-perjantai)!';
                         return;
                     }
@@ -1158,16 +1200,12 @@ function initializeBookingSystem() {
                     // If on mobile device, show mobile modal instead of direct selection
                     if (isMobile) {
                         const dateStr = getDateKey(start);
-                        // Check if dateStr is valid before showing modal
                         if (dateStr) {
                             showMobileTimeModal(dateStr, null, bookings);
                         } else {
-                            console.error('Failed to generate dateKey for start date:', start);
                             document.getElementById('error').textContent = 'Virhe päivämäärän käsittelyssä. Yritä uudelleen.';
                         }
-                        if (typeof calendar.unselect === 'function') {
-                            calendar.unselect();
-                        }
+                        if (calendar.unselect) calendar.unselect();
                         return;
                     }
 
@@ -1175,12 +1213,10 @@ function initializeBookingSystem() {
                     const selectedDate = new Date(start);
                     selectedDate.setHours(9, 0, 0, 0);
                     
-                    // Populate time selection grid with available slots for the selected date
                     const hasAvailableSlots = populateTimeSelectionGrid(selectedDate, bookings);
                     
                     if (hasAvailableSlots) {
                         document.getElementById('error').textContent = '';
-                        // Scroll to time selection
                         const timeGridContainer = document.getElementById('time-selection-grid');
                         if (timeGridContainer) {
                             timeGridContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1189,18 +1225,13 @@ function initializeBookingSystem() {
                         document.getElementById('error').textContent = 'Valitulle päivälle ei ole vapaita aikoja saatavilla.';
                     }
                     
-                    // Unselect the calendar selection since user hasn't picked a time yet
-                    if (typeof calendar.unselect === 'function') {
-                        calendar.unselect();
-                    }
+                    if (calendar.unselect) calendar.unselect();
                 } catch (error) {
                     console.error('Error in select handler:', error);
-                    // Gracefully handle the error
                     document.getElementById('error').textContent = 'Virhe päivämäärän valinnassa. Yritä uudelleen.';
                 }
             },
             dateClick: function(info) {
-                // FIX: Wrap in try-catch for error handling
                 try {
                     if (!info || !info.date) {
                         console.error('Invalid dateClick info');
@@ -1216,20 +1247,16 @@ function initializeBookingSystem() {
                         return;
                     }
                     
-                    // Handle day/slot clicks - use same logic as select for consistency
                     const dayOfWeek = info.date.getDay();
                     if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Only weekdays
                         if (isMobile) {
                             const dateStr = getDateKey(info.date);
-                            // Check if dateStr is valid before showing modal
                             if (dateStr) {
                                 showMobileTimeModal(dateStr, null, bookings);
                             } else {
-                                console.error('Failed to generate dateKey for info.date:', info.date);
                                 document.getElementById('error').textContent = 'Virhe päivämäärän käsittelyssä. Yritä uudelleen.';
                             }
                         } else {
-                            // For desktop, show time selection grid
                             const selectedDate = new Date(info.date);
                             selectedDate.setHours(9, 0, 0, 0);
                             
@@ -1237,7 +1264,6 @@ function initializeBookingSystem() {
                             
                             if (hasAvailableSlots) {
                                 document.getElementById('error').textContent = '';
-                                // Scroll to time selection
                                 const timeGridContainer = document.getElementById('time-selection-grid');
                                 if (timeGridContainer) {
                                     timeGridContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1253,7 +1279,6 @@ function initializeBookingSystem() {
                 }
             },
             events: function (fetchInfo, successCallback) {
-                // FIX: Wrap in try-catch to prevent errors during event generation
                 try {
                     if (!fetchInfo || !successCallback) {
                         console.error('Invalid fetchInfo or successCallback in events function');
@@ -1262,8 +1287,6 @@ function initializeBookingSystem() {
                     }
                     
                     const evs = [];
-                    
-                    // For dayGrid view, show booking count per day
                     const currentDate = new Date(fetchInfo.start);
                     const endDate = new Date(fetchInfo.end);
                     
@@ -1272,25 +1295,22 @@ function initializeBookingSystem() {
                         // Only process weekdays
                         if (dayOfWeek >= 1 && dayOfWeek <= 5) {
                             const dateKey = getDateKey(currentDate);
-                            // Skip if dateKey is null (invalid date)
-                            if (!dateKey) {
-                                currentDate.setDate(currentDate.getDate() + 1);
-                                continue;
-                            }
-                            const dayBookingsCount = bookings.filter(b => {
-                                const bookingDateKey = getDateKey(new Date(b.aika));
-                                return bookingDateKey && bookingDateKey === dateKey;
-                            }).length;
-                            
-                            if (dayBookingsCount > 0) {
-                                const availableSlots = 8 - dayBookingsCount; // 8 slots per day (9-17)
-                                evs.push({
-                                    title: `${availableSlots} paikkaa`,
-                                    start: dateKey,
-                                    allDay: true,
-                                    color: availableSlots > 4 ? '#4CAF50' : availableSlots > 0 ? '#FFC107' : '#F44336',
-                                    textColor: '#fff'
-                                });
+                            if (dateKey) {
+                                const dayBookingsCount = bookings.filter(b => {
+                                    const bookingDateKey = getDateKey(b.aika);
+                                    return bookingDateKey === dateKey;
+                                }).length;
+                                
+                                if (dayBookingsCount > 0) {
+                                    const availableSlots = 8 - dayBookingsCount; // 8 slots per day (9-17)
+                                    evs.push({
+                                        title: `${availableSlots} paikkaa`,
+                                        start: dateKey,
+                                        allDay: true,
+                                        color: availableSlots > 4 ? '#4CAF50' : availableSlots > 0 ? '#FFC107' : '#F44336',
+                                        textColor: '#fff'
+                                    });
+                                }
                             }
                         }
                         
@@ -1300,7 +1320,6 @@ function initializeBookingSystem() {
                     successCallback(evs);
                 } catch (error) {
                     console.error('Error in events function:', error);
-                    // Return empty array on error to prevent calendar breaking
                     if (successCallback) successCallback([]);
                 }
             }
@@ -1321,9 +1340,7 @@ function initializeBookingSystem() {
                         today.setHours(0, 0, 0, 0);
                         
                         function updateNavigationButtons() {
-                            // FIX: Verify calendar exists and has required methods
-                            if (!calendar || typeof calendar.getDate !== 'function') {
-                                console.error('Calendar not available for navigation button update');
+                            if (!calendar || !calendar.getDate || !calendar.view) {
                                 return;
                             }
                             
@@ -1331,53 +1348,30 @@ function initializeBookingSystem() {
                             const nextBtn = document.getElementById('nextWeekBtn');
                             
                             if (!prevBtn || !nextBtn) {
-                                console.error('Navigation buttons not found in DOM:', {
-                                    prevBtn: !!prevBtn,
-                                    nextBtn: !!nextBtn
-                                });
                                 return;
                             }
                             
-                            const currentDate = calendar.getDate();
-                            
-                            // Get the view start date (first visible date in calendar)
                             const view = calendar.view;
-                            if (!view) {
-                                console.error('Calendar view not available');
-                                return;
-                            }
-                            
                             const viewStart = view.currentStart;
+                            const viewEnd = view.currentEnd;
                             
                             // Disable prev button if view start is at or before today
                             const todayStart = new Date(today);
                             todayStart.setHours(0, 0, 0, 0);
-                            
-                            if (viewStart <= todayStart) {
-                                prevBtn.disabled = true;
-                            } else {
-                                prevBtn.disabled = false;
-                            }
+                            prevBtn.disabled = (viewStart <= todayStart);
                             
                             // Disable next button if we're at the valid range end
                             const validRangeEnd = new Date(today.getFullYear(), today.getMonth() + 2, 0);
-                            const viewEnd = view.currentEnd;
-                            
-                            if (viewEnd >= validRangeEnd) {
-                                nextBtn.disabled = true;
-                            } else {
-                                nextBtn.disabled = false;
-                            }
+                            nextBtn.disabled = (viewEnd >= validRangeEnd);
                         }
                         
-                        // Previous month button
+                        // Previous/Next month buttons
                         const prevBtn = document.getElementById('prevWeekBtn');
                         const nextBtn = document.getElementById('nextWeekBtn');
                         
                         if (prevBtn) {
                             prevBtn.addEventListener('click', function() {
-                                // FIX: Verify calendar exists before calling methods
-                                if (calendar && typeof calendar.prev === 'function') {
+                                if (calendar && calendar.prev) {
                                     calendar.prev();
                                     updateNavigationButtons();
                                     populateAvailableSlots(calendar, bookings);
@@ -1385,11 +1379,9 @@ function initializeBookingSystem() {
                             });
                         }
                         
-                        // Next month button
                         if (nextBtn) {
                             nextBtn.addEventListener('click', function() {
-                                // FIX: Verify calendar exists before calling methods
-                                if (calendar && typeof calendar.next === 'function') {
+                                if (calendar && calendar.next) {
                                     calendar.next();
                                     updateNavigationButtons();
                                     populateAvailableSlots(calendar, bookings);
@@ -1399,21 +1391,20 @@ function initializeBookingSystem() {
                         
                         // Navigate to week with next available booking slot
                         setTimeout(() => {
-                            // FIX: Verify calendar exists before navigation
-                            if (calendar && typeof calendar.gotoDate === 'function') {
+                            if (calendar && calendar.gotoDate) {
                                 findAndNavigateToNextAvailableWeek(calendar, bookings);
                                 updateNavigationButtons();
-                                // Populate available slots for the current week
                                 populateAvailableSlots(calendar, bookings);
                             }
+                            
                             // Don't show time selection grid initially - user must click a day first
                             const timeGridContainer = document.getElementById('time-selection-grid');
                             if (timeGridContainer) {
                                 timeGridContainer.style.display = 'none';
                             }
-                            // Setup dropdown event listener
+                            
                             setupDropdownEventListener();
-                        }, 100); // Small delay to ensure calendar is fully rendered
+                        }, 100);
                         
                     } catch (renderError) {
                         console.error('FullCalendar render failed:', renderError);
@@ -1528,8 +1519,7 @@ function initializeBookingSystem() {
                 if (newIsMobile !== isMobile) {
                     isMobile = newIsMobile;
                 }
-                // FIX: Verify calendar exists before calling updateSize
-                if (calendar && typeof calendar.updateSize === 'function') {
+                if (calendar && calendar.updateSize) {
                     calendar.updateSize();
                 }
             }, 250);
@@ -1585,8 +1575,7 @@ function initializeBookingSystem() {
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
-                // FIX: Verify calendar exists before calling updateSize
-                if (calendar && typeof calendar.updateSize === 'function') {
+                if (calendar && calendar.updateSize) {
                     calendar.updateSize();
                 }
             }, 250);
@@ -1600,15 +1589,18 @@ function initializeBookingSystem() {
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const aikaValue = document.getElementById('aika').value;
+            
             if (!/^\+358\s?\d{1,3}\s?\d{4,}$/.test(phone)) {
                 document.getElementById('error').textContent = 'Syötä puhelinnumero muodossa +358 401234567!';
                 return;
             }
+            
             const recaptchaResponse = grecaptcha.getResponse();
             if (!recaptchaResponse) {
                 document.getElementById('error').textContent = 'Vahvista että et ole robotti!';
                 return;
             }
+            
             if (!selectedSlot || !name || !email || !phone) {
                 document.getElementById('error').textContent = 'Täytä kaikki kentät ja valitse aika!';
                 return;
@@ -1633,20 +1625,27 @@ function initializeBookingSystem() {
                 // Prepare structured service data with prices
                 const serviceData = prepareServiceData();
                 
-                // FIXED: Send booking to backend Firebase Function with structured service data
-                const res = await fetch('https://us-central1-fxnr-web.cloudfunctions.net/book', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name, email, phone,
-                        aika: selectedSlot.toISOString(),
-                        services: serviceData.services, // Structured array of services
-                        totalPrice: serviceData.totalPrice, // Formatted total price string
-                        totalNumericPrice: serviceData.totalNumericPrice, // Numeric total for calculations
-                        recaptcha: recaptchaResponse
-                    })
-                });
-                if (res.ok) {
+                // Send booking to backend Firebase Function with retry logic
+                const bookingData = {
+                    name, email, phone,
+                    aika: selectedSlot.toISOString(),
+                    services: serviceData.services,
+                    totalPrice: serviceData.totalPrice,
+                    totalNumericPrice: serviceData.totalNumericPrice,
+                    recaptcha: recaptchaResponse
+                };
+                
+                const result = await fetchWithRetry(
+                    'https://us-central1-fxnr-web.cloudfunctions.net/book',
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(bookingData)
+                    },
+                    2 // Max 2 retries
+                );
+                
+                if (result) {
                     // Hide loading bar and show success bar
                     progressBar.classList.remove('active');
                     successBar.classList.add('active');
@@ -1662,18 +1661,15 @@ function initializeBookingSystem() {
                     selectedSlot = null;
                     selectedServices = [];
                     bookings = await fetchBookings();
-                    // FIX: Verify calendar exists before calling refetchEvents
+                    
                     if (calendar && typeof calendar.refetchEvents === 'function') {
                         calendar.refetchEvents();
                     }
-                    
-                    // Keep success bar visible (don't auto-hide)
                 } else {
-                    const err = await res.json();
-                    throw new Error(err.message || 'Varaus epäonnistui. Yritä uudelleen!');
+                    throw new Error('Varaus epäonnistui. Yritä uudelleen!');
                 }
             } catch (error) {
-                console.error(error);
+                console.error('Booking submission error:', error);
                 document.getElementById('error').textContent = error.message || 'Varaus epäonnistui. Yritä uudelleen!';
                 // Hide both bars on error
                 progressBar.classList.remove('active');
@@ -1687,14 +1683,11 @@ function initializeBookingSystem() {
 window.initializeBookingSystem = initializeBookingSystem;
 
 // Auto-initialize if FullCalendar is already loaded
-// This handles both dynamic loading and direct script loading scenarios
-// FIX: Add additional checks to ensure proper initialization timing
 if (typeof FullCalendar !== 'undefined') {
     if ('requestIdleCallback' in window) {
         window.addEventListener('load', function() {
             requestIdleCallback(() => {
-                // FIX: Double-check FullCalendar is still available before initializing
-                if (typeof FullCalendar !== 'undefined' && typeof FullCalendar.Calendar === 'function') {
+                if (typeof FullCalendar !== 'undefined' && FullCalendar.Calendar) {
                     initializeBookingSystem();
                 } else {
                     console.error('FullCalendar not available during initialization');
@@ -1702,11 +1695,9 @@ if (typeof FullCalendar !== 'undefined') {
             }, { timeout: 2000 });
         });
     } else {
-        // Fallback for browsers without requestIdleCallback
         window.addEventListener('load', function() {
             setTimeout(() => {
-                // FIX: Double-check FullCalendar is still available before initializing
-                if (typeof FullCalendar !== 'undefined' && typeof FullCalendar.Calendar === 'function') {
+                if (typeof FullCalendar !== 'undefined' && FullCalendar.Calendar) {
                     initializeBookingSystem();
                 } else {
                     console.error('FullCalendar not available during initialization');
