@@ -228,8 +228,8 @@
     <!-- Optimized for performance: preconnect + preload + async load to eliminate render-blocking -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap"></noscript>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"></noscript>
     <!-- Google reCAPTCHA v2 - Loaded on demand to reduce initial page load -->
     <!-- Script will be loaded dynamically when user scrolls to booking section -->
     <style>
@@ -1525,14 +1525,15 @@
         ul, ol { padding-left: 20px; }
         strong { color: #333333; }
         .ajanvaraus-container {
-            max-width: 750px;
+            max-width: 900px;
             margin: 30px auto 20px auto;
-            background: #fff url('Ajanvaraus.webp') center top/cover;
-            border-radius: 14px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2), 0 8px 50px rgba(0,0,0,0.15), inset 0 0 0 2px rgba(0,0,0,0.05);
-            padding: 24px 20px 20px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15), 0 20px 80px rgba(102, 126, 234, 0.2);
+            padding: 40px 30px;
             position: relative;
             overflow: hidden;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         
         .ajanvaraus-container::before {
@@ -1542,7 +1543,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255,255,255,0.85);
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
             z-index: 1;
             pointer-events: none;
         }
@@ -1553,54 +1554,58 @@
         }
         .ajanvaraus-container h2 {
             text-align: center;
-            font-size: 1.2rem;
-            margin-bottom: 18px;
-            /* Apply Serpentine-like font style to match service sections */
-            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
-            letter-spacing: 0.05em;
-            color: #333333;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #1a202c;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         #calendar {
-            max-width: 600px;
-            margin: 0 auto 20px auto;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+            max-width: 100%;
+            margin: 0 auto 30px auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
             overflow: hidden;
-            border: 1px solid #e0e0e0;
+            border: none;
         }
         
         /* Compact calendar styling */
         #calendar .fc-daygrid-day {
             cursor: pointer;
+            transition: all 0.2s ease;
         }
         
         #calendar .fc-daygrid-day:hover {
-            background: #f5f5f5;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
         }
         
         #calendar .fc-daygrid-day.fc-day-sat,
         #calendar .fc-daygrid-day.fc-day-sun {
-            background: #f0f0f0;
+            background: #f7fafc;
             opacity: 0.6;
             cursor: not-allowed;
         }
         
         /* Past days styling - light gray and unclickable */
         #calendar .fc-daygrid-day.fc-day-past {
-            background: #e8e8e8;
+            background: #edf2f7;
             opacity: 0.5;
             cursor: not-allowed;
-            color: #333333;
+            color: #a0aec0;
         }
         
         #calendar .fc-daygrid-day.fc-day-past:hover {
-            background: #e8e8e8;
+            background: #edf2f7;
         }
         
         #calendar .fc-daygrid-day.fc-day-past .fc-daygrid-day-number {
-            color: #333333;
+            color: #a0aec0;
         }
         
         /* Calendar navigation buttons */
@@ -1608,56 +1613,58 @@
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         .calendar-nav-btn {
-            padding: 10px 20px;
-            background: #ffffff;
-            border: 2px solid #000000;
-            border-radius: 6px;
-            font-size: 0.95rem;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
-            color: #333333;
+            transition: all 0.3s ease;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
         
         .calendar-nav-btn:hover:not(:disabled) {
-            background: #f5f5f5;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
         
         .calendar-nav-btn:disabled {
-            opacity: 0.4;
+            opacity: 0.5;
             cursor: not-allowed;
-            border-color: #333333;
-            color: #333333;
+            background: #cbd5e0;
+            box-shadow: none;
         }
         
         /* Progress bar container styles */
         .progress-container {
-            max-width: 650px;
+            max-width: 100%;
             margin: 20px auto 0 auto;
             width: 100%;
             position: relative;
-            min-height: 35px;
+            min-height: 40px;
         }
         
         /* Loading animation bar (shown during booking) - sits on top of success bar */
         .progress {
-            background: rgba(0,0,0,0.05);
+            background: #e2e8f0;
             justify-content: flex-start;
-            border-radius: 100px;
+            border-radius: 20px;
             align-items: center;
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            padding: 0 3px;
+            padding: 0 4px;
             display: none !important;
-            height: 35px;
+            height: 40px;
             width: 100%;
             z-index: 10;
         }
@@ -1668,23 +1675,23 @@
         
         .progress-value {
             animation: load 3s normal forwards;
-            box-shadow: 0 5px 20px -5px rgba(100, 150, 200, 0.6);
-            border-radius: 100px;
-            background: linear-gradient(90deg, #4a90e2, #357abd);
-            height: 29px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            border-radius: 16px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 32px;
             width: 0;
         }
         
         /* Success bar (green bar shown after booking succeeds) */
         .success-bar {
-            background: rgba(0,0,0,0.05);
+            background: #e2e8f0;
             justify-content: center;
-            border-radius: 100px;
+            border-radius: 20px;
             align-items: center;
             position: relative;
-            padding: 0 3px;
+            padding: 0 4px;
             display: none !important;
-            height: 35px;
+            height: 40px;
             width: 100%;
         }
         
@@ -1693,17 +1700,18 @@
         }
         
         .success-bar-value {
-            box-shadow: 0 5px 20px -5px rgba(76, 175, 80, 0.8);
-            border-radius: 100px;
-            background: #4CAF50;
-            height: 29px;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
+            border-radius: 16px;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            height: 32px;
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #333333;
+            color: #ffffff;
             font-weight: 600;
             font-size: 1rem;
+            font-family: 'Inter', sans-serif;
         }
         
         @keyframes load {
@@ -1713,63 +1721,65 @@
         
         /* Time Selection Grid Styling */
         .time-selection-container {
-            max-width: 750px;
-            margin: 20px auto;
-            padding: 20px;
+            max-width: 100%;
+            margin: 30px auto;
+            padding: 25px;
             background: #ffffff;
-            border: 2px solid #000000;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
         }
         
         .time-selection-title {
             text-align: center;
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             font-weight: 600;
-            color: #333333;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-family: 'Inter', sans-serif;
         }
         
         .time-slots-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
             margin-top: 15px;
         }
         
         .time-slot-box {
             background: #ffffff;
-            border: 2px solid #333333;
-            color: #333333;
-            padding: 12px 8px;
+            border: 2px solid #e2e8f0;
+            color: #2d3748;
+            padding: 14px 10px;
             text-align: center;
             font-weight: 600;
-            font-size: 0.95rem;
-            border-radius: 8px;
+            font-size: 1rem;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             user-select: none;
+            font-family: 'Inter', sans-serif;
         }
         
         .time-slot-box:hover {
-            background: #f5f5f5;
-            border-color: #333333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            border-color: transparent;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
         }
         
         .time-slot-box.selected {
-            background: #000000;
-            color: #333333;
-            border-color: #333333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
         
         .time-slot-box.booked {
-            background: #e0e0e0;
-            color: #333333;
-            border-color: #333333;
+            background: #f7fafc;
+            color: #a0aec0;
+            border-color: #e2e8f0;
             cursor: not-allowed;
             opacity: 0.6;
         }
@@ -1777,13 +1787,15 @@
         .time-slot-box.booked:hover {
             transform: none;
             box-shadow: none;
-            background: #e0e0e0;
+            background: #f7fafc;
+            color: #a0aec0;
+            border-color: #e2e8f0;
         }
         
         .time-slot-box.disabled {
-            background: #f0f0f0;
-            color: #333333;
-            border-color: #333333;
+            background: #f7fafc;
+            color: #a0aec0;
+            border-color: #e2e8f0;
             cursor: not-allowed;
             opacity: 0.5;
         }
@@ -1791,109 +1803,110 @@
         .time-slot-box.disabled:hover {
             transform: none;
             box-shadow: none;
-            background: #f0f0f0;
+            background: #f7fafc;
         }
         
         /* Calendar header - modern professional style */
         .fc-toolbar {
-            background: #000000 !important;
-            padding: 15px !important;
-            border-bottom: 2px solid #333333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            padding: 20px !important;
+            border-bottom: none;
+            border-radius: 16px 16px 0 0;
         }
         
         .fc-toolbar-title {
-            color: #333333 !important;
-            font-weight: 600 !important;
-            letter-spacing: 0.5px;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.5px;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
             gap: 10px;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 1.5rem !important;
         }
         
         .fc-toolbar-title::before {
-            content: '';
-            display: inline-block;
-            width: 50px;
-            height: 50px;
-            background-image: url('Ajanvaraus.webp');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-            border-radius: 4px;
-            filter: contrast(1.1) brightness(1.05);
+            content: '📅';
+            font-size: 1.5rem;
         }
         
         /* Calendar buttons - modern style */
         .fc-button {
-            background: #000000 !important;
-            border: 2px solid #000000 !important;
-            color: #333333 !important;
+            background: rgba(255,255,255,0.2) !important;
+            border: 2px solid rgba(255,255,255,0.3) !important;
+            color: #ffffff !important;
             font-weight: 600 !important;
             letter-spacing: 0.5px;
-            border-radius: 4px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif !important;
+            transition: all 0.3s ease !important;
         }
         
         .fc-button:hover {
-            background: #000000 !important;
-            border-color: #333333 !important;
+            background: rgba(255,255,255,0.3) !important;
+            border-color: rgba(255,255,255,0.5) !important;
             transform: translateY(-1px);
         }
         
         .fc-button:active {
             transform: translateY(0);
-            background: #000000 !important;
+            background: rgba(255,255,255,0.25) !important;
         }
         
         .fc-button-primary:disabled {
-            background: #ffffff !important;
-            border-color: #333333 !important;
-            color: #333333 !important;
+            background: rgba(255,255,255,0.1) !important;
+            border-color: rgba(255,255,255,0.2) !important;
+            color: rgba(255,255,255,0.5) !important;
             opacity: 0.6;
         }
         
         /* Calendar day headers - modern professional look */
         .fc-col-header-cell {
-            background: #000000 !important;
-            border-color: #333333 !important;
-            color: #333333 !important;
+            background: #f7fafc !important;
+            border-color: #e2e8f0 !important;
+            color: #2d3748 !important;
             font-weight: 600 !important;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             padding: 12px 5px !important;
-            border-bottom: 2px solid #000000 !important;
+            border-bottom: 2px solid #cbd5e0 !important;
+            font-family: 'Inter', sans-serif !important;
         }
         
         /* Time slots - clean professional style */
         .fc-timegrid-slot {
-            border-color: #333333 !important;
+            border-color: #e2e8f0 !important;
             background: #ffffff;
         }
         
         .fc-timegrid-slot:hover {
-            background: #f5f5f5 !important;
-            border-color: #333333 !important;
+            background: #f7fafc !important;
+            border-color: #cbd5e0 !important;
         }
         
         /* Time labels - modern style */
         .fc-timegrid-axis-cushion,
         .fc-timegrid-slot-label-cushion {
-            color: #333333 !important;
+            color: #4a5568 !important;
             font-weight: 600 !important;
+            font-family: 'Inter', sans-serif !important;
         }
         
         /* Available/booked slots with modern colors */
         .fc-event {
-            background: #000000 !important;
-            border: 2px solid #000000 !important;
-            color: #333333 !important;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%) !important;
+            border: none !important;
+            color: #ffffff !important;
             font-weight: 600 !important;
+            border-radius: 6px !important;
+            font-family: 'Inter', sans-serif !important;
         }
         
         /* Day grid cells */
         .fc-daygrid-day {
             background: #ffffff;
-            border-color: #333333 !important;
+            border-color: #e2e8f0 !important;
         }
         
         .fc-daygrid-day:hover {
@@ -1956,7 +1969,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
             z-index: 10000;
             justify-content: center;
             align-items: center;
@@ -1968,158 +1982,212 @@
         
         .mobile-time-content {
             background: white;
-            padding: 20px;
-            border-radius: 12px;
+            padding: 30px 25px;
+            border-radius: 20px;
             max-width: 90%;
-            width: 350px;
+            width: 380px;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
         
         .mobile-time-header {
             text-align: center;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #333333;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d3748;
+            font-family: 'Inter', sans-serif;
         }
         
         .mobile-time-slots {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
         
         .mobile-time-slot {
-            padding: 12px 8px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            padding: 14px 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
             text-align: center;
             cursor: pointer;
             background: white;
-            transition: all 0.2s;
-            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
         }
         
         .mobile-time-slot:hover {
-            border-color: #333333;
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
         }
         
         .mobile-time-slot.selected {
-            border-color: #333333;
-            background: #000000;
-            color: #333333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
         
         .mobile-time-slot.booked {
-            background: #f5f5f5;
-            color: #333333;
+            background: #f7fafc;
+            color: #a0aec0;
             cursor: not-allowed;
-            border-color: #333333;
+            border-color: #e2e8f0;
         }
         
         .mobile-time-buttons {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
         
         .mobile-time-btn {
             flex: 1;
-            padding: 12px;
+            padding: 14px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
         }
         
         .mobile-time-btn.cancel {
-            background: #6c757d;
-            color: #333333;
+            background: #e2e8f0;
+            color: #2d3748;
         }
         
         .mobile-time-btn.cancel:hover {
-            background: #5a6268;
+            background: #cbd5e0;
         }
         
         .mobile-time-btn.confirm {
-            background: #666666;
-            color: #333333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
         
         .mobile-time-btn.confirm:hover {
-            background: #444444;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
         
         .mobile-time-btn:disabled {
-            background: #ccc;
+            background: #cbd5e0;
+            color: #a0aec0;
             cursor: not-allowed;
+            box-shadow: none;
         }
         .booking-form {
-            max-width: 420px;
+            max-width: 100%;
             margin: 0 auto;
-            padding: 20px 0 0 0;
+            padding: 25px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
         }
-        .booking-form label { display: block; font-weight: 500; margin-top: 10px; }
+        .booking-form label { 
+            display: block; 
+            font-weight: 600; 
+            margin-top: 15px; 
+            color: #2d3748;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+        }
         .booking-form input {
             width: 100%;
-            padding: 10px;
-            margin-top: 2px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
+            padding: 12px 16px;
+            margin-top: 6px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
             margin-bottom: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .booking-form input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         .btn {
             width: 100%;
-            padding: 12px;
-            border-radius: 22px;
+            padding: 14px 20px;
+            border-radius: 12px;
             border: none;
-            background: #111;
-            color: #333333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
             font-weight: 600;
             font-size: 1.1rem;
-            margin-top: 8px;
+            margin-top: 12px;
             cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
-        .btn:disabled { background: #ccc; }
+        .btn:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        .btn:disabled { 
+            background: #cbd5e0; 
+            box-shadow: none;
+            transform: none;
+            cursor: not-allowed;
+        }
         .msg {
             margin: 18px 0 0 0;
-            padding: 16px;
-            background: #e7ffe9;
-            color: #333333;
-            border-radius: 9px;
-            font-size: 1.12rem;
-            text-align: center;
-            border: 1.2px solid #b7e3c0;
-        }
-        .error { color: #333333; margin-top: 12px; text-align: center; }
-        #slot-summary {
-            max-width: 500px;
-            margin: 20px auto;
-            padding: 20px;
-            background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
-            border: 2px solid #000000;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
             border-radius: 12px;
-            font-size: 1.2rem;
-            font-weight: 500;
-            color: #333333;
+            font-size: 1.1rem;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 2px solid #b1dfbb;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+        .error { 
+            color: #e53e3e; 
+            margin-top: 12px; 
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+        #slot-summary {
+            max-width: 100%;
+            margin: 20px auto;
+            padding: 20px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 16px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffffff;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
             line-height: 1.6;
             position: relative;
             overflow: hidden;
+            font-family: 'Inter', sans-serif;
         }
         
         #slot-summary::before {
             content: "✓";
             position: absolute;
-            top: -5px;
-            right: 10px;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
             font-size: 2rem;
-            color: #333333;
+            color: rgba(255,255,255,0.3);
             font-weight: bold;
         }
         
@@ -2129,44 +2197,48 @@
         
         /* Available Time Slots Dropdown Section */
         .available-slots-section {
-            max-width: 420px;
-            margin: 15px auto;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-            padding: 16px;
+            max-width: 100%;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 16px;
+            border: none;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
         }
         
         .available-slots-dropdown {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
         
         .available-slots-dropdown label {
-            font-weight: 500;
-            color: #333333;
-            margin-bottom: 4px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
         }
         
         .available-times-select {
-            padding: 10px 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
             font-size: 1rem;
             background: white;
             cursor: pointer;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
         }
         
         .available-times-select:focus {
             outline: none;
-            border-color: #333333;
-            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25);
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         
         .available-times-select:hover {
-            border-color: #333333;
+            border-color: #667eea;
         }
         
         .fc-timegrid-slot { cursor: pointer; }
@@ -3338,6 +3410,30 @@
      <!-- Booking Calendar Section -->
     <div class="ajanvaraus-container" id="ajanvaraus">
       <h2>Varaa aika silmäterällesi</h2>
+      
+      <!-- Booking steps guide -->
+      <div style="text-align: center; margin: 20px auto 30px; max-width: 700px;">
+        <p style="color: #4a5568; font-size: 1rem; line-height: 1.6; margin-bottom: 20px; font-family: 'Inter', sans-serif;">
+          Varaa itsellesi sopiva aika kolmessa yksinkertaisessa vaiheessa
+        </p>
+        <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+          <div style="flex: 1; min-width: 180px; background: rgba(102, 126, 234, 0.1); padding: 15px; border-radius: 12px; border: 2px solid rgba(102, 126, 234, 0.2);">
+            <div style="font-size: 1.5rem; margin-bottom: 8px;">📅</div>
+            <div style="font-weight: 600; color: #2d3748; margin-bottom: 4px; font-family: 'Inter', sans-serif;">1. Valitse päivä</div>
+            <div style="font-size: 0.85rem; color: #4a5568; font-family: 'Inter', sans-serif;">Klikkaa kalenterista</div>
+          </div>
+          <div style="flex: 1; min-width: 180px; background: rgba(102, 126, 234, 0.1); padding: 15px; border-radius: 12px; border: 2px solid rgba(102, 126, 234, 0.2);">
+            <div style="font-size: 1.5rem; margin-bottom: 8px;">⏰</div>
+            <div style="font-weight: 600; color: #2d3748; margin-bottom: 4px; font-family: 'Inter', sans-serif;">2. Valitse aika</div>
+            <div style="font-size: 0.85rem; color: #4a5568; font-family: 'Inter', sans-serif;">Sopiva hetki sinulle</div>
+          </div>
+          <div style="flex: 1; min-width: 180px; background: rgba(102, 126, 234, 0.1); padding: 15px; border-radius: 12px; border: 2px solid rgba(102, 126, 234, 0.2);">
+            <div style="font-size: 1.5rem; margin-bottom: 8px;">✓</div>
+            <div style="font-weight: 600; color: #2d3748; margin-bottom: 4px; font-family: 'Inter', sans-serif;">3. Vahvista</div>
+            <div style="font-size: 0.85rem; color: #4a5568; font-family: 'Inter', sans-serif;">Täytä tiedot ja varaa</div>
+          </div>
+        </div>
+      </div>
       
       <!-- Calendar Navigation Buttons -->
       <div class="calendar-nav-container">
