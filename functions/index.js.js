@@ -17,13 +17,6 @@ exports.book = functions.https.onRequest((req, res) => {
             return res.status(400).json({ error: "Missing required fields" });
         }
         
-        // Development phase restriction: only allow specific phone number
-        const allowedPhone = '0458808551';
-        const normalizedPhone = phone.replace(/^\+358\s?/, '0').replace(/\s/g, '');
-        if (normalizedPhone !== allowedPhone) {
-            return res.status(403).json({ error: "Ajanvarauskalenteri on tilapäisesti kehitystyön vuoksi rajoitettu. Ole yhteydessä puhelimitse tai sähköpostilla varataksesi ajan." });
-        }
-        
         // Helper function to escape HTML to prevent XSS attacks
         function escapeHtml(unsafe) {
             // Handle null and undefined explicitly
