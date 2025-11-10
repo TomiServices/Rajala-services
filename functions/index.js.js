@@ -16,8 +16,10 @@ const cors = require("cors")({
 
 admin.initializeApp();
 
-// reCAPTCHA Secret Key - should be stored in Firebase environment config
+// reCAPTCHA Secret Key - FREE v2 version (NOT Enterprise)
+// Should be stored in Firebase environment config
 // Set with: firebase functions:config:set recaptcha.secret="YOUR_SECRET_KEY"
+// IMPORTANT: Secret key must match site key 6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM
 const RECAPTCHA_SECRET = functions.config().recaptcha?.secret || process.env.RECAPTCHA_SECRET;
 
 // VARAUKSEN TEKO JA SÄHKÖPOSTI
@@ -34,8 +36,10 @@ exports.book = functions.https.onRequest((req, res) => {
         const { name, email, phone, aika, services, totalPrice, totalNumericPrice, recaptcha } = req.body;
         
         // Validate reCAPTCHA if secret key is configured
+        // Using FREE reCAPTCHA v2 siteverify API (NOT Enterprise)
         if (RECAPTCHA_SECRET && recaptcha) {
             try {
+                // Free reCAPTCHA v2 verification endpoint
                 const verifyUrl = `https://www.google.com/recaptcha/api/siteverify`;
                 const verifyResponse = await axios.post(verifyUrl, null, {
                     params: {

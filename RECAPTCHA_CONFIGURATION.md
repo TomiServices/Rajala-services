@@ -2,14 +2,18 @@
 
 ## Overview
 
-This guide has been updated to reflect the new **server-side reCAPTCHA validation** implemented in the Firebase Functions. The booking system now validates reCAPTCHA tokens on both the client and server side for enhanced security.
+This guide documents the **FREE reCAPTCHA v2 (Checkbox)** implementation in the booking system. The system validates reCAPTCHA tokens on both client and server side for enhanced security.
+
+**Important:** This implementation uses the **FREE** version of Google reCAPTCHA v2, NOT reCAPTCHA Enterprise. This ensures cost-efficiency while maintaining robust anti-spam protection.
 
 ## Current Configuration
 
 ### Site Key
-**Site Key:** `6Lcb5pQrAAAAAMFL6-0S0SfLPwpgy4t8N9f1zaGR`
+**Site Key:** `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
 
 **Location:** `index.html` (line 3566)
+
+**Note:** This is a FREE reCAPTCHA v2 (Checkbox) key, not an Enterprise key.
 
 ### Secret Key (Server-Side)
 **Configuration Method:** Firebase Functions config or environment variable
@@ -22,7 +26,13 @@ firebase functions:config:set recaptcha.secret="YOUR_SECRET_KEY_HERE"
 ```
 
 ### reCAPTCHA Version
-**Type:** reCAPTCHA v2 Checkbox ("I'm not a robot")
+**Type:** reCAPTCHA v2 Checkbox ("I'm not a robot") - FREE VERSION
+
+**API Endpoints:**
+- Frontend Script: `https://www.google.com/recaptcha/api.js`
+- Backend Verification: `https://www.google.com/recaptcha/api/siteverify`
+
+**Note:** This implementation uses the FREE reCAPTCHA v2, NOT reCAPTCHA Enterprise.
 
 ## Required Domain Configuration
 
@@ -96,12 +106,13 @@ The server will:
 
 1. Go to [Google reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin)
 2. Sign in with the Google account that owns the site key
-3. Look for site key: `6Lcb5pQrAAAAAMFL6-0S0SfLPwpgy4t8N9f1zaGR`
+3. Look for site key: `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
 4. Click on the site key to view settings
 5. Verify the following:
-   - ✅ reCAPTCHA type: v2 Checkbox
+   - ✅ reCAPTCHA type: v2 Checkbox (FREE version)
    - ✅ Domains include: `rajala-services.com` and `www.rajala-services.com`
    - ✅ Site key is active (not disabled)
+   - ✅ NOT using reCAPTCHA Enterprise
 
 ### 2. Verify Secret Key Configuration
 

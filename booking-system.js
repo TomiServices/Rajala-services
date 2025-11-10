@@ -113,13 +113,15 @@ async function fetchWithRetry(url, options = {}, maxRetries = 3) {
 // ============================================================================
 
 // Lazy load reCAPTCHA when user scrolls to booking section
+// Using FREE reCAPTCHA v2 (Checkbox), NOT Enterprise
+// API: https://www.google.com/recaptcha/api.js
 let recaptchaLoaded = false;
 function loadRecaptcha() {
     if (recaptchaLoaded) return;
     recaptchaLoaded = true;
     
     const script = document.createElement('script');
-    script.src = 'https://www.google.com/recaptcha/api.js';
+    script.src = 'https://www.google.com/recaptcha/api.js'; // Free v2 API
     script.async = true;
     script.defer = true;
     document.head.appendChild(script);

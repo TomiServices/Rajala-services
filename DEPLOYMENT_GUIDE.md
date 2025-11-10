@@ -43,12 +43,14 @@ export RECAPTCHA_SECRET="YOUR_RECAPTCHA_SECRET_KEY"
 
 ### Check Current Site Key
 
-The site key in `index.html` is: `6Lcb5pQrAAAAAMFL6-0S0SfLPwpgy4t8N9f1zaGR`
+The site key in `index.html` is: `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
+
+**Note:** This is a FREE reCAPTCHA v2 (Checkbox) key, not an Enterprise key.
 
 ### Verify Domain Registration
 
 1. Go to [Google reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin)
-2. Select the site key: `6Lcb5pQrAAAAAMFL6-0S0SfLPwpgy4t8N9f1zaGR`
+2. Select the site key: `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
 3. Ensure the following domains are registered:
    - `rajala-services.com`
    - `www.rajala-services.com`

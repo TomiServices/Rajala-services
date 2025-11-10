@@ -163,7 +163,8 @@ firebase functions:config:get recaptcha.secret
 **Important:** 
 - Never commit the secret key to the repository!
 - Get the secret key from the same reCAPTCHA site key configuration
-- The secret key MUST match the site key: `6Lcb5pQrAAAAAMFL6-0S0SfLPwpgy4t8N9f1zaGR`
+- The secret key MUST match the site key: `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
+- This is a FREE reCAPTCHA v2 key, not Enterprise
 
 ### 2. Verify reCAPTCHA Domain Registration ⚠️ REQUIRED
 
@@ -171,7 +172,7 @@ firebase functions:config:get recaptcha.secret
 
 **What to verify:**
 1. Go to [Google reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin)
-2. Find site key: `6Lcb5pQrAAAAAMFL6-0S0SfLPwpgy4t8N9f1zaGR`
+2. Find site key: `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
 3. Ensure these domains are registered:
    - `rajala-services.com`
    - `www.rajala-services.com`
