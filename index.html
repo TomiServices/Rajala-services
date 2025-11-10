@@ -1559,53 +1559,50 @@
             font-family: 'Inter', sans-serif;
             font-weight: 700;
             letter-spacing: -0.5px;
-            color: #1a202c;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #333333;
         }
         #calendar {
             max-width: 100%;
             margin: 0 auto 30px auto;
             background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             overflow: hidden;
-            border: none;
+            border: 1px solid #e0e0e0;
         }
         
         /* Compact calendar styling */
         #calendar .fc-daygrid-day {
             cursor: pointer;
             transition: all 0.2s ease;
+            border-color: #e0e0e0 !important;
         }
         
         #calendar .fc-daygrid-day:hover {
-            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            background: #f5f5f5;
         }
         
         #calendar .fc-daygrid-day.fc-day-sat,
         #calendar .fc-daygrid-day.fc-day-sun {
-            background: #f7fafc;
-            opacity: 0.6;
+            background: #f9f9f9;
+            opacity: 0.7;
             cursor: not-allowed;
         }
         
         /* Past days styling - light gray and unclickable */
         #calendar .fc-daygrid-day.fc-day-past {
-            background: #edf2f7;
+            background: #fafafa;
             opacity: 0.5;
             cursor: not-allowed;
-            color: #a0aec0;
+            color: #999999;
         }
         
         #calendar .fc-daygrid-day.fc-day-past:hover {
-            background: #edf2f7;
+            background: #fafafa;
         }
         
         #calendar .fc-daygrid-day.fc-day-past .fc-daygrid-day-number {
-            color: #a0aec0;
+            color: #999999;
         }
         
         /* Calendar navigation buttons */
@@ -1618,28 +1615,28 @@
         
         .calendar-nav-btn {
             padding: 12px 28px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #4a90e2;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             color: #ffffff;
             font-family: 'Inter', sans-serif;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 2px 6px rgba(74, 144, 226, 0.3);
         }
         
         .calendar-nav-btn:hover:not(:disabled) {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            background: #357abd;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.4);
         }
         
         .calendar-nav-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            background: #cbd5e0;
+            background: #b0b0b0;
             box-shadow: none;
         }
         
@@ -1725,16 +1722,16 @@
             margin: 30px auto;
             padding: 25px;
             background: #ffffff;
-            border: none;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .time-selection-title {
             text-align: center;
             font-size: 1.25rem;
             font-weight: 600;
-            color: #2d3748;
+            color: #333333;
             margin-bottom: 20px;
             font-family: 'Inter', sans-serif;
         }
@@ -1748,13 +1745,13 @@
         
         .time-slot-box {
             background: #ffffff;
-            border: 2px solid #e2e8f0;
-            color: #2d3748;
+            border: 2px solid #cccccc;
+            color: #333333;
             padding: 14px 10px;
             text-align: center;
             font-weight: 600;
             font-size: 1rem;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
             user-select: none;
@@ -1762,24 +1759,24 @@
         }
         
         .time-slot-box:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #4a90e2;
             color: #ffffff;
-            border-color: transparent;
+            border-color: #4a90e2;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
         }
         
         .time-slot-box.selected {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #4a90e2;
             color: #ffffff;
-            border-color: transparent;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            border-color: #4a90e2;
+            box-shadow: 0 2px 6px rgba(74, 144, 226, 0.4);
         }
         
         .time-slot-box.booked {
-            background: #f7fafc;
-            color: #a0aec0;
-            border-color: #e2e8f0;
+            background: #f5f5f5;
+            color: #999999;
+            border-color: #e0e0e0;
             cursor: not-allowed;
             opacity: 0.6;
         }
@@ -1787,15 +1784,15 @@
         .time-slot-box.booked:hover {
             transform: none;
             box-shadow: none;
-            background: #f7fafc;
-            color: #a0aec0;
-            border-color: #e2e8f0;
+            background: #f5f5f5;
+            color: #999999;
+            border-color: #e0e0e0;
         }
         
         .time-slot-box.disabled {
-            background: #f7fafc;
-            color: #a0aec0;
-            border-color: #e2e8f0;
+            background: #f5f5f5;
+            color: #999999;
+            border-color: #e0e0e0;
             cursor: not-allowed;
             opacity: 0.5;
         }
@@ -1803,15 +1800,15 @@
         .time-slot-box.disabled:hover {
             transform: none;
             box-shadow: none;
-            background: #f7fafc;
+            background: #f5f5f5;
         }
         
-        /* Calendar header - modern professional style */
+        /* Calendar header - clean professional style */
         .fc-toolbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(135deg, #333333 0%, #1a1a1a 100%) !important;
             padding: 20px !important;
             border-bottom: none;
-            border-radius: 16px 16px 0 0;
+            border-radius: 12px 12px 0 0;
         }
         
         .fc-toolbar-title {
@@ -1831,71 +1828,71 @@
             font-size: 1.5rem;
         }
         
-        /* Calendar buttons - modern style */
+        /* Calendar buttons - clean style */
         .fc-button {
-            background: rgba(255,255,255,0.2) !important;
-            border: 2px solid rgba(255,255,255,0.3) !important;
+            background: rgba(255,255,255,0.15) !important;
+            border: 2px solid rgba(255,255,255,0.25) !important;
             color: #ffffff !important;
             font-weight: 600 !important;
             letter-spacing: 0.5px;
-            border-radius: 8px;
+            border-radius: 6px;
             font-family: 'Inter', sans-serif !important;
             transition: all 0.3s ease !important;
         }
         
         .fc-button:hover {
-            background: rgba(255,255,255,0.3) !important;
-            border-color: rgba(255,255,255,0.5) !important;
+            background: rgba(255,255,255,0.25) !important;
+            border-color: rgba(255,255,255,0.4) !important;
             transform: translateY(-1px);
         }
         
         .fc-button:active {
             transform: translateY(0);
-            background: rgba(255,255,255,0.25) !important;
+            background: rgba(255,255,255,0.2) !important;
         }
         
         .fc-button-primary:disabled {
-            background: rgba(255,255,255,0.1) !important;
-            border-color: rgba(255,255,255,0.2) !important;
-            color: rgba(255,255,255,0.5) !important;
+            background: rgba(255,255,255,0.08) !important;
+            border-color: rgba(255,255,255,0.15) !important;
+            color: rgba(255,255,255,0.4) !important;
             opacity: 0.6;
         }
         
-        /* Calendar day headers - modern professional look */
+        /* Calendar day headers - clean professional look */
         .fc-col-header-cell {
-            background: #f7fafc !important;
-            border-color: #e2e8f0 !important;
-            color: #2d3748 !important;
+            background: #f5f5f5 !important;
+            border-color: #e0e0e0 !important;
+            color: #333333 !important;
             font-weight: 600 !important;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             padding: 12px 5px !important;
-            border-bottom: 2px solid #cbd5e0 !important;
+            border-bottom: 2px solid #cccccc !important;
             font-family: 'Inter', sans-serif !important;
         }
         
         /* Time slots - clean professional style */
         .fc-timegrid-slot {
-            border-color: #e2e8f0 !important;
+            border-color: #e0e0e0 !important;
             background: #ffffff;
         }
         
         .fc-timegrid-slot:hover {
-            background: #f7fafc !important;
-            border-color: #cbd5e0 !important;
+            background: #f5f5f5 !important;
+            border-color: #cccccc !important;
         }
         
-        /* Time labels - modern style */
+        /* Time labels - clean style */
         .fc-timegrid-axis-cushion,
         .fc-timegrid-slot-label-cushion {
-            color: #4a5568 !important;
+            color: #666666 !important;
             font-weight: 600 !important;
             font-family: 'Inter', sans-serif !important;
         }
         
-        /* Available/booked slots with modern colors */
+        /* Available/booked slots with clean colors */
         .fc-event {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%) !important;
+            background: #4a90e2 !important;
             border: none !important;
             color: #ffffff !important;
             font-weight: 600 !important;
@@ -1906,7 +1903,7 @@
         /* Day grid cells */
         .fc-daygrid-day {
             background: #ffffff;
-            border-color: #e2e8f0 !important;
+            border-color: #e0e0e0 !important;
         }
         
         .fc-daygrid-day:hover {
@@ -1918,7 +1915,7 @@
             border: 2px solid #333333 !important;
         }
         
-        /* Scrollbar styling for calendar - industrial look */
+        /* Scrollbar styling for calendar - clean look */
         #calendar ::-webkit-scrollbar {
             width: 10px;
         }
@@ -1941,12 +1938,12 @@
         /* Enhanced calendar hover effects */
         .fc-timegrid-slot:hover {
             background-color: #f5f5f5 !important;
-            border-color: #333333 !important;
+            border-color: #cccccc !important;
             transition: all 0.2s ease;
         }
         
         .fc-col-header-cell:hover {
-            background-color: #333333 !important;
+            background-color: #e8e8e8 !important;
             transition: all 0.2s ease;
         }
         
@@ -1996,7 +1993,7 @@
             margin-bottom: 20px;
             font-size: 1.3rem;
             font-weight: 700;
-            color: #2d3748;
+            color: #333333;
             font-family: 'Inter', sans-serif;
         }
         
@@ -2009,8 +2006,8 @@
         
         .mobile-time-slot {
             padding: 14px 10px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
+            border: 2px solid #cccccc;
+            border-radius: 8px;
             text-align: center;
             cursor: pointer;
             background: white;
@@ -2021,25 +2018,25 @@
         }
         
         .mobile-time-slot:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #4a90e2;
             color: #ffffff;
-            border-color: transparent;
+            border-color: #4a90e2;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
         }
         
         .mobile-time-slot.selected {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #4a90e2;
             color: #ffffff;
-            border-color: transparent;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            border-color: #4a90e2;
+            box-shadow: 0 2px 6px rgba(74, 144, 226, 0.4);
         }
         
         .mobile-time-slot.booked {
-            background: #f7fafc;
-            color: #a0aec0;
+            background: #f5f5f5;
+            color: #999999;
             cursor: not-allowed;
-            border-color: #e2e8f0;
+            border-color: #e0e0e0;
         }
         
         .mobile-time-buttons {
@@ -2051,7 +2048,7 @@
             flex: 1;
             padding: 14px;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
@@ -2060,28 +2057,28 @@
         }
         
         .mobile-time-btn.cancel {
-            background: #e2e8f0;
-            color: #2d3748;
+            background: #e0e0e0;
+            color: #333333;
         }
         
         .mobile-time-btn.cancel:hover {
-            background: #cbd5e0;
+            background: #cccccc;
         }
         
         .mobile-time-btn.confirm {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #4a90e2;
             color: #ffffff;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 2px 6px rgba(74, 144, 226, 0.3);
         }
         
         .mobile-time-btn.confirm:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            background: #357abd;
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.4);
         }
         
         .mobile-time-btn:disabled {
-            background: #cbd5e0;
-            color: #a0aec0;
+            background: #b0b0b0;
+            color: #666666;
             cursor: not-allowed;
             box-shadow: none;
         }
@@ -2090,14 +2087,15 @@
             margin: 0 auto;
             padding: 25px;
             background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
         }
         .booking-form label { 
             display: block; 
             font-weight: 600; 
             margin-top: 15px; 
-            color: #2d3748;
+            color: #333333;
             font-family: 'Inter', sans-serif;
             font-size: 0.95rem;
         }
@@ -2105,8 +2103,8 @@
             width: 100%;
             padding: 12px 16px;
             margin-top: 6px;
-            border-radius: 10px;
-            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            border: 2px solid #cccccc;
             margin-bottom: 8px;
             font-family: 'Inter', sans-serif;
             font-size: 1rem;
@@ -2114,15 +2112,15 @@
         }
         .booking-form input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
         .btn {
             width: 100%;
             padding: 14px 20px;
-            border-radius: 12px;
+            border-radius: 8px;
             border: none;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #4a90e2;
             color: #ffffff;
             font-weight: 600;
             font-size: 1.1rem;
@@ -2130,15 +2128,15 @@
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 2px 6px rgba(74, 144, 226, 0.3);
         }
         .btn:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            background: #357abd;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.4);
         }
         .btn:disabled { 
-            background: #cbd5e0; 
+            background: #b0b0b0; 
             box-shadow: none;
             transform: none;
             cursor: not-allowed;
@@ -2146,12 +2144,12 @@
         .msg {
             margin: 18px 0 0 0;
             padding: 16px 20px;
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            background: #d4edda;
             color: #155724;
-            border-radius: 12px;
+            border-radius: 8px;
             font-size: 1.1rem;
             text-align: center;
-            border: 2px solid #b1dfbb;
+            border: 2px solid #c3e6cb;
             font-family: 'Inter', sans-serif;
             font-weight: 500;
         }
@@ -2166,14 +2164,14 @@
             max-width: 100%;
             margin: 20px auto;
             padding: 20px 25px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #4a90e2;
             border: none;
-            border-radius: 16px;
+            border-radius: 12px;
             font-size: 1.2rem;
             font-weight: 600;
             color: #ffffff;
             text-align: center;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
             line-height: 1.6;
             position: relative;
             overflow: hidden;
@@ -2200,10 +2198,10 @@
             max-width: 100%;
             margin: 20px auto;
             background: #ffffff;
-            border-radius: 16px;
-            border: none;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
             padding: 25px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .available-slots-dropdown {
@@ -2214,7 +2212,7 @@
         
         .available-slots-dropdown label {
             font-weight: 600;
-            color: #2d3748;
+            color: #333333;
             margin-bottom: 6px;
             font-family: 'Inter', sans-serif;
             font-size: 0.95rem;
@@ -2222,8 +2220,8 @@
         
         .available-times-select {
             padding: 12px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
+            border: 2px solid #cccccc;
+            border-radius: 8px;
             font-size: 1rem;
             background: white;
             cursor: pointer;
@@ -2233,12 +2231,12 @@
         
         .available-times-select:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
         
         .available-times-select:hover {
-            border-color: #667eea;
+            border-color: #4a90e2;
         }
         
         .fc-timegrid-slot { cursor: pointer; }
@@ -3413,24 +3411,24 @@
       
       <!-- Booking steps guide -->
       <div style="text-align: center; margin: 20px auto 30px; max-width: 700px;">
-        <p style="color: #4a5568; font-size: 1rem; line-height: 1.6; margin-bottom: 20px; font-family: 'Inter', sans-serif;">
+        <p style="color: #666666; font-size: 1rem; line-height: 1.6; margin-bottom: 20px; font-family: 'Inter', sans-serif;">
           Varaa itsellesi sopiva aika kolmessa yksinkertaisessa vaiheessa
         </p>
         <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
-          <div style="flex: 1; min-width: 180px; background: rgba(102, 126, 234, 0.1); padding: 15px; border-radius: 12px; border: 2px solid rgba(102, 126, 234, 0.2);">
+          <div style="flex: 1; min-width: 180px; background: #f5f5f5; padding: 15px; border-radius: 8px; border: 2px solid #e0e0e0;">
             <div style="font-size: 1.5rem; margin-bottom: 8px;">📅</div>
-            <div style="font-weight: 600; color: #2d3748; margin-bottom: 4px; font-family: 'Inter', sans-serif;">1. Valitse päivä</div>
-            <div style="font-size: 0.85rem; color: #4a5568; font-family: 'Inter', sans-serif;">Klikkaa kalenterista</div>
+            <div style="font-weight: 600; color: #333333; margin-bottom: 4px; font-family: 'Inter', sans-serif;">1. Valitse päivä</div>
+            <div style="font-size: 0.85rem; color: #666666; font-family: 'Inter', sans-serif;">Klikkaa kalenterista</div>
           </div>
-          <div style="flex: 1; min-width: 180px; background: rgba(102, 126, 234, 0.1); padding: 15px; border-radius: 12px; border: 2px solid rgba(102, 126, 234, 0.2);">
+          <div style="flex: 1; min-width: 180px; background: #f5f5f5; padding: 15px; border-radius: 8px; border: 2px solid #e0e0e0;">
             <div style="font-size: 1.5rem; margin-bottom: 8px;">⏰</div>
-            <div style="font-weight: 600; color: #2d3748; margin-bottom: 4px; font-family: 'Inter', sans-serif;">2. Valitse aika</div>
-            <div style="font-size: 0.85rem; color: #4a5568; font-family: 'Inter', sans-serif;">Sopiva hetki sinulle</div>
+            <div style="font-weight: 600; color: #333333; margin-bottom: 4px; font-family: 'Inter', sans-serif;">2. Valitse aika</div>
+            <div style="font-size: 0.85rem; color: #666666; font-family: 'Inter', sans-serif;">Sopiva hetki sinulle</div>
           </div>
-          <div style="flex: 1; min-width: 180px; background: rgba(102, 126, 234, 0.1); padding: 15px; border-radius: 12px; border: 2px solid rgba(102, 126, 234, 0.2);">
+          <div style="flex: 1; min-width: 180px; background: #f5f5f5; padding: 15px; border-radius: 8px; border: 2px solid #e0e0e0;">
             <div style="font-size: 1.5rem; margin-bottom: 8px;">✓</div>
-            <div style="font-weight: 600; color: #2d3748; margin-bottom: 4px; font-family: 'Inter', sans-serif;">3. Vahvista</div>
-            <div style="font-size: 0.85rem; color: #4a5568; font-family: 'Inter', sans-serif;">Täytä tiedot ja varaa</div>
+            <div style="font-weight: 600; color: #333333; margin-bottom: 4px; font-family: 'Inter', sans-serif;">3. Vahvista</div>
+            <div style="font-size: 0.85rem; color: #666666; font-family: 'Inter', sans-serif;">Täytä tiedot ja varaa</div>
           </div>
         </div>
       </div>
