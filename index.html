@@ -225,11 +225,13 @@
     <link rel="preload" href="Hero1.webp" as="image" media="(min-width: 2560px)">
     <!-- FullCalendar styles are bundled in index.global.min.js, no separate CSS needed -->
     <!-- Google Font for service titles - bold italic style similar to Serpentine -->
-    <!-- Optimized for performance: preconnect + preload + async load to eliminate render-blocking -->
+    <!-- Optimized for performance: preconnect + dns-prefetch + async load with font-display swap -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"></noscript>
+    <!-- Reduced font weights and async loading with media print trick for better performance -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap"></noscript>
     <!-- Google reCAPTCHA v3 (FREE version, NOT Enterprise) -->
     <!-- v3 runs invisibly in the background and generates a score (0.0-1.0) indicating likelihood of being a bot -->
     <!-- Script is loaded automatically with the render parameter -->
@@ -1644,15 +1646,15 @@
             border-radius: 16px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             overflow: hidden;
-            border: 2px solid #333333;
+            border: none;
             transition: all 0.4s ease-in-out;
         }
         
-        /* Desktop: Make calendar more compact and professional */
+        /* Desktop: Make calendar more compact - shrink by additional 10% (0.95 -> 0.855) */
         @media (min-width: 769px) {
             #calendar {
-                max-width: 750px;
-                transform: scale(0.95);
+                max-width: 675px;
+                transform: scale(0.855);
                 transform-origin: top center;
             }
         }
@@ -1668,11 +1670,11 @@
             max-height: none;
         }
         
-        /* Compact calendar styling */
+        /* Compact calendar styling - remove borders */
         #calendar .fc-daygrid-day {
             cursor: pointer;
             transition: all 0.2s ease;
-            border-color: #e0e0e0 !important;
+            border: none !important;
         }
         
         #calendar .fc-daygrid-day:hover {
@@ -1712,8 +1714,8 @@
         
         .calendar-nav-btn {
             padding: 12px 28px;
-            background: #000000;
-            border: 2px solid #333333;
+            background: #3FA9F5;
+            border: 2px solid #2E8DD6;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 600;
@@ -1721,13 +1723,13 @@
             transition: all 0.3s ease;
             color: #ffffff;
             font-family: 'Inter', sans-serif;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 2px 8px rgba(63, 169, 245, 0.3);
         }
         
         .calendar-nav-btn:hover:not(:disabled) {
-            background: #333333;
+            background: #2E8DD6;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 4px 12px rgba(63, 169, 245, 0.4);
         }
         
         .calendar-nav-btn:disabled {
@@ -1902,16 +1904,16 @@
             background: #f5f5f5;
         }
         
-        /* Calendar header - white theme */
+        /* Calendar header - dark gray theme */
         .fc-toolbar {
-            background: #ffffff !important;
+            background: #4a4a4a !important;
             padding: 20px !important;
-            border-bottom: 2px solid #e0e0e0;
+            border-bottom: none;
             border-radius: 12px 12px 0 0;
         }
         
         .fc-toolbar-title {
-            color: #333333 !important;
+            color: #ffffff !important;
             font-weight: 700 !important;
             letter-spacing: -0.5px;
             display: flex !important;
@@ -1957,28 +1959,27 @@
             opacity: 0.6;
         }
         
-        /* Calendar day headers - white theme */
+        /* Calendar day headers - no borders */
         .fc-col-header-cell {
             background: #ffffff !important;
-            border-color: #e0e0e0 !important;
+            border: none !important;
             color: #666666 !important;
             font-weight: 600 !important;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             padding: 12px 5px !important;
-            border-bottom: 2px solid #e0e0e0 !important;
             font-family: 'Inter', sans-serif !important;
         }
         
-        /* Time slots - clean professional style */
+        /* Time slots - clean professional style with no borders */
         .fc-timegrid-slot {
-            border-color: #e0e0e0 !important;
+            border: none !important;
             background: #ffffff;
         }
         
         .fc-timegrid-slot:hover {
             background: #f5f5f5 !important;
-            border-color: #cccccc !important;
+            border: none !important;
         }
         
         /* Time labels - clean style */
@@ -1999,10 +2000,10 @@
             font-family: 'Inter', sans-serif !important;
         }
         
-        /* Day grid cells */
+        /* Day grid cells - remove borders */
         .fc-daygrid-day {
             background: #ffffff;
-            border-color: #e0e0e0 !important;
+            border: none !important;
         }
         
         .fc-daygrid-day:hover {
@@ -2011,7 +2012,8 @@
         
         .fc-daygrid-day.fc-day-today {
             background: #f0f0f0 !important;
-            border: 2px solid #333333 !important;
+            border: none !important;
+            box-shadow: inset 0 0 0 2px #3FA9F5;
         }
         
         /* Scrollbar styling for calendar - clean look */
@@ -2034,10 +2036,10 @@
             background: #999999;
         }
         
-        /* Enhanced calendar hover effects */
+        /* Enhanced calendar hover effects - no borders */
         .fc-timegrid-slot:hover {
             background-color: #f5f5f5 !important;
-            border-color: #cccccc !important;
+            border: none !important;
             transition: all 0.2s ease;
         }
         
@@ -3717,7 +3719,7 @@
         <!-- Add another service button -->
         <div id="add-service-container" style="display: none; margin: 20px 0; text-align: center;" aria-hidden="true">
           <button id="add-service-btn" class="btn" type="button" style="background: #ffffff; border: 2px solid #000000; color: #000000; width: auto; padding: 12px 24px; display: inline-block; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); font-weight: 600;">
-            ➕ Lisää palvelu
+            ➕ Lisää toinen palvelu
           </button>
         </div>
         
@@ -3741,8 +3743,8 @@
         
         <!-- Calendar Navigation Buttons -->
         <div class="calendar-nav-container">
-          <button id="prevWeekBtn" class="calendar-nav-btn" aria-label="Siirry edelliseen kuukauteen" style="background: #000000; border: 2px solid #333333; color: #ffffff;">← Edellinen</button>
-          <button id="nextWeekBtn" class="calendar-nav-btn" aria-label="Siirry seuraavaan kuukauteen" style="background: #000000; border: 2px solid #333333; color: #ffffff;">Seuraava →</button>
+          <button id="prevWeekBtn" class="calendar-nav-btn" aria-label="Siirry edelliseen kuukauteen" style="background: #3FA9F5; border: 2px solid #2E8DD6; color: #ffffff;">← Edellinen</button>
+          <button id="nextWeekBtn" class="calendar-nav-btn" aria-label="Siirry seuraavaan kuukauteen" style="background: #3FA9F5; border: 2px solid #2E8DD6; color: #ffffff;">Seuraava →</button>
         </div>
       
         <div id="calendar" role="application" aria-label="Ajanvarauskalenteri"></div>
@@ -4600,9 +4602,8 @@
         </div>
     </footer>
 <script>
-// FIX: Enhanced FullCalendar dynamic loading with error handling and retry logic
-// Dynamically loads FullCalendar only when booking section is visible to improve performance
-// Includes fallback mechanisms for when CDN is blocked by ad blockers or privacy tools
+// FIX: Load FullCalendar immediately on page load instead of lazy loading
+// This prevents the white screen issue when users navigate to the booking section
 (function() {
     let fullCalendarLoaded = false;
     let loadAttempts = 0;
@@ -4662,37 +4663,19 @@
         document.head.appendChild(script);
     }
     
-    // FIX: Observe the booking section and load FullCalendar when it comes into view
-    // This lazy loading improves initial page load performance
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                console.log('Booking section visible, loading FullCalendar...');
-                loadFullCalendar();
-                observer.disconnect(); // Only trigger once
-            }
-        });
-    }, { rootMargin: '200px' }); // Start loading slightly before section is visible
-    
-    // Start observing when DOM is ready
+    // FIX: Load FullCalendar immediately on DOM ready to prevent white screen
+    // Previously lazy loaded when booking section was visible, causing blank screen
     if ('requestIdleCallback' in window) {
         requestIdleCallback(() => {
-            const bookingSection = document.getElementById('ajanvaraus');
-            if (bookingSection) {
-                observer.observe(bookingSection);
-            } else {
-                console.warn('Booking section not found, cannot lazy load FullCalendar');
-            }
-        });
+            loadFullCalendar();
+        }, { timeout: 500 });
     } else {
-        setTimeout(() => {
-            const bookingSection = document.getElementById('ajanvaraus');
-            if (bookingSection) {
-                observer.observe(bookingSection);
-            } else {
-                console.warn('Booking section not found, cannot lazy load FullCalendar');
-            }
-        }, 100);
+        // Fallback for browsers without requestIdleCallback
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadFullCalendar);
+        } else {
+            setTimeout(loadFullCalendar, 100);
+        }
     }
 })();
 </script>
