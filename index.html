@@ -256,6 +256,13 @@
             src: local('Impact'), local('Arial Black');
         }
         
+        /* Hide reCAPTCHA badge on mobile devices */
+        @media (max-width: 768px) {
+            .grecaptcha-badge {
+                visibility: hidden !important;
+            }
+        }
+        
         /* --- your full original CSS pasted here, unchanged --- */
         html {
             scroll-behavior: smooth;
@@ -3299,6 +3306,27 @@
             box-shadow: 0 0 20px rgba(63, 169, 245, 0.6), 0 0 40px rgba(63, 169, 245, 0.4);
             transform: translateY(-2px);
         }
+        
+        /* Varaa Aika button styling - distinct from Read More button */
+        .btn-book-time {
+            display: inline-block;
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin: 5px;
+        }
+        
+        .btn-book-time:hover {
+            background: linear-gradient(135deg, #333333 0%, #555555 100%);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 0, 0, 0.4);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body id="top">
@@ -3793,6 +3821,7 @@
         </div>
         <p style="margin-top: 30px; text-align: center;">
             <a href="pesupalvelut" class="btn-read-more">Lue lisää autopesusta →</a>
+            <a href="#ajanvaraus" class="btn-book-time">📅 Varaa Aika</a>
             <!-- Calendar temporarily closed during development -->
             <!-- <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span> -->
         </p>
@@ -3828,6 +3857,7 @@
         </div>
         <p style="margin-top: 30px; text-align: center;">
             <a href="sisapuhdistus" class="btn-read-more">Lue lisää sisäpuhdistuksesta →</a>
+            <a href="#ajanvaraus" class="btn-book-time">📅 Varaa Aika</a>
             <!-- Calendar temporarily closed during development -->
             <!-- <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span> -->
         </p>
@@ -3855,6 +3885,7 @@
         </div>
         <p style="margin-top: 30px; text-align: center;">
             <a href="kiilloitus" class="btn-read-more">Lue lisää kiillotuksesta →</a>
+            <a href="#ajanvaraus" class="btn-book-time">📅 Varaa Aika</a>
             <!-- Calendar temporarily closed during development -->
             <!-- <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span> -->
         </p>
@@ -3882,8 +3913,9 @@
         </div>
         <p style="margin-top: 30px; text-align: center;">
             <a href="kolhukorjaus" class="btn-read-more">Lue lisää kolhujenkorjauksesta →</a>
+            <a href="#ajanvaraus" class="btn-book-time">📅 Varaa Aika</a>
             <!-- Calendar temporarily closed during development -->
-            <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Varaa Aika</span>
+            <!-- <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Varaa Aika</span> -->
         </p>
     </section>
     <section id="korjaustyot" class="scroll-animate">
@@ -3912,6 +3944,7 @@
         </div>
         <p style="margin-top: 30px; text-align: center;">
             <a href="korjaustyot" class="btn-read-more">Lue lisää korjaustöistä →</a>
+            <a href="#ajanvaraus" class="btn-book-time">📅 Varaa Aika</a>
             <!-- Calendar temporarily closed during development -->
             <!-- <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span> -->
         </p>
@@ -3946,6 +3979,7 @@
         </div>
         <p style="margin-top: 30px; text-align: center;">
             <a href="rengastyot" class="btn-read-more">Lue lisää rengastöistä →</a>
+            <a href="#ajanvaraus" class="btn-book-time">📅 Varaa Aika</a>
             <!-- Calendar temporarily closed during development -->
             <!-- <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span> -->
         </p>
@@ -3964,6 +3998,7 @@
         </div>
         <p style="margin-top: 30px; text-align: center;">
             <a href="lasikorjaus" class="btn-read-more">Lue lisää lasikorjauksesta →</a>
+            <a href="#ajanvaraus" class="btn-book-time">📅 Varaa Aika</a>
             <!-- Calendar temporarily closed during development -->
             <!-- <span style="display: inline-block; padding: 12px 30px; background: #e0e0e0; color: #333333; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 5px; cursor: not-allowed;">📅 Kalenteri tilapäisesti suljettu</span> -->
         </p>
