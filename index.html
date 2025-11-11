@@ -1540,9 +1540,9 @@
         .ajanvaraus-container {
             max-width: 1100px;
             margin: 30px auto 20px auto;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: #6b46c1;
             border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 100px rgba(15,52,96,0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 100px rgba(107,70,193,0.3);
             padding: 50px 40px;
             position: relative;
             overflow: hidden;
@@ -1556,8 +1556,16 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(26,26,46,0.95) 0%, rgba(15,52,96,0.9) 100%);
+            background: repeating-linear-gradient(
+                45deg,
+                #7c3aed 0px,
+                #7c3aed 30px,
+                #8b5cf6 30px,
+                #8b5cf6 60px
+            );
+            opacity: 0.6;
             z-index: 1;
+            animation: patternMoveSlowly 800s linear infinite;
             pointer-events: none;
         }
         
@@ -1591,6 +1599,17 @@
             transition: all 0.3s ease;
         }
         
+        /* Hide steps 2 and 3 initially */
+        .booking-step#step-calendar,
+        .booking-step#step-contact {
+            display: none;
+        }
+        
+        /* Show steps when they have the 'visible' class */
+        .booking-step.visible {
+            display: block;
+        }
+        
         .booking-step:hover {
             border-color: rgba(255,255,255,0.2);
             box-shadow: 0 8px 24px rgba(0,0,0,0.2);
@@ -1607,7 +1626,7 @@
         }
         
         .step-number {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #3FA9F5;
             color: #ffffff;
             width: 36px;
             height: 36px;
@@ -1617,16 +1636,16 @@
             justify-content: center;
             font-weight: 800;
             font-size: 1.1rem;
-            box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+            box-shadow: 0 4px 12px rgba(63, 169, 245, 0.4);
         }
         #calendar {
             max-width: 100%;
             margin: 0 auto 30px auto;
-            background: rgba(255,255,255,0.98);
+            background: #000000;
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 3px solid #000000;
             transition: all 0.4s ease-in-out;
         }
         
@@ -1685,22 +1704,22 @@
         
         .calendar-nav-btn {
             padding: 12px 28px;
-            background: #b8d4ea;
-            border: 2px solid #9ac0de;
+            background: #3FA9F5;
+            border: 2px solid #5CB8FF;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            color: #2c5f8d;
+            color: #ffffff;
             font-family: 'Inter', sans-serif;
-            box-shadow: 0 2px 6px rgba(156, 192, 222, 0.3);
+            box-shadow: 0 2px 6px rgba(63, 169, 245, 0.3);
         }
         
         .calendar-nav-btn:hover:not(:disabled) {
-            background: #9ac0de;
+            background: #5CB8FF;
             transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(156, 192, 222, 0.4);
+            box-shadow: 0 4px 10px rgba(63, 169, 245, 0.5);
         }
         
         .calendar-nav-btn:disabled {
@@ -1831,18 +1850,18 @@
         }
         
         .time-slot-box:hover {
-            background: #4a90e2;
+            background: #3FA9F5;
             color: #ffffff;
-            border-color: #4a90e2;
+            border-color: #3FA9F5;
             transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+            box-shadow: 0 4px 10px rgba(63, 169, 245, 0.4);
         }
         
         .time-slot-box.selected {
-            background: #4a90e2;
+            background: #3FA9F5;
             color: #ffffff;
-            border-color: #4a90e2;
-            box-shadow: 0 2px 6px rgba(74, 144, 226, 0.4);
+            border-color: #3FA9F5;
+            box-shadow: 0 2px 6px rgba(63, 169, 245, 0.4);
         }
         
         .time-slot-box.booked {
@@ -1875,16 +1894,16 @@
             background: #f5f5f5;
         }
         
-        /* Calendar header - clean professional style */
+        /* Calendar header - black theme */
         .fc-toolbar {
-            background: linear-gradient(135deg, #e8f0f8 0%, #d4e4f3 100%) !important;
+            background: #000000 !important;
             padding: 20px !important;
-            border-bottom: 2px solid #b8d4ea;
+            border-bottom: 2px solid #333333;
             border-radius: 12px 12px 0 0;
         }
         
         .fc-toolbar-title {
-            color: #2c5f8d !important;
+            color: #ffffff !important;
             font-weight: 700 !important;
             letter-spacing: -0.5px;
             display: flex !important;
@@ -1900,11 +1919,11 @@
             font-size: 1.5rem;
         }
         
-        /* Calendar buttons - clean silver-blue style */
+        /* Calendar buttons - black theme */
         .fc-button {
-            background: #b8d4ea !important;
-            border: 2px solid #9ac0de !important;
-            color: #2c5f8d !important;
+            background: #333333 !important;
+            border: 2px solid #555555 !important;
+            color: #ffffff !important;
             font-weight: 600 !important;
             letter-spacing: 0.5px;
             border-radius: 6px;
@@ -1913,33 +1932,33 @@
         }
         
         .fc-button:hover {
-            background: #9ac0de !important;
-            border-color: #7caed4 !important;
+            background: #555555 !important;
+            border-color: #777777 !important;
             transform: translateY(-1px);
         }
         
         .fc-button:active {
             transform: translateY(0);
-            background: #a8cae5 !important;
+            background: #444444 !important;
         }
         
         .fc-button-primary:disabled {
-            background: #e0e0e0 !important;
-            border-color: #cccccc !important;
-            color: #999999 !important;
+            background: #222222 !important;
+            border-color: #333333 !important;
+            color: #666666 !important;
             opacity: 0.6;
         }
         
-        /* Calendar day headers - clean professional look */
+        /* Calendar day headers - black theme */
         .fc-col-header-cell {
-            background: #f5f5f5 !important;
-            border-color: #e0e0e0 !important;
-            color: #333333 !important;
+            background: #000000 !important;
+            border-color: #333333 !important;
+            color: #ffffff !important;
             font-weight: 600 !important;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             padding: 12px 5px !important;
-            border-bottom: 2px solid #cccccc !important;
+            border-bottom: 2px solid #333333 !important;
             font-family: 'Inter', sans-serif !important;
         }
         
@@ -2190,8 +2209,8 @@
         }
         .booking-form input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+            border-color: #3FA9F5;
+            box-shadow: 0 0 0 4px rgba(63, 169, 245, 0.2);
             background: rgba(255,255,255,0.15);
         }
         .btn {
@@ -2399,6 +2418,33 @@
             }
             .booking-form {
                 padding: 15px 0 0 0;
+            }
+            
+            /* Mobile input field fixes - ensure proper touch interaction */
+            .booking-form input {
+                font-size: 16px; /* Prevents iOS zoom on focus */
+                -webkit-appearance: none;
+                appearance: none;
+                border-radius: 8px;
+                padding: 16px 14px;
+                min-height: 48px; /* Minimum touch target size */
+                touch-action: manipulation;
+                width: 100%;
+                box-sizing: border-box;
+                background: rgba(255,255,255,0.15);
+                border: 2px solid rgba(255,255,255,0.3);
+            }
+            
+            .booking-form input:focus {
+                background: rgba(255,255,255,0.2);
+                border-color: #3FA9F5;
+                box-shadow: 0 0 0 4px rgba(63, 169, 245, 0.2);
+            }
+            
+            .booking-form label {
+                font-size: 1rem;
+                margin-top: 16px;
+                margin-bottom: 6px;
             }
             
             /* Mobile time selection grid */
@@ -3688,8 +3734,8 @@
         
         <!-- Calendar Navigation Buttons -->
         <div class="calendar-nav-container">
-          <button id="prevWeekBtn" class="calendar-nav-btn" aria-label="Siirry edelliseen kuukauteen" style="background: rgba(102, 126, 234, 0.3); border: 2px solid rgba(102, 126, 234, 0.5);">← Edellinen</button>
-          <button id="nextWeekBtn" class="calendar-nav-btn" aria-label="Siirry seuraavaan kuukauteen" style="background: rgba(102, 126, 234, 0.3); border: 2px solid rgba(102, 126, 234, 0.5);">Seuraava →</button>
+          <button id="prevWeekBtn" class="calendar-nav-btn" aria-label="Siirry edelliseen kuukauteen" style="background: #3FA9F5; border: 2px solid #5CB8FF; color: #ffffff;">← Edellinen</button>
+          <button id="nextWeekBtn" class="calendar-nav-btn" aria-label="Siirry seuraavaan kuukauteen" style="background: #3FA9F5; border: 2px solid #5CB8FF; color: #ffffff;">Seuraava →</button>
         </div>
       
         <div id="calendar" role="application" aria-label="Ajanvarauskalenteri"></div>

@@ -352,10 +352,12 @@ function initializeBookingSystem() {
                 
                 // Show the time dropdown and service selection
                 document.getElementById('availableSlots').style.display = 'block';
-                document.getElementById('serviceSelection').style.display = 'block';
                 
                 // Clear any errors
                 document.getElementById('error').textContent = '';
+                
+                // Trigger step 3 reveal by calling showBookingForm
+                showBookingForm(slotTime);
             });
             
             gridContainer.appendChild(slotBox);
@@ -980,10 +982,16 @@ function initializeBookingSystem() {
                 const selectedTask = this.value;
                 
                 if (selectedTask) {
-                    // Task selected - booking is complete, show booking form
-                    const selectedDateTime = getCurrentSelectedDateTime();
-                    if (selectedDateTime) {
-                        showBookingForm(selectedDateTime);
+                    // Task selected - reveal step 2 (calendar)
+                    const step2 = document.getElementById('step-calendar');
+                    if (step2) {
+                        step2.classList.add('visible');
+                        step2.style.display = 'block';
+                        
+                        // Smooth scroll to step 2
+                        setTimeout(() => {
+                            step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }, 100);
                     }
                 } else {
                     // Hide booking form if task is deselected
@@ -1035,6 +1043,18 @@ function initializeBookingSystem() {
             
             // Show repair disclaimer if any repair service is selected
             updateRepairDisclaimer();
+            
+            // Reveal step 3 (contact information)
+            const step3 = document.getElementById('step-contact');
+            if (step3) {
+                step3.classList.add('visible');
+                step3.style.display = 'block';
+                
+                // Smooth scroll to step 3
+                setTimeout(() => {
+                    step3.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
             
             // Show add service button and booking form
             document.getElementById('add-service-container').style.display = 'block';
