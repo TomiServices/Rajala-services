@@ -898,6 +898,7 @@ function initializeBookingSystem() {
             }
             
             return {
+                category: service.service, // Add category (tire, repair, washing, etc.)
                 serviceName: service.serviceName,
                 taskName: service.taskName,
                 price: service.taskPrice || 'Hinta sovittaessa',
