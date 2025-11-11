@@ -1513,6 +1513,22 @@ function initializeBookingSystem() {
                                 timeGridContainer.style.display = 'none';
                             }
                             
+                            // Make calendar compact initially, expand on first interaction
+                            calendarEl.classList.add('compact');
+                            
+                            // Expand calendar on first click
+                            let hasInteracted = false;
+                            const expandCalendar = function() {
+                                if (!hasInteracted) {
+                                    calendarEl.classList.remove('compact');
+                                    calendarEl.classList.add('expanded');
+                                    hasInteracted = true;
+                                }
+                            };
+                            
+                            calendarEl.addEventListener('click', expandCalendar, { once: false });
+                            calendarEl.addEventListener('touchstart', expandCalendar, { once: false });
+                            
                             setupDropdownEventListener();
                         }, 100);
                         
