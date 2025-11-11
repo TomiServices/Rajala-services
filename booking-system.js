@@ -1246,6 +1246,7 @@ function initializeBookingSystem() {
             const isMobileView = window.innerWidth < 768;
             calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: isMobileView ? 'dayGridTwoWeeks' : 'dayGridMonth',
+            initialDate: new Date(), // FIX: Explicitly set initial date to ensure calendar displays current month
             locale: 'fi',
             views: {
                 dayGridTwoWeeks: {
