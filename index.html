@@ -1627,6 +1627,18 @@
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
             overflow: hidden;
             border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.4s ease-in-out;
+        }
+        
+        /* Compact calendar - initially collapsed */
+        #calendar.compact {
+            max-height: 350px;
+            overflow: hidden;
+        }
+        
+        /* Expanded calendar - after user interaction */
+        #calendar.expanded {
+            max-height: none;
         }
         
         /* Compact calendar styling */
@@ -1673,28 +1685,30 @@
         
         .calendar-nav-btn {
             padding: 12px 28px;
-            background: #4a90e2;
-            border: none;
+            background: #b8d4ea;
+            border: 2px solid #9ac0de;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            color: #ffffff;
+            color: #2c5f8d;
             font-family: 'Inter', sans-serif;
-            box-shadow: 0 2px 6px rgba(74, 144, 226, 0.3);
+            box-shadow: 0 2px 6px rgba(156, 192, 222, 0.3);
         }
         
         .calendar-nav-btn:hover:not(:disabled) {
-            background: #357abd;
+            background: #9ac0de;
             transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.4);
+            box-shadow: 0 4px 10px rgba(156, 192, 222, 0.4);
         }
         
         .calendar-nav-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            background: #b0b0b0;
+            background: #e0e0e0;
+            color: #999999;
+            border-color: #cccccc;
             box-shadow: none;
         }
         
@@ -1863,14 +1877,14 @@
         
         /* Calendar header - clean professional style */
         .fc-toolbar {
-            background: linear-gradient(135deg, #333333 0%, #1a1a1a 100%) !important;
+            background: linear-gradient(135deg, #e8f0f8 0%, #d4e4f3 100%) !important;
             padding: 20px !important;
-            border-bottom: none;
+            border-bottom: 2px solid #b8d4ea;
             border-radius: 12px 12px 0 0;
         }
         
         .fc-toolbar-title {
-            color: #ffffff !important;
+            color: #2c5f8d !important;
             font-weight: 700 !important;
             letter-spacing: -0.5px;
             display: flex !important;
@@ -1886,11 +1900,11 @@
             font-size: 1.5rem;
         }
         
-        /* Calendar buttons - clean style */
+        /* Calendar buttons - clean silver-blue style */
         .fc-button {
-            background: rgba(255,255,255,0.15) !important;
-            border: 2px solid rgba(255,255,255,0.25) !important;
-            color: #ffffff !important;
+            background: #b8d4ea !important;
+            border: 2px solid #9ac0de !important;
+            color: #2c5f8d !important;
             font-weight: 600 !important;
             letter-spacing: 0.5px;
             border-radius: 6px;
@@ -1899,20 +1913,20 @@
         }
         
         .fc-button:hover {
-            background: rgba(255,255,255,0.25) !important;
-            border-color: rgba(255,255,255,0.4) !important;
+            background: #9ac0de !important;
+            border-color: #7caed4 !important;
             transform: translateY(-1px);
         }
         
         .fc-button:active {
             transform: translateY(0);
-            background: rgba(255,255,255,0.2) !important;
+            background: #a8cae5 !important;
         }
         
         .fc-button-primary:disabled {
-            background: rgba(255,255,255,0.08) !important;
-            border-color: rgba(255,255,255,0.15) !important;
-            color: rgba(255,255,255,0.4) !important;
+            background: #e0e0e0 !important;
+            border-color: #cccccc !important;
+            color: #999999 !important;
             opacity: 0.6;
         }
         
@@ -3259,6 +3273,19 @@
             
             .ajanvaraus-container h2 {
                 font-size: 1.5rem;
+            }
+            
+            /* Prevent section overlap on mobile */
+            section {
+                margin: 30px auto !important;
+                padding: 20px 15px !important;
+                clear: both;
+            }
+            
+            /* Extra spacing for specific sections that might overlap */
+            #lasikorjaus, #hinnasto {
+                margin-top: 40px !important;
+                margin-bottom: 40px !important;
             }
             
             .booking-step {
