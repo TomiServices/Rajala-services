@@ -144,31 +144,50 @@ exports.book = functions.https.onRequest((req, res) => {
             `  - ${sanitizeText(service.serviceName)} - ${sanitizeText(service.taskName)}: ${sanitizeText(service.price)}`
         ).join('\n');
         
+        // Format date and time in the required format: 'klo 12:00 11.11.2025'
+        function formatDateTime(aikaISO) {
+            const date = new Date(aikaISO);
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return `klo ${hours}:${minutes} ${day}.${month}.${year}`;
+        }
+        
         // Sanitize user inputs for email
         const safeName = sanitizeText(name);
-        const safeAika = sanitizeText(aika);
+        const formattedDateTime = formatDateTime(aika);
+        const safeFormattedDateTime = sanitizeText(formattedDateTime);
         const safeTotalPrice = sanitizeText(totalPrice);
+        
+        // Extract date and time components from aika ISO string
+        const bookingDate = new Date(aika);
+        const bookingDateString = `${bookingDate.getDate()}.${bookingDate.getMonth() + 1}.${bookingDate.getFullYear()}`;
+        const bookingTimeString = `${String(bookingDate.getHours()).padStart(2, '0')}:${String(bookingDate.getMinutes()).padStart(2, '0')}`;
         
         // Tallenna varaus Firestoreen with structured service data
         admin.firestore().collection("varaukset").add({
+            timestamp: admin.firestore.FieldValue.serverTimestamp(), // When booking was made
             name,
             email,
             phone,
-            aika,
-            services, // Array of service objects with serviceName, taskName, price, numericPrice
+            aika, // Full datetime ISO string (kept for backward compatibility)
+            selectedDate: bookingDateString, // Date customer selected (DD.MM.YYYY)
+            selectedTime: bookingTimeString, // Time customer selected (HH:MM)
+            services, // Array of service objects with category, serviceName, taskName, price, numericPrice
             totalPrice, // Formatted total price string (e.g., "alkaen 75 €")
-            totalNumericPrice, // Numeric total for calculations and sorting
-            timestamp: admin.firestore.FieldValue.serverTimestamp()
+            totalNumericPrice // Numeric total for calculations and sorting
         }).then(doc => {
             // Luo "mail"-dokumentti sähköpostitriggerille (to array!)
             admin.firestore().collection("mail").add({
                 to: [email], // ARRAY, extension vaatii tätä!
                 message: {
                     subject: "Varausvahvistus – Fixnero",
-                    text: `Hei ${safeName},\n\nKiitos paljon tekemästäsi varauksesta! Sinulle on vahvistettu varaus ajalle ${safeAika}.\n\nValitut palvelut:\n${serviceListText}\n\nYhteensä: ${safeTotalPrice}\n\nTervetuloa asiakkaaksemme!\n\nYstävällisin terveisin,\nFixnero-tiimi\n\nPuhelin: 040 1935001\nSähköposti: info@fixnero.fi\nOsoite: Tiilenvalajantie 6, 02330 Espoo\nAukioloajat: Arkisin 9:00-17:00, viikonloppuisin suljettu`,
+                    text: `Hei ${safeName},\n\nKiitos paljon tekemästäsi varauksesta! Sinulle on vahvistettu varaus ajalle ${safeFormattedDateTime}.\n\nValitut palvelut:\n${serviceListText}\n\nYhteensä: ${safeTotalPrice}\n\nTervetuloa asiakkaaksemme!\n\nYstävällisin terveisin,\nFixnero-tiimi\n\nVerkkosivu: www.fixnero.fi\nPuhelin: 040 1935001\nSähköposti: info@fixnero.fi\nOsoite: Tiilenvalajantie 6, 02330 Espoo\nAukioloajat: Arkisin 9:00-17:00, viikonloppuisin suljettu`,
                     html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
                         <h2 style="color: #333;">Hei ${escapeHtml(safeName)},</h2>
-                        <p>Kiitos paljon tekemästäsi varauksesta! Sinulle on vahvistettu varaus ajalle <strong>${escapeHtml(safeAika)}</strong>.</p>
+                        <p>Kiitos paljon tekemästäsi varauksesta! Sinulle on vahvistettu varaus ajalle <strong>${escapeHtml(safeFormattedDateTime)}</strong>.</p>
                         
                         <h3 style="color: #333; margin-top: 20px;">Valitut palvelut:</h3>
                         <ul style="list-style-type: none; padding: 0;">
@@ -185,6 +204,7 @@ exports.book = functions.https.onRequest((req, res) => {
                         
                         <p style="margin: 0;"><strong>Ystävällisin terveisin,</strong><br>Fixnero-tiimi</p>
                         <p style="margin-top: 15px; color: #666;">
+                            <strong>Verkkosivu:</strong> <a href="https://www.fixnero.fi" style="color: #4CAF50;">www.fixnero.fi</a><br>
                             <strong>Puhelin:</strong> 040 1935001<br>
                             <strong>Sähköposti:</strong> <a href="mailto:info@fixnero.fi" style="color: #4CAF50;">info@fixnero.fi</a><br>
                             <strong>Osoite:</strong> Tiilenvalajantie 6, 02330 Espoo<br>
