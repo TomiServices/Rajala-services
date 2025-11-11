@@ -1540,9 +1540,9 @@
         .ajanvaraus-container {
             max-width: 1100px;
             margin: 30px auto 20px auto;
-            background: #6b46c1;
+            background: #f5f5f5;
             border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 100px rgba(107,70,193,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             padding: 50px 40px;
             position: relative;
             overflow: hidden;
@@ -1556,16 +1556,9 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: repeating-linear-gradient(
-                45deg,
-                #7c3aed 0px,
-                #7c3aed 30px,
-                #8b5cf6 30px,
-                #8b5cf6 60px
-            );
-            opacity: 0.6;
+            background: transparent;
+            opacity: 0;
             z-index: 1;
-            animation: patternMoveSlowly 800s linear infinite;
             pointer-events: none;
         }
         
@@ -1581,18 +1574,14 @@
             font-family: 'Inter', sans-serif;
             font-weight: 800;
             letter-spacing: -0.5px;
-            color: #ffffff;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            background: linear-gradient(135deg, #ffffff 0%, #e0e0ff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #333333;
+            text-shadow: none;
         }
         
         /* Step indicator styles */
         .booking-step {
-            background: rgba(255,255,255,0.05);
-            border: 2px solid rgba(255,255,255,0.1);
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
             border-radius: 16px;
             padding: 30px;
             margin-bottom: 25px;
@@ -1611,12 +1600,12 @@
         }
         
         .booking-step:hover {
-            border-color: rgba(255,255,255,0.2);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            border-color: #cccccc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
         .step-title {
-            color: #ffffff;
+            color: #333333;
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 15px;
@@ -1641,11 +1630,11 @@
         #calendar {
             max-width: 100%;
             margin: 0 auto 30px auto;
-            background: #000000;
+            background: #ffffff;
             border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             overflow: hidden;
-            border: 3px solid #000000;
+            border: 2px solid #e0e0e0;
             transition: all 0.4s ease-in-out;
         }
         
@@ -1894,16 +1883,16 @@
             background: #f5f5f5;
         }
         
-        /* Calendar header - black theme */
+        /* Calendar header - white theme */
         .fc-toolbar {
-            background: #000000 !important;
+            background: #ffffff !important;
             padding: 20px !important;
-            border-bottom: 2px solid #333333;
+            border-bottom: 2px solid #e0e0e0;
             border-radius: 12px 12px 0 0;
         }
         
         .fc-toolbar-title {
-            color: #ffffff !important;
+            color: #333333 !important;
             font-weight: 700 !important;
             letter-spacing: -0.5px;
             display: flex !important;
@@ -1919,11 +1908,11 @@
             font-size: 1.5rem;
         }
         
-        /* Calendar buttons - black theme */
+        /* Calendar buttons - light theme */
         .fc-button {
-            background: #333333 !important;
-            border: 2px solid #555555 !important;
-            color: #ffffff !important;
+            background: #f5f5f5 !important;
+            border: 2px solid #cccccc !important;
+            color: #333333 !important;
             font-weight: 600 !important;
             letter-spacing: 0.5px;
             border-radius: 6px;
@@ -1932,33 +1921,33 @@
         }
         
         .fc-button:hover {
-            background: #555555 !important;
-            border-color: #777777 !important;
+            background: #e0e0e0 !important;
+            border-color: #999999 !important;
             transform: translateY(-1px);
         }
         
         .fc-button:active {
             transform: translateY(0);
-            background: #444444 !important;
+            background: #cccccc !important;
         }
         
         .fc-button-primary:disabled {
-            background: #222222 !important;
-            border-color: #333333 !important;
-            color: #666666 !important;
+            background: #f5f5f5 !important;
+            border-color: #e0e0e0 !important;
+            color: #999999 !important;
             opacity: 0.6;
         }
         
-        /* Calendar day headers - black theme */
+        /* Calendar day headers - white theme */
         .fc-col-header-cell {
-            background: #000000 !important;
-            border-color: #333333 !important;
-            color: #ffffff !important;
+            background: #ffffff !important;
+            border-color: #e0e0e0 !important;
+            color: #666666 !important;
             font-weight: 600 !important;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             padding: 12px 5px !important;
-            border-bottom: 2px solid #333333 !important;
+            border-bottom: 2px solid #e0e0e0 !important;
             font-family: 'Inter', sans-serif !important;
         }
         

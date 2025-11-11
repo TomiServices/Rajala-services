@@ -644,6 +644,15 @@ function initializeBookingSystem() {
                 calendar.select(selectedDateTime, endTime);
             }
             
+            // Check if service and task are already selected, if so, show booking form
+            const serviceSelect = document.getElementById('serviceSelect');
+            const taskSelect = document.getElementById('taskSelect');
+            
+            if (serviceSelect && taskSelect && serviceSelect.value && taskSelect.value) {
+                // Service and task already selected, trigger booking form display
+                showBookingForm(selectedDateTime);
+            }
+            
             return true; // Indicate successful confirmation
         }
         return false; // Indicate failed confirmation
