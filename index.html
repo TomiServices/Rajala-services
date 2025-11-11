@@ -1593,10 +1593,10 @@
         /* Step indicator styles */
         .booking-step {
             background: #ffffff;
-            border: 2px solid #333333;
+            border: none;
             border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 25px;
+            padding: 25px;
+            margin-bottom: 20px;
             transition: all 0.3s ease;
         }
         
@@ -1612,8 +1612,7 @@
         }
         
         .booking-step:hover {
-            border-color: #000000;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
         .step-title {
@@ -1646,15 +1645,15 @@
             border-radius: 16px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             overflow: hidden;
-            border: none;
+            border: 3px solid #000000;
             transition: all 0.4s ease-in-out;
         }
         
-        /* Desktop: Make calendar more compact - shrink by additional 10% (0.95 -> 0.855) */
+        /* Desktop: Make calendar more compact - less shrinking for better visibility */
         @media (min-width: 769px) {
             #calendar {
-                max-width: 675px;
-                transform: scale(0.855);
+                max-width: 750px;
+                transform: scale(0.92);
                 transform-origin: top center;
             }
         }
@@ -1969,6 +1968,17 @@
             letter-spacing: 0.5px;
             padding: 12px 5px !important;
             font-family: 'Inter', sans-serif !important;
+        }
+        
+        /* Remove extra blank row above weekdays in FullCalendar */
+        .fc-scrollgrid-section-header > tr > th {
+            height: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+        }
+        
+        .fc-scrollgrid-section-header {
+            display: none !important;
         }
         
         /* Time slots - clean professional style with no borders */
@@ -3718,14 +3728,14 @@
         
         <!-- Add another service button -->
         <div id="add-service-container" style="display: none; margin: 20px 0; text-align: center;" aria-hidden="true">
-          <button id="add-service-btn" class="btn" type="button" style="background: #ffffff; border: 2px solid #000000; color: #000000; width: auto; padding: 12px 24px; display: inline-block; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); font-weight: 600;">
+          <button id="add-service-btn" class="btn" type="button" style="background: #ffffff; border: 2px solid #000000; color: #000000; width: auto; padding: 10px 20px; display: inline-block; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); font-weight: 600; font-size: 0.9rem;">
             ➕ Lisää toinen palvelu
           </button>
         </div>
         
         <!-- Estimated total price -->
         <div id="total-amount-container" style="display: none; margin: 25px 0; padding: 20px; background: linear-gradient(135deg, #3FA9F5 0%, #5CB8FF 100%); border-radius: 16px; border: none; text-align: center; box-shadow: 0 4px 12px rgba(63, 169, 245, 0.4);" aria-hidden="true">
-          <strong style="font-size: 1.5rem; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">Arvioitu kokonaishinta: <span id="total-amount" style="color: #ffffff; font-weight: 800;">0 €</span></strong>
+          <strong style="font-size: 1.5rem; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">Varauksen hinta: <span id="total-amount" style="color: #ffffff; font-weight: 800;">0 €</span></strong>
         </div>
         
         <!-- Repair services disclaimer -->
