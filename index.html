@@ -224,8 +224,6 @@
     <link rel="preload" href="Hero2.webp" as="image" media="(max-width: 2559px)">
     <link rel="preload" href="Hero1.webp" as="image" media="(min-width: 2560px)">
     <!-- FullCalendar styles are bundled in index.global.min.js, no separate CSS needed -->
-    <!-- Tailwind CSS CDN for modern styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Font for service titles - bold italic style similar to Serpentine -->
     <!-- Optimized for performance: preconnect + preload + async load to eliminate render-blocking -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -256,8 +254,13 @@
             src: local('Impact'), local('Arial Black');
         }
         
-        /* Hide reCAPTCHA badge on mobile devices */
-        @media (max-width: 768px) {
+        /* Hide reCAPTCHA badge on desktop devices (show only on mobile for transparency) */
+        .grecaptcha-badge {
+            visibility: hidden !important;
+        }
+        
+        /* Show reCAPTCHA badge only on very small mobile devices if needed for compliance */
+        @media (max-width: 480px) {
             .grecaptcha-badge {
                 visibility: hidden !important;
             }
@@ -1581,14 +1584,14 @@
             font-family: 'Inter', sans-serif;
             font-weight: 800;
             letter-spacing: -0.5px;
-            color: #333333;
+            color: #1a1a1a;
             text-shadow: none;
         }
         
         /* Step indicator styles */
         .booking-step {
             background: #ffffff;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #333333;
             border-radius: 16px;
             padding: 30px;
             margin-bottom: 25px;
@@ -1607,12 +1610,12 @@
         }
         
         .booking-step:hover {
-            border-color: #cccccc;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: #000000;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
         }
         
         .step-title {
-            color: #333333;
+            color: #1a1a1a;
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 15px;
@@ -1622,7 +1625,7 @@
         }
         
         .step-number {
-            background: #3FA9F5;
+            background: #000000;
             color: #ffffff;
             width: 36px;
             height: 36px;
@@ -1632,7 +1635,7 @@
             justify-content: center;
             font-weight: 800;
             font-size: 1.1rem;
-            box-shadow: 0 4px 12px rgba(63, 169, 245, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
         #calendar {
             max-width: 100%;
@@ -1641,8 +1644,17 @@
             border-radius: 16px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             overflow: hidden;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #333333;
             transition: all 0.4s ease-in-out;
+        }
+        
+        /* Desktop: Make calendar more compact and professional */
+        @media (min-width: 769px) {
+            #calendar {
+                max-width: 750px;
+                transform: scale(0.95);
+                transform-origin: top center;
+            }
         }
         
         /* Compact calendar - initially collapsed */
@@ -3704,8 +3716,8 @@
         
         <!-- Add another service button -->
         <div id="add-service-container" style="display: none; margin: 20px 0; text-align: center;" aria-hidden="true">
-          <button id="add-service-btn" class="btn" type="button" style="background: #ffffff; border: 2px solid #3FA9F5; color: #3FA9F5; width: auto; padding: 12px 24px; display: inline-block; box-shadow: 0 2px 6px rgba(63, 169, 245, 0.2);">
-            ➕ Lisää toinen palvelu
+          <button id="add-service-btn" class="btn" type="button" style="background: #ffffff; border: 2px solid #000000; color: #000000; width: auto; padding: 12px 24px; display: inline-block; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); font-weight: 600;">
+            ➕ Lisää palvelu
           </button>
         </div>
         
