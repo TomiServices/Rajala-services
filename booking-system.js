@@ -989,8 +989,19 @@ function initializeBookingSystem() {
         if (taskSelect) {
             taskSelect.addEventListener('change', function() {
                 const selectedTask = this.value;
+                const selectedService = serviceSelect.value;
                 
-                if (selectedTask) {
+                if (selectedTask && selectedService) {
+                    // Immediately add service to the selected services list
+                    addSelectedService(selectedService, selectedTask);
+                    
+                    // Hide the service selection dropdowns
+                    serviceSelection.style.display = 'none';
+                    taskSelection.style.display = 'none';
+                    
+                    // Show the "Add another service" button
+                    document.getElementById('add-service-container').style.display = 'block';
+                    
                     // Task selected - reveal step 2 (calendar)
                     const step2 = document.getElementById('step-calendar');
                     if (step2) {
@@ -1033,10 +1044,7 @@ function initializeBookingSystem() {
         const selectedService = serviceSelect.value;
         const selectedTask = taskSelect.value;
         
-        if (selectedDateTime && selectedService && selectedTask) {
-            // Add service to the list if it's a new service
-            addSelectedService(selectedService, selectedTask);
-            
+        if (selectedDateTime) {
             selectedSlot = selectedDateTime;
             const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                 ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
@@ -1065,14 +1073,9 @@ function initializeBookingSystem() {
                 }, 100);
             }
             
-            // Show add service button and booking form
-            document.getElementById('add-service-container').style.display = 'block';
+            // Show booking form
             document.getElementById('bookingForm').style.display = '';
             document.getElementById('error').textContent = '';
-            
-            // Hide service selection dropdowns after adding service (user can click button to add more)
-            document.getElementById('serviceSelection').style.display = 'none';
-            document.getElementById('taskSelection').style.display = 'none';
         }
     }
 
