@@ -76,6 +76,7 @@ function initializeUIInteractions() {
     if (window.location.pathname === '/' || window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('index') || currentPage === '' || currentPage === 'index') {
         const sections = document.querySelectorAll('section[id]');
         const navLinks = document.querySelectorAll('nav a[href^="#"]');
+        const navLogoLinks = document.querySelectorAll('nav a.nav-logo-desktop, nav a.nav-logo-mobile');
         
         function highlightNavigation() {
             // Refined offset: activates when section reaches middle of viewport
@@ -103,6 +104,15 @@ function initializeUIInteractions() {
                 link.classList.remove('nav-active');
                 if (activeSection && link.getAttribute('href') === `#${activeSection}`) {
                     link.classList.add('nav-active');
+                }
+            });
+            
+            // Highlight logo when viewing hero or palvelumme sections
+            navLogoLinks.forEach(logoLink => {
+                if (activeSection === 'hero' || activeSection === 'palvelumme') {
+                    logoLink.classList.add('nav-logo-active');
+                } else {
+                    logoLink.classList.remove('nav-logo-active');
                 }
             });
         }
