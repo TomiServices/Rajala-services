@@ -733,7 +733,7 @@
         
         /* Tietoa Meistä category button - appropriately sized background image */
         .category-box-tietoa-meista {
-            background-size: 108% !important;
+            background-size: 104% !important;
             background-repeat: no-repeat !important;
             background-position: center !important;
             background-color: #ffffff !important;
@@ -1761,7 +1761,7 @@
         .calendar-nav-btn {
             padding: 12px 28px;
             background: #3FA9F5;
-            border: 2px solid #2E8DD6;
+            border: 2px solid #000000;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 600;
@@ -2102,7 +2102,7 @@
         .fc-daygrid-day.fc-day-today {
             background: #f0f8ff !important;
             border: none !important;
-            box-shadow: inset 0 0 0 2px #3FA9F5;
+            box-shadow: inset 0 0 0 2px #000000;
         }
         
         /* Scrollbar styling for calendar - clean look */
@@ -2360,7 +2360,7 @@
             max-width: 100%;
             margin: 20px auto;
             padding: 24px 30px;
-            background: linear-gradient(135deg, #3FA9F5 0%, #5CB8FF 100%);
+            background: linear-gradient(135deg, #3FA9F5 0%, #3FA9F5 50%, #000000 50%, #000000 100%);
             border: none;
             border-radius: 16px;
             font-size: 1.25rem;
@@ -2810,6 +2810,12 @@
             .footer { flex-direction: column; align-items: center; }
             .footer-section { align-items: center; text-align: center; }
             .logo-container img { width: 80px; }
+        }
+        
+        /* Ensure services section displays links in a single column */
+        .services-section {
+            display: flex;
+            flex-direction: column;
         }
         .kartanKehys {
             display: block;
@@ -3832,8 +3838,8 @@
         
         <!-- Calendar Navigation Buttons -->
         <div class="calendar-nav-container">
-          <button id="prevWeekBtn" class="calendar-nav-btn" aria-label="Siirry edelliseen kuukauteen" style="background: #3FA9F5; border: 2px solid #2E8DD6; color: #ffffff;">← Edellinen</button>
-          <button id="nextWeekBtn" class="calendar-nav-btn" aria-label="Siirry seuraavaan kuukauteen" style="background: #3FA9F5; border: 2px solid #2E8DD6; color: #ffffff;">Seuraava →</button>
+          <button id="prevWeekBtn" class="calendar-nav-btn" aria-label="Siirry edelliseen kuukauteen" style="background: #3FA9F5; border: 2px solid #000000; color: #ffffff;">← Edellinen</button>
+          <button id="nextWeekBtn" class="calendar-nav-btn" aria-label="Siirry seuraavaan kuukauteen" style="background: #3FA9F5; border: 2px solid #000000; color: #ffffff;">Seuraava →</button>
         </div>
       
         <div id="calendar" role="application" aria-label="Ajanvarauskalenteri"></div>
