@@ -1444,16 +1444,15 @@ function initializeBookingSystem() {
                                     return bookingDateKey === dateKey;
                                 }).length;
                                 
-                                if (dayBookingsCount > 0) {
-                                    const availableSlots = 8 - dayBookingsCount; // 8 slots per day (9-17)
-                                    evs.push({
-                                        title: `${availableSlots} paikkaa`,
-                                        start: dateKey,
-                                        allDay: true,
-                                        color: availableSlots > 4 ? '#4CAF50' : availableSlots > 0 ? '#FFC107' : '#F44336',
-                                        textColor: '#fff'
-                                    });
-                                }
+                                // FIX: Always show available slots for weekdays, even when there are no bookings
+                                const availableSlots = 8 - dayBookingsCount; // 8 slots per day (9-17)
+                                evs.push({
+                                    title: `${availableSlots} paikkaa`,
+                                    start: dateKey,
+                                    allDay: true,
+                                    color: availableSlots > 4 ? '#4CAF50' : availableSlots > 0 ? '#FFC107' : '#F44336',
+                                    textColor: '#fff'
+                                });
                             }
                         }
                         
