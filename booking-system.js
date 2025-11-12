@@ -703,29 +703,6 @@ function initializeBookingSystem() {
 
     // Service and task data structure
     const serviceData = {
-        tire: {
-            name: 'Rengastyöt',
-            tasks: [
-                { id: 'tire-change', name: 'Renkaiden vaihto', price: 'alkaen 35 €' },
-                { id: 'tire-change-14-16', name: 'Renkaiden vaihto (14-16 tuumaa)', price: 'alkaen 40 €' },
-                { id: 'tire-change-17-18', name: 'Renkaiden vaihto (17-18 tuumaa)', price: 'alkaen 45 €' },
-                { id: 'tire-change-19-22', name: 'Renkaiden vaihto (19-22 tuumaa)', price: 'alkaen 50 €' },
-                { id: 'balancing', name: 'Tasapainotus', price: '20 € / sarja' },
-                { id: 'tire-repair', name: 'Renkaan paikkaus', price: 'alkaen 25 €' },
-                { id: 'tire-hotel', name: 'Rengashotelli', price: 'alkaen 55 € / kausi' }
-            ]
-        },
-        repair: {
-            name: 'Korjaustyöt',
-            tasks: [
-                { id: 'diagnostics', name: 'Vikakoodien luku ja nollaus', price: 'alkaen 40 €' },
-                { id: 'shock-absorber', name: 'Iskunvaimentimien ja jousituksen uusiminen', price: '' },
-                { id: 'suspension-parts', name: 'Tukivarsien, nivelien ja raidetankojen vaihto', price: '' },
-                { id: 'stabilizer-bar', name: 'Vakaajatangon ja koiranluiden vaihto', price: '' },
-                { id: 'brake-repair', name: 'Jarrulevyjen, palojen ja käsijarrujen korjaukset', price: '' },
-                { id: 'exhaust-repair', name: 'Pakoputkistojen korjaukset', price: '' }
-            ]
-        },
         washing: {
             name: 'Pesupalvelut',
             tasks: [
@@ -736,16 +713,6 @@ function initializeBookingSystem() {
                 { id: 'hard-wax', name: 'Kova vaha', price: 'alkaen 45 €' },
                 { id: 'ceramic-spray', name: 'Ceramic spray -pinnoite', price: 'alkaen 60 €' },
                 { id: 'water-repellent', name: 'Vettä ja likaa hylkivä pinnoite', price: 'alkaen 40 €' }
-            ]
-        },
-        polishing: {
-            name: 'Kiillotus ja pinnoitteet',
-            tasks: [
-                { id: 'wax', name: 'Vahaus', price: 'alkaen 80 €' },
-                { id: '1-step-polish', name: '1-step kiillotus', price: 'alkaen 120 €' },
-                { id: '2-step-polish', name: '2-step kiillotus', price: 'alkaen 180 €' },
-                { id: '3-step-ceramic', name: '3-step + keraaminen pinnoitus', price: 'alkaen 300 €' },
-                { id: 'scratch-removal', name: 'Naarmujen poisto', price: 'alkaen 50 € / paneeli' }
             ]
         },
         interior: {
@@ -760,6 +727,58 @@ function initializeBookingSystem() {
                 { id: 'odor-removal', name: 'Hajunpoisto erikoisaineilla', price: 'alkaen 70 €' },
                 { id: 'allergy-cleaning', name: 'Allergiapuhdistus', price: 'alkaen 90 €' },
                 { id: 'fabric-protection', name: 'Kangaspintojen suojaus', price: 'alkaen 85 €' }
+            ]
+        },
+        polishing: {
+            name: 'Kiillotus ja pinnoitteet',
+            tasks: [
+                { id: 'wax', name: 'Vahaus', price: 'alkaen 80 €' },
+                { id: '1-step-polish', name: '1-step kiillotus', price: 'alkaen 120 €' },
+                { id: '2-step-polish', name: '2-step kiillotus', price: 'alkaen 180 €' },
+                { id: '3-step-ceramic', name: '3-step + keraaminen pinnoitus', price: 'alkaen 300 €' },
+                { id: 'scratch-removal', name: 'Naarmujen poisto', price: 'alkaen 50 € / paneeli' }
+            ]
+        },
+        dent: {
+            name: 'Kolhukorjaus',
+            tasks: [
+                { id: 'small-dent', name: 'Pieni lommo', price: 'alkaen 125 €' },
+                { id: 'large-dent', name: 'Iso lommo', price: 'alkaen 150 €' },
+                { id: 'paint-repair', name: 'Maalipinnan jälkien hionta ja maalaus', price: '' },
+                { id: 'bumper-repair', name: 'Puskurin ja lokasuojan korjaukset', price: '' },
+                { id: 'rust-repair', name: 'Ruostekorjaukset', price: '' }
+            ]
+        },
+        repair: {
+            name: 'Korjaustyöt',
+            tasks: [
+                { id: 'diagnostics', name: 'Vikakoodien luku ja nollaus', price: 'alkaen 40 €' },
+                { id: 'oil-change', name: 'Moottoriöljyjen vaihto', price: 'alkaen 79 €' },
+                { id: 'shock-absorber', name: 'Iskunvaimentimien ja jousituksen uusiminen', price: '' },
+                { id: 'suspension-parts', name: 'Tukivarsien, nivelien ja raidetankojen vaihto', price: '' },
+                { id: 'stabilizer-bar', name: 'Vakaajatangon ja koiranluiden vaihto', price: '' },
+                { id: 'brake-repair', name: 'Jarrulevyjen, palojen ja käsijarrujen korjaukset', price: '' },
+                { id: 'exhaust-repair', name: 'Pakoputkistojen korjaukset', price: '' }
+            ]
+        },
+        tire: {
+            name: 'Rengastyöt',
+            tasks: [
+                { id: 'tire-change', name: 'Renkaiden vaihto', price: 'alkaen 35 €' },
+                { id: 'tire-change-14-16', name: 'Renkaiden vaihto (14-16 tuumaa)', price: 'alkaen 40 €' },
+                { id: 'tire-change-17-18', name: 'Renkaiden vaihto (17-18 tuumaa)', price: 'alkaen 45 €' },
+                { id: 'tire-change-19-22', name: 'Renkaiden vaihto (19-22 tuumaa)', price: 'alkaen 50 €' },
+                { id: 'balancing', name: 'Tasapainotus', price: '20 € / sarja' },
+                { id: 'tire-repair', name: 'Renkaan paikkaus', price: 'alkaen 25 €' },
+                { id: 'tire-hotel', name: 'Rengashotelli', price: 'alkaen 55 € / kausi' }
+            ]
+        },
+        glass: {
+            name: 'Lasikorjaus',
+            tasks: [
+                { id: 'glass-repair', name: 'Tuulilasin korjaus', price: '50 € / lasiturvalla ilmainen' },
+                { id: 'glass-replacement-insured', name: 'Lasinvaihto lasivakuutuksella', price: 'Maksat vain omavastuun' },
+                { id: 'glass-replacement', name: 'Lasinvaihto ilman vakuutusta', price: 'Kysy tarjous' }
             ]
         }
     };
