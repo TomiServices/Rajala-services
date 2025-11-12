@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,user-scalable=yes">
-    <meta name="description" content="Tuulilasien vaihto ja korjaus Espoo – Ammattitaitoinen asennus Pilkington tuulilaseilla Kivenlahdessa. Kiveniskemien korjaus, lasivakuutus hyväksytty. Nopea palvelu henkilöautoihin, kuorma-autoihin ja työkoneisiin. Varaa aika 040 1935001.">
-    <meta name="keywords" content="tuulilasien vaihto Espoo, Pilkington tuulilasit, ammattitaitoinen asennus, lasikorjaus Espoo, tuulilasin vaihto Kivenlahti, kiveniskemän korjaus, lasipalvelut Espoo, tuulilasi Espoo, lasivakuutus, henkilöauto tuulilasi, kuorma-auto tuulilasi, windshield replacement Espoo, Fixnero lasikorjaus">
-    <title>Tuulilasien Vaihto ja Korjaus Espoo – Pilkington Tuulilasit | Fixnero</title>
+    <meta name="description" content="Sisäpuhdistus Espoo - Fixnero tarjoaa ammattitaitoista auton sisätilojen puhdistusta, otsonontiа, syväpuhdistusta ja allergiapuhdistusta Kivenlahdessa Espoossa. Laadukkaat sisäpuhdistuspalvelut hajusteettomilla ammattituotteilla. Varaa aika 040 1935001.">
+    <meta name="keywords" content="sisäpuhdistus Espoo, auton sisäpuhdistus Espoo, otsonointi, syväpuhdistus, allergiapuhdistus, detailing, nahkapenkkien hoito, kangaspuhdistus, hajunpoisto, Kivenlahti sisäpuhdistus, sisätilan puhdistus">
+    <title>Sisäpuhdistus Espoo – Fixnero</title>
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://fixnero.fi/lasikorjaus">
-    <meta property="og:title" content="Tuulilasien Vaihto ja Korjaus Espoo – Pilkington Tuulilasit | Fixnero">
-    <meta property="og:description" content="Ammattitaitoinen tuulilasien vaihto ja korjaus Pilkington laseilla Kivenlahdessa, Espoossa. Kiveniskemien korjaus, lasivakuutus hyväksytty. Nopea ja laadukas palvelu.">
-    <meta property="og:image" content="https://fixnero.fi/lasikorjaus.webp">
+    <meta property="og:url" content="https://fixnero.fi/sisapuhdistus">
+    <meta property="og:title" content="Sisäpuhdistus Espoo – Fixnero">
+    <meta property="og:description" content="Ammattitaitoinen sisäpuhdistus Espoossa: otsonointi, syväpuhdistus, allergiapuhdistus. Puhdasta ja raikasta autoon!">
+    <meta property="og:image" content="https://fixnero.fi/sisapuhdistus.webp">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://fixnero.fi/lasikorjaus">
-    <meta property="twitter:title" content="Tuulilasien Vaihto ja Korjaus Espoo – Pilkington Tuulilasit | Fixnero">
-    <meta property="twitter:description" content="Ammattitaitoinen tuulilasien vaihto ja korjaus Pilkington laseilla Kivenlahdessa, Espoossa. Kiveniskemien korjaus, lasivakuutus hyväksytty. Nopea ja laadukas palvelu.">
-    <meta property="twitter:image" content="https://fixnero.fi/lasikorjaus.webp">
+    <meta property="twitter:url" content="https://fixnero.fi/sisapuhdistus">
+    <meta property="twitter:title" content="Sisäpuhdistus Espoo – Fixnero">
+    <meta property="twitter:description" content="Ammattitaitoinen sisäpuhdistus Espoossa: otsonointi, syväpuhdistus, allergiapuhdistus. Puhdasta ja raikasta autoon!">
+    <meta property="twitter:image" content="https://fixnero.fi/sisapuhdistus.webp">
     
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://fixnero.fi/lasikorjaus">
+    <link rel="canonical" href="https://fixnero.fi/sisapuhdistus">
     
     <!-- Favicon - Multiple formats for browser and search engine compatibility -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -37,12 +37,12 @@
     {
         "@context": "https://schema.org",
         "@type": "Service",
-        "name": "Tuulilasien Vaihto ja Korjaus Espoo",
-        "serviceType": "Tuulilasien vaihto ja korjaus",
-        "description": "Fixnero tarjoaa ammattitaitoista tuulilasien vaihtopalvelua ja kiveniskemien korjausta Pilkington tuulilaseilla Kivenlahdessa, Espoossa. Palvelemme henkilöautoja, kuorma-autoja ja työkoneita. Lasivakuutus hyväksytty.",
+        "name": "Sisäpuhdistus Espoo",
+        "serviceType": "Sisäpuhdistus",
+        "description": "Fixnero tarjoaa ammattimaisen auton sisäpuhdistuksen Espoossa. Sisältää sisätilojen puhdistuksen, otsonoinnin, syväpuhdistuksen ja allergiapuhdistuksen.",
         "provider": {
             "@type": "LocalBusiness",
-            "name": "Fixnero",
+            "name": "Fixnero / Rajala Services",
             "telephone": "+358401935001",
             "email": "info@fixnero.fi",
             "address": {
@@ -56,30 +56,7 @@
         "areaServed": {
             "@type": "Place",
             "name": "Espoo"
-        },
-        "brand": {
-            "@type": "Brand",
-            "name": "Pilkington"
-        },
-        "offers": [
-            {
-                "@type": "Offer",
-                "name": "Kiveniskemän korjaus",
-                "price": "50",
-                "priceCurrency": "EUR",
-                "description": "Kiveniskemän korjaus erikoishartsilla. Lasiturvalla ilmainen."
-            },
-            {
-                "@type": "Offer",
-                "name": "Tuulilasin vaihto lasivakuutuksella",
-                "description": "Maksat vain vakuutuksen omavastuun. Hoidamme vakuutusasiat puolestasi."
-            },
-            {
-                "@type": "Offer",
-                "name": "Tuulilasin vaihto ilman vakuutusta",
-                "description": "Kilpailukykyinen hinta Pilkington tuulilasille. Pyydä tarjous."
-            }
-        ]
+        }
     }
     </script>
     
@@ -99,13 +76,13 @@
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Palvelut",
-                "item": "https://www.rajala-services.com/index#lasikorjaus"
+                "item": "https://www.rajala-services.com/index#sisapuhdistus"
             },
             {
                 "@type": "ListItem",
                 "position": 3,
-                "name": "Lasikorjaus",
-                "item": "https://www.rajala-services.com/lasikorjaus"
+                "name": "Sisäpuhdistus",
+                "item": "https://www.rajala-services.com/sisapuhdistus"
             }
         ]
     }
@@ -140,15 +117,20 @@
             margin: 0; padding: 0; line-height: 1.6;
         }
         .top-banner {
-            position: fixed; top: 0; left: 0; right: 0;
-            background: #000000; color: #ffffff;
-            text-align: center; padding: 4px 0;
-            z-index: 1002; font-weight: 400;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: #000000;
+            color: #ffffff;
+            text-align: center;
+            padding: 4px 0;
+            z-index: 1002;
+            font-weight: 400;
             font-size: 0.85rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         nav {
-            position: fixed; top: 20px; left: 0; right: 0;
+            position: fixed;
+            top: 20px; left: 0; right: 0;
             background: rgba(0,0,0,0.95);
             backdrop-filter: blur(10px);
             z-index: 1003;
@@ -158,17 +140,33 @@
             align-items: center;
             padding: 0 20px;
         }
-        nav img { height: 50px; margin-left: 10px; margin-right: 15px; filter: brightness(1.1); transition: all 0.3s ease; }
-        nav img:hover { transform: scale(1.05); filter: brightness(1.2); }
+        nav img {
+            height: 50px;
+            margin-left: 10px;
+            margin-right: 15px;
+            filter: brightness(1.1);
+            transition: all 0.3s ease;
+        }
+        nav img:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
         nav a {
-            color: #ffffff; padding: 16px 18px; text-decoration: none;
-            font-size: 18px; font-weight: 500; display: block;
-            white-space: nowrap; transition: all 0.3s ease;
-            border-radius: 8px; margin: 0 2px;
+            color: #ffffff;
+            padding: 16px 18px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            display: block;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0 2px;
         }
         nav a:hover, nav a.nav-active {
             background: linear-gradient(135deg, #333333, #1a1a1a);
-            color: #ffffff; transform: translateY(-2px);
+            color: #ffffff;
+            transform: translateY(-2px);
         }
         nav a.nav-active {
             box-shadow: 0 0 15px rgba(63, 169, 245, 0.4);
@@ -193,60 +191,115 @@
         }
         
         .hamburger-menu {
-            display: none; cursor: pointer; padding: 0;
+            display: none;
+            cursor: pointer;
+            padding: 0;
             background: linear-gradient(135deg, rgba(40,40,40,0.95), rgba(20,20,20,0.95));
-            position: fixed; top: 12px; right: 12px;
-            z-index: 1004; border-radius: 8px;
-            width: 48px; height: 48px;
+            position: fixed;
+            top: 12px; right: 12px;
+            z-index: 1004;
+            border-radius: 8px;
+            width: 48px;
+            height: 48px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        
-        /* Reset button styles */
-        font: inherit;
-        color: inherit;
-        outline: none;}
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.08);
+            /* Reset button styles */
+            font: inherit;
+            color: inherit;
+            outline: none;
+        }
+        .hamburger-menu:hover {
+            background: linear-gradient(135deg, rgba(50,50,50,0.98), rgba(30,30,30,0.98));
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+        .hamburger-menu:active {
+            transform: translateY(0) scale(0.96);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
         .hamburger-menu span {
-            display: block; width: 24px; height: 2.5px;
+            display: block;
+            width: 24px; 
+            height: 2.5px;
             margin: 5.5px auto;
             background: linear-gradient(90deg, #ffffff, #e0e0e0);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 2px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .hamburger-menu.active {
+            background: linear-gradient(135deg, rgba(30,30,30,0.98), rgba(10,10,10,0.98));
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12);
+        }
+        .hamburger-menu.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+        .hamburger-menu.active span:nth-child(2) {
+            opacity: 0;
+            transform: scale(0);
+        }
+        .hamburger-menu.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
         }
         @media (max-width: 1279px) {
-            .hamburger-menu { display: flex; align-items: center; justify-content: center; }
+            .hamburger-menu { display: flex !important; align-items: center; justify-content: center; }
             nav {
-                flex-direction: column; align-items: flex-start;
-                width: 300px; top: 0; left: 0;
+                flex-direction: column;
+                align-items: flex-start;
+                width: 300px;
+                top: 0;
+                left: 0;
                 transform: translateX(-100%);
                 transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-                height: 100%; padding: 0;
+                height: 100%;
+                padding: 0;
                 background: #000000;
                 box-shadow: 8px 0 40px rgba(0,0,0,0.6);
                 overflow-y: auto;
+                backdrop-filter: blur(20px);
+                border-right: 1px solid rgba(255,255,255,0.1);
             }
-            nav.active { transform: translateX(0); }
+            nav.active { 
+                transform: translateX(0);
+                box-shadow: 8px 0 50px rgba(0,0,0,0.8);
+            }
             nav > a:first-child {
-                background: #ffffff; padding: 20px;
-                text-align: center; width: 100%;
+                background: #ffffff;
+                padding: 20px;
+                text-align: center;
+                width: 100%;
                 border-bottom: 2px solid #000;
                 margin: 0;
             }
             nav > a:first-child img {
-                margin: 0; max-width: 200px; height: auto;
+                margin: 0;
+                max-width: 200px;
+                height: auto;
             }
             nav a:not(:first-child) {
-                color: #ecf0f1; font-size: 16px;
-                font-weight: 500; padding: 18px 25px;
-                text-align: left; width: 100%;
+                color: #ffffff;
+                font-size: 16px;
+                font-weight: 500;
+                padding: 18px 25px;
+                text-align: left;
+                width: 100%;
+                transition: all 0.3s ease;
                 margin: 0;
+                position: relative;
                 border-bottom: 1px solid rgba(255,255,255,0.15);
-                background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+                background: linear-gradient(135deg, #000000 0%, #000000 100%);
             }
             nav a:not(:first-child):hover { 
-                background: linear-gradient(135deg, #666666, #444444) !important;
-                color: #fff !important;
+                background: linear-gradient(135deg, #333333, #1a1a1a) !important;
+                color: #ffffff !important;
                 transform: translateX(8px);
                 padding-left: 30px;
+                box-shadow: inset 0 0 20px rgba(255,255,255,0.05);
+            }
+            nav a:not(:first-child):active {
+                transform: translateX(4px) scale(0.98);
+                background: linear-gradient(135deg, #1a1a1a, #0a0a0a) !important;
             }
         }
         .container {
@@ -286,23 +339,6 @@
         ul { color: #333333; line-height: 1.8; padding-left: 20px; }
         ul li { margin-bottom: 8px; }
         strong { color: #1a1a1a; }
-        .btn-read-more {
-            display: inline-block;
-            padding: 8px 19px;
-            background: #3FA9F5;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 0.72rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(63, 169, 245, 0.3);
-        }
-        .btn-read-more:hover {
-            background: #5CB8FF;
-            box-shadow: 0 0 20px rgba(63, 169, 245, 0.6), 0 0 40px rgba(63, 169, 245, 0.4);
-            transform: translateY(-2px);
-        }
         .cta-section {
             background: linear-gradient(135deg, #666666, #444444);
             color: white; padding: 30px;
@@ -320,7 +356,7 @@
         }
         .cta-button {
             display: inline-block;
-            padding: 10px 24px;
+            padding: 12px 30px;
             background: linear-gradient(135deg, #666666, #444444);
             color: white;
             text-decoration: none;
@@ -332,6 +368,24 @@
         .cta-button:hover { 
             transform: translateY(-2px); 
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        .btn-read-more {
+            display: inline-block;
+            padding: 8px 19px;
+            background: #3FA9F5;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.72rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(63, 169, 245, 0.3);
+            margin: 20px 5px;
+        }
+        .btn-read-more:hover {
+            background: #5CB8FF;
+            box-shadow: 0 0 20px rgba(63, 169, 245, 0.6), 0 0 40px rgba(63, 169, 245, 0.4);
+            transform: translateY(-2px);
         }
         .links-section {
             margin: 50px 0;
@@ -361,7 +415,7 @@
         .link-card p {
             margin: 0;
             opacity: 0.9;
-            font-size: 0.9rem;
+            font-size: 1rem;
         }
         /* Tablet and larger devices - center buttons with proper gap */
         @media (min-width: 769px) {
@@ -464,7 +518,7 @@
     </button>
 
     <nav id="nav">
-        <a href="index#top"><img src="FXNRv.webp" alt="Fixnero - Lasikorjaus Espoo, tuulilasin korjaus ja vaihto"></a>
+        <a href="index#top"><img src="FXNRv.webp" alt="Fixnero - Sisäpuhdistus Espoo, otsonointi ja syväpuhdistus"></a>
         <a href="index#pesupalvelut">Autopesu</a>
         <a href="index#sisapuhdistus">Sisäpuhdistus</a>
         <a href="index#kiilloitus">Kiillotus</a>
@@ -478,120 +532,96 @@
 
     <div class="container">
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; margin-bottom: 25px;">
-            <a href="index#lasikorjaus" class="back-button" style="margin-bottom: 0;">← Takaisin palveluihin</a>
-            <a href="pesupalvelut" class="btn-read-more" style="margin: 0; white-space: nowrap;">Lue Autopesu palvelusta →</a>
+            <a href="index#sisapuhdistus" class="back-button" style="margin-bottom: 0;">← Takaisin palveluihin</a>
+            <a href="kiilloitus" class="btn-read-more" style="margin: 0; white-space: nowrap;">Lue Kiillotus palvelusta →</a>
         </div>
         
-        <h1 style="margin-bottom: 25px;">Tuulilasien vaihto ja kiveniskemän korjaus Espoossa - Fixnero.</h1>
+        <h1 style="margin-bottom: 25px;">Sisäpuhdistus Espoo - Auton sisäpuhdistus, kangaspesut ja allergiapuhdistus Fixnerolta.</h1>
         
-        <p>Fixnero tarjoaa ammattitaitoista tuulilasien vaihtopalvelua Kivenlahdessa, Espoossa. Käytämme vain laadukkaita <strong>Pilkington tuulilasiä</strong>, jotka ovat tunnetusti kestäviä ja täsmällisesti auton mallille sopivia. Palvelumme kattaa sekä tuulilasin vaihdot että kiveniskemien korjaukset henkilöautoihin, kuorma-autoihin ja työkoneisiin.</p>
+        <p>Auton sisätilojen puhdistus on olennainen osa ajoneuvon huoltoa. Fixnero tarjoaa ammattitaitoista sisäpuhdistuspalvelua Espoossa, Kivenlahdessa. Palvelumme varmistaa, että autosi sisätilat ovat raikkaita, puhtaita ja terveellisiä. Käytämme vain ammattikäyttöön tarkoitettuja, hajusteettomia pesuaineita, jotka puhdistavat tehokkaasti mutta hellävaraisesti ilman, että ne kuluttavat tai vahingoittavat herkkiä pintoja kuten nahkaa, kangasta tai muovia.</p>
 
-        <p>Kokenut tiimimme asentaa tuulilasin ammattitaidolla ja huolella, varmistaen turvallisen ja pitkäkestoisen lopputuloksen. Tuulilasien vaihto on meille arkipäivää Espoossa. Olemme erikoistuneet nopeaan ja laadukkaaseen asennukseen kaikille automerkeille. Meillä on laaja kokemus lasien vaihdoista ja korjauksista eri ajoneuvotyypeille.</p>
+        <p>Puhdas sisustus tuntuu ja näyttää uudelta, ja se parantaa merkittävästi ajokokemusta. Säännöllinen sisäpuhdistus on myös tärkeää ajoneuvon arvon säilyttämisen kannalta. Palvelumme sopii kaikille ajoneuvotyypeille henkilöautoista maastureihin ja pakettiautoihin. Voit räätälöidä palvelun juuri sinun tarpeisiisi sopivaksi.</p>
 
-        <h2>Pilkington Tuulilasit</h2>
-        <p>Käytämme laadukkaita Pilkington tuulilasieja, jotka täyttävät autovalmistajien vaatimukset ja turvallisuusstandardit. Ammattitaitoinen asennustiimimme varmistaa huolellisen ja kestävän lopputuloksen. Jokainen asennus tehdään takuulla, joten voit luottaa työhömme.</p>
-
-        <h2>Ammattitaitoinen Asennus ja Huolellinen Työ</h2>
-        <p>Tuulilasin ammattitaitoinen asennus on yhtä tärkeää kuin laadukas lasi. Fixnerolla meillä on pitkä kokemus tuulilasien vaihdoista, ja käytämme nykyaikaisia asennusmenetelmiä ja materiaaleja. Jokainen asennus tehdään huolellisesti ja tarkasti seuraavien vaiheiden mukaisesti:</p>
-        <ol>
-            <li><strong>Vanhan lasin poisto</strong> – Vanha tuulilasi poistetaan varovasti vahingoittamatta auton rakennetta tai maalipintaa</li>
-            <li><strong>Pintojen puhdistus ja valmistelu</strong> – Asennuspinnat puhdistetaan perusteellisesti ja käsitellään asianmukaisesti optimaalisen kiinnityksen varmistamiseksi</li>
-            <li><strong>Uuden lasin asennus</strong> – Pilkington tuulilasi asennetaan tarkasti paikoilleen käyttäen ammattitason työkaluja ja tekniikoita</li>
-            <li><strong>Liimaus ja tiivistys</strong> – Käytämme laadukkaita polyuretaaniliima-aineita varmistaaksemme vedenpitävyyden ja rakenteen lujuuden</li>
-            <li><strong>Kuivumisaika</strong> – Annamme liiman kovettua asianmukaisesti ennen ajoneuvon luovutusta, jotta asennus on täysin turvallinen</li>
-            <li><strong>Laaduntarkastus</strong> – Tarkistamme asennuksen laadun ja varmistamme, että kaikki toimii täydellisesti ennen ajoneuvon palautusta</li>
-        </ol>
-        
-        <p>Jokainen työvaihe suoritetaan alan parhaiden käytäntöjen mukaisesti, mikä takaa turvallisen ja kestävän lopputuloksen. Käytämme ainoastaan autovalmistajien hyväksymiä materiaaleja ja noudatamme tiukkoja laatustandardeja.</p>
-
-        <h2>Tuulilasien Vaihto ja Korjaus Espoossa – Palvelumme</h2>
-        
-        <h3>Tuulilasin Vaihto Lasivakuutuksella</h3>
-        <p>Jos sinulla on lasivakuutus, voimme hoitaa tuulilasin vaihdon täysin vakuutuksen kautta. Sinun tarvitsee maksaa vain vakuutuksesi omavastuu, ja me hoidamme kaikki muut asiat vakuutusyhtiön kanssa. Palvelu sisältää ammattitaitoisen asennuksen Pilkington tuulilasilla sekä täydellisen laaduntarkastuksen.</p>
-        <p><strong>Hinta:</strong> Maksat vain omavastuun</p>
-
-        <h3>Tuulilasin Vaihto Ilman Vakuutusta</h3>
-        <p>Vaikka sinulla ei olisi lasivakuutusta, voimme tarjota kilpailukykyisen hinnan tuulilasin vaihtoon. Käytämme aina laadukkaita Pilkington tuulilasieja ja ammattitaitoinen asennustiimimme takaa huolellisen ja turvallisen asennuksen. Ota yhteyttä, niin annamme sinulle tarkan tarjouksen juuri sinun autosi tuulilasista.</p>
-        <p><strong>Hinta:</strong> Kysy tarjous – annamme kilpailukykyisen hinnan</p>
-
-        <h3>Kiveniskemän Korjaus</h3>
-        <p>Pienet kiveniskemät tuulilasissa voidaan usein korjata ilman koko tuulilasin vaihtoa. Korjaus on nopea ja kustannustehokas ratkaisu, joka estää iskemän leviämisen ja säästää sinulta kalliimman lasinvaihdon. Korjaamme iskemän ammattitaitoisesti erikoishartsilla, joka täyttää vaurion ja palauttaa lasin lujuuden. Korjaus on lähes näkymätön ja kestää hyvin.</p>
-        <p><strong>Milloin iskemä kannattaa korjata?</strong></p>
+        <h2>Perussisäpuhdistus</h2>
+        <p>Kattava sisäpuhdistuspalvelumme sisältää kaikki olennaiset sisätilojen puhdistustoimenpiteet:</p>
         <ul>
-            <li>Iskemä on pienempi kuin kolikon kokoinen</li>
-            <li>Iskemä ei ole suoraan kuljettajan näkökentässä</li>
-            <li>Iskemä ei ole lasin reunalla</li>
-            <li>Iskemä ei ole levinnyt pitkäksi halkeamaksi</li>
-        </ul>
-        <p><strong>Hinta:</strong> 50 € / lasiturvalla ilmainen</p>
-        
-        <p>Jos iskemä on liian suuri tai sijaitsee huonossa paikassa, suosittelemme tuulilasin vaihtoa turvallisuuden takaamiseksi. Arvioimme aina tilanteen erikseen ja neuvomme parhaan ratkaisun juuri sinun tilanteessasi.</p>
-
-        <h2>Miksi Valita Fixnero Tuulilasien Vaihtoon Espoossa?</h2>
-        <ul>
-            <li><strong>Pilkington laatu</strong> – Käytämme vain alkuperäisen tasoisia Pilkington tuulilasieja, jotka täyttävät kaikki turvallisuusstandardit</li>
-            <li><strong>Ammattitaitoinen tiimi</strong> – Kokeneet asentajamme tekevät työn huolellisesti ja tarkasti, varmistaen täydellisen lopputuloksen</li>
-            <li><strong>Nopea palvelu</strong> – Tuulilasien vaihto onnistuu usein saman päivän aikana sopivan ajan varauksella</li>
-            <li><strong>Laadukas asennus</strong> – Noudatamme tiukkoja laatustandardeja jokaisessa asennuksessa ja käytämme vain hyväksyttyjä materiaaleja</li>
-            <li><strong>Kattava palvelu</strong> – Hoidamme myös vakuutusasiat puolestasi, jos sinulla on lasivakuutus</li>
-            <li><strong>Kilpailukykyiset hinnat</strong> – Tarjoamme laadukasta palvelua reiluun hintaan ilman piilokustannuksia</li>
-            <li><strong>Kaikki ajoneuvotyypit</strong> – Palvelemme henkilöautoja, kuorma-autoja ja työkoneita</li>
-            <li><strong>Kokemus</strong> – Meillä on laaja kokemus lasien vaihdoista ja korjauksista eri ajoneuvotyypeille</li>
+            <li>Mattojen ja lattiapintojen perusteellinen imurointi</li>
+            <li>Kankaisten ja nahkaisten penkkien huolellinen pesu</li>
+            <li>Kojelaudan ja keskikonsolin perusteellinen puhdistus</li>
+            <li>Ovipaneelien puhdistus ja hoito</li>
+            <li>Lattiamattojen pesu ja desinfiointi</li>
+            <li>Sisäpuolisten ikkunoiden ja peilien kirkastus</li>
         </ul>
         
-        <p>Tuulilasi on tärkeä osa autosi turvallisuutta. Se suojaa sinua tuulelta, sateelta ja kiviltä, mutta se on myös rakenteellinen osa ajoneuvoa. Vaurioitunut tuulilasi voi vaarantaa turvallisuutesi, joten sen korjaaminen tai vaihtaminen on aina tärkeää tehdä ammattitaidolla.</p>
-
-        <h2>Vakuutusyhtiöiden Kanssa Toimiminen</h2>
-        <p>Autamme mielellämme vakuutusasioiden hoidossa. Jos sinulla on lasivakuutus, hoidamme tarvittavat ilmoitukset vakuutusyhtiölle puolestasi. Maksat vain vakuutuksesi omavastuuosuuden, ja me hoidamme loput. Työskentelemme yhteistyössä kaikkien suurimpien vakuutusyhtiöiden kanssa.</p>
-        
-        <p>Lasivakuutus kattaa yleensä sekä tuulilasin vaihdon että kiveniskemien korjaukset. Monissa vakuutuksissa kiveniskemän korjaus on jopa täysin maksuton ilman omavastuuta. Tarkista aina oman vakuutuksesi ehdot tai kysy meiltä neuvoa.</p>
-        
-        <h3>Vakuutusprosessi Yksinkertaisesti</h3>
-        <ol>
-            <li>Ota yhteyttä meihin ja kerro tuulilasin vauriosta</li>
-            <li>Ilmoitamme vaurion vakuutusyhtiöllesi puolestasi</li>
-            <li>Varaa aika meille tuulilasin vaihtoon tai korjaukseen</li>
-            <li>Maksat vain omavastuuosuuden (tai kiveniskemän korjauksessa ei omavastuuta)</li>
-            <li>Saat autosi takaisin uudella, turvallisella tuulilasilla</li>
-        </ol>
-
-        <h2>Tuulilasin Vaihdon Jälkeen – Huomioitavaa</h2>
-        <p>Tuulilasin vaihdon jälkeen on tärkeää noudattaa muutamia ohjeita, jotta lasi kiinnittyy kunnolla ja asennus kestää:</p>
+        <h3>Hinnasto sisäpuhdistukselle</h3>
+        <p>Tarjoamme kilpailukykyiset hinnat kaikille ajoneuvotyypeille:</p>
         <ul>
-            <li><strong>Kuivumisaika</strong> – Anna liiman kovettua riittävän kauan ennen ajamista. Ilmoitamme sinulle tarkan odotusajan asennuksen yhteydessä (yleensä 1 tunti).</li>
-            <li><strong>Auton pesu</strong> – Vältä automaattipesuloita ensimmäisen 24 tunnin ajan. Käsinpesu onnistuu varovasti.</li>
-            <li><strong>Ovet ja ikkunat</strong> – Ensimmäisen vuorokauden aikana vältä ovien tömäyttämistä ja pidä ikkunat hieman auki, jos mahdollista.</li>
-            <li><strong>Paine</strong> – Älä paina tuulilasia sisältä tai ulkoa ensimmäisen päivän aikana.</li>
+            <li><strong>Henkilöauto:</strong> alkaen 38 €</li>
+            <li><strong>Maasturi:</strong> alkaen 43 €</li>
+            <li><strong>Pakettiauto:</strong> alkaen 48 €</li>
         </ul>
-        
-        <p>Nämä ohjeet varmistavat, että liima kovettuu täydellisesti ja tuulilasi pysyy tukevasti paikallaan. Annamme aina tarkat ohjeet asennuksen yhteydessä.</p>
 
-        <h2>Usein Kysytyt Kysymykset Tuulilasien Vaihdosta</h2>
+        <h2>Kankaanpesu ja syväpuhdistus</h2>
+        <p>Kangasverhoilujen pesu kangaspesurilla poistaa syvemmältä lian, tahrat ja epäpuhtaudet. Tämä palvelu on erityisen suosittu, kun auton sisätilat tarvitsevat perusteellista raikastusta. Käytämme ammattilaistuotteita, jotka puhdistavat tehokkaasti mutta hellävaraisesti.</p>
         
-        <h3>Kauanko tuulilasin vaihto kestää?</h3>
-        <p>Tuulilasin vaihto kestää yleensä noin 1-2 tuntia riippuen auton mallista. Liiman kuivumiseen kuluu lisäksi aikaa, mutta voit usein hakea auton saman päivän aikana.</p>
-        
-        <h3>Voiko kiveniskemän aina korjata?</h3>
-        <p>Pienet iskemät voidaan usein korjata, mutta jos iskemä on suuri, sijaitsee kuljettajan näkökentässä tai lasin reunalla, suosittelemme tuulilasin vaihtoa turvallisuuden takaamiseksi.</p>
-        
-        <h3>Toimiiko lasivakuutus kaikissa tilanteissa?</h3>
-        <p>Lasivakuutus kattaa yleensä sekä vaihdot että korjaukset. Tarkista aina oman vakuutuksesi ehdot. Autamme mielellämme selvittämään vakuutusasiat.</p>
-        
-        <h3>Voinko ajaa autolla heti vaihdon jälkeen?</h3>
-        <p>Liiman on annettava kovettua riittävästi ennen ajamista. Ilmoitamme sinulle tarkan odotusajan.</p>
+        <h3>Kankaanpesun hinnat</h3>
+        <ul>
+            <li><strong>Henkilöauto:</strong> 88 €</li>
+            <li><strong>Maasturi:</strong> 88 €</li>
+            <li><strong>Pakettiauto:</strong> 68 €</li>
+        </ul>
 
-        <div class="cta-section" style="background: #fff url('lasikorjaus.webp') center top/cover; position: relative; overflow: hidden;">
+        <h2>Täyssiivous</h2>
+        <p>Täyssiivous on kattavin sisäpuhdistuspalvelumme. Se sisältää kaikki perussisäpuhdistuksen toimenpiteet sekä syväpuhdistuksen vaikeapääsyisiin kohtiin. Täyssiivous sopii erityisesti tilanteisiin, joissa auto tarvitsee kokonaisvaltaista sisätilojen uudistamista.</p>
+        <p><strong>Täyssiivous kaikille ajoneuvotyypeille:</strong> 148 €</p>
+
+        <h2>Lisäpalvelut sisäpuhdistukseen</h2>
+        
+        <h3>Otsonointi hajunpoistoon</h3>
+        <p>Otsonointi on tehokas menetelmä epämiellyttävien hajujen poistamiseksi autosta. Se neutraloi hajut molekyylitasolla ja on turvallinen sekä tehokas ratkaisu. Otsonointi sopii erityisesti tupakanhajun, lemmikkien hajun tai muiden pysyvien hajujen poistoon.</p>
+        <p><strong>Hinta: 85 €</strong></p>
+
+        <h3>Nahkapenkkien hoito ja suojaus</h3>
+        <p>Nahkapenkit vaativat erityishoitoa säilyttääkseen kauneutensa ja kestävyytensä. Puhdistamme ja hoidamme nahkapinnat ammattituotteilla, jotka ylläpitävät nahan joustavuutta ja estävät sen kuivumista ja halkeilua.</p>
+        <p><strong>Hinta: 80 €</strong></p>
+
+        <h3>Allergiapuhdistus ja desinfiointi</h3>
+        <p>Allergiapuhdistus on erityisen huolellinen puhdistus, joka sopii allergikoille ja herkille henkilöille. Poistamme pölyt, siitepölyn ja muut allergeenit autosi sisätiloista. Palveluun voidaan yhdistää myös desinfiointi, joka tuhoaa bakteerit ja virukset pinnoilta.</p>
+        <p><strong>Hinta: 90 €</strong></p>
+
+        <h3>Kangaspintojen suojaus</h3>
+        <p>Suojaamme verhoilun ja kangaspinnat erikoisaineilla, jotka hylkivät likaa ja nesteitä. Tämä helpottaa auton sisätilojen puhtaana pitämistä ja pidentää sisäpuhdistuksen vaikutusta merkittävästi.</p>
+        <p><strong>Hinta: 70 €</strong></p>
+
+        <h2>Miksi valita Fixneron sisäpuhdistus?</h2>
+        <ul>
+            <li><strong>Ammattilaistuotteet:</strong> Käytämme vain laadukkaita, ammattikäyttöön tarkoitettuja tuotteita, jotka ovat tehokkaita mutta turvallisia</li>
+            <li><strong>Hajusteettomat aineet:</strong> Tuotteemme eivät sisällä voimakkaita hajusteita, joten ne sopivat myös herkille henkilöille</li>
+            <li><strong>Hellävarainen puhdistus:</strong> Emme vahingoita herkkiä pintoja, nahkaa tai kangasta</li>
+            <li><strong>Räätälöity palvelu:</strong> Voit valita juuri sinulle sopivat palvelut ja yhdistää eri palveluita tarpeidesi mukaan</li>
+            <li><strong>Kokenut henkilökunta:</strong> Ammattitaitoiset työntekijät huolehtivat autostasi asiantuntemuksella</li>
+            <li><strong>Kilpailukykyiset hinnat:</strong> Tarjoamme laadukkaat palvelut kohtuulliseen hintaan</li>
+        </ul>
+
+        <p style="margin-top: 30px; text-align: center;">
+            <a href="tyonnaytteet" class="btn-read-more">📸 Asiakkaiden ennen ja jälkeen kuvat</a>
+        </p>
+
+        <h2>Yhdistä sisäpuhdistus muihin palveluihin</h2>
+        <p>Voit yhdistää sisäpuhdistuksen myös ulkopesuun tai kiillotukseen kokonaisvaltaista lopputulosta varten. Kun auton sisä ja ulkopuoli ovat molemmat puhtaat, autosi on kuin uusi. Kysy meiltä yhdistelmäpaketeista ja saat parhaan vastineen rahoillesi.</p>
+
+        <div class="cta-section" style="background: #fff url('sisapuhdistus.webp') center top/cover; position: relative; overflow: hidden;">
             <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.85); z-index: 1; pointer-events: none;"></div>
             <div style="position: relative; z-index: 2;">
-                <h2>Varaa aika tuulilasin vaihtoon</h2>
-                <p>Ota yhteyttä ja kysy lisää tuulilasien vaihdosta tai varaa aika – autamme mielellämme!</p>
+                <h2>Varaa aika sisäpuhdistukseen</h2>
+                <p>Ota yhteyttä tai varaa aika suoraan! Autosi sisätilat ansaitsevat parhaan mahdollisen hoidon.</p>
                 <a href="tel:+358401935001" class="cta-button">📞 Soita: 040 1935001</a>
                 <a href="mailto:info@fixnero.fi" class="cta-button">📧 Lähetä sähköposti</a>
                 <a href="index#ajanvaraus" class="cta-button">📅 Varaa Aika</a>
             </div>
         </div>
 
-        <h2>Tutustu Meihin</h2>
+        <h2>Tutustu myös muihin palveluihimme</h2>
         <div class="links-section">
             <a href="tyonnaytteet" class="link-card" style="background-image: url('Tyonaytteet.webp'); background-size: cover; background-position: center;">
                 <div style="background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px;">
@@ -614,7 +644,7 @@
                 </div>
             </a>
             
-            <a href="index#yhteystiedot" class="link-card" style="background-image: url('sisapuhdistus.webp'); background-size: cover; background-position: center;">
+            <a href="index#yhteystiedot" class="link-card" style="background-image: url('yhteystiedot.webp'); background-size: cover; background-position: center;">
                 <div style="background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px;">
                     <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">📞 Ota yhteyttä</h3>
                     <p style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">Ota meihin yhteyttä ja kysy lisää palveluistamme tai varaa aika!</p>
@@ -622,15 +652,14 @@
             </a>
         </div>
     </div>
-
     <footer>
         <div class="footer">
             <div class="logo-container footer-section">
                 <a href="index#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut" loading="lazy" style="max-width: 200px; height: auto; margin-bottom: 15px;"></a>
                 <p>Fixnero © 2025. All Rights Reserved.</p>
                 <p style="margin-top: 10px; font-size: 0.9rem;">
-                    <a href="cookie-policy" style="color: #ecf0f1; text-decoration: none;">Evästekäytäntö</a> | 
-                    <a href="tietosuojaseloste" style="color: #ecf0f1; text-decoration: none;">Tietosuojaseloste</a>
+                    <a href="cookie-policy" style="color: #ffffff; text-decoration: none;">Evästekäytäntö</a> | 
+                    <a href="tietosuojaseloste" style="color: #ffffff; text-decoration: none;">Tietosuojaseloste</a>
                 </p>
                 <div class="social-media-links" style="margin-top: 15px;">
                     <p style="font-weight: 600; margin-bottom: 10px;">Seuraa meitä:</p>
@@ -638,7 +667,7 @@
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                     </a>
                     <a href="https://www.instagram.com/fixnero.fi?igsh=MTFvdThjbGk5NmJhbQ==" target="_blank" rel="noopener" style="display: inline-block; margin: 0 10px; padding-right: 10px; border-right: 2px solid #666666; color: #E4405F; font-size: 1.5rem; text-decoration: none;" aria-label="Instagram">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.40s-.644-1.44-1.439-1.44z"/></svg>
                     </a>
                     <a href="https://wa.me/358401935001" target="_blank" rel="noopener" style="display: inline-block; margin: 0 10px; color: #25D366; font-size: 1.5rem; text-decoration: none;" aria-label="WhatsApp">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
@@ -646,7 +675,7 @@
                 </div>
             </div>
             <div class="services-section footer-section">
-                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: #ffffff;">Palvelumme</h3>
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Palvelumme</h3>
                 <a href="pesupalvelut" title="Autopesu Espoo - Käsinpesu ja vahaukset">Autopesu</a>
                 <a href="rengastyot" title="Rengastyöt Espoo - Renkaiden vaihto ja rengashotelli">Rengastyöt</a>
                 <a href="korjaustyot" title="Korjaustyöt Espoo - Autohuolto ja katsastuskorjaukset">Korjaustyöt</a>
@@ -654,19 +683,17 @@
                 <a href="kiilloitus" title="Kiillotus Espoo - Koneellinen kiillotus ja pinnoitus">Kiillotus</a>
                 <a href="lasikorjaus">Lasikorjaus</a>
                 <a href="kolhukorjaus" title="Kolhukorjaus Espoo - Lommojen oikaisu ja ruostekorjaukset">Kolhukorjaus</a>
-                <a href="tietoa-meista" title="Tietoa meistä - Tutustu Fixnero autohuoltoon">Tietoa meistä</a>
-                <a href="blogi/" title="Blogi - Vinkkejä auton hoitoon">Blogi</a>
                 <a href="index#hinnasto">Hinnasto</a>
                 <a href="index#yhteystiedot">Yhteystiedot</a>
                 <a href="tyonnaytteet" title="Työnäytteet - Aiemmat työt">Työnäytteet</a>
             </div>
             <div class="contact-section footer-section">
-                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: #ffffff;">Yhteystiedot</h3>
-                <p style="color: #ffffff;"><strong style="color: #ffffff;">📞 Puhelin:</strong> <a href="tel:+358401935001" style="color: #ffffff; text-decoration: none;">040 1935001</a></p>
-                <p style="color: #ffffff;"><strong style="color: #ffffff;">📧 Sähköposti:</strong> <a href="mailto:info@fixnero.fi" style="color: #ffffff;">info@fixnero.fi</a></p>
-                <p style="color: #ffffff;"><strong style="color: #ffffff;">🕐 Aukioloajat:</strong></p>
-                <p style="margin-left: 20px; color: #ffffff;">Ma-Pe: 9:00-17:00<br>La-Su: Suljettu</p>
-                <p style="color: #ffffff;"><strong style="color: #ffffff;">📍 Osoite:</strong><br>Tiilenvalajantie 6<br>02330 Espoo (Kivenlahti)<br><small style="color: #ffffff;">Sisäpiha, keskimmäinen nosto-ovi<br>Helppo Katsastuksen vieressä</small></p>
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Yhteystiedot</h3>
+                <p><strong>📞 Puhelin:</strong> <a href="tel:+358401935001" style="color: inherit; text-decoration: none;">040 1935001</a></p>
+                <p><strong>📧 Sähköposti:</strong> <a href="mailto:info@fixnero.fi">info@fixnero.fi</a></p>
+                <p><strong>🕐 Aukioloajat:</strong></p>
+                <p style="margin-left: 20px;">Ma-Pe: 9:00-17:00<br>La-Su: Suljettu</p>
+                <p><strong>📍 Osoite:</strong><br>Tiilenvalajantie 6<br>02330 Espoo (Kivenlahti)<br><small>Sisäpiha, keskimmäinen nosto-ovi<br>Helppo Katsastuksen vieressä</small></p>
             </div>
         </div>
     </footer>
@@ -694,8 +721,8 @@
             flex-direction: column;
         }
         .footer-section a { color: #ffffff; text-decoration: underline; }
-        .footer-section p { color: #ffffff; }
-        .footer-section h3, .footer-section h4, .footer-section p, .footer-section a {
+        .footer-section h3, .footer-section h4, .footer-section p, .footer-section a, .footer-section strong, .footer-section small {
+            color: #ffffff;
             margin: 8px 0;
         }
         @media (max-width: 768px) {
@@ -703,6 +730,9 @@
             .footer-section { align-items: center; text-align: center; }
         }
     </style>
+
+
+
 
     <!-- Cookie Consent Banner - GDPR Compliant -->
     <script src="cookie-consent.min.js" defer></script>

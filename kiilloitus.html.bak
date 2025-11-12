@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,user-scalable=yes">
-    <meta name="description" content="Tuulilasien vaihto ja korjaus Espoo – Ammattitaitoinen asennus Pilkington tuulilaseilla Kivenlahdessa. Kiveniskemien korjaus, lasivakuutus hyväksytty. Nopea palvelu henkilöautoihin, kuorma-autoihin ja työkoneisiin. Varaa aika 040 1935001.">
-    <meta name="keywords" content="tuulilasien vaihto Espoo, Pilkington tuulilasit, ammattitaitoinen asennus, lasikorjaus Espoo, tuulilasin vaihto Kivenlahti, kiveniskemän korjaus, lasipalvelut Espoo, tuulilasi Espoo, lasivakuutus, henkilöauto tuulilasi, kuorma-auto tuulilasi, windshield replacement Espoo, Fixnero lasikorjaus">
-    <title>Tuulilasien Vaihto ja Korjaus Espoo – Pilkington Tuulilasit | Fixnero</title>
+    <meta name="description" content="Kiillotus Espoo - Fixnero tarjoaa ammattitaitoista auton kiillotusta, keraamisia pinnoitteita, naarmujen poistoa ja 1-3 step kiillotuspalveluita Kivenlahdessa Espoossa. Autosi kiiltää kuin uusi. Varaa aika 040 1935001.">
+    <meta name="keywords" content="kiilloitus Espoo, auton kiilloitus Espoo, keraaminen pinnoite, naarmujen poisto, 1 step kiilloitus, 2 step kiilloitus, 3 step kiilloitus, koneellinen kiilloitus, Kivenlahti kiilloitus, auton pinnoitus, ceramic coating">
+    <title>Kiillotus ja Pinnoitteet Espoo – Fixnero</title>
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://fixnero.fi/lasikorjaus">
-    <meta property="og:title" content="Tuulilasien Vaihto ja Korjaus Espoo – Pilkington Tuulilasit | Fixnero">
-    <meta property="og:description" content="Ammattitaitoinen tuulilasien vaihto ja korjaus Pilkington laseilla Kivenlahdessa, Espoossa. Kiveniskemien korjaus, lasivakuutus hyväksytty. Nopea ja laadukas palvelu.">
-    <meta property="og:image" content="https://fixnero.fi/lasikorjaus.webp">
+    <meta property="og:url" content="https://fixnero.fi/kiilloitus">
+    <meta property="og:title" content="Kiillotus ja Pinnoitteet Espoo – Fixnero">
+    <meta property="og:description" content="Ammattitaitoinen auton kiillotus Espoossa: keraaminen pinnoitus, naarmujen poisto, 1-3 step kiillotus. Autosi kiiltää kuin uusi!">
+    <meta property="og:image" content="https://fixnero.fi/kiilloitus.webp">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://fixnero.fi/lasikorjaus">
-    <meta property="twitter:title" content="Tuulilasien Vaihto ja Korjaus Espoo – Pilkington Tuulilasit | Fixnero">
-    <meta property="twitter:description" content="Ammattitaitoinen tuulilasien vaihto ja korjaus Pilkington laseilla Kivenlahdessa, Espoossa. Kiveniskemien korjaus, lasivakuutus hyväksytty. Nopea ja laadukas palvelu.">
-    <meta property="twitter:image" content="https://fixnero.fi/lasikorjaus.webp">
+    <meta property="twitter:url" content="https://fixnero.fi/kiilloitus">
+    <meta property="twitter:title" content="Kiillotus ja Pinnoitteet Espoo – Fixnero">
+    <meta property="twitter:description" content="Ammattitaitoinen auton kiillotus Espoossa: keraaminen pinnoitus, naarmujen poisto, 1-3 step kiillotus. Autosi kiiltää kuin uusi!">
+    <meta property="twitter:image" content="https://fixnero.fi/kiilloitus.webp">
     
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://fixnero.fi/lasikorjaus">
+    <link rel="canonical" href="https://fixnero.fi/kiilloitus">
     
     <!-- Favicon - Multiple formats for browser and search engine compatibility -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -37,12 +37,12 @@
     {
         "@context": "https://schema.org",
         "@type": "Service",
-        "name": "Tuulilasien Vaihto ja Korjaus Espoo",
-        "serviceType": "Tuulilasien vaihto ja korjaus",
-        "description": "Fixnero tarjoaa ammattitaitoista tuulilasien vaihtopalvelua ja kiveniskemien korjausta Pilkington tuulilaseilla Kivenlahdessa, Espoossa. Palvelemme henkilöautoja, kuorma-autoja ja työkoneita. Lasivakuutus hyväksytty.",
+        "name": "Kiillotus Espoo",
+        "serviceType": "Kiillotus ja pinnoitteet",
+        "description": "Fixnero tarjoaa ammattimaisen auton kiillotuksen Espoossa. Sisältää koneellisen kiillotuksen, keraamisen pinnoitteen ja naarmujen poiston.",
         "provider": {
             "@type": "LocalBusiness",
-            "name": "Fixnero",
+            "name": "Fixnero / Rajala Services",
             "telephone": "+358401935001",
             "email": "info@fixnero.fi",
             "address": {
@@ -56,30 +56,7 @@
         "areaServed": {
             "@type": "Place",
             "name": "Espoo"
-        },
-        "brand": {
-            "@type": "Brand",
-            "name": "Pilkington"
-        },
-        "offers": [
-            {
-                "@type": "Offer",
-                "name": "Kiveniskemän korjaus",
-                "price": "50",
-                "priceCurrency": "EUR",
-                "description": "Kiveniskemän korjaus erikoishartsilla. Lasiturvalla ilmainen."
-            },
-            {
-                "@type": "Offer",
-                "name": "Tuulilasin vaihto lasivakuutuksella",
-                "description": "Maksat vain vakuutuksen omavastuun. Hoidamme vakuutusasiat puolestasi."
-            },
-            {
-                "@type": "Offer",
-                "name": "Tuulilasin vaihto ilman vakuutusta",
-                "description": "Kilpailukykyinen hinta Pilkington tuulilasille. Pyydä tarjous."
-            }
-        ]
+        }
     }
     </script>
     
@@ -99,13 +76,13 @@
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Palvelut",
-                "item": "https://www.rajala-services.com/index#lasikorjaus"
+                "item": "https://www.rajala-services.com/index#kiilloitus"
             },
             {
                 "@type": "ListItem",
                 "position": 3,
-                "name": "Lasikorjaus",
-                "item": "https://www.rajala-services.com/lasikorjaus"
+                "name": "Kiillotus",
+                "item": "https://www.rajala-services.com/kiilloitus"
             }
         ]
     }
@@ -286,23 +263,6 @@
         ul { color: #333333; line-height: 1.8; padding-left: 20px; }
         ul li { margin-bottom: 8px; }
         strong { color: #1a1a1a; }
-        .btn-read-more {
-            display: inline-block;
-            padding: 8px 19px;
-            background: #3FA9F5;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 0.72rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(63, 169, 245, 0.3);
-        }
-        .btn-read-more:hover {
-            background: #5CB8FF;
-            box-shadow: 0 0 20px rgba(63, 169, 245, 0.6), 0 0 40px rgba(63, 169, 245, 0.4);
-            transform: translateY(-2px);
-        }
         .cta-section {
             background: linear-gradient(135deg, #666666, #444444);
             color: white; padding: 30px;
@@ -320,7 +280,7 @@
         }
         .cta-button {
             display: inline-block;
-            padding: 10px 24px;
+            padding: 12px 30px;
             background: linear-gradient(135deg, #666666, #444444);
             color: white;
             text-decoration: none;
@@ -332,6 +292,24 @@
         .cta-button:hover { 
             transform: translateY(-2px); 
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        .btn-read-more {
+            display: inline-block;
+            padding: 8px 19px;
+            background: #3FA9F5;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.72rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(63, 169, 245, 0.3);
+            margin: 20px 5px;
+        }
+        .btn-read-more:hover {
+            background: #5CB8FF;
+            box-shadow: 0 0 20px rgba(63, 169, 245, 0.6), 0 0 40px rgba(63, 169, 245, 0.4);
+            transform: translateY(-2px);
         }
         .links-section {
             margin: 50px 0;
@@ -361,7 +339,7 @@
         .link-card p {
             margin: 0;
             opacity: 0.9;
-            font-size: 0.9rem;
+            font-size: 1rem;
         }
         /* Tablet and larger devices - center buttons with proper gap */
         @media (min-width: 769px) {
@@ -464,7 +442,7 @@
     </button>
 
     <nav id="nav">
-        <a href="index#top"><img src="FXNRv.webp" alt="Fixnero - Lasikorjaus Espoo, tuulilasin korjaus ja vaihto"></a>
+        <a href="index#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" loading="lazy"></a>
         <a href="index#pesupalvelut">Autopesu</a>
         <a href="index#sisapuhdistus">Sisäpuhdistus</a>
         <a href="index#kiilloitus">Kiillotus</a>
@@ -478,113 +456,120 @@
 
     <div class="container">
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; margin-bottom: 25px;">
-            <a href="index#lasikorjaus" class="back-button" style="margin-bottom: 0;">← Takaisin palveluihin</a>
-            <a href="pesupalvelut" class="btn-read-more" style="margin: 0; white-space: nowrap;">Lue Autopesu palvelusta →</a>
+            <a href="index#kiilloitus" class="back-button" style="margin-bottom: 0;">← Takaisin palveluihin</a>
+            <a href="kolhukorjaus" class="btn-read-more" style="margin: 0; white-space: nowrap;">Lue Kolhukorjaus palvelusta →</a>
         </div>
         
-        <h1 style="margin-bottom: 25px;">Tuulilasien vaihto ja kiveniskemän korjaus Espoossa - Fixnero.</h1>
+        <h1 style="margin-bottom: 25px;">Kiillotus ja pinnoitteet Espoo - koneellinen kiillotus, vahakäsittely ja keraamiset pinnoitteet Fixnerolta.</h1>
         
-        <p>Fixnero tarjoaa ammattitaitoista tuulilasien vaihtopalvelua Kivenlahdessa, Espoossa. Käytämme vain laadukkaita <strong>Pilkington tuulilasiä</strong>, jotka ovat tunnetusti kestäviä ja täsmällisesti auton mallille sopivia. Palvelumme kattaa sekä tuulilasin vaihdot että kiveniskemien korjaukset henkilöautoihin, kuorma-autoihin ja työkoneisiin.</p>
+        <p>Fixnero tarjoaa ammattitaitoista koneellista kiillotusta ja pinnoituspalveluita Espoossa, Kivenlahdessa. Kiillotus palauttaa maalipinnan kiillon, poistaa pienet naarmut tehokkaasti ja saa autosi näyttämään jälleen uudelta. Käytämme vain huippulaatuisia ammattilaistuotteita ja koneita, jotka takaavat parhaan mahdollisen lopputuloksen autollesi.</p>
 
-        <p>Kokenut tiimimme asentaa tuulilasin ammattitaidolla ja huolella, varmistaen turvallisen ja pitkäkestoisen lopputuloksen. Tuulilasien vaihto on meille arkipäivää Espoossa. Olemme erikoistuneet nopeaan ja laadukkaaseen asennukseen kaikille automerkeille. Meillä on laaja kokemus lasien vaihdoista ja korjauksista eri ajoneuvotyypeille.</p>
+        <p>Meillä on laaja kokemus kiillotuksesta ja pinnoituksista eri ajoneuvotyypeille, mukaan lukien henkilöautot, maasturit, moottoripyörät, veneet sekä työkoneet. Jokainen kiillotus tehdään huolellisesti ajoneuvon maalipinnan kunnon ja toivotun lopputuloksen mukaan. Palvelumme on räätälöitävissä juuri sinun autosi tarpeiden mukaan, jotta saat parhaan mahdollisen tuloksen.</p>
 
-        <h2>Pilkington Tuulilasit</h2>
-        <p>Käytämme laadukkaita Pilkington tuulilasieja, jotka täyttävät autovalmistajien vaatimukset ja turvallisuusstandardit. Ammattitaitoinen asennustiimimme varmistaa huolellisen ja kestävän lopputuloksen. Jokainen asennus tehdään takuulla, joten voit luottaa työhömme.</p>
+        <h2>Kiillotuspalvelumme ja Hinnat</h2>
+        
+        <h3>1-vaiheinen Kiillotus</h3>
+        <p>Yhden vaiheen kiillotus sopii autoille, joiden maalipinta on kohtuullisessa kunnossa ja tarvitsee pääasiassa kiillon palauttamista. Prosessissa käytetään yhtä kiillotusvaihetta, joka poistaa lieviä naarmuja ja palauttaa maalipinnan kiillon. Tämä on kustannustehokas valinta, kun autosi maalipinta on melko hyvässä kunnossa mutta kaipaa raikastusta ja kiiltoa.</p>
+        <p><strong>Hinta: alkaen 248 €</strong></p>
 
-        <h2>Ammattitaitoinen Asennus ja Huolellinen Työ</h2>
-        <p>Tuulilasin ammattitaitoinen asennus on yhtä tärkeää kuin laadukas lasi. Fixnerolla meillä on pitkä kokemus tuulilasien vaihdoista, ja käytämme nykyaikaisia asennusmenetelmiä ja materiaaleja. Jokainen asennus tehdään huolellisesti ja tarkasti seuraavien vaiheiden mukaisesti:</p>
+        <h3>2-vaiheinen Kiillotus</h3>
+        <p>Kahden vaiheen kiillotus on perusteellisempi prosessi, joka sopii autoille, joissa on enemmän naarmuja, hapettumaa tai maalipinnan kulumista. Ensimmäisessä vaiheessa poistetaan syvemmät naarmut ja hapettumat, ja toisessa vaiheessa viimeistellään pinta kiiltäväksi ja sileäksi. Lopputulos on merkittävästi parempi kuin yhden vaiheen kiillotuksessa.</p>
+        <p><strong>Hinta: alkaen 598 €</strong></p>
+
+        <h3>3-vaiheinen Kiillotus</h3>
+        <p>Kattavin kiillotuspalvelumme sisältää kolme erillistä kiillotusvaihetta, jotka tuottavat showroom-tason lopputuloksen. Tämä on paras vaihtoehto autoille, jotka tarvitsevat kokonaisvaltaista kunnostusta ja maksimaalisen kiillon palauttamista. Prosessi sisältää karkean hiomisen, keskihienon kiillotuksen ja lopuksi viimeistelykiillotuksen, joka tuottaa peilitason lopputuloksen.</p>
+        <p><strong>Hinta: alkaen 898 €</strong></p>
+
+        <h3>Vesihionta</h3>
+        <p>Vesihionta on erikoistoimenpide syvien naarmujen, hapettumien tai maalipinnan epätasaisuuksien poistamiseen. Tätä palvelua käytetään erityisen haastavissa tapauksissa, ja hinta määräytyy aina työn laajuuden mukaan. Ota yhteyttä saadaksesi tarkan arvion autosi tilanteesta.</p>
+        <p><strong>Hinta: sopimuksen mukaan</strong></p>
+
+        <h2>Vahaukset ja Pintakäsittelyt</h2>
+        
+        <p>Kiillotuksen jälkeen on tärkeää suojata maalipinta laadukkaalla vahakäsittelyllä tai pinnoitteella. Tarjoamme useita vaihtoehtoja eri tarpeisiin ja budjetteihin:</p>
+
+        <h3>Vahakäsittely</h3>
+        <p>Perinteinen vahakäsittely antaa maalipinnalle hyvän suojan ja kiillon. Vahaus suojaa autoa sateelta, lialta ja UV-säteilyltä sekä helpottaa auton pesua merkittävästi. Tämä on erinomainen valinta säännölliseen autosi hoitoon.</p>
+        <ul>
+            <li>Henkilöauto: <strong>98 €</strong></li>
+            <li>Maasturi: <strong>108 €</strong></li>
+            <li>Pakettiauto: <strong>118 €</strong></li>
+        </ul>
+
+        <h3>Kovavaha</h3>
+        <p>Kovavaha on kestävämpi ja pitkäikäisempi vaihtoehto perinteiselle vahalle. Se muodostaa kovemman suojakerroksen, joka kestää paremmin kulutusta ja säätä. Kovavaha säilyttää kiiltonsa pidempään ja tarjoaa erinomaisen suojan maalipinnalle.</p>
+        <ul>
+            <li>Henkilöauto: <strong>118 €</strong></li>
+            <li>Maasturi: <strong>128 €</strong></li>
+            <li>Pakettiauto: <strong>148 €</strong></li>
+        </ul>
+
+        <h3>Ultra Shine</h3>
+        <p>Ultra Shine on premium-tason pintakäsittely, joka yhdistää parhaat ominaisuudet vahasta ja synteettisestä pinnoitteesta. Se tuottaa poikkeuksellisen syvän kiillon ja tarjoaa erinomaisen suojan autosi maalipinnalle. Ultra Shine on suosittu valinta asiakkaillemme, jotka haluavat ehdotonta huippulaatuista lopputulosta.</p>
+        <ul>
+            <li>Henkilöauto: <strong>168 €</strong></li>
+            <li>Maasturi: <strong>178 €</strong></li>
+            <li>Pakettiauto: <strong>198 €</strong></li>
+        </ul>
+
+        <h3>Keraaminen Pinnoite</h3>
+        <p>Keraaminen pinnoite on modernin teknologian mukainen pitkäkestoinen suoja autosi maalipinnalle. Se muodostaa kovan, kiiltävän kerroksen, joka tarjoaa markkinoiden parasta suojaa ja kestävyyttä. Keraaminen pinnoite on investointi, joka maksaa itsensä takaisin pidemmällä aikavälillä.</p>
+        <p>Keraaminen pinnoite:</p>
+        <ul>
+            <li>Suojaa maalipintaa UV-säteilyltä, hapettumiselta ja ympäristön vaikutuksilta</li>
+            <li>Tekee pinnasta vettä ja likaa hylkivän (hydrofobinen vaikutus)</li>
+            <li>Helpottaa huomattavasti auton pesua, lika ei tartu yhtä helposti</li>
+            <li>Säilyttää kiillon ja värin kirkkauden pidempään</li>
+            <li>Kestää jopa useita vuosia oikealla hoidolla</li>
+            <li>Suojaa maalipintaa pieniltä naarmuilta ja ympäristön kulutukselta</li>
+        </ul>
+        <p><strong>Hinnat:</strong></p>
+        <ul>
+            <li>Henkilöauto: <strong>alkaen 258 €</strong></li>
+            <li>Maasturi: <strong>alkaen 283 €</strong></li>
+        </ul>
+
+        <h2>Kiillotusprosessi Vaihe Vaiheelta</h2>
+        <p>Ammattitaitoinen kiillotusprosessimme on suunniteltu takaamaan parhaat mahdolliset tulokset jokaiselle autolle. Noudatamme tarkasti laadukasta työtapaa, joka takaa tasaisen ja kestävän lopputuloksen:</p>
         <ol>
-            <li><strong>Vanhan lasin poisto</strong> – Vanha tuulilasi poistetaan varovasti vahingoittamatta auton rakennetta tai maalipintaa</li>
-            <li><strong>Pintojen puhdistus ja valmistelu</strong> – Asennuspinnat puhdistetaan perusteellisesti ja käsitellään asianmukaisesti optimaalisen kiinnityksen varmistamiseksi</li>
-            <li><strong>Uuden lasin asennus</strong> – Pilkington tuulilasi asennetaan tarkasti paikoilleen käyttäen ammattitason työkaluja ja tekniikoita</li>
-            <li><strong>Liimaus ja tiivistys</strong> – Käytämme laadukkaita polyuretaaniliima-aineita varmistaaksemme vedenpitävyyden ja rakenteen lujuuden</li>
-            <li><strong>Kuivumisaika</strong> – Annamme liiman kovettua asianmukaisesti ennen ajoneuvon luovutusta, jotta asennus on täysin turvallinen</li>
-            <li><strong>Laaduntarkastus</strong> – Tarkistamme asennuksen laadun ja varmistamme, että kaikki toimii täydellisesti ennen ajoneuvon palautusta</li>
-        </ol>
-        
-        <p>Jokainen työvaihe suoritetaan alan parhaiden käytäntöjen mukaisesti, mikä takaa turvallisen ja kestävän lopputuloksen. Käytämme ainoastaan autovalmistajien hyväksymiä materiaaleja ja noudatamme tiukkoja laatustandardeja.</p>
-
-        <h2>Tuulilasien Vaihto ja Korjaus Espoossa – Palvelumme</h2>
-        
-        <h3>Tuulilasin Vaihto Lasivakuutuksella</h3>
-        <p>Jos sinulla on lasivakuutus, voimme hoitaa tuulilasin vaihdon täysin vakuutuksen kautta. Sinun tarvitsee maksaa vain vakuutuksesi omavastuu, ja me hoidamme kaikki muut asiat vakuutusyhtiön kanssa. Palvelu sisältää ammattitaitoisen asennuksen Pilkington tuulilasilla sekä täydellisen laaduntarkastuksen.</p>
-        <p><strong>Hinta:</strong> Maksat vain omavastuun</p>
-
-        <h3>Tuulilasin Vaihto Ilman Vakuutusta</h3>
-        <p>Vaikka sinulla ei olisi lasivakuutusta, voimme tarjota kilpailukykyisen hinnan tuulilasin vaihtoon. Käytämme aina laadukkaita Pilkington tuulilasieja ja ammattitaitoinen asennustiimimme takaa huolellisen ja turvallisen asennuksen. Ota yhteyttä, niin annamme sinulle tarkan tarjouksen juuri sinun autosi tuulilasista.</p>
-        <p><strong>Hinta:</strong> Kysy tarjous – annamme kilpailukykyisen hinnan</p>
-
-        <h3>Kiveniskemän Korjaus</h3>
-        <p>Pienet kiveniskemät tuulilasissa voidaan usein korjata ilman koko tuulilasin vaihtoa. Korjaus on nopea ja kustannustehokas ratkaisu, joka estää iskemän leviämisen ja säästää sinulta kalliimman lasinvaihdon. Korjaamme iskemän ammattitaitoisesti erikoishartsilla, joka täyttää vaurion ja palauttaa lasin lujuuden. Korjaus on lähes näkymätön ja kestää hyvin.</p>
-        <p><strong>Milloin iskemä kannattaa korjata?</strong></p>
-        <ul>
-            <li>Iskemä on pienempi kuin kolikon kokoinen</li>
-            <li>Iskemä ei ole suoraan kuljettajan näkökentässä</li>
-            <li>Iskemä ei ole lasin reunalla</li>
-            <li>Iskemä ei ole levinnyt pitkäksi halkeamaksi</li>
-        </ul>
-        <p><strong>Hinta:</strong> 50 € / lasiturvalla ilmainen</p>
-        
-        <p>Jos iskemä on liian suuri tai sijaitsee huonossa paikassa, suosittelemme tuulilasin vaihtoa turvallisuuden takaamiseksi. Arvioimme aina tilanteen erikseen ja neuvomme parhaan ratkaisun juuri sinun tilanteessasi.</p>
-
-        <h2>Miksi Valita Fixnero Tuulilasien Vaihtoon Espoossa?</h2>
-        <ul>
-            <li><strong>Pilkington laatu</strong> – Käytämme vain alkuperäisen tasoisia Pilkington tuulilasieja, jotka täyttävät kaikki turvallisuusstandardit</li>
-            <li><strong>Ammattitaitoinen tiimi</strong> – Kokeneet asentajamme tekevät työn huolellisesti ja tarkasti, varmistaen täydellisen lopputuloksen</li>
-            <li><strong>Nopea palvelu</strong> – Tuulilasien vaihto onnistuu usein saman päivän aikana sopivan ajan varauksella</li>
-            <li><strong>Laadukas asennus</strong> – Noudatamme tiukkoja laatustandardeja jokaisessa asennuksessa ja käytämme vain hyväksyttyjä materiaaleja</li>
-            <li><strong>Kattava palvelu</strong> – Hoidamme myös vakuutusasiat puolestasi, jos sinulla on lasivakuutus</li>
-            <li><strong>Kilpailukykyiset hinnat</strong> – Tarjoamme laadukasta palvelua reiluun hintaan ilman piilokustannuksia</li>
-            <li><strong>Kaikki ajoneuvotyypit</strong> – Palvelemme henkilöautoja, kuorma-autoja ja työkoneita</li>
-            <li><strong>Kokemus</strong> – Meillä on laaja kokemus lasien vaihdoista ja korjauksista eri ajoneuvotyypeille</li>
-        </ul>
-        
-        <p>Tuulilasi on tärkeä osa autosi turvallisuutta. Se suojaa sinua tuulelta, sateelta ja kiviltä, mutta se on myös rakenteellinen osa ajoneuvoa. Vaurioitunut tuulilasi voi vaarantaa turvallisuutesi, joten sen korjaaminen tai vaihtaminen on aina tärkeää tehdä ammattitaidolla.</p>
-
-        <h2>Vakuutusyhtiöiden Kanssa Toimiminen</h2>
-        <p>Autamme mielellämme vakuutusasioiden hoidossa. Jos sinulla on lasivakuutus, hoidamme tarvittavat ilmoitukset vakuutusyhtiölle puolestasi. Maksat vain vakuutuksesi omavastuuosuuden, ja me hoidamme loput. Työskentelemme yhteistyössä kaikkien suurimpien vakuutusyhtiöiden kanssa.</p>
-        
-        <p>Lasivakuutus kattaa yleensä sekä tuulilasin vaihdon että kiveniskemien korjaukset. Monissa vakuutuksissa kiveniskemän korjaus on jopa täysin maksuton ilman omavastuuta. Tarkista aina oman vakuutuksesi ehdot tai kysy meiltä neuvoa.</p>
-        
-        <h3>Vakuutusprosessi Yksinkertaisesti</h3>
-        <ol>
-            <li>Ota yhteyttä meihin ja kerro tuulilasin vauriosta</li>
-            <li>Ilmoitamme vaurion vakuutusyhtiöllesi puolestasi</li>
-            <li>Varaa aika meille tuulilasin vaihtoon tai korjaukseen</li>
-            <li>Maksat vain omavastuuosuuden (tai kiveniskemän korjauksessa ei omavastuuta)</li>
-            <li>Saat autosi takaisin uudella, turvallisella tuulilasilla</li>
+            <li><strong>Perusteellinen pesu:</strong> Aloitamme aina huolellisella autosi ulkopesulla, joka poistaa kaikki lika- ja pölypartikkelit. Tämä on välttämätöntä, jotta kiillotus ei aiheuta ylimääräisiä naarmuja maalipintaan.</li>
+            <li><strong>Maalipinnan arviointi:</strong> Tarkastamme autosi maalipinnan kunnon ja määritämme sopivat kiillotustuotteet sekä työmenetelmät. Jokainen auto on yksilö, ja siksi räätälöimme palvelun juuri sinun autosi tarpeisiin.</li>
+            <li><strong>Ammattimainen kiillotus:</strong> Suoritamme kiillotuksen huippuluokan ammattikoneilla ja tuotteilla. Työskentelemme huolellisesti ja varmistamme, että jokainen paneeli saa tasaisen käsittelyn.</li>
+            <li><strong>Viimeistely ja suojaus:</strong> Kiillotuksen jälkeen suojaamme maalipinnan valitsemallasi vahakäsittelyllä tai pinnoitteella. Tämä varmistaa, että kiilto säilyy pidempään ja autosi pysyy kauniina.</li>
+            <li><strong>Laadun tarkistus:</strong> Lopuksi tarkistamme koko auton huolellisesti varmistaaksemme, että lopputulos on täydellinen ja vastaa odotuksiamme sekä asiakkaan toiveita.</li>
         </ol>
 
-        <h2>Tuulilasin Vaihdon Jälkeen – Huomioitavaa</h2>
-        <p>Tuulilasin vaihdon jälkeen on tärkeää noudattaa muutamia ohjeita, jotta lasi kiinnittyy kunnolla ja asennus kestää:</p>
+        <h2>Milloin autosi tarvitsee kiillotusta?</h2>
+        <p>On useita merkkejä siitä, että autosi maalipinta hyötyisi ammattimaisesta kiillotuksesta ja pinnoituksesta:</p>
         <ul>
-            <li><strong>Kuivumisaika</strong> – Anna liiman kovettua riittävän kauan ennen ajamista. Ilmoitamme sinulle tarkan odotusajan asennuksen yhteydessä (yleensä 1 tunti).</li>
-            <li><strong>Auton pesu</strong> – Vältä automaattipesuloita ensimmäisen 24 tunnin ajan. Käsinpesu onnistuu varovasti.</li>
-            <li><strong>Ovet ja ikkunat</strong> – Ensimmäisen vuorokauden aikana vältä ovien tömäyttämistä ja pidä ikkunat hieman auki, jos mahdollista.</li>
-            <li><strong>Paine</strong> – Älä paina tuulilasia sisältä tai ulkoa ensimmäisen päivän aikana.</li>
+            <li><strong>Maalipinta on haalistunut tai menettänyt kiiltonsa:</strong> Auringon UV-säteily, sää ja aika saavat maalipinnan näyttämään tylsältä ja elottomalta.</li>
+            <li><strong>Pinnassa näkyy pieniä naarmuja tai pyörteitä:</strong> Väärät pesumenetelmät tai automaattipesukoneet voivat aiheuttaa pintanaarmuja, jotka näkyvät erityisesti valon heijastuessa.</li>
+            <li><strong>Maalipinnassa on hapettumaa:</strong> Vanhemmissa autoissa maalipinta saattaa hapettua ja tuntua karhealta kosketettaessa.</li>
+            <li><strong>Haluat suojata autosi arvoa:</strong> Hyvin hoidettu maalipinta säilyttää auton arvoa ja tekee siitä houkuttelevamman mahdollisessa myyntitilanteessa.</li>
+            <li><strong>Valmistaudut auton myyntiin:</strong> Ammattimainen kiillotus ja pinnoitus voivat nostaa auton myyntihintaa merkittävästi.</li>
+            <li><strong>Olet ostanut käytetyn auton:</strong> Kiillotus antaa käytetylle autolle uuden elämän ja palauttaa sen alkuperäisen kauneuden.</li>
         </ul>
-        
-        <p>Nämä ohjeet varmistavat, että liima kovettuu täydellisesti ja tuulilasi pysyy tukevasti paikallaan. Annamme aina tarkat ohjeet asennuksen yhteydessä.</p>
 
-        <h2>Usein Kysytyt Kysymykset Tuulilasien Vaihdosta</h2>
-        
-        <h3>Kauanko tuulilasin vaihto kestää?</h3>
-        <p>Tuulilasin vaihto kestää yleensä noin 1-2 tuntia riippuen auton mallista. Liiman kuivumiseen kuluu lisäksi aikaa, mutta voit usein hakea auton saman päivän aikana.</p>
-        
-        <h3>Voiko kiveniskemän aina korjata?</h3>
-        <p>Pienet iskemät voidaan usein korjata, mutta jos iskemä on suuri, sijaitsee kuljettajan näkökentässä tai lasin reunalla, suosittelemme tuulilasin vaihtoa turvallisuuden takaamiseksi.</p>
-        
-        <h3>Toimiiko lasivakuutus kaikissa tilanteissa?</h3>
-        <p>Lasivakuutus kattaa yleensä sekä vaihdot että korjaukset. Tarkista aina oman vakuutuksesi ehdot. Autamme mielellämme selvittämään vakuutusasiat.</p>
-        
-        <h3>Voinko ajaa autolla heti vaihdon jälkeen?</h3>
-        <p>Liiman on annettava kovettua riittävästi ennen ajamista. Ilmoitamme sinulle tarkan odotusajan.</p>
+        <h2>Miksi valita Fixneron kiillotuspalvelut Espoossa?</h2>
+        <p>Kun valitset Fixneron kiillotus- ja pinnoituspalvelut Espoossa, saat ammattitaitoista palvelua, joka on räätälöity juuri sinun autosi tarpeisiin. Tässä muutamia syitä, miksi asiakkaamme luottavat meihin:</p>
+        <ul>
+            <li><strong>Ammattilaistuotteet ja materiaalit:</strong> Käytämme vain huippulaatuisia, ammattikäyttöön tarkoitettuja kiillotustuotteita ja pinnoitteita. Emme tee kompromisseja laadun suhteen.</li>
+            <li><strong>Kokenut ja koulutettu henkilöstö:</strong> Meillä on vuosien kokemus erilaisista ajoneuvoista, henkilöautoista maastureihin ja erikoisajoneuvoihin. Tiedämme, miten käsitellä jokaista maalipintaa oikein.</li>
+            <li><strong>Huippuluokan kalusto:</strong> Käytämme nykyaikaisia ammattilaisille tarkoitettuja kiillotuskoneita ja laitteita, jotka takaavat tasaisen ja laadukkaan lopputuloksen.</li>
+            <li><strong>Räätälöity ja henkilökohtainen palvelu:</strong> Jokainen auto on meille tärkeä projekti. Suunnittelemme kiillotuksen ja pinnoituksen aina autosi maalipinnan kunnon ja asiakkaan toiveiden mukaan.</li>
+            <li><strong>Laadukas ja kestävä lopputulos:</strong> Tavoitteenamme on aina paras mahdollinen tulos, joka kestää aikaa. Haluamme, että autosi näyttää upealta pitkään.</li>
+            <li><strong>Kilpailukykyiset hinnat:</strong> Tarjoamme laadukasta palvelua kohtuulliseen hintaan. Saat rahoillesi vastinetta ja autosi saa ansaitsemansa hoidon.</li>
+        </ul>
 
-        <div class="cta-section" style="background: #fff url('lasikorjaus.webp') center top/cover; position: relative; overflow: hidden;">
+        <p style="margin-top: 30px; text-align: center;">
+            <a href="tyonnaytteet" class="btn-read-more">📸 Asiakkaiden ennen ja jälkeen kuvat</a>
+        </p>
+
+        <div class="cta-section" style="background: #fff url('sisapuhdistus.webp') center top/cover; position: relative; overflow: hidden;">
             <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.85); z-index: 1; pointer-events: none;"></div>
             <div style="position: relative; z-index: 2;">
-                <h2>Varaa aika tuulilasin vaihtoon</h2>
-                <p>Ota yhteyttä ja kysy lisää tuulilasien vaihdosta tai varaa aika – autamme mielellämme!</p>
+                <h2>Varaa aika kiillotukseen</h2>
+                <p>Ota yhteyttä tai tule paikan päälle näyttämään autoasi – annamme arvion ja suosittelemme sopivinta palvelua!</p>
                 <a href="tel:+358401935001" class="cta-button">📞 Soita: 040 1935001</a>
                 <a href="mailto:info@fixnero.fi" class="cta-button">📧 Lähetä sähköposti</a>
                 <a href="index#ajanvaraus" class="cta-button">📅 Varaa Aika</a>
@@ -629,8 +614,8 @@
                 <a href="index#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut" loading="lazy" style="max-width: 200px; height: auto; margin-bottom: 15px;"></a>
                 <p>Fixnero © 2025. All Rights Reserved.</p>
                 <p style="margin-top: 10px; font-size: 0.9rem;">
-                    <a href="cookie-policy" style="color: #ecf0f1; text-decoration: none;">Evästekäytäntö</a> | 
-                    <a href="tietosuojaseloste" style="color: #ecf0f1; text-decoration: none;">Tietosuojaseloste</a>
+                    <a href="cookie-policy" style="color: #ffffff; text-decoration: none;">Evästekäytäntö</a> | 
+                    <a href="tietosuojaseloste" style="color: #ffffff; text-decoration: none;">Tietosuojaseloste</a>
                 </p>
                 <div class="social-media-links" style="margin-top: 15px;">
                     <p style="font-weight: 600; margin-bottom: 10px;">Seuraa meitä:</p>
@@ -646,7 +631,7 @@
                 </div>
             </div>
             <div class="services-section footer-section">
-                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: #ffffff;">Palvelumme</h3>
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Palvelumme</h3>
                 <a href="pesupalvelut" title="Autopesu Espoo - Käsinpesu ja vahaukset">Autopesu</a>
                 <a href="rengastyot" title="Rengastyöt Espoo - Renkaiden vaihto ja rengashotelli">Rengastyöt</a>
                 <a href="korjaustyot" title="Korjaustyöt Espoo - Autohuolto ja katsastuskorjaukset">Korjaustyöt</a>
@@ -654,19 +639,17 @@
                 <a href="kiilloitus" title="Kiillotus Espoo - Koneellinen kiillotus ja pinnoitus">Kiillotus</a>
                 <a href="lasikorjaus">Lasikorjaus</a>
                 <a href="kolhukorjaus" title="Kolhukorjaus Espoo - Lommojen oikaisu ja ruostekorjaukset">Kolhukorjaus</a>
-                <a href="tietoa-meista" title="Tietoa meistä - Tutustu Fixnero autohuoltoon">Tietoa meistä</a>
-                <a href="blogi/" title="Blogi - Vinkkejä auton hoitoon">Blogi</a>
                 <a href="index#hinnasto">Hinnasto</a>
                 <a href="index#yhteystiedot">Yhteystiedot</a>
                 <a href="tyonnaytteet" title="Työnäytteet - Aiemmat työt">Työnäytteet</a>
             </div>
             <div class="contact-section footer-section">
-                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: #ffffff;">Yhteystiedot</h3>
-                <p style="color: #ffffff;"><strong style="color: #ffffff;">📞 Puhelin:</strong> <a href="tel:+358401935001" style="color: #ffffff; text-decoration: none;">040 1935001</a></p>
-                <p style="color: #ffffff;"><strong style="color: #ffffff;">📧 Sähköposti:</strong> <a href="mailto:info@fixnero.fi" style="color: #ffffff;">info@fixnero.fi</a></p>
-                <p style="color: #ffffff;"><strong style="color: #ffffff;">🕐 Aukioloajat:</strong></p>
-                <p style="margin-left: 20px; color: #ffffff;">Ma-Pe: 9:00-17:00<br>La-Su: Suljettu</p>
-                <p style="color: #ffffff;"><strong style="color: #ffffff;">📍 Osoite:</strong><br>Tiilenvalajantie 6<br>02330 Espoo (Kivenlahti)<br><small style="color: #ffffff;">Sisäpiha, keskimmäinen nosto-ovi<br>Helppo Katsastuksen vieressä</small></p>
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Yhteystiedot</h3>
+                <p><strong>📞 Puhelin:</strong> <a href="tel:+358401935001" style="color: inherit; text-decoration: none;">040 1935001</a></p>
+                <p><strong>📧 Sähköposti:</strong> <a href="mailto:info@fixnero.fi">info@fixnero.fi</a></p>
+                <p><strong>🕐 Aukioloajat:</strong></p>
+                <p style="margin-left: 20px;">Ma-Pe: 9:00-17:00<br>La-Su: Suljettu</p>
+                <p><strong>📍 Osoite:</strong><br>Tiilenvalajantie 6<br>02330 Espoo (Kivenlahti)<br><small>Sisäpiha, keskimmäinen nosto-ovi<br>Helppo Katsastuksen vieressä</small></p>
             </div>
         </div>
     </footer>
@@ -694,8 +677,8 @@
             flex-direction: column;
         }
         .footer-section a { color: #ffffff; text-decoration: underline; }
-        .footer-section p { color: #ffffff; }
-        .footer-section h3, .footer-section h4, .footer-section p, .footer-section a {
+        .footer-section h3, .footer-section h4, .footer-section p, .footer-section a, .footer-section strong, .footer-section small {
+            color: #ffffff;
             margin: 8px 0;
         }
         @media (max-width: 768px) {

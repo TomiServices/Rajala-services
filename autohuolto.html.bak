@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,user-scalable=yes">
-    <meta name="description" content="Rengastyöt Espoo - Fixnero tarjoaa ammattitaista renkaiden vaihtoa, tasapainotusta, paikkauksia ja rengashotellia Kivenlahdessa Espoossa. Laadukas ja nopea rengaspalvelu. Varaa aika 040 1935001.">
-    <meta name="keywords" content="rengastyöt Espoo, renkaiden vaihto Espoo, rengashotelli Espoo, tasapainotus, renkaiden paikkaus, Kivenlahti rengaspalvelu, rengas vaihto, rengastyö, tire change, tire hotel, rengassäilytys">
-    <title>Rengastyöt Espoo – Fixnero</title>
+    <meta name="description" content="Autohuolto Espoo - Fixnero tarjoaa ammattitaitoisia korjaustyöpalveluita, katsastuskorjauksia, diagnostiikkaa ja huoltopalveluita kaikille automerkeille Kivenlahdessa Espoossa. Luotettava autohuolto Espoossa takuulla. Varaa aika 040 1935001.">
+    <meta name="keywords" content="autohuolto Espoo, korjaustyöt Espoo, katsastuskorjaus Espoo, autonhuolto Kivenlahti, jarrujen vaihto, iskunvaimentimien vaihto, diagnostiikka, vikakoodien luku, pakoputkiston korjaus, jousitus ja alusta, sähkötyöt, korjaus Espoo">
+    <title>Autohuolto ja Korjaustyöt Espoo – Fixnero</title>
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://fixnero.fi/rengastyot">
-    <meta property="og:title" content="Rengastyöt Espoo – Fixnero">
-    <meta property="og:description" content="Ammattitaitoinen rengaspalvelu Espoossa: renkaiden vaihto, tasapainotus, rengashotelli. Varaa aika kätevästi!">
-    <meta property="og:image" content="https://fixnero.fi/Rengas.webp">
+    <meta property="og:url" content="https://fixnero.fi/autohuolto">
+    <meta property="og:title" content="Autohuolto ja Korjaustyöt Espoo – Fixnero">
+    <meta property="og:description" content="Ammattitaitoinen autohuolto Espoossa: korjaustyöt, katsastuskorjaukset, vikakoodien luku. Huollot kaikille automerkeille!">
+    <meta property="og:image" content="https://fixnero.fi/FXNR.webp">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://fixnero.fi/rengastyot">
-    <meta property="twitter:title" content="Rengastyöt Espoo – Fixnero">
-    <meta property="twitter:description" content="Ammattitaitoinen rengaspalvelu Espoossa: renkaiden vaihto, tasapainotus, rengashotelli. Varaa aika kätevästi!">
-    <meta property="twitter:image" content="https://fixnero.fi/Rengas.webp">
+    <meta property="twitter:url" content="https://fixnero.fi/autohuolto">
+    <meta property="twitter:title" content="Autohuolto ja Korjaustyöt Espoo – Fixnero">
+    <meta property="twitter:description" content="Ammattitaitoinen autohuolto Espoossa: korjaustyöt, katsastuskorjaukset, vikakoodien luku. Huollot kaikille automerkeille!">
+    <meta property="twitter:image" content="https://fixnero.fi/FXNR.webp">
     
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://fixnero.fi/rengastyot">
+    <link rel="canonical" href="https://fixnero.fi/autohuolto">
     
     <!-- Favicon - Multiple formats for browser and search engine compatibility -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -38,9 +38,9 @@
     {
         "@context": "https://schema.org",
         "@type": "Service",
-        "name": "Rengastyöt Espoo",
-        "serviceType": "Rengastyöt",
-        "description": "Fixnero tarjoaa ammattimaiset rengastyöt Espoossa. Sisältää renkaiden vaihdon, tasapainotuksen, paikkauksen ja rengashotellin.",
+        "name": "Autohuolto Espoo",
+        "serviceType": "Autohuolto",
+        "description": "Fixnero tarjoaa ammattimaisen autohuollon Espoossa. Sisältää korjaustyöt, katsastuskorjaukset, vikakoodien luvun ja huoltopalvelut kaikille automerkeille.",
         "provider": {
             "@type": "LocalBusiness",
             "name": "Fixnero / Rajala Services",
@@ -77,40 +77,23 @@
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Palvelut",
-                "item": "https://www.rajala-services.com/index#rengastyot"
+                "item": "https://www.rajala-services.com/index#korjaustyot"
             },
             {
                 "@type": "ListItem",
                 "position": 3,
-                "name": "Rengastyöt",
-                "item": "https://www.rajala-services.com/rengastyot"
+                "name": "Autohuolto",
+                "item": "https://www.rajala-services.com/autohuolto"
             }
         ]
     }
     </script>
     
-    <link rel="preload" href="FXNRv.webp" as="image">
+    <link rel="preload" href="FXNR.webp" as="image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
-        /* Font loading optimization */
-        @font-face {
-            font-family: 'Bebas Neue';
-            font-style: normal;
-            font-weight: 400;
-            font-display: swap;
-            src: local('Impact'), local('Arial Black');
-        }
-        
-        @font-face {
-            font-family: 'Yanone Kaffeesatz';
-            font-style: normal;
-            font-weight: 700;
-            font-display: swap;
-            src: local('Impact'), local('Arial Black');
-        }
         html {
             scroll-behavior: smooth;
         }
@@ -208,11 +191,12 @@
             height: 48px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        
-        /* Reset button styles */
-        font: inherit;
-        color: inherit;
-        outline: none;}
+            /* Reset button styles */
+            border: none;
+            font: inherit;
+            color: inherit;
+            outline: none;
+        }
         .hamburger-menu span {
             display: block;
             width: 24px; 
@@ -282,27 +266,26 @@
         }
         .back-button {
             display: inline-block;
-            padding: 8px 16px;
-            background: linear-gradient(135deg, #333333, #1a1a1a);
+            padding: 10px 19px;
+            background: linear-gradient(135deg, #666666, #444444);
             color: white;
             text-decoration: none;
             border-radius: 25px;
             margin-bottom: 30px;
             font-weight: 600;
-            font-size: 0.72rem;
+            font-size: 0.8rem;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         .back-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         h1 {
             color: #1a1a1a;
-            font-size: 2.5rem;
-            margin-bottom: 25px;
+            font-size: 2.8rem;
+            margin-bottom: 20px;
             font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', sans-serif;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.05em;
         }
         h2 {
             color: #2a2a2a;
@@ -310,13 +293,11 @@
             margin-top: 30px;
             font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', sans-serif;
             letter-spacing: 0.05em;
-            font-weight: normal;
         }
         h3 {
             color: #2a2a2a;
             font-size: 1.5rem;
             margin-top: 25px;
-            font-weight: normal;
         }
         p {
             color: #333333;
@@ -333,23 +314,6 @@
         }
         strong {
             color: #1a1a1a;
-        }
-        .btn-read-more {
-            display: inline-block;
-            padding: 8px 19px;
-            background: #3FA9F5;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 0.72rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(63, 169, 245, 0.3);
-        }
-        .btn-read-more:hover {
-            background: #5CB8FF;
-            box-shadow: 0 0 20px rgba(63, 169, 245, 0.6), 0 0 40px rgba(63, 169, 245, 0.4);
-            transform: translateY(-2px);
         }
         .cta-section {
             background: linear-gradient(135deg, #666666, #444444);
@@ -369,7 +333,7 @@
         }
         .cta-button {
             display: inline-block;
-            padding: 10px 24px;
+            padding: 12px 30px;
             background: linear-gradient(135deg, #666666, #444444);
             color: white;
             text-decoration: none;
@@ -410,14 +374,7 @@
         .link-card p {
             margin: 0;
             opacity: 0.9;
-            font-size: 0.9rem;
-        }
-        /* Tablet and larger devices - center buttons with proper gap */
-        @media (min-width: 769px) {
-            .container > div:first-child {
-                justify-content: center !important;
-                gap: 20px !important;
-            }
+            font-size: 1rem;
         }
         @media (max-width: 768px) {
             .top-banner {
@@ -435,28 +392,8 @@
                 font-size: 0.65rem;
                 padding: 8px 14px;
             }
-            .btn-read-more {
-                font-size: 0.65rem;
-                padding: 8px 14px;
-            }
             .links-section {
                 grid-template-columns: 1fr;
-            }
-            /* Stack buttons vertically on mobile for better spacing */
-            .container > div:first-child {
-                flex-direction: column;
-                align-items: center !important;
-                gap: 10px !important;
-            }
-            .container > div:first-child .back-button,
-            .container > div:first-child .btn-read-more {
-                width: auto;
-                max-width: 85%;
-                text-align: center;
-                margin: 0 !important;
-                white-space: normal;
-                word-wrap: break-word;
-                padding: 9px 16px;
             }
         }
         /* Enhanced mobile optimization for smaller devices (iPhone SE, small phones) */
@@ -470,33 +407,6 @@
             .back-button {
                 font-size: 0.62rem;
                 padding: 7px 12px;
-                max-width: 80%;
-            }
-            .btn-read-more {
-                font-size: 0.62rem;
-                padding: 7px 12px;
-                max-width: 80%;
-                white-space: normal;
-            }
-            .container > div:first-child {
-                gap: 8px !important;
-            }
-        }
-            h1 { font-size: 1.9rem; }
-            h2 { font-size: 1.6rem; }
-            .back-button {
-                font-size: 0.8rem;
-                padding: 10px 15px;
-                max-width: 100%;
-            }
-            .btn-read-more {
-                font-size: 0.8rem;
-                padding: 10px 15px;
-                max-width: 100%;
-                white-space: normal;
-            }
-            .container > div:first-child {
-                gap: 8px !important;
             }
         }
     </style>
@@ -513,8 +423,8 @@
     </button>
 
     <nav id="nav">
-        <a href="index#top"><img src="FXNRv.webp" alt="Fixnero - Rengastyöt Espoo, renkaiden vaihto ja rengashotelli"></a>
-        <a href="index#pesupalvelut">Autopesu</a>
+        <a href="index#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, korjaustyöt ja huoltopalvelut"></a>
+        <a href="index#pesupalvelut">Pesupalvelut</a>
         <a href="index#sisapuhdistus">Sisäpuhdistus</a>
         <a href="index#kiilloitus">Kiillotus</a>
         <a href="index#kolhukorjaus">Kolhukorjaus</a>
@@ -526,111 +436,75 @@
     </nav>
 
     <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; margin-bottom: 25px;">
-            <a href="index#rengastyot" class="back-button" style="margin-bottom: 0;">← Takaisin palveluihin</a>
-            <a href="lasikorjaus" class="btn-read-more" style="margin: 0; white-space: nowrap;">Lue Lasikorjaus palvelusta →</a>
-        </div>
+        <a href="index#korjaustyot" class="back-button">← Takaisin palveluihin</a>
         
-        <h1 style="margin-bottom: 25px;">Renkaiden vaihto Espoo - Renkaiden asennus, tasapainotus ja rengashotelli</h1>
+        <h1>Autohuolto Espoo</h1>
         
-        <p>Fixnero tarjoaa ammattitaitoisia rengaspalveluita Kivenlahdessa, Espoossa. Huolehdimme siitä, että renkaasi ovat turvalliset, oikein asennetut ja tasapainotetut jokaiseen vuodenaikaan. Palvelumme kattaa renkaiden vaihdot, tasapainotukset, paikkaukset, uusien renkaiden myynnin ja asennuksen sekä rengashotellin. Kaikki työt tehdään huolellisesti nykyaikaisilla laitteilla ja kokeneiden ammattilaisten toimesta.</p>
+        <p>Fixnero tarjoaa ammattitaitoista autohuoltoa ja korjaustyöpalveluita Espoossa, Kivenlahdessa Espoossa. Korjaamme ajoneuvoja laajasti automerkeistä riippumatta käyttäen laadukkaita varaosia ja nykyaikaisia työkaluja. Palvelumme on luotettavaa, ja kaikki työt tehdään huolellisesti takuulla.</p>
 
-        <p>Ammattitaitoinen rengastyö on tärkeää ajoneuvon turvallisuuden kannalta. Oikein asennetut ja tasapainotetut renkaat parantavat ajoturvallisuutta, vähentävät renkaiden kulumista ja tekevät ajosta miellyttävämpää. Meiltä saat nopean ja luotettavan palvelun kilpailukykyiseen hintaan.</p>
+        <p>Erikoisalaamme kuuluvat katsastuskorjaukset – jos autosi sai hylätyn päätöksen katsastuksessa, tuo se meille, niin korjaamme viat ja saat autosi takaisin katsastuskuntoon nopeasti. Autamme myös selvittämään epäselvät viat ja annamme realistisen arvion korjauskustannuksista ennen töiden aloittamista, jotta et kohtaa ikäviä yllätyksiä.</p>
 
-        <h2>Rengaspalvelumme</h2>
+        <h2>Korjaustyömme</h2>
         
-        <h3>Renkaiden vaihto</h3>
-        <p>Vaihdamme kesä- ja talvirenkaat auton alle nopeasti ja ammattitaidolla. Palveluun sisältyy renkaiden asennus, ilmanpaineiden tarkistus ja säätö oikealle tasolle. Huolehdimme myös siitä, että renkaat ovat turvallisesti kiinnitetty ja valmiina ajoon.</p>
-        <p><strong>Hinta: 28–38 €</strong> (riippuen ajoneuvon koosta ja renkaiden tyypistä)</p>
-
-        <h3>Renkaiden asennus ja tasapainotus</h3>
-        <p>Tarjoamme kokonaispalvelun uusille tai käytetyille renkaille. Asennamme renkaat vanteille tai vaihdamme ne vanteelta toiselle ja tasapainotamme ne tarkasti. Ammattilaitteilla varustettuna varmistamme, että renkaat ovat täydellisessä tasapainossa.</p>
-        <p><strong>Hinta: alkaen 78 €</strong> (sisältää asennuksen ja tasapainotuksen)</p>
-
-        <h3>Renkaan paikkaus</h3>
-        <p>Vuotavan renkaan paikkaus on nopea ja edullinen ratkaisu pienten vaurioiden korjaamiseen. Tarkistamme renkaan kunnon ja paikaamme sen tarvittaessa ammattitaidolla. Paikkaus on kestävä ratkaisu, joka pidentää renkaan käyttöikää.</p>
-        <p><strong>Hinta: 23 €</strong></p>
-
-        <h3>Vanteiden pesu</h3>
-        <p>Tarjoamme myös vanteiden pesun osana rengaspalveluitamme. Puhtaat vanteet näyttävät hyvältä ja pidentävät renkaiden käyttöikää. Pesemme vanteet huolellisesti ja poistamme lian, jarrupölyn sekä muut epäpuhtaudet.</p>
-        <p><strong>Hinta: 8 € (4 kpl)</strong></p>
-
-        <h3>Uusien renkaiden myynti ja asennus</h3>
-        <p>Tarvitsetko uudet renkaat? Autamme sinua valitsemaan oikeat renkaat ajoneuvollesi ja käyttötarpeisiisi. Myymme laadukkaita renkaita eri valmistajilta ja asennamme ne ammattitaidolla. Pyydä tarjous puhelimitse tai sähköpostilla, niin etsimme sinulle parhaat vaihtoehdot.</p>
-        
-        <p><strong>Uusien renkaiden asennus hinnat:</strong></p>
-        <div style="overflow-x: auto; margin: 20px 0;">
-            <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
-                <thead>
-                    <tr style="background: #f0f0f0;">
-                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Ajoneuvoluokka</th>
-                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Renkaan koko</th>
-                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Hinta</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="padding: 10px; border: 1px solid #ddd;">Henkilöauto</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;">15" ja alle</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;"><strong>80 €</strong></td>
-                    </tr>
-                    <tr style="background: #f9f9f9;">
-                        <td style="padding: 10px; border: 1px solid #ddd;">Henkilöauto</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;">16–17"</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;"><strong>90 €</strong></td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px; border: 1px solid #ddd;">Henkilöauto</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;">18" ja 19"</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;"><strong>95 €</strong></td>
-                    </tr>
-                    <tr style="background: #f9f9f9;">
-                        <td style="padding: 10px; border: 1px solid #ddd;">Henkilöauto</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;">20" ja yli</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;"><strong>105 €</strong></td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px; border: 1px solid #ddd;">Maasturi/Paketti</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;">17" ja alle</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;"><strong>105 €</strong></td>
-                    </tr>
-                    <tr style="background: #f9f9f9;">
-                        <td style="padding: 10px; border: 1px solid #ddd;">Maasturi/Paketti</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;">18" ja yli</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;"><strong>120 €</strong></td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 10px; border: 1px solid #ddd;">Muut ajoneuvot</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;">Kaikki koot</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;">Sop. mukaan</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <h2>Rengashotelli Espoo</h2>
-        <p>Rengashotellissamme säilytämme renkaasi turvallisesti ja asianmukaisissa olosuhteissa. Palveluun sisältyy renkaiden pesu ennen varastointia, ja kun on aika vaihtaa renkaat, haemme ne suoraan varastosta ja asennamme autosi alle. Sinun ei tarvitse kantaa renkaita mukanasi tai huolehtia niiden säilytyksestä!</p>
-
-        <p><strong>Rengashotellin edut:</strong></p>
+        <h3>Jousitus ja alusta</h3>
         <ul>
-            <li>Säästät tilaa kotona tai autotallissa</li>
-            <li>Renkaat säilyvät oikeissa olosuhteissa ja pysyvät hyvässä kunnossa</li>
-            <li>Renkaiden pesu sisältyy hintaan</li>
-            <li>Vaivaton vaihto: haemme renkaat varastosta ja asennamme ne autosi alle</li>
-            <li>Ilmanpaineiden tarkistus ja säätö sisältyy palveluun</li>
-            <li>Varma ja turvallinen säilytys läpi kauden</li>
+            <li>Iskunvaimentimien ja jousituksen uusiminen</li>
+            <li>Tukivarsien, nivelien ja raidetankojen vaihto</li>
+            <li>Vakaajatangon ja koiranluiden vaihto</li>
+            <li>Alustan tarkistus ja huolto</li>
         </ul>
 
-        <p><strong>Hinta: 68–73 € / kausi</strong> (riippuen ajoneuvon koosta)</p>
+        <h3>Jarrujärjestelmä</h3>
+        <ul>
+            <li>Jarrulevyjen ja -palojen vaihto</li>
+            <li>Käsijarrujen säätö ja korjaus</li>
+            <li>Jarrunesteiden vaihto</li>
+            <li>Jarrujärjestelmän tarkistus ja huolto</li>
+        </ul>
 
-        <div class="cta-section" style="background: #fff url('Rengastyot.webp') center center/cover; position: relative; overflow: hidden;">
+        <h3>Pakoputkisto</h3>
+        <ul>
+            <li>Pakoputkiston korjaukset</li>
+            <li>Katalysaattorin vaihto</li>
+            <li>Äänenvaimentimen vaihto</li>
+        </ul>
+
+        <h3>Diagnostiikka ja sähkötyöt</h3>
+        <ul>
+            <li>Vikakoodien luku ja nollaus</li>
+            <li>Auton diagnostiikka</li>
+            <li>Sähköjärjestelmän vianetsintä</li>
+        </ul>
+
+        <h2>Katsastuskorjaukset Espoo</h2>
+        <p>Erikoistumme katsastuksessa ilmenneiden vikojen korjaamiseen. Tuo autosi meille, niin korjaamme katsastusviat ammattitaidolla ja saat autosi takaisin katsastuskuntoon. Korjaustyöt tehdään nopeasti ja laadukkaasti, jotta voit viedä autosi uudelleen katsastettavaksi mahdollisimman pian.</p>
+
+        <p>Yleisimmät katsastuskorjaukset:</p>
+        <ul>
+            <li>Jarrujen korjaukset</li>
+            <li>Alustan korjaukset</li>
+            <li>Valojen ja sähköjärjestelmän korjaukset</li>
+            <li>Pakoputkiston korjaukset</li>
+            <li>Jousituksen ja iskunvaimentimien vaihto</li>
+        </ul>
+
+        <h2>Miksi valita Fixnero?</h2>
+        <ul>
+            <li><strong>Ammattitaito:</strong> Kokeneet asentajat ja nykyaikaiset työkalut</li>
+            <li><strong>Laadukkaat osat:</strong> Käytämme vain laadukkaita varaosia</li>
+            <li><strong>Takuu:</strong> Kaikki työt tehdään takuulla</li>
+            <li><strong>Läpinäkyvä hinnoittelu:</strong> Arvio kustannuksista ennen töiden aloittamista</li>
+            <li><strong>Nopea palvelu:</strong> Pyrimme saamaan autosi takaisin tielle mahdollisimman nopeasti</li>
+        </ul>
+
+        <div class="cta-section" style="background: #fff url('sisapuhdistus.webp') center top/cover; position: relative; overflow: hidden;">
             <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.85); z-index: 1; pointer-events: none;"></div>
             <div style="position: relative; z-index: 2;">
-                <h2>Varaa aika rengastyöhön</h2>
-                <p>Ota yhteyttä tai varaa aika suoraan kalenteristamme!</p>
-                <a href="tel:+358401935001" class="cta-button">📞 Soita: 040 1935001</a>
-                <a href="mailto:info@fixnero.fi" class="cta-button">📧 Lähetä sähköposti</a>
-                <a href="index#ajanvaraus" class="cta-button">📅 Varaa Aika</a>
+                <h2>Tarvitsetko korjausapua?</h2>
+                <p>Ota yhteyttä, niin autamme sinua!</p>
+                <a href="tel:+358401935001" class="cta-button">📞 Soita meille</a>
+                <a href="mailto:info@fixnero.fi" class="cta-button">📧 Lähetä viesti</a>
+                <a href="index#ajanvaraus" class="cta-button">📅 Varaa aika</a>
             </div>
         </div>
 
@@ -657,7 +531,7 @@
                 </div>
             </a>
             
-            <a href="index#yhteystiedot" class="link-card" style="background-image: url('yhteystiedot.webp'); background-size: cover; background-position: center;">
+            <a href="index#yhteystiedot" class="link-card" style="background-image: url('sisapuhdistus.webp'); background-size: cover; background-position: center;">
                 <div style="background: rgba(0,0,0,0.7); padding: 30px; border-radius: 15px;">
                     <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">📞 Ota yhteyttä</h3>
                     <p style="color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">Ota meihin yhteyttä ja kysy lisää palveluistamme tai varaa aika!</p>
@@ -671,8 +545,8 @@
                 <a href="index#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut" loading="lazy" style="max-width: 200px; height: auto; margin-bottom: 15px;"></a>
                 <p>Fixnero © 2025. All Rights Reserved.</p>
                 <p style="margin-top: 10px; font-size: 0.9rem;">
-                    <a href="cookie-policy" style="color: #ffffff; text-decoration: none;">Evästekäytäntö</a> | 
-                    <a href="tietosuojaseloste" style="color: #ffffff; text-decoration: none;">Tietosuojaseloste</a>
+                    <a href="cookie-policy" style="color: #ecf0f1; text-decoration: none;">Evästekäytäntö</a> | 
+                    <a href="tietosuojaseloste" style="color: #ecf0f1; text-decoration: none;">Tietosuojaseloste</a>
                 </p>
                 <div class="social-media-links" style="margin-top: 15px;">
                     <p style="font-weight: 600; margin-bottom: 10px;">Seuraa meitä:</p>
@@ -688,27 +562,25 @@
                 </div>
             </div>
             <div class="services-section footer-section">
-                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: #ffffff;">Palvelumme</h3>
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Palvelumme</h3>
                 <a href="pesupalvelut" title="Autopesu Espoo - Käsinpesu ja vahaukset">Autopesu</a>
                 <a href="rengastyot" title="Rengastyöt Espoo - Renkaiden vaihto ja rengashotelli">Rengastyöt</a>
-                <a href="korjaustyot" title="Korjaustyöt Espoo - Autohuolto ja katsastuskorjaukset">Korjaustyöt</a>
+                <a href="autohuolto" title="Korjaustyöt Espoo - Autohuolto ja katsastuskorjaukset">Korjaustyöt</a>
                 <a href="sisapuhdistus" title="Sisäpuhdistus Espoo - Auton sisätilojen puhdistus">Sisäpuhdistus</a>
                 <a href="kiilloitus" title="Kiillotus Espoo - Koneellinen kiillotus ja pinnoitus">Kiillotus</a>
                 <a href="lasikorjaus">Lasikorjaus</a>
                 <a href="kolhukorjaus" title="Kolhukorjaus Espoo - Lommojen oikaisu ja ruostekorjaukset">Kolhukorjaus</a>
-                <a href="tietoa-meista" title="Tietoa meistä - Tutustu Fixnero autohuoltoon">Tietoa meistä</a>
-                <a href="blogi/" title="Blogi - Vinkkejä auton hoitoon">Blogi</a>
                 <a href="index#hinnasto">Hinnasto</a>
                 <a href="index#yhteystiedot">Yhteystiedot</a>
                 <a href="tyonnaytteet" title="Työnäytteet - Aiemmat työt">Työnäytteet</a>
             </div>
             <div class="contact-section footer-section">
-                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: #ffffff;">Yhteystiedot</h3>
-                <p style="color: #ffffff;"><strong style="color: #ffffff;">📞 Puhelin:</strong> <a href="tel:+358401935001" style="color: #ffffff; text-decoration: none;">040 1935001</a></p>
-                <p style="color: #ffffff;"><strong style="color: #ffffff;">📧 Sähköposti:</strong> <a href="mailto:info@fixnero.fi" style="color: #ffffff;">info@fixnero.fi</a></p>
-                <p style="color: #ffffff;"><strong style="color: #ffffff;">🕐 Aukioloajat:</strong></p>
-                <p style="margin-left: 20px; color: #ffffff;">Ma-Pe: 9:00-17:00<br>La-Su: Suljettu</p>
-                <p style="color: #ffffff;"><strong style="color: #ffffff;">📍 Osoite:</strong><br>Tiilenvalajantie 6<br>02330 Espoo (Kivenlahti)<br><small style="color: #ffffff;">Sisäpiha, keskimmäinen nosto-ovi<br>Helppo Katsastuksen vieressä</small></p>
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Yhteystiedot</h3>
+                <p><strong>📞 Puhelin:</strong> <a href="tel:+358401935001" style="color: inherit; text-decoration: none;">040 1935001</a></p>
+                <p><strong>📧 Sähköposti:</strong> <a href="mailto:info@fixnero.fi">info@fixnero.fi</a></p>
+                <p><strong>🕐 Aukioloajat:</strong></p>
+                <p style="margin-left: 20px;">Ma-Pe: 9:00-17:00<br>La-Su: Suljettu</p>
+                <p><strong>📍 Osoite:</strong><br>Tiilenvalajantie 6<br>02330 Espoo (Kivenlahti)<br><small>Sisäpiha, keskimmäinen nosto-ovi<br>Helppo Katsastuksen vieressä</small></p>
             </div>
         </div>
     </footer>
@@ -722,7 +594,7 @@
         }
         .footer {
             background: #000000;
-            color: #ffffff;
+            color: #ecf0f1;
             padding: 40px 20px;
             display: flex;
             justify-content: space-around;
@@ -749,8 +621,24 @@
 
 
 
+    <script>
+        const hamburger = document.querySelector('.hamburger-menu');
+        const nav = document.getElementById('nav');
+        hamburger.addEventListener('click', () => {
+            const isExpanded = nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
+            hamburger.setAttribute('aria-expanded', isExpanded);
+        });
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1279) {
+                nav.classList.remove('active');
+                hamburger.classList.remove('active');
+                hamburger.setAttribute('aria-expanded', 'false');
+            }
+        });
+    </script>
+    
     <!-- Cookie Consent Banner - GDPR Compliant -->
     <script src="cookie-consent.min.js" defer></script>
-    <script src="ui-interactions.js" defer></script>
 </body>
 </html>

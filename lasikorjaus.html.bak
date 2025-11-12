@@ -646,7 +646,7 @@
                 </div>
             </div>
             <div class="services-section footer-section">
-                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: #ffffff;">Palvelumme</h3>
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Palvelumme</h3>
                 <a href="pesupalvelut" title="Autopesu Espoo - Käsinpesu ja vahaukset">Autopesu</a>
                 <a href="rengastyot" title="Rengastyöt Espoo - Renkaiden vaihto ja rengashotelli">Rengastyöt</a>
                 <a href="korjaustyot" title="Korjaustyöt Espoo - Autohuolto ja katsastuskorjaukset">Korjaustyöt</a>
@@ -654,19 +654,17 @@
                 <a href="kiilloitus" title="Kiillotus Espoo - Koneellinen kiillotus ja pinnoitus">Kiillotus</a>
                 <a href="lasikorjaus">Lasikorjaus</a>
                 <a href="kolhukorjaus" title="Kolhukorjaus Espoo - Lommojen oikaisu ja ruostekorjaukset">Kolhukorjaus</a>
-                <a href="tietoa-meista" title="Tietoa meistä - Tutustu Fixnero autohuoltoon">Tietoa meistä</a>
-                <a href="blogi/" title="Blogi - Vinkkejä auton hoitoon">Blogi</a>
                 <a href="index#hinnasto">Hinnasto</a>
                 <a href="index#yhteystiedot">Yhteystiedot</a>
                 <a href="tyonnaytteet" title="Työnäytteet - Aiemmat työt">Työnäytteet</a>
             </div>
             <div class="contact-section footer-section">
-                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: #ffffff;">Yhteystiedot</h3>
-                <p style="color: #ffffff;"><strong style="color: #ffffff;">📞 Puhelin:</strong> <a href="tel:+358401935001" style="color: #ffffff; text-decoration: none;">040 1935001</a></p>
-                <p style="color: #ffffff;"><strong style="color: #ffffff;">📧 Sähköposti:</strong> <a href="mailto:info@fixnero.fi" style="color: #ffffff;">info@fixnero.fi</a></p>
-                <p style="color: #ffffff;"><strong style="color: #ffffff;">🕐 Aukioloajat:</strong></p>
-                <p style="margin-left: 20px; color: #ffffff;">Ma-Pe: 9:00-17:00<br>La-Su: Suljettu</p>
-                <p style="color: #ffffff;"><strong style="color: #ffffff;">📍 Osoite:</strong><br>Tiilenvalajantie 6<br>02330 Espoo (Kivenlahti)<br><small style="color: #ffffff;">Sisäpiha, keskimmäinen nosto-ovi<br>Helppo Katsastuksen vieressä</small></p>
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Yhteystiedot</h3>
+                <p><strong>📞 Puhelin:</strong> <a href="tel:+358401935001" style="color: inherit; text-decoration: none;">040 1935001</a></p>
+                <p><strong>📧 Sähköposti:</strong> <a href="mailto:info@fixnero.fi">info@fixnero.fi</a></p>
+                <p><strong>🕐 Aukioloajat:</strong></p>
+                <p style="margin-left: 20px;">Ma-Pe: 9:00-17:00<br>La-Su: Suljettu</p>
+                <p><strong>📍 Osoite:</strong><br>Tiilenvalajantie 6<br>02330 Espoo (Kivenlahti)<br><small>Sisäpiha, keskimmäinen nosto-ovi<br>Helppo Katsastuksen vieressä</small></p>
             </div>
         </div>
     </footer>
