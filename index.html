@@ -730,9 +730,9 @@
             font-weight: 700;
         }
         
-        /* Tietoa Meistä category button - significantly enlarged background image */
+        /* Tietoa Meistä category button - appropriately sized background image */
         .category-box-tietoa-meista {
-            background-size: 140% !important;
+            background-size: 120% !important;
             background-repeat: no-repeat !important;
             background-position: center !important;
             background-color: #ffffff !important;
@@ -1678,9 +1678,9 @@
             margin: 0 auto 20px auto;
             background: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(63, 169, 245, 0.2);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
             overflow: hidden;
-            border: 2px solid #3FA9F5;
+            border: 2px solid #000000;
             transition: all 0.4s ease-in-out;
         }
         
@@ -2347,15 +2347,15 @@
         #slot-summary {
             max-width: 100%;
             margin: 20px auto;
-            padding: 24px 30px;
-            background: linear-gradient(135deg, #3FA9F5 0%, #5CB8FF 100%);
-            border: none;
-            border-radius: 16px;
-            font-size: 1.25rem;
+            padding: 18px 24px;
+            background: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 8px;
+            font-size: 1.1rem;
             font-weight: 700;
-            color: #ffffff;
+            color: #000000;
             text-align: center;
-            box-shadow: 0 8px 24px rgba(63, 169, 245, 0.4);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
             line-height: 1.6;
             position: relative;
             overflow: hidden;
@@ -2366,10 +2366,10 @@
             content: "✓";
             position: absolute;
             top: 50%;
-            right: 24px;
+            right: 20px;
             transform: translateY(-50%);
-            font-size: 2.5rem;
-            color: rgba(255,255,255,0.3);
+            font-size: 2rem;
+            color: rgba(0, 0, 0, 0.15);
             font-weight: bold;
         }
         
@@ -3498,7 +3498,7 @@
     </button>
     <nav id="nav">
         <a href="#top" class="nav-logo-desktop"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" loading="lazy"></a>
-        <a href="#top" class="nav-logo-mobile"><img src="FXNR.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" loading="lazy"></a>
+        <a href="#top" class="nav-logo-mobile" style="display: flex; align-items: center; justify-content: center; gap: 10px;"><img src="FXNR.webp" alt="Fixnero - Autohuolto Espoo" loading="lazy" style="max-height: 50px;"><span style="font-size: 1.2rem; font-weight: 700; color: #000; font-family: 'Bebas Neue', 'Impact', sans-serif; letter-spacing: 0.05em;">ETUSIVU</span></a>
         <a href="#pesupalvelut">Autopesu</a>
         <a href="#sisapuhdistus">Sisäpuhdistus</a>
         <a href="#kiilloitus">Kiillotus</a>
@@ -3801,8 +3801,8 @@
         </div>
         
         <!-- Estimated total price -->
-        <div id="total-amount-container" style="display: none; margin: 25px 0; padding: 20px; background: linear-gradient(135deg, #3FA9F5 0%, #5CB8FF 100%); border-radius: 16px; border: none; text-align: center; box-shadow: 0 4px 12px rgba(63, 169, 245, 0.4);" aria-hidden="true">
-          <strong style="font-size: 1.5rem; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">Varauksen hinta: <span id="total-amount" style="color: #ffffff; font-weight: 800;">0 €</span></strong>
+        <div id="total-amount-container" style="display: none; margin: 20px 0; padding: 14px 18px; background: linear-gradient(135deg, #3FA9F5 0%, #5CB8FF 100%); border-radius: 12px; border: none; text-align: center; box-shadow: 0 3px 10px rgba(63, 169, 245, 0.3);" aria-hidden="true">
+          <strong style="font-size: 1.15rem; color: #ffffff; text-shadow: 0 1px 4px rgba(0,0,0,0.15);">Varauksen hinta: <span id="total-amount" style="color: #ffffff; font-weight: 800;">0 €</span></strong>
         </div>
         
         <!-- Repair services disclaimer -->
@@ -4648,6 +4648,8 @@
             </div>
             <div class="services-section footer-section">
                 <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Palvelumme</h3>
+                <a href="blogi/" title="Blogi - Vinkkejä ja ohjeita auton hoitoon">Blogi</a>
+                <a href="tietoa-meista" title="Tietoa meistä - Tutustu Fixneroon">Tietoa meistä</a>
                 <a href="pesupalvelut" title="Autopesu Espoo - Käsinpesu ja vahaukset">Autopesu</a>
                 <a href="rengastyot" title="Rengastyöt Espoo - Renkaiden vaihto ja rengashotelli">Rengastyöt</a>
                 <a href="korjaustyot" title="Korjaustyöt Espoo - Autohuolto ja katsastuskorjaukset">Korjaustyöt</a>
@@ -4665,7 +4667,7 @@
                 <p><strong>📧 Sähköposti:</strong> <a href="mailto:info@fixnero.fi">info@fixnero.fi</a></p>
                 <p><strong>🕐 Aukioloajat:</strong></p>
                 <p style="margin-left: 20px;">Ma-Pe: 9:00-17:00<br>La-Su: Suljettu</p>
-                <p><strong>📍 Osoite:</strong><br>Tiilenvalajantie 6<br>02330 Espoo (Kivenlahti)<br><small>Sisäpiha, keskimmäinen nosto-ovi<br>Helppo Katsastuksen vieressä</small></p>
+                <p><strong>📍 Osoite:</strong><br>Tiilenvalajantie 6<br>02330 Espoo (Kivenlahti)<br><small>Sisäpiha, keskimmäinen nosto-ovi<br>Plus katsastuksen vieressä</small></p>
             </div>
         </div>
     </footer>
