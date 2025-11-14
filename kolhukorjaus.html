@@ -396,18 +396,24 @@
         .cta-button {
             display: inline-block;
             padding: 10px 24px;
-            background: linear-gradient(135deg, #333333, #1a1a1a);
+            background: linear-gradient(135deg, #666666, #444444);
             color: white;
             text-decoration: none;
             border-radius: 25px;
             font-weight: 600;
             margin: 10px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         .cta-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        .cta-button-primary {
+            border: 2px solid #3FA9F5;
+            box-shadow: 0 4px 15px rgba(63, 169, 245, 0.3);
+        }
+        .cta-button-primary:hover {
+            box-shadow: 0 6px 20px rgba(63, 169, 245, 0.4);
         }
         .links-section {
             margin: 50px 0;
@@ -657,9 +663,9 @@
             <div style="position: relative; z-index: 2;">
                 <h2>Tarvitsetko Kolhukorjausta?</h2>
                 <p>Ota yhteyttä, niin autamme sinua! Annamme ilmaisen arvion korjauksesta ja kustannuksista.</p>
+                <a href="index#ajanvaraus" class="cta-button cta-button-primary">📅 Varaa Aika</a>
                 <a href="tel:+358401935001" class="cta-button">📞 Soita: 040 1935001</a>
                 <a href="mailto:info@fixnero.fi" class="cta-button">📧 Lähetä sähköposti</a>
-                <a href="index#ajanvaraus" class="cta-button">📅 Varaa Aika</a>
             </div>
         </div>
 
