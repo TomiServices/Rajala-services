@@ -1566,26 +1566,33 @@
         
         /* Mobile-specific spacing adjustments to prevent section overlap */
         @media (max-width: 768px) {
-            /* Add extra spacing between Lasikorjaus and Hinnasto */
-            #lasikorjaus {
-                margin-bottom: 60px !important;
+            /* Fix services-container sections overlap on mobile */
+            .services-container section {
+                margin: 50px auto !important;
             }
             
-            /* Add extra spacing around Hinnasto section */
-            #hinnasto {
-                margin-top: 60px !important;
+            /* Add extra spacing between Lasikorjaus and Hinnasto to prevent overlap */
+            .services-container #lasikorjaus {
                 margin-bottom: 90px !important;
+                padding-bottom: 40px !important;
             }
             
-            /* Add extra spacing around UKK (Tietoa meistä) section */
-            #ukk {
+            /* Add extra spacing around Hinnasto section to prevent overlap with UKK */
+            .services-container #hinnasto {
                 margin-top: 90px !important;
-                margin-bottom: 60px !important;
+                margin-bottom: 110px !important;
+                padding-bottom: 40px !important;
+            }
+            
+            /* Add extra spacing around UKK (Tietoa meistä) section to prevent overlap */
+            #ukk {
+                margin-top: 110px !important;
+                margin-bottom: 80px !important;
             }
             
             /* Add extra spacing for Yhteystiedot section */
             #yhteystiedot {
-                margin-top: 60px !important;
+                margin-top: 80px !important;
             }
         }
         
@@ -2856,27 +2863,29 @@
                 padding: 20px 15px 15px 15px !important;
             }
             
-            /* Add extra spacing between Lasikorjaus and Hinnasto */
+            /* Add extra spacing between Lasikorjaus and Hinnasto to prevent overlap */
             #lasikorjaus {
-                margin-bottom: 50px !important;
+                margin-bottom: 80px !important;
+                padding-bottom: 30px !important;
             }
             
-            /* Add extra spacing around Hinnasto section */
+            /* Add extra spacing around Hinnasto section to prevent overlap with UKK */
             #hinnasto {
-                margin-top: 50px !important;
-                margin-bottom: 60px !important;
+                margin-top: 80px !important;
+                margin-bottom: 100px !important;
+                padding-bottom: 30px !important;
             }
             
-            /* Add extra spacing around UKK (Tietoa meistä) section */
+            /* Add extra spacing around UKK (Tietoa meistä) section to prevent overlap */
             #ukk {
-                margin-top: 60px !important;
-                margin-bottom: 50px !important;
+                margin-top: 100px !important;
+                margin-bottom: 70px !important;
                 padding: 45px 20px !important;
             }
             
             /* Add extra spacing for Yhteystiedot section */
             #yhteystiedot {
-                margin-top: 50px !important;
+                margin-top: 70px !important;
                 margin-bottom: 30px !important;
             }
             
@@ -2893,27 +2902,29 @@
                 padding: 18px 12px 12px 12px !important;
             }
             
-            /* Add extra spacing between Lasikorjaus and Hinnasto */
+            /* Add extra spacing between Lasikorjaus and Hinnasto to prevent overlap */
             #lasikorjaus {
-                margin-bottom: 50px !important;
+                margin-bottom: 90px !important;
+                padding-bottom: 35px !important;
             }
             
-            /* Add extra spacing around Hinnasto section */
+            /* Add extra spacing around Hinnasto section to prevent overlap with UKK */
             #hinnasto {
-                margin-top: 50px !important;
-                margin-bottom: 70px !important;
+                margin-top: 90px !important;
+                margin-bottom: 110px !important;
+                padding-bottom: 35px !important;
             }
             
-            /* Add extra spacing around UKK (Tietoa meistä) section */
+            /* Add extra spacing around UKK (Tietoa meistä) section to prevent overlap */
             #ukk {
-                margin-top: 70px !important;
-                margin-bottom: 50px !important;
+                margin-top: 110px !important;
+                margin-bottom: 80px !important;
                 padding: 40px 15px !important;
             }
             
             /* Add extra spacing for Yhteystiedot section */
             #yhteystiedot {
-                margin-top: 50px !important;
+                margin-top: 80px !important;
                 margin-bottom: 25px !important;
             }
         }
