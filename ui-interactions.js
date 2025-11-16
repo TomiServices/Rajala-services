@@ -1,3 +1,18 @@
+// Global scroll function with proper offset for fixed header
+// Exported to window so it can be used by inline onclick handlers
+window.scrollToSection = function(sectionId) {
+    const element = document.querySelector(sectionId);
+    if (!element) return;
+    
+    // Account for fixed header: top banner (20px) + nav bar (~82px) = ~102px
+    // Adding extra 10px margin for better visibility = 112px total
+    const offset = window.innerWidth <= 1279 ? 0 : 112;
+    const rect = element.getBoundingClientRect();
+    const scrollTop = window.pageYOffset + rect.top - offset;
+    
+    window.scrollTo({ top: scrollTop, behavior: 'smooth' });
+};
+
 // Defer non-critical UI initialization to reduce main-thread blocking
 function initializeUIInteractions() {
     // Hamburger and nav toggle
@@ -33,7 +48,9 @@ function initializeUIInteractions() {
                 e.preventDefault();
                 // Batch layout reads/writes using requestAnimationFrame
                 requestAnimationFrame(() => {
-                    const offset = window.innerWidth <= 1279 ? 0 : 70;
+                    // Account for fixed header: top banner (20px) + nav bar (~82px) = ~102px
+                    // Adding extra 10px margin for better visibility = 112px total
+                    const offset = window.innerWidth <= 1279 ? 0 : 112;
                     const rect = scrollToElement.getBoundingClientRect();
                     const scrollTop = window.pageYOffset + rect.top - offset;
                     window.scrollTo({ top: scrollTop, behavior: 'smooth' });
