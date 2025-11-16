@@ -2820,7 +2820,7 @@
             margin: 10px;
         }
         .logo-container img {
-            width: 120px;
+            width: 180px;
             margin-bottom: 15px;
         }
         .footer-section a { color: #ffffff; text-decoration: underline; }
@@ -2832,7 +2832,56 @@
         @media (max-width: 900px) {
             .footer { flex-direction: column; align-items: center; }
             .footer-section { align-items: center; text-align: center; }
-            .logo-container img { width: 80px; }
+            .logo-container img { width: 140px; }
+        }
+        
+        /* Mobile-specific fixes for section spacing to prevent overlap */
+        @media (max-width: 768px) {
+            section {
+                margin: 30px auto !important;
+                padding: 20px 15px 15px 15px !important;
+            }
+            
+            #hinnasto {
+                margin-bottom: 40px !important;
+            }
+            
+            #ukk {
+                margin: 40px auto !important;
+                padding: 40px 20px !important;
+            }
+            
+            #yhteystiedot {
+                margin-top: 40px !important;
+                margin-bottom: 30px !important;
+            }
+            
+            .kartanKehys {
+                margin-top: 20px !important;
+                margin-bottom: 30px !important;
+            }
+        }
+        
+        /* Extra small mobile devices - additional spacing */
+        @media (max-width: 480px) {
+            section {
+                margin: 25px auto !important;
+                padding: 18px 12px 12px 12px !important;
+            }
+            
+            #hinnasto {
+                margin-bottom: 35px !important;
+            }
+            
+            #ukk {
+                margin: 35px auto !important;
+                padding: 35px 15px !important;
+            }
+            
+            #yhteystiedot {
+                margin-top: 35px !important;
+                margin-bottom: 25px !important;
+            }
         }
         
         /* Ensure services section displays links in a single column */
@@ -4622,15 +4671,15 @@
         <!-- Add animated background pattern -->
         <div aria-hidden="true" style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(45deg, #e8e8e8 0px, #e8e8e8 30px, #f0f0f0 30px, #f0f0f0 60px); opacity: 0.4; z-index: 0; animation: patternMoveSlowly 800s linear infinite; pointer-events: none;"></div>
         <div style="position: relative; z-index: 1;">
-            <h2 style="color: #333333;">Usein Kysytyt Kysymykset ja Tietoa Meistä</h2>
-            <p style="margin-bottom: 30px; font-size: 1.1rem; color: #333333;">Löydä vastaukset yleisimpiin kysymyksiin palveluistamme ja tutustu meihin paremmin.</p>
+            <h2 style="color: #333333;">Tietoa meistä</h2>
+            <p style="margin-bottom: 30px; font-size: 1.1rem; color: #333333;">Tutustu meihin paremmin ja löydä vastaukset yleisimpiin kysymyksiin palveluistamme.</p>
             
-            <a href="tietoa-meista#ukk" class="btn-read-more" style="display: inline-block; padding: 16px 40px; font-size: 1.1rem; margin-right: 10px;">
-                📋 Lue UKK sivulta
+            <a href="tietoa-meista" class="btn-read-more" style="display: inline-block; padding: 16px 40px; font-size: 1.1rem; margin-right: 10px;">
+                👥 Tietoa Meistä
             </a>
             
-            <a href="tietoa-meista" class="btn-read-more" style="display: inline-block; padding: 16px 40px; font-size: 1.1rem;">
-                👥 Tietoa Meistä
+            <a href="tietoa-meista#ukk" class="btn-read-more" style="display: inline-block; padding: 16px 40px; font-size: 1.1rem;">
+                📋 Lue UKK sivulta
             </a>
             
             <p style="margin-top: 25px; font-size: 0.95rem; color: #333333;">
