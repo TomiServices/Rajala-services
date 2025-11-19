@@ -10,6 +10,9 @@ yarn-error.log*
 .env
 .env.local
 .env.*.local
+functions/.runtimeconfig.json
+service-account-key.json
+*-service-account*.json
 
 # Ignore build output (if using TypeScript or Babel, etc)
 dist/
