@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,user-scalable=yes">
+    <meta name="description" content="Fixnero evästekäytäntö - Tietoa siitä, miten käytämme evästeitä verkkosivustollamme käyttökokemuksen parantamiseksi.">
+    <meta name="robots" content="noindex, follow">
+    <title>Evästekäytäntö – Fixnero</title>
+    
+    <link rel="canonical" href="https://fixnero.fi/cookie-policy">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/webp" href="Favicon.webp">
+    
+    <!-- Structured Data for WebPage -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Evästekäytäntö",
+        "description": "Fixnero evästekäytäntö - Tietoa siitä, miten käytämme evästeitä verkkosivustollamme käyttökokemuksen parantamiseksi.",
+        "url": "https://fixnero.fi/cookie-policy.html",
+        "inLanguage": "fi",
+        "isPartOf": {
+            "@type": "WebSite",
+            "name": "Fixnero",
+            "url": "https://fixnero.fi"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Fixnero Oy",
+            "url": "https://fixnero.fi"
+        }
+    }
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8f8f8 0%, #e0e0e0 100%);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .top-banner {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: #000000;
+            color: #ffffff;
+            text-align: center;
+            padding: 4px 0;
+            z-index: 1002;
+            font-weight: 400;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        nav {
+            position: fixed;
+            top: 20px; left: 0; right: 0;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1003;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        nav img {
+            height: 50px;
+            margin-left: 10px;
+            margin-right: 15px;
+            filter: brightness(1.1);
+            transition: all 0.3s ease;
+        }
+        nav img:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+        nav a {
+            color: #ffffff;
+            padding: 16px 18px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            display: block;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0 2px;
+        }
+        nav a:hover, nav a.nav-active {
+            background: linear-gradient(135deg, #333333, #1a1a1a);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        nav a.nav-active {
+            box-shadow: 0 0 15px rgba(63, 169, 245, 0.4);
+            border-bottom: 2px solid #3FA9F5;
+        }
+        
+        /* Laptop screen adjustments (1280px - 1366px) to prevent navigation overflow */
+        @media (min-width: 1280px) and (max-width: 1366px) {
+            nav {
+                padding: 0 10px;
+            }
+            nav img {
+                height: 45px;
+                margin-left: 5px;
+                margin-right: 10px;
+            }
+            nav a {
+                font-size: 15px;
+                padding: 14px 12px;
+                margin: 0 1px;
+            }
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 140px auto 60px auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1a1a1a;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #2a2a2a;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', sans-serif;
+            font-size: 2rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        h3 {
+            color: #333;
+            font-size: 1.3rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        p, li {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        ul {
+            padding-left: 30px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .back-link:hover {
+            background: #333;
+            transform: translateY(-2px);
+        }
+        footer {
+            background: #1a1a1a;
+            color: #ecf0f1;
+            padding: 40px 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-banner">
+        📞 Varaa aika: +358 40 1935001 | 📍 Kivenlahti, Espoo
+    </div>
+    
+    <nav id="nav">
+        <a href="index">
+            <img src="FXNR.webp" alt="Fixnero - Autohuolto Espoo">
+        </a>
+        <a href="index">Etusivu</a>
+    </nav>
+    
+    <div class="container">
+        <h1>Evästekäytäntö (Cookie Policy)</h1>
+        
+        <p><strong>Viimeisin päivitys:</strong> Lokakuu 2025</p>
+        
+        <h2>Mikä on eväste?</h2>
+        <p>Eväste on pieni tekstitiedosto, jonka verkkosivusto tallentaa käyttäjän laitteelle (tietokone, tabletti, älypuhelin). Evästeet auttavat meitä tarjoamaan paremman käyttökokemuksen ja analysoimaan verkkosivustomme käyttöä.</p>
+        
+        <h2>Mitä evästeitä käytämme?</h2>
+        
+        <h3>1. Välttämättömät evästeet</h3>
+        <p>Nämä evästeet ovat välttämättömiä verkkosivuston perustoimintojen kannalta. Niitä käytetään esimerkiksi:</p>
+        <ul>
+            <li>Evästehyväksynnän muistamiseen</li>
+            <li>Lomakkeiden toimintaan (ajanvaraus)</li>
+            <li>Käyttäjäistunnon ylläpitämiseen</li>
+        </ul>
+        <p>Näitä evästeitä ei voi poistaa käytöstä, sillä ne ovat välttämättömiä sivuston toiminnalle.</p>
+        
+        <h3>2. Analytiikka- ja suorituskykyevästeet</h3>
+        <p>Käytämme Google Analytics 4 -palvelua kerätäksemme tietoa siitä, miten kävijät käyttävät verkkosivustoamme. Nämä tiedot auttavat meitä parantamaan sivuston sisältöä ja käytettävyyttä.</p>
+        <p>Keräämme tietoja kuten:</p>
+        <ul>
+            <li>Sivustolla vietetty aika</li>
+            <li>Vieraillut sivut</li>
+            <li>Laitteen tyyppi ja selain</li>
+            <li>Maantieteellinen sijainti (kaupunkitasolla)</li>
+            <li>Sivustolle saapumisen lähde</li>
+        </ul>
+        <p><strong>Nämä evästeet asetetaan vain, jos hyväksyt ne evästebannerin kautta.</strong></p>
+        
+        <h3>3. Kolmannen osapuolen evästeet</h3>
+        <p>Verkkosivustomme voi sisältää sisältöä kolmansilta osapuolilta, kuten:</p>
+        <ul>
+            <li>Google Maps (kartat)</li>
+            <li>Google reCAPTCHA (roskapostisuojaus)</li>
+            <li>Sosiaalisen median upotukset</li>
+        </ul>
+        <p>Nämä palvelut voivat asettaa omia evästeitään, joihin sovelletaan kyseisten palveluiden omia evästekäytäntöjä.</p>
+        
+        <h2>Miten hallitsen evästeitä?</h2>
+        
+        <h3>Evästeasetukset</h3>
+        <p>Voit hallita evästeasetuksiasi verkkosivustomme evästebannerin kautta. Voit:</p>
+        <ul>
+            <li>Hyväksyä kaikki evästeet</li>
+            <li>Hylätä vapaaehtoiset evästeet (analytiikka)</li>
+            <li>Muuttaa asetuksiasi milloin tahansa</li>
+        </ul>
+        
+        <h3>Selaimen evästeasetukset</h3>
+        <p>Voit myös hallita evästeitä suoraan selaimesi asetuksista. Useimmat selaimet sallivat:</p>
+        <ul>
+            <li>Evästeiden estämisen kokonaan</li>
+            <li>Olemassa olevien evästeiden poistamisen</li>
+            <li>Evästeiden hyväksymisen tapauskohtaisesti</li>
+        </ul>
+        <p>Huomaa, että evästeiden estäminen voi vaikuttaa verkkosivuston toiminnallisuuteen.</p>
+        
+        <h2>Google Analytics ja tietosuoja</h2>
+        <p>Käytämme Google Analytics 4 -palvelua anonymisoituna:</p>
+        <ul>
+            <li>IP-osoitteet anonymisoidaan</li>
+            <li>Emme kerää henkilökohtaisesti tunnistettavia tietoja</li>
+            <li>Tiedot käytetään vain tilastollisiin tarkoituksiin</li>
+            <li>Tiedot säilytetään Googlen palvelimilla (EU-alue, jos mahdollista)</li>
+        </ul>
+        
+        <h2>Evästeiden säilytysaika</h2>
+        <ul>
+            <li><strong>Välttämättömät evästeet:</strong> Istuntoevästeet (poistetaan selaimen sulkeutuessa) tai 1 vuosi</li>
+            <li><strong>Analytiikkaevästeet:</strong> Enintään 2 vuotta</li>
+            <li><strong>Suostumusevästeet:</strong> 1 vuosi</li>
+        </ul>
+        
+        <h2>Yhteystiedot</h2>
+        <p>Jos sinulla on kysyttävää evästekäytännöstämme tai tietosuojasta, ota meihin yhteyttä:</p>
+        <p>
+            <strong>Fixnero Oy</strong><br>
+            Tiilenvalajantie 6, 02330 Espoo<br>
+            Puhelin: +358 40 1935001<br>
+            Sähköposti: info@fixnero.fi
+        </p>
+        
+        <h2>Muutokset evästekäytäntöön</h2>
+        <p>Voimme päivittää tätä evästekäytäntöä ajoittain. Suosittelemme tarkistamaan tämän sivun säännöllisesti mahdollisten muutosten varalta. Päivitykset tulevat voimaan heti, kun ne julkaistaan tällä sivulla.</p>
+        
+        <a href="index" class="back-link">← Takaisin etusivulle</a>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Fixnero Oy. Kaikki oikeudet pidätetään.</p>
+        <p style="margin-top: 10px;">
+            <a href="cookie-policy" style="color: #ecf0f1; text-decoration: none;">Evästekäytäntö</a>
+        </p>
+    </footer>
+</body>
+</html>
