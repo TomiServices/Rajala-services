@@ -1794,6 +1794,23 @@
             cursor: not-allowed;
         }
         
+        /* REFINEMENT: Weekend styling for custom class */
+        #calendar .weekend-day {
+            background: #f9f9f9 !important;
+            opacity: 0.6 !important;
+            cursor: not-allowed !important;
+        }
+        
+        #calendar .weekend-day:hover {
+            background: #f9f9f9 !important;
+            opacity: 0.6 !important;
+        }
+        
+        /* Ensure weekend day numbers are visible but dimmed */
+        #calendar .weekend-day .fc-daygrid-day-number {
+            color: #999999 !important;
+        }
+        
         /* Past days styling - light gray and unclickable */
         #calendar .fc-daygrid-day.fc-day-past {
             background: #fafafa;
@@ -2646,6 +2663,18 @@
                 color: #333333;
                 opacity: 0.7;
                 white-space: nowrap;
+            }
+            
+            /* REFINEMENT: Hide days from other months on mobile to prevent month name confusion */
+            .fc-day-other {
+                display: none !important;
+            }
+            
+            /* REFINEMENT: Ensure weekday headers are always visible and clear */
+            .fc-col-header-cell-cushion {
+                display: block !important;
+                padding: 8px 4px !important;
+                font-size: 0.75rem !important;
             }
             
             /* Mobile optimization for "Miksi valita Fixnero" section */
