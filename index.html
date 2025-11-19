@@ -1756,19 +1756,26 @@
             transition: all 0.4s ease-in-out;
         }
         
-        /* Desktop: Make calendar more compact - less shrinking for better visibility */
+        /* Desktop: Make calendar more spacious and professional */
         @media (min-width: 769px) {
             #calendar {
-                max-width: 650px;
-                transform: scale(0.95);
+                max-width: 800px; /* REFINEMENT: Increased from 650px for better visibility */
+                transform: scale(1); /* REFINEMENT: Removed scaling for cleaner appearance */
                 transform-origin: top center;
             }
         }
         
-        /* Compact calendar - initially collapsed */
+        /* Compact calendar - initially collapsed on mobile only */
         #calendar.compact {
-            max-height: 350px;
+            max-height: 500px; /* REFINEMENT: Increased from 350px for better visibility */
             overflow: hidden;
+        }
+        
+        /* REFINEMENT: On desktop, don't limit height - show full calendar */
+        @media (min-width: 769px) {
+            #calendar.compact {
+                max-height: none;
+            }
         }
         
         /* Expanded calendar - after user interaction */
@@ -2170,10 +2177,28 @@
         .fc-daygrid-day {
             background: #ffffff;
             border: none !important;
+            padding: 8px; /* REFINEMENT: Add padding for better spacing */
         }
         
         .fc-daygrid-day:hover {
             background: #f0f8ff !important;
+        }
+        
+        /* REFINEMENT: Desktop-specific cell improvements for cleaner layout */
+        @media (min-width: 769px) {
+            .fc-daygrid-day {
+                min-height: 80px; /* Ensure consistent cell height */
+            }
+            
+            .fc-daygrid-day-number {
+                font-size: 1rem !important;
+                padding: 6px !important;
+            }
+            
+            .fc-event {
+                margin: 2px 0 !important; /* Better event spacing */
+                font-size: 0.85rem !important;
+            }
         }
         
         .fc-daygrid-day.fc-day-today {
