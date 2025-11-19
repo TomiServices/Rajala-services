@@ -1280,14 +1280,27 @@ function initializeBookingSystem() {
                 },
                 dayGridWeek: {
                     type: 'dayGrid',
-                    duration: { weeks: 2 } // Mobile: show 2 weeks at a time
+                    duration: { weeks: 2 }, // Mobile: show 2 weeks at a time
+                    fixedWeekCount: false, // REFINEMENT: Don't pad with extra weeks
+                    showNonCurrentDates: false // REFINEMENT: Hide days from other months
                 }
             },
             selectable: true,
             selectOverlap: false,
             expandRows: true,
-            // IMPORTANT: Hide weekends (Saturday=6, Sunday=0)
-            hiddenDays: [0, 6], // Hide Sunday and Saturday
+            fixedWeekCount: false, // REFINEMENT: Don't show extra weeks
+            showNonCurrentDates: false, // REFINEMENT: Hide days from other months
+            // REFINEMENT: Show weekends but dimmed (removed hiddenDays)
+            // Weekends will be styled as dimmed via CSS and dayCellClassNames
+            dayHeaderFormat: { weekday: 'short' }, // Show weekday names (Ma, Ti, Ke, etc.)
+            dayCellClassNames: function(arg) {
+                // Add custom classes for weekend styling
+                const dayOfWeek = arg.date.getDay();
+                if (dayOfWeek === 0 || dayOfWeek === 6) {
+                    return ['weekend-day'];
+                }
+                return [];
+            },
             displayEventTime: false,
             dayMaxEventRows: 3,
             viewDidMount: function(info) {
@@ -1322,9 +1335,9 @@ function initializeBookingSystem() {
             eventDisplay: 'block',
             displayEventTime: true,
             headerToolbar: {
-                left: isMobileView ? 'prev' : '',
+                left: '',
                 center: 'title',
-                right: isMobileView ? 'next' : ''
+                right: ''
             },
             // Limit view to current and next month only
             validRange: function() {
@@ -1546,7 +1559,10 @@ function initializeBookingSystem() {
                                 if (calendar && calendar.prev) {
                                     calendar.prev();
                                     updateNavigationButtons();
-                                    populateAvailableSlots(calendar, bookings);
+                                    // REFINEMENT: Ensure events are refreshed after navigation
+                                    if (calendar.refetchEvents) {
+                                        calendar.refetchEvents();
+                                    }
                                 }
                             });
                         }
@@ -1556,7 +1572,10 @@ function initializeBookingSystem() {
                                 if (calendar && calendar.next) {
                                     calendar.next();
                                     updateNavigationButtons();
-                                    populateAvailableSlots(calendar, bookings);
+                                    // REFINEMENT: Ensure events are refreshed after navigation
+                                    if (calendar.refetchEvents) {
+                                        calendar.refetchEvents();
+                                    }
                                 }
                             });
                         }
@@ -1566,7 +1585,10 @@ function initializeBookingSystem() {
                             if (calendar && calendar.gotoDate) {
                                 findAndNavigateToNextAvailableWeek(calendar, bookings);
                                 updateNavigationButtons();
-                                populateAvailableSlots(calendar, bookings);
+                                // REFINEMENT: Ensure events are refreshed after navigation
+                                if (calendar.refetchEvents) {
+                                    calendar.refetchEvents();
+                                }
                             }
                             
                             // Don't show time selection grid initially - user must click a day first

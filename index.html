@@ -1756,19 +1756,26 @@
             transition: all 0.4s ease-in-out;
         }
         
-        /* Desktop: Make calendar more compact - less shrinking for better visibility */
+        /* Desktop: Make calendar more spacious and professional */
         @media (min-width: 769px) {
             #calendar {
-                max-width: 650px;
-                transform: scale(0.95);
+                max-width: 800px; /* REFINEMENT: Increased from 650px for better visibility */
+                transform: scale(1); /* REFINEMENT: Removed scaling for cleaner appearance */
                 transform-origin: top center;
             }
         }
         
-        /* Compact calendar - initially collapsed */
+        /* Compact calendar - initially collapsed on mobile only */
         #calendar.compact {
-            max-height: 350px;
+            max-height: 500px; /* REFINEMENT: Increased from 350px for better visibility */
             overflow: hidden;
+        }
+        
+        /* REFINEMENT: On desktop, don't limit height - show full calendar */
+        @media (min-width: 769px) {
+            #calendar.compact {
+                max-height: none;
+            }
         }
         
         /* Expanded calendar - after user interaction */
@@ -1792,6 +1799,23 @@
             background: #f9f9f9;
             opacity: 0.7;
             cursor: not-allowed;
+        }
+        
+        /* REFINEMENT: Weekend styling for custom class */
+        #calendar .weekend-day {
+            background: #f9f9f9 !important;
+            opacity: 0.6 !important;
+            cursor: not-allowed !important;
+        }
+        
+        #calendar .weekend-day:hover {
+            background: #f9f9f9 !important;
+            opacity: 0.6 !important;
+        }
+        
+        /* Ensure weekend day numbers are visible but dimmed */
+        #calendar .weekend-day .fc-daygrid-day-number {
+            color: #999999 !important;
         }
         
         /* Past days styling - light gray and unclickable */
@@ -2153,10 +2177,28 @@
         .fc-daygrid-day {
             background: #ffffff;
             border: none !important;
+            padding: 8px; /* REFINEMENT: Add padding for better spacing */
         }
         
         .fc-daygrid-day:hover {
             background: #f0f8ff !important;
+        }
+        
+        /* REFINEMENT: Desktop-specific cell improvements for cleaner layout */
+        @media (min-width: 769px) {
+            .fc-daygrid-day {
+                min-height: 80px; /* Ensure consistent cell height */
+            }
+            
+            .fc-daygrid-day-number {
+                font-size: 1rem !important;
+                padding: 6px !important;
+            }
+            
+            .fc-event {
+                margin: 2px 0 !important; /* Better event spacing */
+                font-size: 0.85rem !important;
+            }
         }
         
         .fc-daygrid-day.fc-day-today {
@@ -2646,6 +2688,18 @@
                 color: #333333;
                 opacity: 0.7;
                 white-space: nowrap;
+            }
+            
+            /* REFINEMENT: Hide days from other months on mobile to prevent month name confusion */
+            .fc-day-other {
+                display: none !important;
+            }
+            
+            /* REFINEMENT: Ensure weekday headers are always visible and clear */
+            .fc-col-header-cell-cushion {
+                display: block !important;
+                padding: 8px 4px !important;
+                font-size: 0.75rem !important;
             }
             
             /* Mobile optimization for "Miksi valita Fixnero" section */
