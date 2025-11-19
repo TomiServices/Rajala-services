@@ -1263,21 +1263,31 @@ function initializeBookingSystem() {
         try {
             // Initialize FullCalendar
             const isMobileView = window.innerWidth < 768;
+            
+            // Configure FullCalendar for hybrid solution
+            // - Show 2 months (current + next) on desktop
+            // - Hide weekends (Saturday and Sunday)
+            // - Responsive design for mobile
             calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: isMobileView ? 'dayGridTwoWeeks' : 'dayGridMonth',
-            initialDate: new Date(), // FIX: Explicitly set initial date to ensure calendar displays current month
+            initialView: isMobileView ? 'dayGridWeek' : 'multiMonthYear',
+            initialDate: new Date(), // Start with current month
             locale: 'fi',
             views: {
-                dayGridTwoWeeks: {
+                multiMonthYear: {
+                    type: 'multiMonth',
+                    duration: { months: 2 }, // Show current month + next month
+                    multiMonthMaxColumns: 2 // Display side by side
+                },
+                dayGridWeek: {
                     type: 'dayGrid',
-                    duration: { weeks: 2 }
+                    duration: { weeks: 2 } // Mobile: show 2 weeks at a time
                 }
             },
             selectable: true,
             selectOverlap: false,
             expandRows: true,
-            // Show all 7 days including weekends for visual indication
-            hiddenDays: [], // Show all days including weekends
+            // IMPORTANT: Hide weekends (Saturday=6, Sunday=0)
+            hiddenDays: [0, 6], // Hide Sunday and Saturday
             displayEventTime: false,
             dayMaxEventRows: 3,
             viewDidMount: function(info) {
@@ -1312,10 +1322,11 @@ function initializeBookingSystem() {
             eventDisplay: 'block',
             displayEventTime: true,
             headerToolbar: {
-                left: '',
+                left: isMobileView ? 'prev' : '',
                 center: 'title',
-                right: ''
+                right: isMobileView ? 'next' : ''
             },
+            // Limit view to current and next month only
             validRange: function() {
                 const now = new Date();
                 
@@ -1323,7 +1334,7 @@ function initializeBookingSystem() {
                 const startDate = new Date(now);
                 startDate.setHours(0, 0, 0, 0);
                 
-                // End date: end of next month (allows current month + next month)
+                // End date: end of next month (allows current month + next month = 2 months)
                 const endDate = new Date(now.getFullYear(), now.getMonth() + 2, 0);
                 endDate.setHours(23, 59, 59, 999);
                 
