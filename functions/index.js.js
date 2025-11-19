@@ -1,6 +1,7 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const axios = require("axios");
+const { v4: uuidv4 } = require('uuid');
 
 // Configure CORS to explicitly allow the production domain
 const cors = require("cors")({
@@ -15,6 +16,22 @@ const cors = require("cors")({
 });
 
 admin.initializeApp();
+
+// Import Google Calendar service functions
+const {
+    createCalendarEvent,
+    updateCalendarEvent,
+    deleteCalendarEvent,
+    getCalendarEvents,
+    checkSlotAvailability
+} = require('./google-calendar-service');
+
+// Import OAuth handlers
+const {
+    generateAuthUrl,
+    oauth2callback,
+    checkAuthStatus
+} = require('./google-auth');
 
 // reCAPTCHA Secret Key - FREE v3 version (NOT Enterprise)
 // Should be stored in Firebase environment config
@@ -114,6 +131,13 @@ exports.book = functions.https.onRequest((req, res) => {
             return res.status(400).json({ error: "Missing required fields" });
         }
         
+        // Generate unique appointment ID
+        const appointmentId = uuidv4();
+        
+        // Calculate end time (1 hour after start)
+        const startTime = new Date(aika);
+        const endTime = new Date(startTime.getTime() + 60 * 60 * 1000);
+        
         // Helper function to escape HTML to prevent XSS attacks
         function escapeHtml(unsafe) {
             // Handle null and undefined explicitly
@@ -166,7 +190,59 @@ exports.book = functions.https.onRequest((req, res) => {
         const bookingDateString = `${bookingDate.getDate()}.${bookingDate.getMonth() + 1}.${bookingDate.getFullYear()}`;
         const bookingTimeString = `${String(bookingDate.getHours()).padStart(2, '0')}:${String(bookingDate.getMinutes()).padStart(2, '0')}`;
         
-        // Tallenna varaus Firestoreen with structured service data
+        // Prepare appointment data for both Firebase and Google Calendar
+        const appointmentData = {
+            id: appointmentId,
+            googleCalendarId: null, // Will be updated after Google Calendar creation
+            customerName: name,
+            customerEmail: email,
+            customerPhone: phone,
+            services,
+            startTime: startTime.toISOString(),
+            endTime: endTime.toISOString(),
+            status: 'confirmed',
+            totalPrice,
+            totalNumericPrice,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            syncStatus: 'pending'
+        };
+        
+        try {
+            // Step 1: Save to Firebase Realtime Database
+            await admin.database().ref(`appointments/${appointmentId}`).set(appointmentData);
+            console.log('Appointment saved to Firebase:', appointmentId);
+            
+            // Step 2: Try to create Google Calendar event
+            try {
+                const googleEventId = await createCalendarEvent(appointmentData);
+                
+                // Update Firebase with Google Calendar ID
+                await admin.database().ref(`appointments/${appointmentId}`).update({
+                    googleCalendarId: googleEventId,
+                    syncStatus: 'synced',
+                    updatedAt: new Date().toISOString()
+                });
+                
+                console.log('Appointment synced to Google Calendar:', googleEventId);
+            } catch (googleError) {
+                console.error('Failed to sync to Google Calendar:', googleError);
+                // Update sync status but don't fail the booking
+                await admin.database().ref(`appointments/${appointmentId}`).update({
+                    syncStatus: 'sync_failed',
+                    syncError: googleError.message,
+                    updatedAt: new Date().toISOString()
+                });
+            }
+        } catch (firebaseError) {
+            console.error('Failed to save appointment to Firebase:', firebaseError);
+            return res.status(500).json({
+                error: 'Varauksen tallentaminen epäonnistui. Yritä uudelleen.',
+                technicalDetails: firebaseError.message
+            });
+        }
+        
+        // Tallenna varaus Firestoreen with structured service data (legacy support)
         admin.firestore().collection("varaukset").add({
             timestamp: admin.firestore.FieldValue.serverTimestamp(), // When booking was made
             name,
@@ -228,7 +304,7 @@ exports.book = functions.https.onRequest((req, res) => {
     });
 });
 
-// KALENTERIN VARAUKSET
+// KALENTERIN VARAUKSET - Updated to use Firebase Realtime Database
 exports.bookings = functions.https.onRequest((req, res) => {
     cors(req, res, async () => {
         // Handle OPTIONS preflight request
@@ -241,11 +317,26 @@ exports.bookings = functions.https.onRequest((req, res) => {
         }
         
         try {
-            const snapshot = await admin.firestore().collection("varaukset").get();
-            const bookings = [];
-            snapshot.forEach(doc => {
-                bookings.push({ id: doc.id, ...doc.data() });
-            });
+            // Fetch from Firebase Realtime Database
+            const appointmentsSnapshot = await admin.database().ref('appointments').once('value');
+            const appointmentsData = appointmentsSnapshot.val() || {};
+            
+            // Convert to array format expected by frontend
+            const bookings = Object.keys(appointmentsData)
+                .filter(id => {
+                    const appointment = appointmentsData[id];
+                    // Only include active appointments (not deleted or cancelled)
+                    return appointment.status !== 'deleted' && appointment.status !== 'cancelled';
+                })
+                .map(id => ({
+                    id: id,
+                    aika: appointmentsData[id].startTime,
+                    name: appointmentsData[id].customerName,
+                    email: appointmentsData[id].customerEmail,
+                    phone: appointmentsData[id].customerPhone,
+                    services: appointmentsData[id].services,
+                    totalPrice: appointmentsData[id].totalPrice
+                }));
             
             // Add cache control headers to reduce load
             res.set('Cache-Control', 'public, max-age=60, s-maxage=300');
@@ -256,3 +347,21 @@ exports.bookings = functions.https.onRequest((req, res) => {
         }
     });
 });
+
+// Export OAuth handlers
+exports.generateAuthUrl = generateAuthUrl;
+exports.oauth2callback = oauth2callback;
+exports.checkAuthStatus = checkAuthStatus;
+
+// Export Google Calendar sync functions
+const {
+    googleCalendarWebhook,
+    scheduledSync,
+    onAppointmentCreated,
+    onAppointmentUpdated
+} = require('./google-calendar-sync');
+
+exports.googleCalendarWebhook = googleCalendarWebhook;
+exports.scheduledSync = scheduledSync;
+exports.onAppointmentCreated = onAppointmentCreated;
+exports.onAppointmentUpdated = onAppointmentUpdated;
