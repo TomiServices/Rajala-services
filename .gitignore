@@ -43,4 +43,4 @@ logo-enhanced-*.png
 
 # Ignore compressed files (Firebase handles compression)
 *.gz
-*.br
+*.brtest-calendar-refinement.html
