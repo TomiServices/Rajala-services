@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/firebase-hosting.json",
   "hosting": {
     "public": ".",
     "ignore": [
