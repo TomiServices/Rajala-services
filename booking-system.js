@@ -1302,20 +1302,30 @@ function initializeBookingSystem() {
                 return [];
             },
             displayEventTime: false,
-            dayMaxEventRows: 3,
+            dayMaxEventRows: false, // FIX: Disable max event rows to prevent "+X more" links
             viewDidMount: function(info) {
                 // Small delay to ensure view is fully rendered
                 setTimeout(() => {
                     if (calendar && info && info.view) {
                         populateAvailableSlots(calendar, bookings);
+                        
+                        // FIX: Ensure weekday headers are visible on mobile
+                        if (window.innerWidth < 768) {
+                            const headers = document.querySelectorAll('.fc-col-header-cell-cushion');
+                            headers.forEach(header => {
+                                header.style.display = 'block';
+                                header.style.visibility = 'visible';
+                                header.style.opacity = '1';
+                            });
+                        }
                     }
                 }, 50);
             },
             // Mobile-specific improvements
             height: 'auto',
             contentHeight: window.innerWidth < 768 ? 500 : 400,
-            dayMaxEvents: true,
-            moreLinkClick: 'popover',
+            dayMaxEvents: false, // FIX: Disable to prevent "+X more" links
+            moreLinkClick: 'none', // FIX: Disable more link popover
             selectMirror: true,
             unselectAuto: true,
             selectMinDistance: 1,
