@@ -1,6 +1,7 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const axios = require("axios");
+const { google } = require("googleapis");
 
 // Configure CORS to explicitly allow the production domain
 const cors = require("cors")({
@@ -15,6 +16,141 @@ const cors = require("cors")({
 });
 
 admin.initializeApp();
+
+// ============================================================================
+// GOOGLE CALENDAR CONFIGURATION
+// ============================================================================
+
+/**
+ * Initialize Google Calendar API client with service account credentials
+ * Service account credentials should be stored in Firebase Functions config
+ * Set with: firebase functions:config:set google.calendar_id="YOUR_CALENDAR_ID"
+ *           firebase functions:config:set google.service_account="$(cat service-account-key.json)"
+ */
+function getCalendarClient() {
+    try {
+        const serviceAccount = functions.config().google?.service_account;
+        const calendarId = functions.config().google?.calendar_id;
+        
+        if (!serviceAccount || !calendarId) {
+            console.warn("Google Calendar not configured - service account or calendar ID missing");
+            return null;
+        }
+        
+        // Parse service account JSON if it's a string
+        const credentials = typeof serviceAccount === 'string' 
+            ? JSON.parse(serviceAccount) 
+            : serviceAccount;
+        
+        const auth = new google.auth.GoogleAuth({
+            credentials,
+            scopes: ['https://www.googleapis.com/auth/calendar']
+        });
+        
+        const calendar = google.calendar({ version: 'v3', auth });
+        
+        return { calendar, calendarId };
+    } catch (error) {
+        console.error("Error initializing Google Calendar client:", error);
+        return null;
+    }
+}
+
+/**
+ * Create or update an event in Google Calendar
+ * @param {object} booking - Booking data from Firestore
+ * @param {string} bookingId - Firestore document ID
+ * @returns {Promise<string|null>} - Google Calendar event ID or null on failure
+ */
+async function syncToGoogleCalendar(booking, bookingId) {
+    const client = getCalendarClient();
+    if (!client) {
+        console.log("Google Calendar not configured, skipping sync");
+        return null;
+    }
+    
+    const { calendar, calendarId } = client;
+    
+    try {
+        // Parse the booking time
+        const startTime = new Date(booking.aika);
+        // Default duration: 1 hour
+        const endTime = new Date(startTime.getTime() + 60 * 60 * 1000);
+        
+        // Build service list description
+        const serviceList = booking.services
+            .map(s => `${s.serviceName} - ${s.taskName}: ${s.price}`)
+            .join('\n');
+        
+        const event = {
+            summary: `Varaus: ${booking.name}`,
+            description: `Asiakas: ${booking.name}\nPuhelin: ${booking.phone}\nSähköposti: ${booking.email}\n\nPalvelut:\n${serviceList}\n\nYhteensä: ${booking.totalPrice}\n\n[Firestore ID: ${bookingId}]`,
+            start: {
+                dateTime: startTime.toISOString(),
+                timeZone: 'Europe/Helsinki',
+            },
+            end: {
+                dateTime: endTime.toISOString(),
+                timeZone: 'Europe/Helsinki',
+            },
+            colorId: '11', // Red color for bookings
+        };
+        
+        // Check if this booking already has a Google Calendar event ID
+        if (booking.googleEventId) {
+            // Update existing event
+            const response = await calendar.events.update({
+                calendarId: calendarId,
+                eventId: booking.googleEventId,
+                requestBody: event,
+            });
+            console.log(`Updated Google Calendar event: ${response.data.id}`);
+            return response.data.id;
+        } else {
+            // Create new event
+            const response = await calendar.events.insert({
+                calendarId: calendarId,
+                requestBody: event,
+            });
+            console.log(`Created Google Calendar event: ${response.data.id}`);
+            return response.data.id;
+        }
+    } catch (error) {
+        console.error("Error syncing to Google Calendar:", error);
+        return null;
+    }
+}
+
+/**
+ * Delete an event from Google Calendar
+ * @param {string} googleEventId - Google Calendar event ID
+ * @returns {Promise<boolean>} - Success status
+ */
+async function deleteFromGoogleCalendar(googleEventId) {
+    const client = getCalendarClient();
+    if (!client) {
+        console.log("Google Calendar not configured, skipping delete");
+        return false;
+    }
+    
+    const { calendar, calendarId } = client;
+    
+    try {
+        await calendar.events.delete({
+            calendarId: calendarId,
+            eventId: googleEventId,
+        });
+        console.log(`Deleted Google Calendar event: ${googleEventId}`);
+        return true;
+    } catch (error) {
+        if (error.code === 404) {
+            console.log(`Google Calendar event not found: ${googleEventId}`);
+            return true; // Already deleted
+        }
+        console.error("Error deleting from Google Calendar:", error);
+        return false;
+    }
+}
 
 // reCAPTCHA Secret Key - FREE v3 version (NOT Enterprise)
 // Should be stored in Firebase environment config
@@ -256,3 +392,330 @@ exports.bookings = functions.https.onRequest((req, res) => {
         }
     });
 });
+
+// ============================================================================
+// GOOGLE CALENDAR SYNC - FIRESTORE TRIGGERS
+// ============================================================================
+
+/**
+ * Firestore trigger: When a booking is created, sync to Google Calendar
+ */
+exports.onBookingCreated = functions.firestore
+    .document('varaukset/{bookingId}')
+    .onCreate(async (snapshot, context) => {
+        const booking = snapshot.data();
+        const bookingId = context.params.bookingId;
+        
+        console.log(`New booking created: ${bookingId}`);
+        
+        // Sync to Google Calendar
+        const googleEventId = await syncToGoogleCalendar(booking, bookingId);
+        
+        // Store the Google Calendar event ID in Firestore
+        if (googleEventId) {
+            try {
+                await snapshot.ref.update({
+                    googleEventId: googleEventId,
+                    googleSyncedAt: admin.firestore.FieldValue.serverTimestamp()
+                });
+                console.log(`Stored Google Calendar event ID for booking ${bookingId}`);
+            } catch (error) {
+                console.error(`Error storing Google Calendar event ID:`, error);
+            }
+        }
+    });
+
+/**
+ * Firestore trigger: When a booking is updated, sync to Google Calendar
+ */
+exports.onBookingUpdated = functions.firestore
+    .document('varaukset/{bookingId}')
+    .onUpdate(async (change, context) => {
+        const bookingBefore = change.before.data();
+        const bookingAfter = change.after.data();
+        const bookingId = context.params.bookingId;
+        
+        // Skip if this update was triggered by us adding the googleEventId
+        if (!bookingBefore.googleEventId && bookingAfter.googleEventId && !bookingBefore.googleSyncedAt) {
+            console.log(`Skipping Google Calendar sync - update was from sync itself`);
+            return null;
+        }
+        
+        console.log(`Booking updated: ${bookingId}`);
+        
+        // Sync to Google Calendar
+        const googleEventId = await syncToGoogleCalendar(bookingAfter, bookingId);
+        
+        // Update the sync timestamp
+        if (googleEventId && googleEventId !== bookingAfter.googleEventId) {
+            try {
+                await change.after.ref.update({
+                    googleEventId: googleEventId,
+                    googleSyncedAt: admin.firestore.FieldValue.serverTimestamp()
+                });
+            } catch (error) {
+                console.error(`Error updating Google Calendar event ID:`, error);
+            }
+        }
+    });
+
+/**
+ * Firestore trigger: When a booking is deleted, remove from Google Calendar
+ */
+exports.onBookingDeleted = functions.firestore
+    .document('varaukset/{bookingId}')
+    .onDelete(async (snapshot, context) => {
+        const booking = snapshot.data();
+        const bookingId = context.params.bookingId;
+        
+        console.log(`Booking deleted: ${bookingId}`);
+        
+        // Delete from Google Calendar if it was synced
+        if (booking.googleEventId) {
+            await deleteFromGoogleCalendar(booking.googleEventId);
+        }
+    });
+
+// ============================================================================
+// GOOGLE CALENDAR WEBHOOK - RECEIVE UPDATES FROM GOOGLE CALENDAR
+// ============================================================================
+
+/**
+ * Webhook endpoint to receive notifications from Google Calendar
+ * This enables two-way sync: Google Calendar → Firebase
+ * 
+ * Setup instructions:
+ * 1. Set up Google Calendar Push Notifications (watch endpoint)
+ * 2. Configure webhook URL: https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook
+ * 3. Add webhook verification token in Firebase config
+ */
+exports.calendarWebhook = functions.https.onRequest(async (req, res) => {
+    // Handle webhook verification (sent by Google)
+    if (req.headers['x-goog-resource-state'] === 'sync') {
+        console.log('Google Calendar webhook verification received');
+        return res.status(200).send('OK');
+    }
+    
+    // Handle webhook notifications
+    if (req.headers['x-goog-resource-state'] === 'exists') {
+        const resourceId = req.headers['x-goog-resource-id'];
+        const channelId = req.headers['x-goog-channel-id'];
+        
+        console.log(`Google Calendar change notification received - Channel: ${channelId}, Resource: ${resourceId}`);
+        
+        // Fetch recent events from Google Calendar and sync to Firebase
+        try {
+            await syncGoogleCalendarToFirebase();
+            return res.status(200).send('OK');
+        } catch (error) {
+            console.error('Error processing calendar webhook:', error);
+            return res.status(500).send('Error processing webhook');
+        }
+    }
+    
+    // Unknown webhook type
+    console.log('Unknown webhook notification:', req.headers);
+    return res.status(200).send('OK');
+});
+
+/**
+ * Sync Google Calendar events to Firebase Realtime Database
+ * This function fetches events from Google Calendar and creates/updates Firebase bookings
+ */
+async function syncGoogleCalendarToFirebase() {
+    const client = getCalendarClient();
+    if (!client) {
+        console.log("Google Calendar not configured, skipping sync from Google");
+        return;
+    }
+    
+    const { calendar, calendarId } = client;
+    
+    try {
+        // Fetch events from the next 30 days
+        const now = new Date();
+        const futureDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+        
+        const response = await calendar.events.list({
+            calendarId: calendarId,
+            timeMin: now.toISOString(),
+            timeMax: futureDate.toISOString(),
+            singleEvents: true,
+            orderBy: 'startTime',
+        });
+        
+        const events = response.data.items || [];
+        console.log(`Fetched ${events.length} events from Google Calendar`);
+        
+        // Get all existing bookings from Firestore
+        const bookingsSnapshot = await admin.firestore().collection("varaukset").get();
+        const existingBookings = new Map();
+        bookingsSnapshot.forEach(doc => {
+            const data = doc.data();
+            if (data.googleEventId) {
+                existingBookings.set(data.googleEventId, { id: doc.id, ...data });
+            }
+        });
+        
+        // Process each Google Calendar event
+        for (const event of events) {
+            // Skip events that don't have Firestore ID in description (manually created in Google Calendar)
+            const firestoreIdMatch = event.description?.match(/\[Firestore ID: ([^\]]+)\]/);
+            
+            if (!firestoreIdMatch) {
+                // This is a new event created directly in Google Calendar
+                await createBookingFromGoogleEvent(event);
+            } else {
+                // This event was synced from Firestore, check if it needs updating
+                const firestoreId = firestoreIdMatch[1];
+                const existingBooking = existingBookings.get(event.id);
+                
+                if (existingBooking) {
+                    // Event exists in both systems, check if we need to update Firestore
+                    await updateBookingFromGoogleEvent(event, firestoreId);
+                } else {
+                    // Event exists in Google Calendar but not in Firestore
+                    console.log(`Event ${event.id} exists in Google Calendar but not in Firestore - creating booking`);
+                    await createBookingFromGoogleEvent(event);
+                }
+                
+                // Remove from map (events remaining in map after loop are deleted in Google Calendar)
+                existingBookings.delete(event.id);
+            }
+        }
+        
+        // Handle events that exist in Firestore but not in Google Calendar (deleted in Google)
+        for (const [googleEventId, booking] of existingBookings) {
+            console.log(`Event ${googleEventId} deleted in Google Calendar - deleting Firestore booking ${booking.id}`);
+            try {
+                await admin.firestore().collection("varaukset").doc(booking.id).delete();
+            } catch (error) {
+                console.error(`Error deleting booking ${booking.id}:`, error);
+            }
+        }
+        
+    } catch (error) {
+        console.error("Error syncing from Google Calendar:", error);
+        throw error;
+    }
+}
+
+/**
+ * Create a Firestore booking from a Google Calendar event
+ */
+async function createBookingFromGoogleEvent(event) {
+    try {
+        // Parse event details
+        const startTime = new Date(event.start.dateTime || event.start.date);
+        
+        // Extract customer info from description (if available)
+        const description = event.description || '';
+        const nameMatch = description.match(/Asiakas: ([^\n]+)/);
+        const phoneMatch = description.match(/Puhelin: ([^\n]+)/);
+        const emailMatch = description.match(/Sähköposti: ([^\n]+)/);
+        
+        // Parse services from description
+        const servicesMatch = description.match(/Palvelut:\n([\s\S]*?)\n\nYhteensä:/);
+        const totalPriceMatch = description.match(/Yhteensä: ([^\n]+)/);
+        
+        let services = [];
+        let totalPrice = "0 €";
+        
+        if (servicesMatch && servicesMatch[1]) {
+            const serviceLines = servicesMatch[1].trim().split('\n');
+            services = serviceLines.map(line => {
+                const parts = line.split(' - ');
+                if (parts.length >= 2) {
+                    const [serviceName, rest] = parts;
+                    const taskParts = rest.split(': ');
+                    return {
+                        serviceName: serviceName.trim(),
+                        taskName: taskParts[0]?.trim() || '',
+                        price: taskParts[1]?.trim() || '0 €',
+                        numericPrice: 0
+                    };
+                }
+                return null;
+            }).filter(Boolean);
+        }
+        
+        if (totalPriceMatch) {
+            totalPrice = totalPriceMatch[1];
+        }
+        
+        // Create booking in Firestore
+        const bookingData = {
+            timestamp: admin.firestore.FieldValue.serverTimestamp(),
+            name: nameMatch ? nameMatch[1] : event.summary || 'Asiakas',
+            email: emailMatch ? emailMatch[1] : 'ei.sahkopostia@example.com',
+            phone: phoneMatch ? phoneMatch[1] : '',
+            aika: startTime.toISOString(),
+            selectedDate: `${startTime.getDate()}.${startTime.getMonth() + 1}.${startTime.getFullYear()}`,
+            selectedTime: `${String(startTime.getHours()).padStart(2, '0')}:${String(startTime.getMinutes()).padStart(2, '0')}`,
+            services: services.length > 0 ? services : [{ 
+                serviceName: 'Palvelu', 
+                taskName: event.summary || 'Varaus',
+                price: totalPrice,
+                numericPrice: 0
+            }],
+            totalPrice: totalPrice,
+            totalNumericPrice: 0,
+            googleEventId: event.id,
+            googleSyncedAt: admin.firestore.FieldValue.serverTimestamp(),
+            syncedFromGoogle: true
+        };
+        
+        const docRef = await admin.firestore().collection("varaukset").add(bookingData);
+        console.log(`Created Firestore booking ${docRef.id} from Google Calendar event ${event.id}`);
+        
+        // Update the Google Calendar event description to include Firestore ID
+        const client = getCalendarClient();
+        if (client) {
+            try {
+                await client.calendar.events.patch({
+                    calendarId: client.calendarId,
+                    eventId: event.id,
+                    requestBody: {
+                        description: `${description}\n\n[Firestore ID: ${docRef.id}]`
+                    }
+                });
+            } catch (error) {
+                console.error(`Error updating Google Calendar event description:`, error);
+            }
+        }
+        
+    } catch (error) {
+        console.error(`Error creating booking from Google Calendar event:`, error);
+    }
+}
+
+/**
+ * Update a Firestore booking from a Google Calendar event
+ */
+async function updateBookingFromGoogleEvent(event, firestoreId) {
+    try {
+        const startTime = new Date(event.start.dateTime || event.start.date);
+        
+        // Parse event details
+        const description = event.description || '';
+        const nameMatch = description.match(/Asiakas: ([^\n]+)/);
+        
+        // Update only if the event time or name has changed
+        const updateData = {
+            aika: startTime.toISOString(),
+            selectedDate: `${startTime.getDate()}.${startTime.getMonth() + 1}.${startTime.getFullYear()}`,
+            selectedTime: `${String(startTime.getHours()).padStart(2, '0')}:${String(startTime.getMinutes()).padStart(2, '0')}`,
+            googleSyncedAt: admin.firestore.FieldValue.serverTimestamp()
+        };
+        
+        if (nameMatch) {
+            updateData.name = nameMatch[1];
+        }
+        
+        await admin.firestore().collection("varaukset").doc(firestoreId).update(updateData);
+        console.log(`Updated Firestore booking ${firestoreId} from Google Calendar event ${event.id}`);
+        
+    } catch (error) {
+        console.error(`Error updating booking from Google Calendar event:`, error);
+    }
+}
