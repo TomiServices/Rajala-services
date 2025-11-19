@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://fixnero.fi/sitemap.xml
+
+# Prevent indexing of admin or backend pages if any
+Disallow: /functions/
