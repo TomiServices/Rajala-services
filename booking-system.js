@@ -1265,8 +1265,8 @@ function initializeBookingSystem() {
             const isMobileView = window.innerWidth < 768;
             
             // Configure FullCalendar for hybrid solution
-            // - Show 2 months (current + next) on desktop
-            // - Hide weekends (Saturday and Sunday)
+            // - Show 1 month on desktop (refined from 2 months)
+            // - Show weekends as grayed-out (disabled but visible)
             // - Responsive design for mobile
             calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: isMobileView ? 'dayGridWeek' : 'multiMonthYear',
@@ -1275,8 +1275,8 @@ function initializeBookingSystem() {
             views: {
                 multiMonthYear: {
                     type: 'multiMonth',
-                    duration: { months: 2 }, // Show current month + next month
-                    multiMonthMaxColumns: 2 // Display side by side
+                    duration: { months: 1 }, // Show only current month (refined from 2)
+                    multiMonthMaxColumns: 1 // Display single month
                 },
                 dayGridWeek: {
                     type: 'dayGrid',
@@ -1286,8 +1286,7 @@ function initializeBookingSystem() {
             selectable: true,
             selectOverlap: false,
             expandRows: true,
-            // IMPORTANT: Hide weekends (Saturday=6, Sunday=0)
-            hiddenDays: [0, 6], // Hide Sunday and Saturday
+            // Weekends are visible but grayed-out (selection disabled via selectAllow)
             displayEventTime: false,
             dayMaxEventRows: 3,
             viewDidMount: function(info) {
@@ -1334,7 +1333,7 @@ function initializeBookingSystem() {
                 const startDate = new Date(now);
                 startDate.setHours(0, 0, 0, 0);
                 
-                // End date: end of next month (allows current month + next month = 2 months)
+                // End date: end of next month (allows booking up to 2 months ahead)
                 const endDate = new Date(now.getFullYear(), now.getMonth() + 2, 0);
                 endDate.setHours(23, 59, 59, 999);
                 
