@@ -2123,6 +2123,7 @@
         .fc-col-header-cell {
             background: #f8f8f8 !important;
             border: none !important;
+            border-bottom: 2px solid #e0e0e0 !important;
             color: #1a1a1a !important;
             font-weight: 700 !important;
             text-transform: uppercase;
@@ -2132,15 +2133,69 @@
             font-size: 0.85rem !important;
         }
         
-        /* Remove extra blank row above weekdays in FullCalendar */
-        .fc-scrollgrid-section-header > tr > th {
-            height: 0 !important;
-            padding: 0 !important;
-            overflow: hidden !important;
+        /* Better weekday header cushion styling */
+        .fc-col-header-cell-cushion {
+            display: inline-block !important;
+            padding: 4px !important;
         }
         
+        /* MultiMonth view specific styling for cleaner layout */
+        .fc-multimonth {
+            border: none !important;
+        }
+        
+        .fc-multimonth-title {
+            font-size: 0.95rem !important;
+            font-weight: 600 !important;
+            color: #666666 !important;
+            padding: 8px !important;
+            background: #f8f8f8 !important;
+            border-radius: 6px !important;
+            margin-bottom: 10px !important;
+            text-align: center !important;
+        }
+        
+        /* Desktop multiMonth grid improvements */
+        @media (min-width: 769px) {
+            .fc-multimonth-month {
+                margin: 0 10px 20px 10px !important;
+                border: 1px solid #e0e0e0 !important;
+                border-radius: 8px !important;
+                overflow: hidden !important;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+            }
+            
+            .fc-multimonth-header-row {
+                background: #f8f8f8 !important;
+            }
+        }
+        
+        /* REFINEMENT: Show weekday headers properly - Ma, Ti, Ke, To, Pe, La, Su */
+        /* Previous CSS was hiding the weekday row completely - now we show it */
         .fc-scrollgrid-section-header {
+            display: table-row-group !important;
+        }
+        
+        .fc-scrollgrid-section-header > tr > th {
+            height: auto !important;
+            padding: 8px 5px !important;
+            overflow: visible !important;
+        }
+        
+        /* Hide month name that appears in the first day of multiMonth view */
+        .fc-daygrid-day-top {
+            display: flex !important;
+            justify-content: flex-end !important;
+        }
+        
+        /* Hide the month name text in day cells - only show day number */
+        .fc-daygrid-day-top .fc-daygrid-month-start {
             display: none !important;
+        }
+        
+        /* Ensure day numbers are always visible */
+        .fc-daygrid-day-number {
+            display: block !important;
         }
         
         /* Time slots - clean professional style with no borders */

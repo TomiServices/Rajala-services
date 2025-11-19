@@ -1514,118 +1514,116 @@ function initializeBookingSystem() {
         if (calendar) {
             // Wrap render in try-catch to handle any rendering errors gracefully
             try {
-                // FIX: Minimal delay to ensure DOM is fully ready before render
-                setTimeout(() => {
-                    try {
-                        calendar.render();
-                        
-                        // FIX: Move all post-render setup inside the timeout to ensure calendar is fully initialized
-                        // Navigation button state management for month view
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
-                        
-                        function updateNavigationButtons() {
-                            if (!calendar || !calendar.getDate || !calendar.view) {
-                                return;
-                            }
-                            
-                            const prevBtn = document.getElementById('prevWeekBtn');
-                            const nextBtn = document.getElementById('nextWeekBtn');
-                            
-                            if (!prevBtn || !nextBtn) {
-                                return;
-                            }
-                            
-                            const view = calendar.view;
-                            const viewStart = view.currentStart;
-                            const viewEnd = view.currentEnd;
-                            
-                            // Disable prev button if view start is at or before today
-                            const todayStart = new Date(today);
-                            todayStart.setHours(0, 0, 0, 0);
-                            prevBtn.disabled = (viewStart <= todayStart);
-                            
-                            // Disable next button if we're at the valid range end
-                            const validRangeEnd = new Date(today.getFullYear(), today.getMonth() + 2, 0);
-                            nextBtn.disabled = (viewEnd >= validRangeEnd);
-                        }
-                        
-                        // Previous/Next month buttons
-                        const prevBtn = document.getElementById('prevWeekBtn');
-                        const nextBtn = document.getElementById('nextWeekBtn');
-                        
-                        if (prevBtn) {
-                            prevBtn.addEventListener('click', function() {
-                                if (calendar && calendar.prev) {
-                                    calendar.prev();
-                                    updateNavigationButtons();
-                                    // REFINEMENT: Ensure events are refreshed after navigation
-                                    if (calendar.refetchEvents) {
-                                        calendar.refetchEvents();
-                                    }
-                                }
-                            });
-                        }
-                        
-                        if (nextBtn) {
-                            nextBtn.addEventListener('click', function() {
-                                if (calendar && calendar.next) {
-                                    calendar.next();
-                                    updateNavigationButtons();
-                                    // REFINEMENT: Ensure events are refreshed after navigation
-                                    if (calendar.refetchEvents) {
-                                        calendar.refetchEvents();
-                                    }
-                                }
-                            });
-                        }
-                        
-                        // Navigate to week with next available booking slot
-                        setTimeout(() => {
-                            if (calendar && calendar.gotoDate) {
-                                findAndNavigateToNextAvailableWeek(calendar, bookings);
-                                updateNavigationButtons();
-                                // REFINEMENT: Ensure events are refreshed after navigation
-                                if (calendar.refetchEvents) {
-                                    calendar.refetchEvents();
-                                }
-                            }
-                            
-                            // Don't show time selection grid initially - user must click a day first
-                            const timeGridContainer = document.getElementById('time-selection-grid');
-                            if (timeGridContainer) {
-                                timeGridContainer.style.display = 'none';
-                            }
-                            
-                            // Make calendar compact initially, expand on first interaction
-                            calendarEl.classList.add('compact');
-                            
-                            // Expand calendar on first click
-                            let hasInteracted = false;
-                            const expandCalendar = function() {
-                                if (!hasInteracted) {
-                                    calendarEl.classList.remove('compact');
-                                    calendarEl.classList.add('expanded');
-                                    hasInteracted = true;
-                                }
-                            };
-                            
-                            calendarEl.addEventListener('click', expandCalendar, { once: false });
-                            calendarEl.addEventListener('touchstart', expandCalendar, { once: false });
-                            
-                            setupDropdownEventListener();
-                        }, 100);
-                        
-                    } catch (renderError) {
-                        console.error('FullCalendar render failed:', renderError);
-                        calendar = null; // Reset calendar to null so fallback can activate
-                        return; // Exit early to trigger fallback
+                // Render immediately - no delay needed for modern browsers
+                calendar.render();
+                
+                // FIX: Force events to load immediately after render
+                if (calendar.refetchEvents) {
+                    calendar.refetchEvents();
+                }
+                
+                // FIX: Move all post-render setup inside to ensure calendar is fully initialized
+                // Navigation button state management for month view
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                function updateNavigationButtons() {
+                    if (!calendar || !calendar.getDate || !calendar.view) {
+                        return;
                     }
-                }, 50);
-            } catch (error) {
-                console.error('Error preparing calendar render:', error);
-                calendar = null;
-                return;
+                    
+                    const prevBtn = document.getElementById('prevWeekBtn');
+                    const nextBtn = document.getElementById('nextWeekBtn');
+                    
+                    if (!prevBtn || !nextBtn) {
+                        return;
+                    }
+                    
+                    const view = calendar.view;
+                    const viewStart = view.currentStart;
+                    const viewEnd = view.currentEnd;
+                    
+                    // Disable prev button if view start is at or before today
+                    const todayStart = new Date(today);
+                    todayStart.setHours(0, 0, 0, 0);
+                    prevBtn.disabled = (viewStart <= todayStart);
+                    
+                    // Disable next button if we're at the valid range end
+                    const validRangeEnd = new Date(today.getFullYear(), today.getMonth() + 2, 0);
+                    nextBtn.disabled = (viewEnd >= validRangeEnd);
+                }
+                
+                // Previous/Next month buttons
+                const prevBtn = document.getElementById('prevWeekBtn');
+                const nextBtn = document.getElementById('nextWeekBtn');
+                
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', function() {
+                        if (calendar && calendar.prev) {
+                            calendar.prev();
+                            updateNavigationButtons();
+                            // REFINEMENT: Ensure events are refreshed after navigation
+                            if (calendar.refetchEvents) {
+                                calendar.refetchEvents();
+                            }
+                        }
+                    });
+                }
+                
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', function() {
+                        if (calendar && calendar.next) {
+                            calendar.next();
+                            updateNavigationButtons();
+                            // REFINEMENT: Ensure events are refreshed after navigation
+                            if (calendar.refetchEvents) {
+                                calendar.refetchEvents();
+                            }
+                        }
+                    });
+                }
+                    
+                    // Navigate to week with next available booking slot
+                    // Small delay to ensure calendar is fully rendered before navigation
+                    setTimeout(() => {
+                        if (calendar && calendar.gotoDate) {
+                            findAndNavigateToNextAvailableWeek(calendar, bookings);
+                            updateNavigationButtons();
+                            // REFINEMENT: Ensure events are refreshed after navigation
+                            if (calendar.refetchEvents) {
+                                calendar.refetchEvents();
+                            }
+                        }
+                        
+                        // Don't show time selection grid initially - user must click a day first
+                        const timeGridContainer = document.getElementById('time-selection-grid');
+                        if (timeGridContainer) {
+                            timeGridContainer.style.display = 'none';
+                        }
+                        
+                        // Make calendar compact initially, expand on first interaction
+                        calendarEl.classList.add('compact');
+                        
+                        // Expand calendar on first click
+                        let hasInteracted = false;
+                        const expandCalendar = function() {
+                            if (!hasInteracted) {
+                                calendarEl.classList.remove('compact');
+                                calendarEl.classList.add('expanded');
+                                hasInteracted = true;
+                            }
+                        };
+                        
+                    calendarEl.addEventListener('click', expandCalendar, { once: false });
+                    calendarEl.addEventListener('touchstart', expandCalendar, { once: false });
+                    
+                    setupDropdownEventListener();
+                }, 100);
+                
+            } catch (renderError) {
+                console.error('FullCalendar render failed:', renderError);
+                calendar = null; // Reset calendar to null so fallback can activate
+                return; // Exit early to trigger fallback
             }
         }
         
