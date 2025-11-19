@@ -1264,25 +1264,20 @@ function initializeBookingSystem() {
             // Initialize FullCalendar
             const isMobileView = window.innerWidth < 768;
             
-            // Configure FullCalendar for hybrid solution
-            // - Show 2 months (current + next) on desktop
-            // - Hide weekends (Saturday and Sunday)
+            // Configure FullCalendar for improved solution
+            // - Show 1 month at a time on desktop (UPDATED)
+            // - Show weekdays on mobile with proper headers
             // - Responsive design for mobile
             calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: isMobileView ? 'dayGridWeek' : 'multiMonthYear',
+            initialView: isMobileView ? 'dayGridMonth' : 'dayGridMonth',
             initialDate: new Date(), // Start with current month
             locale: 'fi',
             views: {
-                multiMonthYear: {
-                    type: 'multiMonth',
-                    duration: { months: 2 }, // Show current month + next month
-                    multiMonthMaxColumns: 2 // Display side by side
-                },
-                dayGridWeek: {
+                dayGridMonth: {
                     type: 'dayGrid',
-                    duration: { weeks: 2 }, // Mobile: show 2 weeks at a time
-                    fixedWeekCount: false, // REFINEMENT: Don't pad with extra weeks
-                    showNonCurrentDates: false // REFINEMENT: Hide days from other months
+                    duration: { months: 1 }, // UPDATED: Show only 1 month at a time
+                    fixedWeekCount: false, // Don't pad with extra weeks
+                    showNonCurrentDates: false // Hide days from other months
                 }
             },
             selectable: true,
@@ -1345,9 +1340,16 @@ function initializeBookingSystem() {
             eventDisplay: 'block',
             displayEventTime: true,
             headerToolbar: {
-                left: '',
+                left: 'prev',
                 center: 'title',
-                right: ''
+                right: 'next'
+            },
+            titleFormat: function() {
+                // Custom title format to show month name
+                const now = calendar ? calendar.getDate() : new Date();
+                const monthNames = ['Tammikuu', 'Helmikuu', 'Maaliskuu', 'Huhtikuu', 'Toukokuu', 'Kesäkuu',
+                                    'Heinäkuu', 'Elokuu', 'Syyskuu', 'Lokakuu', 'Marraskuu', 'Joulukuu'];
+                return monthNames[now.getMonth()] + ' ' + now.getFullYear();
             },
             // Limit view to current and next month only
             validRange: function() {
@@ -1503,8 +1505,10 @@ function initializeBookingSystem() {
                                     title: `${availableSlots} paikkaa`,
                                     start: dateKey,
                                     allDay: true,
-                                    color: availableSlots > 4 ? '#4CAF50' : availableSlots > 0 ? '#FFC107' : '#F44336',
-                                    textColor: '#fff'
+                                    backgroundColor: 'transparent', // Transparent background
+                                    borderColor: 'transparent', // No border
+                                    textColor: '#3FA9F5', // Blue text matching mobile view
+                                    classNames: ['available-slots-indicator']
                                 });
                             }
                         }
