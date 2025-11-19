@@ -2915,6 +2915,152 @@
             }
         }
         
+        /* ========================================
+           CALENDAR LAYOUT FIXES FOR DESKTOP & MOBILE
+           ======================================== */
+        
+        /* Desktop: Fix multiMonth grid alignment and layout */
+        @media (min-width: 769px) {
+            /* Ensure proper table cell alignment */
+            .fc-multimonth-daygrid {
+                border-collapse: separate !important;
+                border-spacing: 0 !important;
+            }
+            
+            .fc-daygrid-day-frame {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                min-height: 80px !important;
+                height: 100% !important;
+            }
+            
+            .fc-daygrid-day-top {
+                width: 100% !important;
+                display: flex !important;
+                justify-content: flex-end !important;
+                padding: 4px !important;
+            }
+            
+            .fc-daygrid-day-events {
+                flex: 1 !important;
+                width: 100% !important;
+                padding: 2px 4px !important;
+            }
+            
+            /* Hide "more" links on desktop to prevent layout issues */
+            .fc-daygrid-more-link,
+            .fc-more-link {
+                display: none !important;
+            }
+            
+            /* Ensure all events are visible or use proper overflow */
+            .fc-daygrid-day-bottom {
+                display: none !important;
+            }
+            
+            /* Make event display cleaner */
+            .fc-daygrid-event-harness {
+                margin-bottom: 2px !important;
+            }
+            
+            /* Ensure consistent cell dimensions */
+            .fc-daygrid-day {
+                vertical-align: top !important;
+                position: relative !important;
+            }
+        }
+        
+        /* Mobile: Fix first-day cell and weekday headers */
+        @media (max-width: 768px) {
+            /* Ensure weekday headers are visible */
+            .fc-col-header {
+                display: table-header-group !important;
+            }
+            
+            .fc-col-header-cell {
+                display: table-cell !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                color: #1a1a1a !important;
+                background: #f8f8f8 !important;
+            }
+            
+            .fc-col-header-cell-cushion {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                padding: 8px 4px !important;
+                font-size: 0.85rem !important;
+                font-weight: 700 !important;
+                color: #1a1a1a !important;
+                text-transform: uppercase !important;
+            }
+            
+            /* Fix first-day cell rendering */
+            .fc-daygrid-day:first-child .fc-daygrid-day-top,
+            .fc-day-mon .fc-daygrid-day-top {
+                display: flex !important;
+                justify-content: flex-end !important;
+                align-items: flex-start !important;
+            }
+            
+            .fc-daygrid-day:first-child .fc-daygrid-day-number,
+            .fc-day-mon .fc-daygrid-day-number {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                padding: 6px !important;
+            }
+            
+            /* Ensure events are aligned properly on first day */
+            .fc-daygrid-day:first-child .fc-daygrid-day-events,
+            .fc-day-mon .fc-daygrid-day-events {
+                margin-top: 0 !important;
+                padding-top: 2px !important;
+            }
+            
+            /* Hide month indicators that might be showing */
+            .fc-daygrid-month-start {
+                display: none !important;
+            }
+        }
+        
+        /* General fixes for both desktop and mobile */
+        
+        /* Hide "+X more" links globally to prevent clutter */
+        .fc-daygrid-more-link {
+            display: none !important;
+        }
+        
+        .fc-popover {
+            display: none !important;
+        }
+        
+        /* Ensure day numbers are always visible */
+        .fc-daygrid-day-number {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            color: #333333 !important;
+        }
+        
+        /* Ensure proper event overflow handling */
+        .fc-daygrid-day-events {
+            overflow: visible !important;
+        }
+        
+        /* Clean event display without "more" indicators */
+        .fc-daygrid-event-harness {
+            max-width: 100% !important;
+        }
+        
+        .fc-event {
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+        }
+        
         /* Weekend visual indication - light gray styling */
         .fc-day-sun, .fc-day-sat {
             background-color: #f0f0f0 !important;
