@@ -2139,6 +2139,41 @@
             padding: 4px !important;
         }
         
+        /* UPDATED: Mobile calendar improvements */
+        @media (max-width: 768px) {
+            /* Make month title larger and more prominent on mobile */
+            .fc-toolbar-title {
+                font-size: 1.1rem !important;
+                font-weight: 800 !important;
+            }
+            
+            /* Ensure weekday headers are always visible and styled properly */
+            .fc-col-header-cell {
+                background: #f8f8f8 !important;
+                padding: 8px 2px !important;
+            }
+            
+            .fc-col-header-cell-cushion {
+                font-size: 0.75rem !important;
+                font-weight: 700 !important;
+                text-transform: uppercase !important;
+                color: #1a1a1a !important;
+            }
+            
+            /* Ensure day numbers are visible and properly sized */
+            .fc-daygrid-day-number {
+                font-size: 0.9rem !important;
+                padding: 4px !important;
+                font-weight: 600 !important;
+            }
+            
+            /* Make events (available slots) more visible on mobile */
+            .fc-event.available-slots-indicator {
+                font-size: 0.8rem !important;
+                padding: 2px !important;
+            }
+        }
+        
         /* MultiMonth view specific styling for cleaner layout */
         .fc-multimonth {
             border: none !important;
@@ -2226,6 +2261,23 @@
             border-radius: 6px !important;
             font-family: 'Inter', sans-serif !important;
             box-shadow: 0 2px 6px rgba(63, 169, 245, 0.3) !important;
+        }
+        
+        /* UPDATED: Blue text indicators for available slots */
+        .fc-event.available-slots-indicator {
+            background: transparent !important;
+            border: none !important;
+            color: #3FA9F5 !important;
+            font-weight: 700 !important;
+            font-size: 0.9rem !important;
+            box-shadow: none !important;
+            text-align: center !important;
+            padding: 4px !important;
+        }
+        
+        .fc-event.available-slots-indicator .fc-event-title {
+            color: #3FA9F5 !important;
+            font-weight: 700 !important;
         }
         
         /* Day grid cells - remove borders */
