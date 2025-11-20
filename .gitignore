@@ -1,5 +1,18 @@
-.gitignore
+# Ignore temporary files
+*.tmp
+*.bak
+*.log
+*.env
+*.json
 
+# Ignore node_modules folder
+node_modules/
+
+# Ignore IDE settings
+.vscode/
+.idea/
+
+# Ignore Firebase emulator and Google CLI files
+.firebase/
+functions/.runtimeconfig.json
 functions/kalenteri.json
-
----end---
