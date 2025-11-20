@@ -3,10 +3,10 @@
 *.bak
 *.log
 *.env
-*.json
 
-# Ignore node_modules folder
+# Ignore node_modules folders
 node_modules/
+functions/node_modules/
 
 # Ignore IDE settings
 .vscode/
