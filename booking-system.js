@@ -352,10 +352,12 @@ function initializeBookingSystem() {
                 
                 // Show the time dropdown and service selection
                 document.getElementById('availableSlots').style.display = 'block';
-                document.getElementById('serviceSelection').style.display = 'block';
                 
                 // Clear any errors
                 document.getElementById('error').textContent = '';
+                
+                // Trigger step 3 reveal by calling showBookingForm
+                showBookingForm(slotTime);
             });
             
             gridContainer.appendChild(slotBox);
@@ -642,6 +644,15 @@ function initializeBookingSystem() {
                 calendar.select(selectedDateTime, endTime);
             }
             
+            // Check if service and task are already selected, if so, show booking form
+            const serviceSelect = document.getElementById('serviceSelect');
+            const taskSelect = document.getElementById('taskSelect');
+            
+            if (serviceSelect && taskSelect && serviceSelect.value && taskSelect.value) {
+                // Service and task already selected, trigger booking form display
+                showBookingForm(selectedDateTime);
+            }
+            
             return true; // Indicate successful confirmation
         }
         return false; // Indicate failed confirmation
@@ -692,29 +703,6 @@ function initializeBookingSystem() {
 
     // Service and task data structure
     const serviceData = {
-        tire: {
-            name: 'Rengastyöt',
-            tasks: [
-                { id: 'tire-change', name: 'Renkaiden vaihto', price: 'alkaen 35 €' },
-                { id: 'tire-change-14-16', name: 'Renkaiden vaihto (14-16 tuumaa)', price: 'alkaen 40 €' },
-                { id: 'tire-change-17-18', name: 'Renkaiden vaihto (17-18 tuumaa)', price: 'alkaen 45 €' },
-                { id: 'tire-change-19-22', name: 'Renkaiden vaihto (19-22 tuumaa)', price: 'alkaen 50 €' },
-                { id: 'balancing', name: 'Tasapainotus', price: '20 € / sarja' },
-                { id: 'tire-repair', name: 'Renkaan paikkaus', price: 'alkaen 25 €' },
-                { id: 'tire-hotel', name: 'Rengashotelli', price: 'alkaen 55 € / kausi' }
-            ]
-        },
-        repair: {
-            name: 'Korjaustyöt',
-            tasks: [
-                { id: 'diagnostics', name: 'Vikakoodien luku ja nollaus', price: 'alkaen 40 €' },
-                { id: 'shock-absorber', name: 'Iskunvaimentimien ja jousituksen uusiminen', price: '' },
-                { id: 'suspension-parts', name: 'Tukivarsien, nivelien ja raidetankojen vaihto', price: '' },
-                { id: 'stabilizer-bar', name: 'Vakaajatangon ja koiranluiden vaihto', price: '' },
-                { id: 'brake-repair', name: 'Jarrulevyjen, palojen ja käsijarrujen korjaukset', price: '' },
-                { id: 'exhaust-repair', name: 'Pakoputkistojen korjaukset', price: '' }
-            ]
-        },
         washing: {
             name: 'Pesupalvelut',
             tasks: [
@@ -725,16 +713,6 @@ function initializeBookingSystem() {
                 { id: 'hard-wax', name: 'Kova vaha', price: 'alkaen 45 €' },
                 { id: 'ceramic-spray', name: 'Ceramic spray -pinnoite', price: 'alkaen 60 €' },
                 { id: 'water-repellent', name: 'Vettä ja likaa hylkivä pinnoite', price: 'alkaen 40 €' }
-            ]
-        },
-        polishing: {
-            name: 'Kiillotus ja pinnoitteet',
-            tasks: [
-                { id: 'wax', name: 'Vahaus', price: 'alkaen 80 €' },
-                { id: '1-step-polish', name: '1-step kiillotus', price: 'alkaen 120 €' },
-                { id: '2-step-polish', name: '2-step kiillotus', price: 'alkaen 180 €' },
-                { id: '3-step-ceramic', name: '3-step + keraaminen pinnoitus', price: 'alkaen 300 €' },
-                { id: 'scratch-removal', name: 'Naarmujen poisto', price: 'alkaen 50 € / paneeli' }
             ]
         },
         interior: {
@@ -749,6 +727,58 @@ function initializeBookingSystem() {
                 { id: 'odor-removal', name: 'Hajunpoisto erikoisaineilla', price: 'alkaen 70 €' },
                 { id: 'allergy-cleaning', name: 'Allergiapuhdistus', price: 'alkaen 90 €' },
                 { id: 'fabric-protection', name: 'Kangaspintojen suojaus', price: 'alkaen 85 €' }
+            ]
+        },
+        polishing: {
+            name: 'Kiillotus ja pinnoitteet',
+            tasks: [
+                { id: 'wax', name: 'Vahaus', price: 'alkaen 80 €' },
+                { id: '1-step-polish', name: '1-step kiillotus', price: 'alkaen 120 €' },
+                { id: '2-step-polish', name: '2-step kiillotus', price: 'alkaen 180 €' },
+                { id: '3-step-ceramic', name: '3-step + keraaminen pinnoitus', price: 'alkaen 300 €' },
+                { id: 'scratch-removal', name: 'Naarmujen poisto', price: 'alkaen 50 € / paneeli' }
+            ]
+        },
+        dent: {
+            name: 'Kolhukorjaus',
+            tasks: [
+                { id: 'small-dent', name: 'Pieni lommo', price: 'alkaen 125 €' },
+                { id: 'large-dent', name: 'Iso lommo', price: 'alkaen 150 €' },
+                { id: 'paint-repair', name: 'Maalipinnan jälkien hionta ja maalaus', price: '' },
+                { id: 'bumper-repair', name: 'Puskurin ja lokasuojan korjaukset', price: '' },
+                { id: 'rust-repair', name: 'Ruostekorjaukset', price: '' }
+            ]
+        },
+        repair: {
+            name: 'Korjaustyöt',
+            tasks: [
+                { id: 'diagnostics', name: 'Vikakoodien luku ja nollaus', price: 'alkaen 40 €' },
+                { id: 'oil-change', name: 'Moottoriöljyjen vaihto', price: 'alkaen 79 €' },
+                { id: 'shock-absorber', name: 'Iskunvaimentimien ja jousituksen uusiminen', price: '' },
+                { id: 'suspension-parts', name: 'Tukivarsien, nivelien ja raidetankojen vaihto', price: '' },
+                { id: 'stabilizer-bar', name: 'Vakaajatangon ja koiranluiden vaihto', price: '' },
+                { id: 'brake-repair', name: 'Jarrulevyjen, palojen ja käsijarrujen korjaukset', price: '' },
+                { id: 'exhaust-repair', name: 'Pakoputkistojen korjaukset', price: '' }
+            ]
+        },
+        tire: {
+            name: 'Rengastyöt',
+            tasks: [
+                { id: 'tire-change', name: 'Renkaiden vaihto', price: 'alkaen 35 €' },
+                { id: 'tire-change-14-16', name: 'Renkaiden vaihto (14-16 tuumaa)', price: 'alkaen 40 €' },
+                { id: 'tire-change-17-18', name: 'Renkaiden vaihto (17-18 tuumaa)', price: 'alkaen 45 €' },
+                { id: 'tire-change-19-22', name: 'Renkaiden vaihto (19-22 tuumaa)', price: 'alkaen 50 €' },
+                { id: 'balancing', name: 'Tasapainotus', price: '20 € / sarja' },
+                { id: 'tire-repair', name: 'Renkaan paikkaus', price: 'alkaen 25 €' },
+                { id: 'tire-hotel', name: 'Rengashotelli', price: 'alkaen 55 € / kausi' }
+            ]
+        },
+        glass: {
+            name: 'Lasikorjaus',
+            tasks: [
+                { id: 'glass-repair', name: 'Tuulilasin korjaus', price: '50 € / lasiturvalla ilmainen' },
+                { id: 'glass-replacement-insured', name: 'Lasinvaihto lasivakuutuksella', price: 'Maksat vain omavastuun' },
+                { id: 'glass-replacement', name: 'Lasinvaihto ilman vakuutusta', price: 'Kysy tarjous' }
             ]
         }
     };
@@ -978,12 +1008,29 @@ function initializeBookingSystem() {
         if (taskSelect) {
             taskSelect.addEventListener('change', function() {
                 const selectedTask = this.value;
+                const selectedService = serviceSelect.value;
                 
-                if (selectedTask) {
-                    // Task selected - booking is complete, show booking form
-                    const selectedDateTime = getCurrentSelectedDateTime();
-                    if (selectedDateTime) {
-                        showBookingForm(selectedDateTime);
+                if (selectedTask && selectedService) {
+                    // Immediately add service to the selected services list
+                    addSelectedService(selectedService, selectedTask);
+                    
+                    // Hide the service selection dropdowns
+                    serviceSelection.style.display = 'none';
+                    taskSelection.style.display = 'none';
+                    
+                    // Show the "Add another service" button
+                    document.getElementById('add-service-container').style.display = 'block';
+                    
+                    // Task selected - reveal step 2 (calendar)
+                    const step2 = document.getElementById('step-calendar');
+                    if (step2) {
+                        step2.classList.add('visible');
+                        step2.style.display = 'block';
+                        
+                        // Smooth scroll to step 2
+                        setTimeout(() => {
+                            step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }, 100);
                     }
                 } else {
                     // Hide booking form if task is deselected
@@ -1016,10 +1063,7 @@ function initializeBookingSystem() {
         const selectedService = serviceSelect.value;
         const selectedTask = taskSelect.value;
         
-        if (selectedDateTime && selectedService && selectedTask) {
-            // Add service to the list if it's a new service
-            addSelectedService(selectedService, selectedTask);
-            
+        if (selectedDateTime) {
             selectedSlot = selectedDateTime;
             const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                 ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
@@ -1036,14 +1080,21 @@ function initializeBookingSystem() {
             // Show repair disclaimer if any repair service is selected
             updateRepairDisclaimer();
             
-            // Show add service button and booking form
-            document.getElementById('add-service-container').style.display = 'block';
+            // Reveal step 3 (contact information)
+            const step3 = document.getElementById('step-contact');
+            if (step3) {
+                step3.classList.add('visible');
+                step3.style.display = 'block';
+                
+                // Smooth scroll to step 3
+                setTimeout(() => {
+                    step3.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+            
+            // Show booking form
             document.getElementById('bookingForm').style.display = '';
             document.getElementById('error').textContent = '';
-            
-            // Hide service selection dropdowns after adding service (user can click button to add more)
-            document.getElementById('serviceSelection').style.display = 'none';
-            document.getElementById('taskSelection').style.display = 'none';
         }
     }
 
@@ -1214,6 +1265,7 @@ function initializeBookingSystem() {
             const isMobileView = window.innerWidth < 768;
             calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: isMobileView ? 'dayGridTwoWeeks' : 'dayGridMonth',
+            initialDate: new Date(), // FIX: Explicitly set initial date to ensure calendar displays current month
             locale: 'fi',
             views: {
                 dayGridTwoWeeks: {
@@ -1411,16 +1463,15 @@ function initializeBookingSystem() {
                                     return bookingDateKey === dateKey;
                                 }).length;
                                 
-                                if (dayBookingsCount > 0) {
-                                    const availableSlots = 8 - dayBookingsCount; // 8 slots per day (9-17)
-                                    evs.push({
-                                        title: `${availableSlots} paikkaa`,
-                                        start: dateKey,
-                                        allDay: true,
-                                        color: availableSlots > 4 ? '#4CAF50' : availableSlots > 0 ? '#FFC107' : '#F44336',
-                                        textColor: '#fff'
-                                    });
-                                }
+                                // FIX: Always show available slots for weekdays, even when there are no bookings
+                                const availableSlots = 8 - dayBookingsCount; // 8 slots per day (9-17)
+                                evs.push({
+                                    title: `${availableSlots} paikkaa`,
+                                    start: dateKey,
+                                    allDay: true,
+                                    color: availableSlots > 4 ? '#4CAF50' : availableSlots > 0 ? '#FFC107' : '#F44336',
+                                    textColor: '#fff'
+                                });
                             }
                         }
                         
@@ -1512,6 +1563,22 @@ function initializeBookingSystem() {
                             if (timeGridContainer) {
                                 timeGridContainer.style.display = 'none';
                             }
+                            
+                            // Make calendar compact initially, expand on first interaction
+                            calendarEl.classList.add('compact');
+                            
+                            // Expand calendar on first click
+                            let hasInteracted = false;
+                            const expandCalendar = function() {
+                                if (!hasInteracted) {
+                                    calendarEl.classList.remove('compact');
+                                    calendarEl.classList.add('expanded');
+                                    hasInteracted = true;
+                                }
+                            };
+                            
+                            calendarEl.addEventListener('click', expandCalendar, { once: false });
+                            calendarEl.addEventListener('touchstart', expandCalendar, { once: false });
                             
                             setupDropdownEventListener();
                         }, 100);
