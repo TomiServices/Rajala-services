@@ -1,15 +1,24 @@
 // index.js - Complete Firebase Functions for Rajala Services Booking System
-const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const cors = require('cors');
 const axios = require('axios');
 const { google } = require('googleapis');
-// Import v2 Firestore trigger functions for the latest Firebase SDK compatibility
+// Import v2 functions for the latest Firebase SDK compatibility
+const { onRequest } = require('firebase-functions/v2/https');
 const { onDocumentUpdated, onDocumentDeleted } = require('firebase-functions/v2/firestore');
+const { defineString } = require('firebase-functions/params');
 
 // Initialize Firebase Admin
 admin.initializeApp();
 const db = admin.firestore();
+
+// =======================
+// ENVIRONMENT VARIABLES (Gen2)
+// =======================
+// Define environment parameters for Gen2 functions
+// These can be set using: firebase functions:config:set or as environment variables
+const recaptchaSecret = defineString('RECAPTCHA_SECRET');
+const googleServiceAccount = defineString('GOOGLE_SERVICE_ACCOUNT');
+const googleCalendarId = defineString('GOOGLE_CALENDAR_ID');
 
 // =======================
 // CONSTANTS
@@ -23,22 +32,6 @@ const ALLOWED_ORIGINS = [
 ];
 
 // =======================
-// CORS CONFIGURATION
-// =======================
-const corsOptions = {
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl)
-    if (!origin || ALLOWED_ORIGINS.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-};
-const corsHandler = cors(corsOptions);
-
-// =======================
 // GOOGLE CALENDAR SETUP
 // =======================
 let googleCalendar = null;
@@ -47,19 +40,21 @@ let calendarId = null;
 // Initialize Google Calendar client if configured
 function initializeGoogleCalendar() {
   try {
-    const config = functions.config();
+    // Check if Google Calendar is configured
+    const serviceAccountValue = googleServiceAccount.value();
+    const calendarIdValue = googleCalendarId.value();
     
-    if (!config.google || !config.google.service_account || !config.google.calendar_id) {
+    if (!serviceAccountValue || !calendarIdValue) {
       console.log('Google Calendar not configured - sync disabled');
       return null;
     }
 
     // Parse service account from config
-    const serviceAccount = typeof config.google.service_account === 'string' 
-      ? JSON.parse(config.google.service_account)
-      : config.google.service_account;
+    const serviceAccount = typeof serviceAccountValue === 'string' 
+      ? JSON.parse(serviceAccountValue)
+      : serviceAccountValue;
 
-    calendarId = config.google.calendar_id;
+    calendarId = calendarIdValue;
 
     // Create auth client
     const auth = new google.auth.GoogleAuth({
@@ -85,8 +80,7 @@ function initializeGoogleCalendar() {
  */
 async function verifyRecaptcha(token) {
   try {
-    const config = functions.config();
-    const secretKey = config.recaptcha?.secret;
+    const secretKey = recaptchaSecret.value();
     
     if (!secretKey) {
       console.error('reCAPTCHA secret key not configured');
@@ -207,167 +201,171 @@ async function createGoogleCalendarEvent(bookingData) {
 
 /**
  * GET /bookings - Fetch all bookings
+ * Gen2 HTTP function with CORS support
  */
-exports.bookings = functions.https.onRequest((req, res) => {
-  corsHandler(req, res, async () => {
-    try {
-      if (req.method !== 'GET') {
-        return res.status(405).json({ error: 'Method not allowed' });
-      }
-
-      const snapshot = await db.collection(BOOKINGS_COLLECTION)
-        .orderBy('aika', 'asc')
-        .get();
-
-      const bookings = [];
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        bookings.push({
-          id: doc.id,
-          aika: data.aika?.toDate().toISOString() || data.aika,
-          nimi: data.nimi,
-          sahkoposti: data.sahkoposti,
-          puhelin: data.puhelin,
-          services: data.services || [],
-          totalPrice: data.totalPrice,
-          googleEventId: data.googleEventId
-        });
-      });
-
-      // Add cache headers
-      res.set('Cache-Control', 'public, max-age=60, s-maxage=120');
-      res.status(200).json(bookings);
-    } catch (error) {
-      console.error('Error fetching bookings:', error);
-      res.status(500).json({ error: 'Varausten haku epäonnistui' });
+exports.bookings = onRequest({
+  region: 'us-central1',
+  cors: ALLOWED_ORIGINS
+}, async (req, res) => {
+  try {
+    if (req.method !== 'GET') {
+      return res.status(405).json({ error: 'Method not allowed' });
     }
-  });
+
+    const snapshot = await db.collection(BOOKINGS_COLLECTION)
+      .orderBy('aika', 'asc')
+      .get();
+
+    const bookings = [];
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      bookings.push({
+        id: doc.id,
+        aika: data.aika?.toDate().toISOString() || data.aika,
+        nimi: data.nimi,
+        sahkoposti: data.sahkoposti,
+        puhelin: data.puhelin,
+        services: data.services || [],
+        totalPrice: data.totalPrice,
+        googleEventId: data.googleEventId
+      });
+    });
+
+    // Add cache headers
+    res.set('Cache-Control', 'public, max-age=60, s-maxage=120');
+    res.status(200).json(bookings);
+  } catch (error) {
+    console.error('Error fetching bookings:', error);
+    res.status(500).json({ error: 'Varausten haku epäonnistui' });
+  }
 });
 
 /**
  * POST /book - Create a new booking
+ * Gen2 HTTP function with CORS support
  */
-exports.book = functions.https.onRequest((req, res) => {
-  corsHandler(req, res, async () => {
-    try {
-      if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-      }
-
-      const { name, email, phone, aika, services, totalPrice, totalNumericPrice, recaptcha } = req.body;
-
-      // Validate required fields
-      if (!name || !email || !phone || !aika || !services || !recaptcha) {
-        return res.status(400).json({ error: 'Täytä kaikki pakolliset kentät' });
-      }
-
-      // Verify reCAPTCHA
-      const isValidRecaptcha = await verifyRecaptcha(recaptcha);
-      if (!isValidRecaptcha) {
-        console.log('reCAPTCHA verification failed for booking attempt');
-        return res.status(401).json({ error: 'Turvavarmennus epäonnistui. Yritä uudelleen.' });
-      }
-
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        return res.status(400).json({ error: 'Virheellinen sähköpostiosoite' });
-      }
-
-      // Validate phone format - Finnish mobile numbers
-      // Formats: +358 40XXXXXXX, +358 50XXXXXXX, etc.
-      const phoneRegex = /^\+358\s?(40|41|42|43|44|45|46|47|48|49|50)\s?\d{7}$/;
-      if (!phoneRegex.test(phone)) {
-        return res.status(400).json({ error: 'Virheellinen puhelinnumero. Käytä muotoa: +358 40XXXXXXX' });
-      }
-
-      // Validate date is in the future
-      const bookingDate = new Date(aika);
-      const now = new Date();
-      if (bookingDate <= now) {
-        return res.status(400).json({ error: 'Valitse tuleva aika' });
-      }
-
-      // Validate business hours (9-17, weekdays)
-      const dayOfWeek = bookingDate.getDay();
-      const hour = bookingDate.getHours();
-      if (dayOfWeek === 0 || dayOfWeek === 6) {
-        return res.status(400).json({ error: 'Varaukset vain arkipäivisin' });
-      }
-      if (hour < 9 || hour >= 17) {
-        return res.status(400).json({ error: 'Varaukset klo 9-17 välillä' });
-      }
-
-      // Check slot availability using transaction for atomicity
-      const bookingRef = db.collection(BOOKINGS_COLLECTION).doc();
-      
-      try {
-        await db.runTransaction(async (transaction) => {
-          // Check if slot is available within transaction
-          const available = await isSlotAvailable(aika);
-          
-          if (!available) {
-            throw new Error('SLOT_UNAVAILABLE');
-          }
-
-          // Create booking data
-          const bookingData = {
-            nimi: name,
-            sahkoposti: email,
-            puhelin: phone,
-            aika: admin.firestore.Timestamp.fromDate(bookingDate),
-            services: services,
-            totalPrice: totalPrice || 'Hinta sovittaessa',
-            totalNumericPrice: totalNumericPrice || 0,
-            luotu: admin.firestore.FieldValue.serverTimestamp(),
-            googleEventId: null,
-            syncedToGoogle: false
-          };
-
-          // Create booking atomically
-          transaction.set(bookingRef, bookingData);
-        });
-
-        // Transaction successful - booking created
-        console.log('Booking created successfully:', bookingRef.id);
-
-        // Sync to Google Calendar (async, non-blocking)
-        // This happens after the transaction to avoid blocking the response
-        const bookingSnapshot = await bookingRef.get();
-        const bookingData = bookingSnapshot.data();
-        
-        // Attempt Google Calendar sync
-        const googleEventId = await createGoogleCalendarEvent(bookingData);
-        if (googleEventId) {
-          await bookingRef.update({
-            googleEventId: googleEventId,
-            syncedToGoogle: true,
-            googleSyncedAt: admin.firestore.FieldValue.serverTimestamp()
-          });
-        }
-
-        // Return success response
-        res.status(200).json({
-          success: true,
-          id: bookingRef.id,
-          message: 'Varaus onnistui'
-        });
-
-      } catch (transactionError) {
-        if (transactionError.message === 'SLOT_UNAVAILABLE') {
-          console.log('Booking attempt failed: slot not available');
-          return res.status(409).json({ 
-            error: 'Valittu aika on jo varattu. Valitse toinen aika.' 
-          });
-        }
-        throw transactionError;
-      }
-
-    } catch (error) {
-      console.error('Error creating booking:', error);
-      res.status(500).json({ error: 'Varauksen luonti epäonnistui. Yritä uudelleen.' });
+exports.book = onRequest({
+  region: 'us-central1',
+  cors: ALLOWED_ORIGINS
+}, async (req, res) => {
+  try {
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Method not allowed' });
     }
-  });
+
+    const { name, email, phone, aika, services, totalPrice, totalNumericPrice, recaptcha } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !phone || !aika || !services || !recaptcha) {
+      return res.status(400).json({ error: 'Täytä kaikki pakolliset kentät' });
+    }
+
+    // Verify reCAPTCHA
+    const isValidRecaptcha = await verifyRecaptcha(recaptcha);
+    if (!isValidRecaptcha) {
+      console.log('reCAPTCHA verification failed for booking attempt');
+      return res.status(401).json({ error: 'Turvavarmennus epäonnistui. Yritä uudelleen.' });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Virheellinen sähköpostiosoite' });
+    }
+
+    // Validate phone format - Finnish mobile numbers
+    // Formats: +358 40XXXXXXX, +358 50XXXXXXX, etc.
+    const phoneRegex = /^\+358\s?(40|41|42|43|44|45|46|47|48|49|50)\s?\d{7}$/;
+    if (!phoneRegex.test(phone)) {
+      return res.status(400).json({ error: 'Virheellinen puhelinnumero. Käytä muotoa: +358 40XXXXXXX' });
+    }
+
+    // Validate date is in the future
+    const bookingDate = new Date(aika);
+    const now = new Date();
+    if (bookingDate <= now) {
+      return res.status(400).json({ error: 'Valitse tuleva aika' });
+    }
+
+    // Validate business hours (9-17, weekdays)
+    const dayOfWeek = bookingDate.getDay();
+    const hour = bookingDate.getHours();
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+      return res.status(400).json({ error: 'Varaukset vain arkipäivisin' });
+    }
+    if (hour < 9 || hour >= 17) {
+      return res.status(400).json({ error: 'Varaukset klo 9-17 välillä' });
+    }
+
+    // Check slot availability using transaction for atomicity
+    const bookingRef = db.collection(BOOKINGS_COLLECTION).doc();
+    
+    try {
+      await db.runTransaction(async (transaction) => {
+        // Check if slot is available within transaction
+        const available = await isSlotAvailable(aika);
+        
+        if (!available) {
+          throw new Error('SLOT_UNAVAILABLE');
+        }
+
+        // Create booking data
+        const bookingData = {
+          nimi: name,
+          sahkoposti: email,
+          puhelin: phone,
+          aika: admin.firestore.Timestamp.fromDate(bookingDate),
+          services: services,
+          totalPrice: totalPrice || 'Hinta sovittaessa',
+          totalNumericPrice: totalNumericPrice || 0,
+          luotu: admin.firestore.FieldValue.serverTimestamp(),
+          googleEventId: null,
+          syncedToGoogle: false
+        };
+
+        // Create booking atomically
+        transaction.set(bookingRef, bookingData);
+      });
+
+      // Transaction successful - booking created
+      console.log('Booking created successfully:', bookingRef.id);
+
+      // Sync to Google Calendar (async, non-blocking)
+      // This happens after the transaction to avoid blocking the response
+      const bookingSnapshot = await bookingRef.get();
+      const bookingData = bookingSnapshot.data();
+      
+      // Attempt Google Calendar sync
+      const googleEventId = await createGoogleCalendarEvent(bookingData);
+      if (googleEventId) {
+        await bookingRef.update({
+          googleEventId: googleEventId,
+          syncedToGoogle: true,
+          googleSyncedAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+      }
+
+      // Return success response
+      res.status(200).json({
+        success: true,
+        id: bookingRef.id,
+        message: 'Varaus onnistui'
+      });
+
+    } catch (transactionError) {
+      if (transactionError.message === 'SLOT_UNAVAILABLE') {
+        console.log('Booking attempt failed: slot not available');
+        return res.status(409).json({ 
+          error: 'Valittu aika on jo varattu. Valitse toinen aika.' 
+        });
+      }
+      throw transactionError;
+    }
+
+  } catch (error) {
+    console.error('Error creating booking:', error);
+    res.status(500).json({ error: 'Varauksen luonti epäonnistui. Yritä uudelleen.' });
+  }
 });
 
 // =======================
@@ -541,8 +539,11 @@ exports.onBookingDeleted = onDocumentDeleted({
 
 /**
  * Webhook: Receive notifications from Google Calendar
+ * Gen2 HTTP function
  */
-exports.calendarWebhook = functions.https.onRequest(async (req, res) => {
+exports.calendarWebhook = onRequest({
+  region: 'us-central1'
+}, async (req, res) => {
   try {
     // Respond quickly to Google's ping
     res.status(200).send('OK');
