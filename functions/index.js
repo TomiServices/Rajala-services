@@ -272,10 +272,11 @@ exports.book = functions.https.onRequest((req, res) => {
         return res.status(400).json({ error: 'Virheellinen sähköpostiosoite' });
       }
 
-      // Validate phone format
-      const phoneRegex = /^\+358\s?\d{1,3}\s?\d{4,}$/;
+      // Validate phone format - Finnish mobile numbers
+      // Formats: +358 40XXXXXXX, +358 50XXXXXXX, etc.
+      const phoneRegex = /^\+358\s?(40|41|42|43|44|45|46|47|48|49|50)\s?\d{7}$/;
       if (!phoneRegex.test(phone)) {
-        return res.status(400).json({ error: 'Virheellinen puhelinnumero. Käytä muotoa: +358 401234567' });
+        return res.status(400).json({ error: 'Virheellinen puhelinnumero. Käytä muotoa: +358 40XXXXXXX' });
       }
 
       // Validate date is in the future
@@ -451,8 +452,10 @@ exports.onBookingDeleted = functions.firestore
       return null;
     }
 
-    // Skip if this deletion came from Google Calendar (prevent loops)
-    if (data.syncedFromGoogle) {
+    // Skip if this deletion came from Google Calendar sync (prevent loops)
+    // Check if this is a webhook-triggered deletion by looking at metadata
+    if (data.deletedFromGoogle === true) {
+      console.log('Deletion originated from Google Calendar, skipping sync to prevent loop');
       return null;
     }
 
@@ -562,7 +565,7 @@ exports.calendarWebhook = functions.https.onRequest(async (req, res) => {
       }
     }
 
-    // Check for deleted events
+    // Check for deleted events (prevent deletion loops)
     const allBookings = await db.collection(BOOKINGS_COLLECTION)
       .where('googleEventId', '!=', null)
       .get();
@@ -573,6 +576,13 @@ exports.calendarWebhook = functions.https.onRequest(async (req, res) => {
       const booking = doc.data();
       if (booking.googleEventId && !eventIds.has(booking.googleEventId)) {
         // Event was deleted from Google Calendar
+        // Mark as deleted from Google to prevent deletion loop
+        await doc.ref.update({ deletedFromGoogle: true });
+        
+        // Small delay to ensure update is processed before deletion trigger
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Now delete the booking
         await doc.ref.delete();
         console.log('Deleted booking (removed from Google Calendar):', doc.id);
       }
