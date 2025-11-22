@@ -1,10 +1,18 @@
 // index.js
+const express = require("express");
 const { onRequest } = require("firebase-functions/v2/https");
 const admin = require("firebase-admin");
 const { google } = require("googleapis");
-const cors = require("cors")({ origin: true });
+const cors = require("cors");
 
 admin.initializeApp();
+
+// =======================
+// Middleware ja Express-sovellus
+// =======================
+const app = express();
+app.use(cors({ origin: true })); // sallii kaikki originit testaukseen
+app.use(express.json()); // JSON parsing
 
 // =======================
 // Google Calendar autentikointi
@@ -50,51 +58,48 @@ exports.syncToGoogleCalendar = admin.firestore
 // =======================
 // 2️⃣ Google Calendar -> Firestore webhook
 // =======================
-exports.calendarWebhook = onRequest((req, res) => {
-  cors(req, res, async () => {
-    if (req.method !== "POST") {
-      return res.status(405).send("Method Not Allowed");
-    }
+const webhookApp = express();
+webhookApp.use(cors({ origin: true }));
+webhookApp.use(express.json());
 
-    const event = req.body; // Google Calendar push notification payload
-    console.log("Received Google Calendar webhook event:", JSON.stringify(event));
+webhookApp.post("/", async (req, res) => {
+  const event = req.body; // Google Calendar push notification payload
+  console.log("Received Google Calendar webhook event:", JSON.stringify(event));
 
-    // TODO: Päivitä Firestore FullCalendarin näyttämään muutokset
-    // Esim. etsi dokumentti googleEventId:n perusteella ja päivitä tiedot
-    // const bookingRef = admin.firestore().collection(BOOKINGS_COLLECTION).doc(docId);
-    // await bookingRef.update({...});
+  // TODO: Päivitä Firestore FullCalendarin näyttämään muutokset
+  // Esim. etsi dokumentti googleEventId:n perusteella ja päivitä tiedot
+  // const bookingRef = admin.firestore().collection(BOOKINGS_COLLECTION).doc(docId);
+  // await bookingRef.update({...});
 
-    res.status(200).send("OK");
-  });
+  res.status(200).send("OK");
 });
+
+exports.calendarWebhook = onRequest(webhookApp);
 
 // =======================
 // 3️⃣ FullCalendar -> Firestore POST endpoint
 // =======================
-exports.bookings = onRequest((req, res) => {
-  cors(req, res, async () => {
-    if (req.method !== "POST") {
-      return res.status(405).send("Method Not Allowed");
-    }
+app.post("/", async (req, res) => {
+  const data = req.body;
+  if (!data.start || !data.end || !data.title) {
+    return res.status(400).send("Missing required fields: start, end, title");
+  }
 
-    const data = req.body;
-    if (!data.start || !data.end || !data.title) {
-      return res.status(400).send("Missing required fields: start, end, title");
-    }
+  try {
+    const bookingRef = await admin.firestore().collection(BOOKINGS_COLLECTION).add({
+      title: data.title,
+      description: data.description || "",
+      start: admin.firestore.Timestamp.fromDate(new Date(data.start)),
+      end: admin.firestore.Timestamp.fromDate(new Date(data.end)),
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
 
-    try {
-      const bookingRef = await admin.firestore().collection(BOOKINGS_COLLECTION).add({
-        title: data.title,
-        description: data.description || "",
-        start: admin.firestore.Timestamp.fromDate(new Date(data.start)),
-        end: admin.firestore.Timestamp.fromDate(new Date(data.end)),
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
-
-      res.status(200).json({ id: bookingRef.id, message: "Booking saved" });
-    } catch (error) {
-      console.error("Error saving booking:", error);
-      res.status(500).send("Internal Server Error");
-    }
-  });
+    res.status(200).json({ id: bookingRef.id, message: "Booking saved" });
+  } catch (error) {
+    console.error("Error saving booking:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
+// Export V2 HTTP function
+exports.bookings = onRequest(app);
