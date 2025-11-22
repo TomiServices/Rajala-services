@@ -40,13 +40,7 @@ let calendarId = null;
 // Initialize Google Calendar client if configured
 function initializeGoogleCalendar() {
   try {
-    // Check if Google Calendar parameters are defined
-    if (!googleServiceAccount || !googleCalendarId) {
-      console.log('Google Calendar parameters not defined - sync disabled');
-      return null;
-    }
-
-    // Check if Google Calendar is configured
+    // Get environment variable values - will throw if not set
     const serviceAccountValue = googleServiceAccount.value();
     const calendarIdValue = googleCalendarId.value();
     
@@ -86,12 +80,7 @@ function initializeGoogleCalendar() {
  */
 async function verifyRecaptcha(token) {
   try {
-    // Check if reCAPTCHA parameter is defined
-    if (!recaptchaSecret) {
-      console.error('reCAPTCHA parameter not defined');
-      throw new Error('Turvavarmennus ei ole määritetty');
-    }
-
+    // Get reCAPTCHA secret - will throw if not configured
     const secretKey = recaptchaSecret.value();
     
     if (!secretKey) {
