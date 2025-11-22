@@ -4,6 +4,8 @@ const admin = require('firebase-admin');
 const cors = require('cors');
 const axios = require('axios');
 const { google } = require('googleapis');
+// Import v2 Firestore trigger functions for the latest Firebase SDK compatibility
+const { onDocumentUpdated, onDocumentDeleted } = require('firebase-functions/v2/firestore');
 
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -373,18 +375,47 @@ exports.book = functions.https.onRequest((req, res) => {
 // =======================
 
 /**
- * Trigger: When booking is updated in Firestore, update Google Calendar
+ * Firestore Trigger: onBookingUpdated
+ * 
+ * This function is triggered automatically whenever a booking document is updated in Firestore.
+ * It synchronizes the changes to the corresponding Google Calendar event.
+ * 
+ * Trigger Path: 'varaukset/{bookingId}'
+ * - 'varaukset' is the Firestore collection containing all bookings
+ * - '{bookingId}' is a wildcard that matches any document ID in the collection
+ * 
+ * Trigger Event: onDocumentUpdated (Firebase Functions v2 API)
+ * - Fires when any field in the booking document is modified
+ * - Receives 'event' object with 'data' property containing 'before' and 'after' snapshots
+ * - The 'params' property contains the bookingId from the document path
+ * 
+ * Functionality:
+ * 1. Initializes Google Calendar client if configured
+ * 2. Compares before/after data to detect changes
+ * 3. Prevents infinite loops by checking 'syncedFromGoogle' flag
+ * 4. Updates the Google Calendar event if it exists
+ * 5. Handles errors gracefully without blocking Firestore operations
+ * 
+ * @param {CloudEvent<FirestoreEvent<Change<DocumentSnapshot>>>} event - Event containing document snapshots
+ * @returns {Promise<null>} Returns null after processing
+ * 
+ * @example
+ * // When a booking is updated in Firestore:
+ * // Before: { nimi: "John Doe", aika: "2024-01-15T10:00:00Z" }
+ * // After:  { nimi: "Jane Doe", aika: "2024-01-15T10:00:00Z" }
+ * // This trigger will update the Google Calendar event with the new name
  */
-exports.onBookingUpdated = functions.firestore
-  .document(`${BOOKINGS_COLLECTION}/{bookingId}`)
-  .onUpdate(async (change, context) => {
+exports.onBookingUpdated = onDocumentUpdated({
+  document: `${BOOKINGS_COLLECTION}/{bookingId}`,
+  region: 'us-central1'
+}, async (event) => {
     const calendar = initializeGoogleCalendar();
     if (!calendar || !calendarId) {
       return null;
     }
 
-    const beforeData = change.before.data();
-    const afterData = change.after.data();
+    const beforeData = event.data.before.data();
+    const afterData = event.data.after.data();
 
     // Skip if this update came from Google Calendar (prevent loops)
     if (afterData.syncedFromGoogle) {
@@ -434,17 +465,50 @@ exports.onBookingUpdated = functions.firestore
   });
 
 /**
- * Trigger: When booking is deleted from Firestore, delete from Google Calendar
+ * Firestore Trigger: onBookingDeleted
+ * 
+ * This function is triggered automatically whenever a booking document is deleted from Firestore.
+ * It removes the corresponding event from Google Calendar to keep both systems synchronized.
+ * 
+ * Trigger Path: 'varaukset/{bookingId}'
+ * - 'varaukset' is the Firestore collection containing all bookings
+ * - '{bookingId}' is a wildcard that matches any document ID in the collection
+ * 
+ * Trigger Event: onDocumentDeleted (Firebase Functions v2 API)
+ * - Fires when a document is completely removed from the collection
+ * - Receives 'event' object with 'data' property containing the document data before deletion
+ * - The 'params' property contains the bookingId from the document path
+ * 
+ * Functionality:
+ * 1. Initializes Google Calendar client if configured
+ * 2. Retrieves the Google Calendar event ID from the deleted document
+ * 3. Prevents infinite loops by checking 'deletedFromGoogle' flag
+ * 4. Deletes the corresponding event from Google Calendar
+ * 5. Handles errors gracefully without blocking Firestore operations
+ * 
+ * Loop Prevention:
+ * - When a booking is deleted via Google Calendar webhook, it's marked with 'deletedFromGoogle: true'
+ * - This flag prevents the trigger from attempting to delete the Google Calendar event again
+ * - Ensures bidirectional sync without infinite deletion loops
+ * 
+ * @param {CloudEvent<FirestoreEvent<DocumentSnapshot>>} event - Event containing the deleted document snapshot
+ * @returns {Promise<null>} Returns null after processing
+ * 
+ * @example
+ * // When a booking is deleted from Firestore:
+ * // Document: { googleEventId: "abc123", nimi: "John Doe" }
+ * // This trigger will delete the Google Calendar event with ID "abc123"
  */
-exports.onBookingDeleted = functions.firestore
-  .document(`${BOOKINGS_COLLECTION}/{bookingId}`)
-  .onDelete(async (snap, context) => {
+exports.onBookingDeleted = onDocumentDeleted({
+  document: `${BOOKINGS_COLLECTION}/{bookingId}`,
+  region: 'us-central1'
+}, async (event) => {
     const calendar = initializeGoogleCalendar();
     if (!calendar || !calendarId) {
       return null;
     }
 
-    const data = snap.data();
+    const data = event.data.data();
     const googleEventId = data.googleEventId;
 
     if (!googleEventId) {
