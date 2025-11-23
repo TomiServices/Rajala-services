@@ -335,6 +335,117 @@ www.rajala-services.com
   }
 }
 
+/**
+ * Send booking cancellation email to customer
+ */
+async function sendCancellationEmail(bookingData) {
+  const transporter = initializeEmailTransporter();
+  if (!transporter) {
+    console.log('Email transporter not available, skipping cancellation email');
+    return false;
+  }
+
+  try {
+    const fromAddress = safeGetParamValue(emailFrom, 'EMAIL_FROM') || 'noreply@rajala-services.com';
+    const bookingDate = parseFirestoreDate(bookingData.aika);
+    
+    if (!bookingDate) {
+      console.warn('Invalid booking date for cancellation email, skipping');
+      return false;
+    }
+
+    // Format date and time for Finnish locale
+    const formattedDate = bookingDate.toLocaleDateString('fi-FI', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    const formattedTime = bookingDate.toLocaleTimeString('fi-FI', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    // Email content
+    const subject = 'Varauksesi on peruutettu - Rajala Services';
+    const text = `Hei ${bookingData.nimi},
+
+Varauksesi on peruutettu:
+
+PERUUTETUN VARAUKSEN TIEDOT:
+─────────────────
+Aika: ${formattedDate} klo ${formattedTime}
+Asiakas: ${bookingData.nimi}
+
+Jos tämä peruutus oli virhe tai haluat varata uuden ajan, ole yhteydessä meihin.
+
+Ystävällisin terveisin,
+Rajala Services
+www.rajala-services.com
+`;
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background-color: #e74c3c; color: white; padding: 20px; text-align: center; }
+    .content { background-color: #f9f9f9; padding: 20px; margin: 20px 0; border-radius: 5px; }
+    .section { margin: 20px 0; }
+    .info-row { margin: 10px 0; }
+    .footer { text-align: center; padding: 20px; color: #7f8c8d; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Varauksesi on peruutettu</h1>
+      <p>Rajala Services</p>
+    </div>
+    
+    <div class="content">
+      <p>Hei <strong>${bookingData.nimi}</strong>,</p>
+      <p>Varauksesi on peruutettu:</p>
+      
+      <div class="section">
+        <div class="info-row"><strong>Aika:</strong> ${formattedDate} klo ${formattedTime}</div>
+        <div class="info-row"><strong>Asiakas:</strong> ${bookingData.nimi}</div>
+      </div>
+      
+      <p>Jos tämä peruutus oli virhe tai haluat varata uuden ajan, ole yhteydessä meihin.</p>
+    </div>
+    
+    <div class="footer">
+      <p>Ystävällisin terveisin,<br>
+      <strong>Rajala Services</strong><br>
+      www.rajala-services.com</p>
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+    // Send email
+    const info = await transporter.sendMail({
+      from: fromAddress,
+      to: bookingData.sahkoposti,
+      subject: subject,
+      text: text,
+      html: html
+    });
+
+    console.log('Cancellation email sent:', info.messageId);
+    return true;
+  } catch (err) {
+    console.error('Failed to send cancellation email:', err.message || err);
+    // Don't throw - email sending is optional
+    return false;
+  }
+}
+
 // =======================
 // UTILITY: Robust date parsing
 // =======================
@@ -702,19 +813,31 @@ exports.onBookingDeleted = onDocumentDeleted({
   document: `${BOOKINGS_COLLECTION}/{bookingId}`,
   region: 'us-central1'
 }, async (event) => {
-  const calendar = initializeGoogleCalendar();
-  if (!calendar || !calendarId) return null;
-
   const data = event.data.data();
   if (!data) return null;
-  const googleEventId = data.googleEventId;
-  if (!googleEventId) {
-    console.log('No googleEventId on delete - skipping');
+
+  // Skip if this deletion came from Google Calendar sync (prevent loops)
+  if (data.deletedFromGoogle === true) {
+    console.log('Deletion originated from Google - skipping to prevent loop');
     return null;
   }
 
-  if (data.deletedFromGoogle === true) {
-    console.log('Deletion originated from Google - skipping to prevent loop');
+  // Send cancellation email (async, non-blocking)
+  (async () => {
+    try {
+      await sendCancellationEmail(data);
+    } catch (err) {
+      console.error('Failed to send cancellation email:', err.message || err);
+    }
+  })();
+
+  // Delete from Google Calendar
+  const calendar = initializeGoogleCalendar();
+  if (!calendar || !calendarId) return null;
+
+  const googleEventId = data.googleEventId;
+  if (!googleEventId) {
+    console.log('No googleEventId on delete - skipping');
     return null;
   }
 
