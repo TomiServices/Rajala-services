@@ -108,6 +108,11 @@ Receives notifications from Google Calendar for synchronization.
 
 ### Firestore Triggers
 
+#### `onBookingCreated`
+Automatically sends confirmation email to customer when a new booking is created.
+
+**Trigger**: `varaukset/{bookingId}` document creation
+
 #### `onBookingUpdated`
 Automatically syncs booking updates to Google Calendar.
 
@@ -125,10 +130,14 @@ Removes deleted bookings from Google Calendar.
 | Variable | Description | Required |
 |----------|-------------|----------|
 | `RECAPTCHA_SECRET` | reCAPTCHA v3 secret key from Google | Yes |
+| `EMAIL_USER` | Gmail account for sending confirmation emails | Yes** |
+| `EMAIL_PASSWORD` | Gmail App Password (not regular password) | Yes** |
+| `EMAIL_FROM` | Display name and email for sent emails | Optional** |
 | `GOOGLE_SERVICE_ACCOUNT` | Google service account JSON (stringified) | Optional* |
 | `GOOGLE_CALENDAR_ID` | Google Calendar ID for sync | Optional* |
 
 *Optional: Google Calendar sync features will be disabled if not configured
+**Required for email confirmations: Email features will be disabled if not configured
 
 ### Setting Production Variables
 
@@ -175,6 +184,7 @@ curl -X POST http://localhost:5001/your-project/us-central1/book \
 
 ## 📚 Documentation
 
+- [Email Configuration Guide](../EMAIL_CONFIGURATION.md) - Complete email setup instructions
 - [Gen2 Migration Guide](../FIREBASE_FUNCTIONS_GEN2_MIGRATION.md) - Complete migration documentation
 - [Migration Summary](../FIREBASE_GEN2_MIGRATION_SUMMARY.md) - Quick overview of changes
 - [Firebase Functions Docs](https://firebase.google.com/docs/functions) - Official documentation
