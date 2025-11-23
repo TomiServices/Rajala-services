@@ -173,6 +173,20 @@ function initializeEmailTransporter() {
 }
 
 /**
+ * HTML escape function to prevent XSS in email templates
+ */
+function escapeHtml(unsafe) {
+  if (!unsafe) return '';
+  return unsafe
+    .toString()
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/**
  * Send booking confirmation email to customer
  */
 async function sendBookingConfirmationEmail(bookingData) {
@@ -268,7 +282,7 @@ www.rajala-services.com
     </div>
     
     <div class="content">
-      <p>Hei <strong>${bookingData.nimi}</strong>,</p>
+      <p>Hei <strong>${escapeHtml(bookingData.nimi)}</strong>,</p>
       <p>Kiitos varauksestasi! Olemme vastaanottaneet varauksen seuraavilla tiedoilla:</p>
       
       <div class="highlight">
@@ -278,21 +292,21 @@ www.rajala-services.com
       
       <div class="section">
         <div class="section-title">ASIAKASTIEDOT</div>
-        <div class="info-row"><strong>Nimi:</strong> ${bookingData.nimi}</div>
-        <div class="info-row"><strong>Puhelin:</strong> ${bookingData.puhelin}</div>
-        <div class="info-row"><strong>Sähköposti:</strong> ${bookingData.sahkoposti}</div>
+        <div class="info-row"><strong>Nimi:</strong> ${escapeHtml(bookingData.nimi)}</div>
+        <div class="info-row"><strong>Puhelin:</strong> ${escapeHtml(bookingData.puhelin)}</div>
+        <div class="info-row"><strong>Sähköposti:</strong> ${escapeHtml(bookingData.sahkoposti)}</div>
       </div>
       
       <div class="section">
         <div class="section-title">VALITUT PALVELUT</div>
         ${(bookingData.services || []).map(s => 
-          `<div class="service-item">• ${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}</div>`
+          `<div class="service-item">• ${escapeHtml(s.serviceName || '')} - ${escapeHtml(s.taskName || '')}${s.price ? ': ' + escapeHtml(s.price) : ''}</div>`
         ).join('') || '<div class="service-item">• Palvelu ei määritelty</div>'}
       </div>
       
       <div class="section">
         <div class="section-title">HINTA</div>
-        <div class="info-row"><strong>Kokonaishinta:</strong> ${bookingData.totalPrice || 'Hinta sovittaessa'}</div>
+        <div class="info-row"><strong>Kokonaishinta:</strong> ${escapeHtml(bookingData.totalPrice || 'Hinta sovittaessa')}</div>
       </div>
       
       <div class="section">
@@ -407,12 +421,12 @@ www.rajala-services.com
     </div>
     
     <div class="content">
-      <p>Hei <strong>${bookingData.nimi}</strong>,</p>
+      <p>Hei <strong>${escapeHtml(bookingData.nimi)}</strong>,</p>
       <p>Varauksesi on peruutettu:</p>
       
       <div class="section">
         <div class="info-row"><strong>Aika:</strong> ${formattedDate} klo ${formattedTime}</div>
-        <div class="info-row"><strong>Asiakas:</strong> ${bookingData.nimi}</div>
+        <div class="info-row"><strong>Asiakas:</strong> ${escapeHtml(bookingData.nimi)}</div>
       </div>
       
       <p>Jos tämä peruutus oli virhe tai haluat varata uuden ajan, ole yhteydessä meihin.</p>
