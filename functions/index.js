@@ -1,8 +1,10 @@
-// index.js - Complete Firebase Functions for Rajala Services Booking System
+// index.js - Firebase Functions for Rajala Services Booking System (updated)
+// Rewritten to be more robust: fixed date parsing, safer Google service account handling,
+// improved CORS handling for HTTP endpoints, and defensive error handling.
+
 const admin = require('firebase-admin');
 const axios = require('axios');
 const { google } = require('googleapis');
-// Import v2 functions for the latest Firebase SDK compatibility
 const { onRequest } = require('firebase-functions/v2/https');
 const { onDocumentUpdated, onDocumentDeleted } = require('firebase-functions/v2/firestore');
 const { defineString } = require('firebase-functions/params');
@@ -12,10 +14,8 @@ admin.initializeApp();
 const db = admin.firestore();
 
 // =======================
-// ENVIRONMENT VARIABLES (Gen2)
+// ENVIRONMENT PARAMETERS (Gen2 / fallback to env)
 // =======================
-// Define environment parameters for Gen2 functions
-// These can be set using: firebase functions:config:set or as environment variables
 const recaptchaSecret = defineString('RECAPTCHA_SECRET');
 const googleServiceAccount = defineString('GOOGLE_SERVICE_ACCOUNT');
 const googleCalendarId = defineString('GOOGLE_CALENDAR_ID');
@@ -23,7 +23,7 @@ const googleCalendarId = defineString('GOOGLE_CALENDAR_ID');
 // =======================
 // CONSTANTS
 // =======================
-const BOOKINGS_COLLECTION = 'varaukset'; // Using Finnish collection name as per existing setup
+const BOOKINGS_COLLECTION = 'varaukset';
 const ALLOWED_ORIGINS = [
   'https://www.rajala-services.com',
   'https://rajala-services.com',
@@ -32,60 +32,140 @@ const ALLOWED_ORIGINS = [
 ];
 
 // =======================
-// GOOGLE CALENDAR SETUP
+// GOOGLE CALENDAR CLIENT (lazy init)
 // =======================
 let googleCalendar = null;
 let calendarId = null;
 
-// Initialize Google Calendar client if configured
-function initializeGoogleCalendar() {
+function safeGetParamValue(param, envNameFallback) {
+  // param is a firebase-functions/params object; calling .value() may throw if not available at runtime
   try {
-    // Get environment variable values - will throw if not set
-    const serviceAccountValue = googleServiceAccount.value();
-    const calendarIdValue = googleCalendarId.value();
-    
-    if (!serviceAccountValue || !calendarIdValue) {
-      console.log('Google Calendar not configured - sync disabled');
-      return null;
+    const v = param.value();
+    if (v === undefined || v === null || v === '') return process.env[envNameFallback] || null;
+    return v;
+  } catch (e) {
+    return process.env[envNameFallback] || null;
+  }
+}
+
+function parseServiceAccountInput(input) {
+  // input may be:
+  // - JSON string
+  // - base64 encoded JSON string
+  // - already an object
+  if (!input) return null;
+  if (typeof input === 'object') return input;
+  let s = input.trim();
+  // likely base64 if contains many '=' or not starting with '{'
+  if (!s.startsWith('{')) {
+    try {
+      const decoded = Buffer.from(s, 'base64').toString('utf8');
+      if (decoded.trim().startsWith('{')) {
+        s = decoded;
+      }
+    } catch (e) {
+      // not base64 or decode failed; continue
     }
+  }
+  try {
+    return JSON.parse(s);
+  } catch (e) {
+    console.error('Failed to parse service account JSON:', e.message);
+    return null;
+  }
+}
 
-    // Parse service account from config
-    const serviceAccount = typeof serviceAccountValue === 'string' 
-      ? JSON.parse(serviceAccountValue)
-      : serviceAccountValue;
+function normalizePrivateKey(sa) {
+  if (!sa || typeof sa.private_key !== 'string') return sa;
+  // Replace escaped newlines with real newlines
+  sa.private_key = sa.private_key.replace(/\\n/g, '\n');
+  return sa;
+}
 
-    calendarId = calendarIdValue;
+function initializeGoogleCalendar() {
+  // Return existing client if already initialized
+  if (googleCalendar && calendarId) return googleCalendar;
 
-    // Create auth client
+  const saRaw = safeGetParamValue(googleServiceAccount, 'GOOGLE_SERVICE_ACCOUNT');
+  const calIdRaw = safeGetParamValue(googleCalendarId, 'GOOGLE_CALENDAR_ID');
+
+  if (!saRaw || !calIdRaw) {
+    console.log('Google Calendar not configured (missing service account or calendar id)');
+    return null;
+  }
+
+  const sa = parseServiceAccountInput(saRaw);
+  if (!sa) {
+    console.error('Unable to parse Google service account credentials');
+    return null;
+  }
+
+  normalizePrivateKey(sa);
+
+  try {
     const auth = new google.auth.GoogleAuth({
-      credentials: serviceAccount,
+      credentials: sa,
       scopes: ['https://www.googleapis.com/auth/calendar']
     });
-
+    calendarId = calIdRaw;
     googleCalendar = google.calendar({ version: 'v3', auth });
-    console.log('Google Calendar initialized successfully');
+    console.log('Google Calendar initialized');
     return googleCalendar;
-  } catch (error) {
-    console.error('Failed to initialize Google Calendar:', error.message);
+  } catch (err) {
+    console.error('Failed to initialize Google Calendar client:', err.message || err);
     return null;
   }
 }
 
 // =======================
-// UTILITY FUNCTIONS
+// UTILITY: Robust date parsing
 // =======================
+function parseFirestoreDate(val) {
+  if (!val) return null;
 
-/**
- * Verify reCAPTCHA token
- */
+  // Firestore Timestamp (Admin SDK) has toDate()
+  if (typeof val === 'object' && typeof val.toDate === 'function') {
+    try {
+      return val.toDate();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Proto-like object { seconds, nanos }
+  if (typeof val === 'object' && val.seconds !== undefined && val.nanos !== undefined) {
+    try {
+      return new Date(val.seconds * 1000 + Math.round(val.nanos / 1e6));
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Number: treat < 1e12 as seconds, else milliseconds
+  if (typeof val === 'number') {
+    if (val < 1e12) return new Date(val * 1000);
+    return new Date(val);
+  }
+
+  // String: try Date.parse
+  if (typeof val === 'string') {
+    const d = new Date(val);
+    if (!Number.isNaN(d.getTime())) return d;
+    return null;
+  }
+
+  return null;
+}
+
+// =======================
+// reCAPTCHA verification
+// =======================
 async function verifyRecaptcha(token) {
   try {
-    // Get reCAPTCHA secret - will throw if not configured
-    const secretKey = recaptchaSecret.value();
-    
+    const secretKey = safeGetParamValue(recaptchaSecret, 'RECAPTCHA_SECRET');
     if (!secretKey) {
-      console.error('reCAPTCHA secret key not configured');
-      throw new Error('Turvavarmennus ei ole määritetty');
+      console.error('reCAPTCHA secret not configured');
+      return false;
     }
 
     const response = await axios.post(
@@ -99,130 +179,141 @@ async function verifyRecaptcha(token) {
       }
     );
 
-    if (!response.data.success) {
-      console.log('reCAPTCHA verification failed:', response.data['error-codes']);
+    if (!response.data || response.data.success !== true) {
+      console.log('reCAPTCHA validation failed:', response.data && response.data['error-codes']);
       return false;
     }
 
-    // For v3, check score (0.0 - 1.0, higher is better)
-    const score = response.data.score || 0;
-    console.log('reCAPTCHA score:', score);
-    
-    // Require score > 0.5 for v3, or just success for v2
-    return response.data.score === undefined || score > 0.5;
-  } catch (error) {
-    console.error('reCAPTCHA verification error:', error.message);
+    // v3 may include score
+    if (response.data.score !== undefined) {
+      return response.data.score > 0.5;
+    }
+    return true;
+  } catch (err) {
+    console.error('reCAPTCHA check error:', err.message || err);
     return false;
   }
 }
 
-/**
- * Check if a time slot is available
- */
+// =======================
+// Slot availability check
+// =======================
 async function isSlotAvailable(dateTime) {
   try {
     const slotDate = new Date(dateTime);
-    const slotHour = slotDate.getHours();
-    
-    // Create start and end of the hour slot
     const slotStart = new Date(slotDate);
     slotStart.setMinutes(0, 0, 0);
-    
     const slotEnd = new Date(slotStart);
-    slotEnd.setHours(slotHour + 1);
+    slotEnd.setHours(slotStart.getHours() + 1);
 
-    // Query existing bookings for this time slot
     const snapshot = await db.collection(BOOKINGS_COLLECTION)
       .where('aika', '>=', admin.firestore.Timestamp.fromDate(slotStart))
       .where('aika', '<', admin.firestore.Timestamp.fromDate(slotEnd))
       .get();
 
-    // Slot is available if no bookings exist
     return snapshot.empty;
-  } catch (error) {
-    console.error('Error checking slot availability:', error);
-    throw error;
+  } catch (err) {
+    console.error('isSlotAvailable error:', err);
+    throw err;
   }
 }
 
-/**
- * Create Google Calendar event for a booking
- */
+// =======================
+// Google Calendar helpers
+// =======================
 async function createGoogleCalendarEvent(bookingData) {
-  if (!googleCalendar || !calendarId) {
-    console.log('Google Calendar not available, skipping sync');
+  const calendar = initializeGoogleCalendar();
+  if (!calendar || !calendarId) {
+    console.log('Google Calendar client missing - skipping event creation');
     return null;
   }
 
   try {
-    const startTime = new Date(bookingData.aika);
-    const endTime = new Date(startTime);
-    endTime.setHours(startTime.getHours() + 1); // 1-hour booking slots
+    const startDate = parseFirestoreDate(bookingData.aika) || new Date(bookingData.aika);
+    if (!startDate || Number.isNaN(startDate.getTime())) {
+      console.warn('Invalid booking date for Google event, skipping:', bookingData);
+      return null;
+    }
 
-    // Format service information
-    const serviceInfo = bookingData.services?.map(s => 
-      `${s.serviceName} - ${s.taskName}${s.price ? ': ' + s.price : ''}`
+    const endDate = new Date(startDate);
+    endDate.setHours(startDate.getHours() + 1);
+
+    const serviceInfo = (bookingData.services || []).map(s =>
+      `${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}`
     ).join('\n') || 'Palvelu ei määritelty';
 
     const event = {
-      summary: `Varaus: ${bookingData.nimi}`,
-      description: `Asiakas: ${bookingData.nimi}\n` +
-                   `Puhelin: ${bookingData.puhelin}\n` +
-                   `Sähköposti: ${bookingData.sahkoposti}\n\n` +
-                   `Palvelut:\n${serviceInfo}\n\n` +
-                   `Kokonaishinta: ${bookingData.totalPrice || 'Hinta sovittaessa'}`,
-      start: {
-        dateTime: startTime.toISOString(),
-        timeZone: 'Europe/Helsinki'
-      },
-      end: {
-        dateTime: endTime.toISOString(),
-        timeZone: 'Europe/Helsinki'
-      },
-      colorId: '11' // Red color for easy identification
+      summary: `Varaus: ${bookingData.nimi || 'Tuntematon'}`,
+      description:
+        `Asiakas: ${bookingData.nimi || ''}\n` +
+        `Puhelin: ${bookingData.puhelin || ''}\n` +
+        `Sähköposti: ${bookingData.sahkoposti || ''}\n\n` +
+        `Palvelut:\n${serviceInfo}\n\n` +
+        `Kokonaishinta: ${bookingData.totalPrice || 'Hinta sovittaessa'}`,
+      start: { dateTime: startDate.toISOString(), timeZone: 'Europe/Helsinki' },
+      end: { dateTime: endDate.toISOString(), timeZone: 'Europe/Helsinki' },
+      colorId: '11'
     };
 
-    const response = await googleCalendar.events.insert({
-      calendarId: calendarId,
+    const resp = await calendar.events.insert({
+      calendarId,
       requestBody: event
     });
 
-    console.log('Created Google Calendar event:', response.data.id);
-    return response.data.id;
-  } catch (error) {
-    console.error('Failed to create Google Calendar event:', error.message);
-    // Don't throw - Google Calendar sync is optional
+    console.log('Google event created id=', resp.data && resp.data.id);
+    return resp.data && resp.data.id;
+  } catch (err) {
+    console.error('createGoogleCalendarEvent error:', err.message || err);
     return null;
   }
 }
 
 // =======================
-// HTTP ENDPOINTS
+// Helpers: CORS
 // =======================
+function setCorsHeadersForRequest(req, res) {
+  const origin = req.headers.origin;
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    res.set('Access-Control-Allow-Origin', origin);
+    res.set('Vary', 'Origin');
+  } else {
+    // Optionally allow requests from same origin if front and back are same host
+    // Do not set wildcard in production unless you intentionally allow it.
+  }
+  res.set('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.set('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+}
 
-/**
- * GET /bookings - Fetch all bookings
- * Gen2 HTTP function with CORS support
- */
+// =======================
+// HTTP: GET /bookings
+// =======================
 exports.bookings = onRequest({
   region: 'us-central1',
   cors: ALLOWED_ORIGINS
 }, async (req, res) => {
   try {
+    setCorsHeadersForRequest(req, res);
+    if (req.method === 'OPTIONS') {
+      return res.status(204).send('');
+    }
     if (req.method !== 'GET') {
       return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const snapshot = await db.collection(BOOKINGS_COLLECTION)
-      .orderBy('aika', 'asc')
-      .get();
-
+    const snapshot = await db.collection(BOOKINGS_COLLECTION).orderBy('aika', 'asc').get();
     const bookings = [];
+
     snapshot.forEach(doc => {
       const data = doc.data();
+      const dt = parseFirestoreDate(data.aika);
+      if (!dt) {
+        console.warn('Invalid/empty aika for doc', doc.id, 'raw=', data.aika);
+        // skip invalid date documents
+        return;
+      }
       bookings.push({
         id: doc.id,
-        aika: data.aika?.toDate().toISOString() || data.aika,
+        aika: dt.toISOString(),
         nimi: data.nimi,
         sahkoposti: data.sahkoposti,
         puhelin: data.puhelin,
@@ -232,63 +323,58 @@ exports.bookings = onRequest({
       });
     });
 
-    // Add cache headers
     res.set('Cache-Control', 'public, max-age=60, s-maxage=120');
-    res.status(200).json(bookings);
-  } catch (error) {
-    console.error('Error fetching bookings:', error);
-    res.status(500).json({ error: 'Varausten haku epäonnistui' });
+    return res.status(200).json(bookings);
+  } catch (err) {
+    console.error('Error fetching bookings:', err);
+    return res.status(500).json({ error: 'Varausten haku epäonnistui' });
   }
 });
 
-/**
- * POST /book - Create a new booking
- * Gen2 HTTP function with CORS support
- */
+// =======================
+// HTTP: POST /book
+// =======================
 exports.book = onRequest({
   region: 'us-central1',
   cors: ALLOWED_ORIGINS
 }, async (req, res) => {
   try {
+    setCorsHeadersForRequest(req, res);
+    if (req.method === 'OPTIONS') {
+      return res.status(204).send('');
+    }
     if (req.method !== 'POST') {
       return res.status(405).json({ error: 'Method not allowed' });
     }
 
     const { name, email, phone, aika, services, totalPrice, totalNumericPrice, recaptcha } = req.body;
 
-    // Validate required fields
     if (!name || !email || !phone || !aika || !services || !recaptcha) {
       return res.status(400).json({ error: 'Täytä kaikki pakolliset kentät' });
     }
 
-    // Verify reCAPTCHA
     const isValidRecaptcha = await verifyRecaptcha(recaptcha);
     if (!isValidRecaptcha) {
-      console.log('reCAPTCHA verification failed for booking attempt');
+      console.log('reCAPTCHA failed for booking');
       return res.status(401).json({ error: 'Turvavarmennus epäonnistui. Yritä uudelleen.' });
     }
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ error: 'Virheellinen sähköpostiosoite' });
     }
 
-    // Validate phone format - Finnish mobile numbers
-    // Formats: +358 40XXXXXXX, +358 50XXXXXXX, etc.
     const phoneRegex = /^\+358\s?(40|41|42|43|44|45|46|47|48|49|50)\s?\d{7}$/;
     if (!phoneRegex.test(phone)) {
       return res.status(400).json({ error: 'Virheellinen puhelinnumero. Käytä muotoa: +358 40XXXXXXX' });
     }
 
-    // Validate date is in the future
     const bookingDate = new Date(aika);
     const now = new Date();
-    if (bookingDate <= now) {
+    if (Number.isNaN(bookingDate.getTime()) || bookingDate <= now) {
       return res.status(400).json({ error: 'Valitse tuleva aika' });
     }
 
-    // Validate business hours (9-17, weekdays)
     const dayOfWeek = bookingDate.getDay();
     const hour = bookingDate.getHours();
     if (dayOfWeek === 0 || dayOfWeek === 6) {
@@ -298,19 +384,13 @@ exports.book = onRequest({
       return res.status(400).json({ error: 'Varaukset klo 9-17 välillä' });
     }
 
-    // Check slot availability using transaction for atomicity
     const bookingRef = db.collection(BOOKINGS_COLLECTION).doc();
-    
+
     try {
       await db.runTransaction(async (transaction) => {
-        // Check if slot is available within transaction
-        const available = await isSlotAvailable(aika);
-        
-        if (!available) {
-          throw new Error('SLOT_UNAVAILABLE');
-        }
+        const available = await isSlotAvailable(bookingDate);
+        if (!available) throw new Error('SLOT_UNAVAILABLE');
 
-        // Create booking data
         const bookingData = {
           nimi: name,
           sahkoposti: email,
@@ -324,282 +404,181 @@ exports.book = onRequest({
           syncedToGoogle: false
         };
 
-        // Create booking atomically
         transaction.set(bookingRef, bookingData);
       });
 
-      // Transaction successful - booking created
-      console.log('Booking created successfully:', bookingRef.id);
+      console.log('Booking created:', bookingRef.id);
 
-      // Sync to Google Calendar (async, non-blocking)
-      // This happens after the transaction to avoid blocking the response
-      const bookingSnapshot = await bookingRef.get();
-      const bookingData = bookingSnapshot.data();
-      
-      // Attempt Google Calendar sync
-      const googleEventId = await createGoogleCalendarEvent(bookingData);
-      if (googleEventId) {
-        await bookingRef.update({
-          googleEventId: googleEventId,
-          syncedToGoogle: true,
-          googleSyncedAt: admin.firestore.FieldValue.serverTimestamp()
-        });
+      // Fetch created booking and try to sync to Google Calendar asynchronously
+      const createdSnap = await bookingRef.get();
+      const createdData = createdSnap.data();
+
+      (async () => {
+        try {
+          const eventId = await createGoogleCalendarEvent(createdData);
+          if (eventId) {
+            await bookingRef.update({
+              googleEventId: eventId,
+              syncedToGoogle: true,
+              googleSyncedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+          }
+        } catch (e) {
+          console.error('Async Google sync failed for booking', bookingRef.id, e.message || e);
+        }
+      })();
+
+      return res.status(200).json({ success: true, id: bookingRef.id, message: 'Varaus onnistui' });
+
+    } catch (txErr) {
+      if (txErr.message === 'SLOT_UNAVAILABLE') {
+        console.log('Slot unavailable for booking');
+        return res.status(409).json({ error: 'Valittu aika on jo varattu. Valitse toinen aika.' });
       }
-
-      // Return success response
-      res.status(200).json({
-        success: true,
-        id: bookingRef.id,
-        message: 'Varaus onnistui'
-      });
-
-    } catch (transactionError) {
-      if (transactionError.message === 'SLOT_UNAVAILABLE') {
-        console.log('Booking attempt failed: slot not available');
-        return res.status(409).json({ 
-          error: 'Valittu aika on jo varattu. Valitse toinen aika.' 
-        });
-      }
-      throw transactionError;
+      throw txErr;
     }
-
-  } catch (error) {
-    console.error('Error creating booking:', error);
-    res.status(500).json({ error: 'Varauksen luonti epäonnistui. Yritä uudelleen.' });
+  } catch (err) {
+    console.error('Error creating booking:', err);
+    return res.status(500).json({ error: 'Varauksen luonti epäonnistui. Yritä uudelleen.' });
   }
 });
 
 // =======================
-// FIRESTORE TRIGGERS FOR GOOGLE CALENDAR SYNC
+// Firestore Triggers (v2)
 // =======================
 
-/**
- * Firestore Trigger: onBookingUpdated
- * 
- * This function is triggered automatically whenever a booking document is updated in Firestore.
- * It synchronizes the changes to the corresponding Google Calendar event.
- * 
- * Trigger Path: 'varaukset/{bookingId}'
- * - 'varaukset' is the Firestore collection containing all bookings
- * - '{bookingId}' is a wildcard that matches any document ID in the collection
- * 
- * Trigger Event: onDocumentUpdated (Firebase Functions v2 API)
- * - Fires when any field in the booking document is modified
- * - Receives 'event' object with 'data' property containing 'before' and 'after' snapshots
- * - The 'params' property contains the bookingId from the document path
- * 
- * Functionality:
- * 1. Initializes Google Calendar client if configured
- * 2. Compares before/after data to detect changes
- * 3. Prevents infinite loops by checking 'syncedFromGoogle' flag
- * 4. Updates the Google Calendar event if it exists
- * 5. Handles errors gracefully without blocking Firestore operations
- * 
- * @param {CloudEvent<FirestoreEvent<Change<DocumentSnapshot>>>} event - Event containing document snapshots
- * @returns {Promise<null>} Returns null after processing
- * 
- * @example
- * // When a booking is updated in Firestore:
- * // Before: { nimi: "John Doe", aika: "2024-01-15T10:00:00Z" }
- * // After:  { nimi: "Jane Doe", aika: "2024-01-15T10:00:00Z" }
- * // This trigger will update the Google Calendar event with the new name
- */
 exports.onBookingUpdated = onDocumentUpdated({
   document: `${BOOKINGS_COLLECTION}/{bookingId}`,
   region: 'us-central1'
 }, async (event) => {
-    const calendar = initializeGoogleCalendar();
-    if (!calendar || !calendarId) {
+  const calendar = initializeGoogleCalendar();
+  if (!calendar || !calendarId) return null;
+
+  const beforeData = event.data.before.data();
+  const afterData = event.data.after.data();
+
+  if (afterData.syncedFromGoogle) return null; // prevent loops
+  const googleEventId = afterData.googleEventId;
+  if (!googleEventId) {
+    console.log('No googleEventId on update - skipping');
+    return null;
+  }
+
+  try {
+    const startDate = parseFirestoreDate(afterData.aika);
+    if (!startDate) {
+      console.warn('Cannot update Google event: invalid aika for booking', event.data.params.bookingId);
       return null;
     }
+    const endDate = new Date(startDate);
+    endDate.setHours(startDate.getHours() + 1);
 
-    const beforeData = event.data.before.data();
-    const afterData = event.data.after.data();
+    const serviceInfo = (afterData.services || []).map(s =>
+      `${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}`
+    ).join('\n') || 'Palvelu ei määritelty';
 
-    // Skip if this update came from Google Calendar (prevent loops)
-    if (afterData.syncedFromGoogle) {
-      return null;
-    }
+    await calendar.events.patch({
+      calendarId,
+      eventId: googleEventId,
+      requestBody: {
+        summary: `Varaus: ${afterData.nimi || 'Tuntematon'}`,
+        description:
+          `Asiakas: ${afterData.nimi || ''}\n` +
+          `Puhelin: ${afterData.puhelin || ''}\n` +
+          `Sähköposti: ${afterData.sahkoposti || ''}\n\n` +
+          `Palvelut:\n${serviceInfo}\n\n` +
+          `Kokonaishinta: ${afterData.totalPrice || 'Hinta sovittaessa'}`,
+        start: { dateTime: startDate.toISOString(), timeZone: 'Europe/Helsinki' },
+        end: { dateTime: endDate.toISOString(), timeZone: 'Europe/Helsinki' }
+      }
+    });
 
-    const googleEventId = afterData.googleEventId;
-    if (!googleEventId) {
-      console.log('No Google event ID, skipping update');
-      return null;
-    }
+    console.log('Patched Google event:', googleEventId);
+  } catch (err) {
+    console.error('Failed to patch Google event:', err.message || err);
+  }
+});
 
-    try {
-      const startTime = afterData.aika.toDate();
-      const endTime = new Date(startTime);
-      endTime.setHours(startTime.getHours() + 1);
-
-      const serviceInfo = afterData.services?.map(s => 
-        `${s.serviceName} - ${s.taskName}${s.price ? ': ' + s.price : ''}`
-      ).join('\n') || 'Palvelu ei määritelty';
-
-      await calendar.events.patch({
-        calendarId: calendarId,
-        eventId: googleEventId,
-        requestBody: {
-          summary: `Varaus: ${afterData.nimi}`,
-          description: `Asiakas: ${afterData.nimi}\n` +
-                       `Puhelin: ${afterData.puhelin}\n` +
-                       `Sähköposti: ${afterData.sahkoposti}\n\n` +
-                       `Palvelut:\n${serviceInfo}\n\n` +
-                       `Kokonaishinta: ${afterData.totalPrice || 'Hinta sovittaessa'}`,
-          start: {
-            dateTime: startTime.toISOString(),
-            timeZone: 'Europe/Helsinki'
-          },
-          end: {
-            dateTime: endTime.toISOString(),
-            timeZone: 'Europe/Helsinki'
-          }
-        }
-      });
-
-      console.log('Updated Google Calendar event:', googleEventId);
-    } catch (error) {
-      console.error('Failed to update Google Calendar event:', error.message);
-    }
-  });
-
-/**
- * Firestore Trigger: onBookingDeleted
- * 
- * This function is triggered automatically whenever a booking document is deleted from Firestore.
- * It removes the corresponding event from Google Calendar to keep both systems synchronized.
- * 
- * Trigger Path: 'varaukset/{bookingId}'
- * - 'varaukset' is the Firestore collection containing all bookings
- * - '{bookingId}' is a wildcard that matches any document ID in the collection
- * 
- * Trigger Event: onDocumentDeleted (Firebase Functions v2 API)
- * - Fires when a document is completely removed from the collection
- * - Receives 'event' object with 'data' property containing the document data before deletion
- * - The 'params' property contains the bookingId from the document path
- * 
- * Functionality:
- * 1. Initializes Google Calendar client if configured
- * 2. Retrieves the Google Calendar event ID from the deleted document
- * 3. Prevents infinite loops by checking 'deletedFromGoogle' flag
- * 4. Deletes the corresponding event from Google Calendar
- * 5. Handles errors gracefully without blocking Firestore operations
- * 
- * Loop Prevention:
- * - When a booking is deleted via Google Calendar webhook, it's marked with 'deletedFromGoogle: true'
- * - This flag prevents the trigger from attempting to delete the Google Calendar event again
- * - Ensures bidirectional sync without infinite deletion loops
- * 
- * @param {CloudEvent<FirestoreEvent<DocumentSnapshot>>} event - Event containing the deleted document snapshot
- * @returns {Promise<null>} Returns null after processing
- * 
- * @example
- * // When a booking is deleted from Firestore:
- * // Document: { googleEventId: "abc123", nimi: "John Doe" }
- * // This trigger will delete the Google Calendar event with ID "abc123"
- */
 exports.onBookingDeleted = onDocumentDeleted({
   document: `${BOOKINGS_COLLECTION}/{bookingId}`,
   region: 'us-central1'
 }, async (event) => {
-    const calendar = initializeGoogleCalendar();
-    if (!calendar || !calendarId) {
-      return null;
-    }
+  const calendar = initializeGoogleCalendar();
+  if (!calendar || !calendarId) return null;
 
-    const data = event.data.data();
-    const googleEventId = data.googleEventId;
+  const data = event.data.data();
+  if (!data) return null;
+  const googleEventId = data.googleEventId;
+  if (!googleEventId) {
+    console.log('No googleEventId on delete - skipping');
+    return null;
+  }
 
-    if (!googleEventId) {
-      console.log('No Google event ID, skipping deletion');
-      return null;
-    }
+  if (data.deletedFromGoogle === true) {
+    console.log('Deletion originated from Google - skipping to prevent loop');
+    return null;
+  }
 
-    // Skip if this deletion came from Google Calendar sync (prevent loops)
-    // Check if this is a webhook-triggered deletion by looking at metadata
-    if (data.deletedFromGoogle === true) {
-      console.log('Deletion originated from Google Calendar, skipping sync to prevent loop');
-      return null;
-    }
-
-    try {
-      await calendar.events.delete({
-        calendarId: calendarId,
-        eventId: googleEventId
-      });
-
-      console.log('Deleted Google Calendar event:', googleEventId);
-    } catch (error) {
-      console.error('Failed to delete Google Calendar event:', error.message);
-    }
-  });
+  try {
+    await calendar.events.delete({ calendarId, eventId: googleEventId });
+    console.log('Deleted Google event:', googleEventId);
+  } catch (err) {
+    console.error('Failed to delete Google event:', err.message || err);
+  }
+});
 
 // =======================
-// GOOGLE CALENDAR WEBHOOK
+// Google Calendar webhook
 // =======================
-
-/**
- * Webhook: Receive notifications from Google Calendar
- * Gen2 HTTP function
- */
 exports.calendarWebhook = onRequest({
   region: 'us-central1'
 }, async (req, res) => {
   try {
-    // Respond quickly to Google's ping
+    // Respond quickly for Google's webhook to avoid retries
     res.status(200).send('OK');
 
     const calendar = initializeGoogleCalendar();
     if (!calendar || !calendarId) {
-      console.log('Google Calendar not configured, ignoring webhook');
+      console.log('Calendar not configured - ignoring webhook');
       return;
     }
 
-    // Check if this is a sync notification
     const resourceState = req.headers['x-goog-resource-state'];
-    if (resourceState !== 'exists' && resourceState !== 'updated') {
-      console.log('Ignoring webhook with state:', resourceState);
+    if (!resourceState || (resourceState !== 'exists' && resourceState !== 'updated')) {
+      console.log('Ignoring webhook state:', resourceState);
       return;
     }
 
-    // Fetch recent events from Google Calendar
     const now = new Date();
     const oneMonthAgo = new Date(now);
     oneMonthAgo.setMonth(now.getMonth() - 1);
 
     const response = await calendar.events.list({
-      calendarId: calendarId,
+      calendarId,
       timeMin: oneMonthAgo.toISOString(),
-      maxResults: 100,
+      maxResults: 250,
       singleEvents: true,
       orderBy: 'startTime'
     });
 
     const events = response.data.items || [];
 
-    // Sync events to Firestore
-    for (const event of events) {
+    for (const eventItem of events) {
       try {
-        // Skip events without start time
-        if (!event.start?.dateTime) {
-          continue;
-        }
+        if (!eventItem.start?.dateTime) continue;
+        const startTime = new Date(eventItem.start.dateTime);
 
-        // Check if we already have this event
         const existingSnapshot = await db.collection(BOOKINGS_COLLECTION)
-          .where('googleEventId', '==', event.id)
+          .where('googleEventId', '==', eventItem.id)
           .limit(1)
           .get();
 
-        const startTime = new Date(event.start.dateTime);
-
         if (existingSnapshot.empty) {
-          // Create new booking from Google Calendar event
-          // Parse customer info from description
-          const description = event.description || '';
-          const nameMatch = description.match(/Asiakas:\s*(.+)/);
-          const phoneMatch = description.match(/Puhelin:\s*(.+)/);
-          const emailMatch = description.match(/Sähköposti:\s*(.+)/);
+          // parse description for customer info
+          const desc = eventItem.description || '';
+          const nameMatch = desc.match(/Asiakas:\s*(.+)/);
+          const phoneMatch = desc.match(/Puhelin:\s*(.+)/);
+          const emailMatch = desc.match(/Sähköposti:\s*(.+)/);
 
           await db.collection(BOOKINGS_COLLECTION).add({
             nimi: nameMatch ? nameMatch[1].trim() : 'Google Calendar -varaus',
@@ -608,55 +587,45 @@ exports.calendarWebhook = onRequest({
             aika: admin.firestore.Timestamp.fromDate(startTime),
             services: [],
             totalPrice: 'Hinta sovittaessa',
-            googleEventId: event.id,
+            googleEventId: eventItem.id,
             syncedFromGoogle: true,
             googleSyncedAt: admin.firestore.FieldValue.serverTimestamp(),
             luotu: admin.firestore.FieldValue.serverTimestamp()
           });
-
-          console.log('Created booking from Google Calendar event:', event.id);
+          console.log('Created booking from calendar event:', eventItem.id);
         } else {
-          // Update existing booking
           const docRef = existingSnapshot.docs[0].ref;
           await docRef.update({
             aika: admin.firestore.Timestamp.fromDate(startTime),
             syncedFromGoogle: true,
             googleSyncedAt: admin.firestore.FieldValue.serverTimestamp()
           });
-
-          console.log('Updated booking from Google Calendar event:', event.id);
+          console.log('Updated booking from calendar event:', eventItem.id);
         }
-      } catch (eventError) {
-        console.error('Error syncing event:', event.id, eventError.message);
+      } catch (evtErr) {
+        console.error('Error processing calendar event', eventItem.id, evtErr.message || evtErr);
       }
     }
 
-    // Check for deleted events (prevent deletion loops)
+    // Remove deleted events in Firestore (mark/delete)
     const allBookings = await db.collection(BOOKINGS_COLLECTION)
       .where('googleEventId', '!=', null)
       .get();
 
     const eventIds = new Set(events.map(e => e.id));
-
     for (const doc of allBookings.docs) {
       const booking = doc.data();
       if (booking.googleEventId && !eventIds.has(booking.googleEventId)) {
-        // Event was deleted from Google Calendar
-        // Mark as deleted from Google to prevent deletion loop
         await doc.ref.update({ deletedFromGoogle: true });
-        
-        // Small delay to ensure update is processed before deletion trigger
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
-        // Now delete the booking
+        await new Promise(r => setTimeout(r, 100));
         await doc.ref.delete();
-        console.log('Deleted booking (removed from Google Calendar):', doc.id);
+        console.log('Deleted booking removed from Google Calendar:', doc.id);
       }
     }
 
-    console.log('Calendar webhook processed successfully');
-  } catch (error) {
-    console.error('Error processing calendar webhook:', error);
-    // Still return 200 to prevent Google from retrying
+    console.log('Calendar webhook completed');
+  } catch (err) {
+    console.error('calendarWebhook error:', err.message || err);
+    // return 200 already done above
   }
 });
