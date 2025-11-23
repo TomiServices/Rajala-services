@@ -15,6 +15,34 @@ admin.initializeApp();
 const db = admin.firestore();
 
 // =======================
+// LEGACY CONFIG SUPPORT (Gen1)
+// =======================
+let legacyFunctionsConfig = null;
+try {
+  // eslint-disable-next-line global-require
+  const functionsLib = require('firebase-functions');
+  if (functionsLib.config) {
+    legacyFunctionsConfig = functionsLib.config();
+  }
+} catch (e) {
+  // Legacy config not available, that's fine
+}
+
+function getLegacyConfigValue(path) {
+  if (!legacyFunctionsConfig) return null;
+  const parts = path.split('.');
+  let value = legacyFunctionsConfig;
+  for (const part of parts) {
+    if (value && typeof value === 'object') {
+      value = value[part];
+    } else {
+      return null;
+    }
+  }
+  return value;
+}
+
+// =======================
 // ENVIRONMENT PARAMETERS (Gen2 / fallback to env)
 // =======================
 const recaptchaSecret = defineString('RECAPTCHA_SECRET');
@@ -86,16 +114,8 @@ function initializeGoogleCalendar() {
   let calIdRaw = safeGetParamValue(googleCalendarId, 'GOOGLE_CALENDAR_ID');
 
   // Legacy fallback: read functions.config().google if needed
-  try {
-    // eslint-disable-next-line global-require
-    const legacyCfg = require('firebase-functions').config && require('firebase-functions').config().google;
-    if (legacyCfg) {
-      if (!saRaw && legacyCfg.service_account) saRaw = legacyCfg.service_account;
-      if (!calIdRaw && legacyCfg.calendar_id) calIdRaw = legacyCfg.calendar_id;
-    }
-  } catch (e) {
-    // ignore if not available
-  }
+  if (!saRaw) saRaw = getLegacyConfigValue('google.service_account');
+  if (!calIdRaw) calIdRaw = getLegacyConfigValue('google.calendar_id');
 
   if (!saRaw || !calIdRaw) {
     console.log('Google Calendar not configured (missing service account or calendar id)');
@@ -137,16 +157,8 @@ function initializeEmailTransporter() {
   let emailPasswordVal = safeGetParamValue(emailPassword, 'EMAIL_PASSWORD');
 
   // Legacy fallback: read functions.config().email if needed
-  try {
-    // eslint-disable-next-line global-require
-    const legacyCfg = require('firebase-functions').config && require('firebase-functions').config().email;
-    if (legacyCfg) {
-      if (!emailUserVal && legacyCfg.user) emailUserVal = legacyCfg.user;
-      if (!emailPasswordVal && legacyCfg.password) emailPasswordVal = legacyCfg.password;
-    }
-  } catch (e) {
-    // ignore if not available
-  }
+  if (!emailUserVal) emailUserVal = getLegacyConfigValue('email.user');
+  if (!emailPasswordVal) emailPasswordVal = getLegacyConfigValue('email.password');
 
   if (!emailUserVal || !emailPasswordVal) {
     console.log('Email not configured (missing EMAIL_USER or EMAIL_PASSWORD)');
@@ -180,15 +192,7 @@ async function sendBookingConfirmationEmail(bookingData) {
     let emailFromVal = safeGetParamValue(emailFrom, 'EMAIL_FROM') || safeGetParamValue(emailUser, 'EMAIL_USER');
     
     // Legacy fallback for email.from
-    try {
-      // eslint-disable-next-line global-require
-      const legacyCfg = require('firebase-functions').config && require('firebase-functions').config().email;
-      if (legacyCfg && !emailFromVal && legacyCfg.from) {
-        emailFromVal = legacyCfg.from;
-      }
-    } catch (e) {
-      // ignore if not available
-    }
+    if (!emailFromVal) emailFromVal = getLegacyConfigValue('email.from');
     
     const startDate = parseFirestoreDate(bookingData.aika);
     if (!startDate || Number.isNaN(startDate.getTime())) {
