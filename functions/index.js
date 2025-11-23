@@ -187,6 +187,15 @@ function escapeHtml(unsafe) {
 }
 
 /**
+ * Sanitize text for plain text emails (remove control characters)
+ */
+function sanitizeText(text) {
+  if (!text) return '';
+  // Remove control characters and normalize whitespace
+  return text.toString().replace(/[\x00-\x1F\x7F]/g, '').trim();
+}
+
+/**
  * Send booking confirmation email to customer
  */
 async function sendBookingConfirmationEmail(bookingData) {
@@ -207,7 +216,7 @@ async function sendBookingConfirmationEmail(bookingData) {
 
     // Format services for email
     const servicesList = (bookingData.services || []).map(s => 
-      `  • ${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}`
+      `  • ${sanitizeText(s.serviceName || '')} - ${sanitizeText(s.taskName || '')}${s.price ? ': ' + sanitizeText(s.price) : ''}`
     ).join('\n') || '  • Palvelu ei määritelty';
 
     // Format date and time for Finnish locale
@@ -224,7 +233,7 @@ async function sendBookingConfirmationEmail(bookingData) {
 
     // Email content
     const subject = 'Varausvahvistus - Rajala Services';
-    const text = `Hei ${bookingData.nimi},
+    const text = `Hei ${sanitizeText(bookingData.nimi)},
 
 Kiitos varauksestasi! Olemme vastaanottaneet varauksen seuraavilla tiedoilla:
 
@@ -233,15 +242,15 @@ VARAUKSEN TIEDOT:
 Aika: ${formattedDate} klo ${formattedTime}
 Kesto: 1 tunti
 
-Asiakas: ${bookingData.nimi}
-Puhelin: ${bookingData.puhelin}
-Sähköposti: ${bookingData.sahkoposti}
+Asiakas: ${sanitizeText(bookingData.nimi)}
+Puhelin: ${sanitizeText(bookingData.puhelin)}
+Sähköposti: ${sanitizeText(bookingData.sahkoposti)}
 
 VALITUT PALVELUT:
 ─────────────────
 ${servicesList}
 
-Kokonaishinta: ${bookingData.totalPrice || 'Hinta sovittaessa'}
+Kokonaishinta: ${sanitizeText(bookingData.totalPrice || 'Hinta sovittaessa')}
 
 HUOMIOITAVAA:
 ─────────────────
@@ -382,14 +391,14 @@ async function sendCancellationEmail(bookingData) {
 
     // Email content
     const subject = 'Varauksesi on peruutettu - Rajala Services';
-    const text = `Hei ${bookingData.nimi},
+    const text = `Hei ${sanitizeText(bookingData.nimi)},
 
 Varauksesi on peruutettu:
 
 PERUUTETUN VARAUKSEN TIEDOT:
 ─────────────────
 Aika: ${formattedDate} klo ${formattedTime}
-Asiakas: ${bookingData.nimi}
+Asiakas: ${sanitizeText(bookingData.nimi)}
 
 Jos tämä peruutus oli virhe tai haluat varata uuden ajan, ole yhteydessä meihin.
 
