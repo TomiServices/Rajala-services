@@ -112,8 +112,9 @@ firebase deploy --only functions
 **Using Environment Variables** (Alternative):
 ```bash
 # Set all configuration at once
+# IMPORTANT: Replace these example values with your actual secrets
 firebase functions:config:set \
-  RECAPTCHA_SECRET="6Lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
+  RECAPTCHA_SECRET="YOUR_ACTUAL_SECRET_KEY_HERE" \
   GOOGLE_SERVICE_ACCOUNT="$(cat service-account-key.json | jq -c)" \
   GOOGLE_CALENDAR_ID="rajala-varaukset@group.calendar.google.com"
 
@@ -127,7 +128,7 @@ Create `functions/.env`:
 
 ```env
 # reCAPTCHA Secret Key (v3)
-RECAPTCHA_SECRET=6Lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+RECAPTCHA_SECRET=YOUR_ACTUAL_SECRET_KEY_HERE_40_CHARS
 
 # Google Service Account JSON (minified)
 GOOGLE_SERVICE_ACCOUNT={"type":"service_account","project_id":"your-project-id",...}

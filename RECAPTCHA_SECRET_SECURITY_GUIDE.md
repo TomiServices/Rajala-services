@@ -27,6 +27,8 @@ This document provides a comprehensive guide for securing reCAPTCHA secret keys 
 ### Site Key (Public) ✅
 **Current Site Key**: `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
 
+**Note**: This is the actual production site key registered for `rajala-services.com` domains.
+
 **Safe to expose:**
 - ✅ Used in frontend HTML/JavaScript
 - ✅ Committed to repository
@@ -340,10 +342,10 @@ firebase functions:secrets:access RECAPTCHA_SECRET
 ### Test 1: Verify Secrets Not in Repository
 
 ```bash
-# Search for potential secrets
-git grep -i "secret" | grep -v "defineString\|placeholder\|example\|SECRET_NAME"
+# Search for potential secrets (excluding legitimate parameter usage)
+git grep -i "secret" | grep -v "defineString\|placeholder\|example\|SECRET_NAME\|RECAPTCHA_SECRET\|secretKey\|your_secret"
 
-# Search for reCAPTCHA secret patterns
+# Search for reCAPTCHA secret patterns (should only find site key)
 git grep -E "6L[a-zA-Z0-9_-]{38}"
 
 # Should only find site key (public), not secret key

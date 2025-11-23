@@ -82,7 +82,7 @@ firebase emulators:start --import=./emulator-data --export-on-exit
 # First, get a valid reCAPTCHA token from your frontend
 # Then test the booking endpoint
 
-curl -X POST http://localhost:5001/your-project-id/us-central1/book \
+curl -X POST http://localhost:5001/rajala-services-dev/us-central1/book \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Test User",
@@ -143,10 +143,10 @@ In your local `index.html` or `booking-system.js`, update the API endpoint:
 
 ```javascript
 // Development - use local emulator
-const API_BASE = 'http://localhost:5001/your-project-id/us-central1';
+const API_BASE = 'http://localhost:5001/rajala-services-dev/us-central1';
 
 // Production - use deployed functions
-// const API_BASE = 'https://us-central1-your-project-id.cloudfunctions.net';
+// const API_BASE = 'https://us-central1-fxnr-web.cloudfunctions.net';
 
 const response = await fetch(`${API_BASE}/book`, {
   method: 'POST',
@@ -203,7 +203,7 @@ RECAPTCHA_SECRET=invalid_secret_key_123
 
 ```bash
 # Set your real test secret in .env
-RECAPTCHA_SECRET=6Lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+RECAPTCHA_SECRET=YOUR_TEST_SECRET_KEY_HERE_40_CHARS
 
 # Start emulator and try booking with real reCAPTCHA token
 # Expected: Booking succeeds
@@ -306,7 +306,7 @@ artillery run load-test.yml
 const axios = require('axios');
 
 describe('Booking API', () => {
-  const API_BASE = 'http://localhost:5001/test-project/us-central1';
+  const API_BASE = 'http://localhost:5001/rajala-services-dev/us-central1';
   
   it('should reject booking without reCAPTCHA', async () => {
     const response = await axios.post(`${API_BASE}/book`, {
