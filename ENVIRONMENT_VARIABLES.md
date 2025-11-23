@@ -1,10 +1,13 @@
 # Environment Variables Configuration
 
-This document lists all environment variables and Firebase Functions configuration required for the Fixnero booking system.
+This document lists all environment variables and Firebase Functions configuration required for the Rajala Services booking system.
 
-## Firebase Functions Configuration
+## Firebase Functions Gen2 Configuration
 
-Firebase Functions use `firebase functions:config:set` for production configuration and `.runtimeconfig.json` for local development.
+**IMPORTANT**: This project uses Firebase Functions Gen2, which uses environment variables and secrets instead of the legacy `functions.config()` approach.
+
+**Production**: Use Firebase secrets management
+**Local Development**: Use `.env` file in the `functions/` directory
 
 ### Required Configuration
 
@@ -12,9 +15,13 @@ Firebase Functions use `firebase functions:config:set` for production configurat
 
 **Purpose**: Server-side validation of reCAPTCHA tokens to prevent spam bookings.
 
-**Configuration**:
+**Production Configuration (Firebase Secrets)**:
 ```bash
-firebase functions:config:set recaptcha.secret="YOUR_RECAPTCHA_SECRET_KEY"
+# Set as a secret (recommended for Gen2)
+firebase functions:secrets:set RECAPTCHA_SECRET
+
+# Or set as an environment variable
+firebase functions:config:set RECAPTCHA_SECRET="YOUR_RECAPTCHA_SECRET_KEY"
 ```
 
 **Details**:
@@ -23,24 +30,25 @@ firebase functions:config:set recaptcha.secret="YOUR_RECAPTCHA_SECRET_KEY"
 - Required: Yes (for production)
 - Site Key (public): `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
 - Register at: https://www.google.com/recaptcha/admin
+- **NEVER commit this secret to version control**
 
-**Local Development**:
-```json
-{
-  "recaptcha": {
-    "secret": "YOUR_RECAPTCHA_SECRET_KEY"
-  }
-}
+**Local Development (.env file)**:
+Create `functions/.env`:
+```env
+RECAPTCHA_SECRET=YOUR_RECAPTCHA_SECRET_KEY
 ```
 
 #### 2. Google Calendar Service Account
 
 **Purpose**: Authenticate with Google Calendar API for two-way sync.
 
-**Configuration**:
+**Production Configuration (Firebase Secrets)**:
 ```bash
-# Minify the service account JSON and set it
-firebase functions:config:set google.service_account="$(cat service-account-key.json | jq -c)"
+# Set as a secret (recommended for Gen2)
+firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT
+
+# Or set as an environment variable (minified JSON)
+firebase functions:config:set GOOGLE_SERVICE_ACCOUNT="$(cat service-account-key.json | jq -c)"
 ```
 
 **Details**:
@@ -48,36 +56,27 @@ firebase functions:config:set google.service_account="$(cat service-account-key.
 - Format: Google Cloud service account key JSON
 - Required: Yes (for Google Calendar integration)
 - Obtain from: Google Cloud Console > IAM & Admin > Service Accounts
+- **NEVER commit this to version control**
 
-**Local Development**:
-```json
-{
-  "google": {
-    "service_account": {
-      "type": "service_account",
-      "project_id": "your-project-id",
-      "private_key_id": "key-id",
-      "private_key": "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n",
-      "client_email": "service-account@project-id.iam.gserviceaccount.com",
-      "client_id": "client-id",
-      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-      "token_uri": "https://oauth2.googleapis.com/token",
-      "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-      "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/..."
-    }
-  }
-}
+**Local Development (.env file)**:
+Create `functions/.env`:
+```env
+GOOGLE_SERVICE_ACCOUNT={"type":"service_account","project_id":"your-project-id",...}
 ```
 
-**Security Warning**: ⚠️ NEVER commit this to version control! Add `.runtimeconfig.json` to `.gitignore`.
+**Security Warning**: ⚠️ NEVER commit this to version control! The `.env` file is already in `.gitignore`.
 
 #### 3. Google Calendar ID
 
 **Purpose**: Specify which Google Calendar to sync bookings with.
 
-**Configuration**:
+**Production Configuration (Firebase Secrets)**:
 ```bash
-firebase functions:config:set google.calendar_id="your-calendar-id@group.calendar.google.com"
+# Set as a secret (recommended for Gen2)
+firebase functions:secrets:set GOOGLE_CALENDAR_ID
+
+# Or set as an environment variable
+firebase functions:config:set GOOGLE_CALENDAR_ID="your-calendar-id@group.calendar.google.com"
 ```
 
 **Details**:
@@ -86,56 +85,61 @@ firebase functions:config:set google.calendar_id="your-calendar-id@group.calenda
 - Required: Yes (for Google Calendar integration)
 - Obtain from: Google Calendar Settings > Integrate calendar
 
-**Local Development**:
-```json
-{
-  "google": {
-    "calendar_id": "your-calendar-id@group.calendar.google.com"
-  }
-}
+**Local Development (.env file)**:
+Create `functions/.env`:
+```env
+GOOGLE_CALENDAR_ID=your-calendar-id@group.calendar.google.com
 ```
 
 ## Complete Configuration Example
 
 ### Production (Firebase CLI)
 
+**Using Secrets (Recommended for Gen2)**:
+```bash
+# Set secrets interactively
+firebase functions:secrets:set RECAPTCHA_SECRET
+firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT
+firebase functions:secrets:set GOOGLE_CALENDAR_ID
+
+# Verify secrets are set
+firebase functions:secrets:access RECAPTCHA_SECRET --project=your-project-id
+
+# Deploy functions with secrets
+firebase deploy --only functions
+```
+
+**Using Environment Variables** (Alternative):
 ```bash
 # Set all configuration at once
 firebase functions:config:set \
-  recaptcha.secret="6Lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
-  google.service_account="$(cat service-account-key.json | jq -c)" \
-  google.calendar_id="fixnero-varaukset@group.calendar.google.com"
+  RECAPTCHA_SECRET="6Lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
+  GOOGLE_SERVICE_ACCOUNT="$(cat service-account-key.json | jq -c)" \
+  GOOGLE_CALENDAR_ID="rajala-varaukset@group.calendar.google.com"
 
 # Verify configuration
 firebase functions:config:get
 ```
 
-### Local Development (.runtimeconfig.json)
+### Local Development (.env file)
 
-Create `functions/.runtimeconfig.json`:
+Create `functions/.env`:
 
-```json
-{
-  "recaptcha": {
-    "secret": "6Lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  },
-  "google": {
-    "service_account": {
-      "type": "service_account",
-      "project_id": "your-project-id",
-      "private_key_id": "abc123...",
-      "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkq...\n-----END PRIVATE KEY-----\n",
-      "client_email": "fixnero-calendar-sync@your-project-id.iam.gserviceaccount.com",
-      "client_id": "123456789...",
-      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-      "token_uri": "https://oauth2.googleapis.com/token",
-      "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-      "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/fixnero-calendar-sync%40your-project-id.iam.gserviceaccount.com"
-    },
-    "calendar_id": "fixnero-varaukset@group.calendar.google.com"
-  }
-}
+```env
+# reCAPTCHA Secret Key (v3)
+RECAPTCHA_SECRET=6Lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# Google Service Account JSON (minified)
+GOOGLE_SERVICE_ACCOUNT={"type":"service_account","project_id":"your-project-id",...}
+
+# Google Calendar ID
+GOOGLE_CALENDAR_ID=rajala-varaukset@group.calendar.google.com
 ```
+
+**Important**: 
+- The `.env` file is already in `.gitignore` - NEVER commit it
+- Copy `functions/.env.example` to `functions/.env` and fill in your values
+- Use different credentials for development and production
 
 ## Frontend Configuration (index.html)
 
@@ -159,43 +163,64 @@ const RECAPTCHA_SITE_KEY = '6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM';
 
 ## How to Access Configuration in Code
 
-### Firebase Functions
+### Firebase Functions Gen2
+
+The code uses `defineString()` from `firebase-functions/params` to access environment variables:
 
 ```javascript
-// reCAPTCHA secret
-const RECAPTCHA_SECRET = functions.config().recaptcha?.secret || process.env.RECAPTCHA_SECRET;
+const { defineString } = require('firebase-functions/params');
 
-// Google Calendar credentials
-const serviceAccount = functions.config().google?.service_account;
-const calendarId = functions.config().google?.calendar_id;
+// Define parameters (Gen2 approach)
+const recaptchaSecret = defineString('RECAPTCHA_SECRET');
+const googleServiceAccount = defineString('GOOGLE_SERVICE_ACCOUNT');
+const googleCalendarId = defineString('GOOGLE_CALENDAR_ID');
+
+// Access values at runtime
+const secretKey = recaptchaSecret.value();
+const serviceAccountJson = googleServiceAccount.value();
+const calendarId = googleCalendarId.value();
 ```
+
+**Benefits of Gen2 approach**:
+- Better type safety
+- Clearer error messages when variables are missing
+- Works with both secrets and environment variables
+- Supports local `.env` files automatically
 
 ## Configuration Checklist
 
 Before deploying to production, ensure:
 
-- [ ] reCAPTCHA secret key is configured
+- [ ] reCAPTCHA secret key is configured (via `firebase functions:secrets:set RECAPTCHA_SECRET`)
 - [ ] reCAPTCHA domains include: `rajala-services.com`, `www.rajala-services.com`
-- [ ] Google service account JSON is configured
-- [ ] Google Calendar ID is configured
+- [ ] Google service account JSON is configured (via `firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT`)
+- [ ] Google Calendar ID is configured (via `firebase functions:secrets:set GOOGLE_CALENDAR_ID`)
 - [ ] Service account has access to the calendar
 - [ ] Calendar API is enabled in Google Cloud Console
 - [ ] All secrets are NOT committed to version control
-- [ ] `.runtimeconfig.json` is in `.gitignore`
+- [ ] `.env` file is in `.gitignore` (already configured)
+- [ ] Functions are deployed with latest environment variables
+- [ ] Local `.env` file exists for development (copy from `.env.example`)
 
 ## Verification Commands
 
 ```bash
-# Check Firebase Functions configuration
+# Check Firebase Functions secrets (Gen2)
+firebase functions:secrets:access RECAPTCHA_SECRET --project=your-project-id
+
+# Check Firebase Functions environment variables (alternative)
 firebase functions:config:get
 
-# Test local configuration
+# Test local configuration (.env file)
 cd functions
-node -e "const config = require('./.runtimeconfig.json'); console.log('Config loaded:', Object.keys(config));"
+node -e "require('dotenv').config(); console.log('RECAPTCHA_SECRET:', process.env.RECAPTCHA_SECRET ? 'Set ✓' : 'Not set ✗');"
 
 # Validate service account JSON
 cd functions
-node -e "const config = require('./.runtimeconfig.json'); console.log('Service account email:', config.google.service_account.client_email);"
+node -e "require('dotenv').config(); const sa = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT || '{}'); console.log('Service account email:', sa.client_email || 'Not configured');"
+
+# Start Firebase Emulator with local .env
+firebase emulators:start
 ```
 
 ## Troubleshooting
@@ -230,29 +255,41 @@ node -e "const config = require('./.runtimeconfig.json'); console.log('Service a
 
 ## Security Best Practices
 
-1. **Never commit secrets**: Add to `.gitignore`:
+1. **Never commit secrets**: Already configured in `.gitignore`:
    ```
+   *.env
    functions/.runtimeconfig.json
-   service-account-key.json
+   functions/service-account.json
+   *service-account*.json
    ```
 
-2. **Rotate keys regularly**: 
+2. **Use Firebase Secrets for production** (Gen2 best practice):
+   - Secrets are encrypted at rest
+   - Access is logged and auditable
+   - Easier rotation and management
+   - Command: `firebase functions:secrets:set SECRET_NAME`
+
+3. **Rotate keys regularly**: 
    - Regenerate reCAPTCHA keys every 6-12 months
    - Rotate service account keys annually
 
-3. **Limit permissions**:
+4. **Limit permissions**:
    - Service account should only have Calendar API access
    - Use principle of least privilege
 
-4. **Monitor usage**:
+5. **Monitor usage**:
    - Check Google Cloud Console for API usage
    - Set up billing alerts
    - Monitor Firebase Functions logs
 
-5. **Use environment-specific configs**:
-   - Development: Use `.runtimeconfig.json`
-   - Production: Use `firebase functions:config:set`
+6. **Use environment-specific configs**:
+   - Development: Use `.env` file locally
+   - Production: Use Firebase Secrets
    - Never mix dev and prod credentials
+
+7. **Verify .gitignore**:
+   - Ensure `.env` files are never committed
+   - Check with: `git status --ignored`
 
 ## Support
 
@@ -264,5 +301,6 @@ For issues with configuration:
 
 ---
 
-**Last Updated**: 2025-11-19
-**Configuration Version**: 1.0.0
+**Last Updated**: 2025-11-23
+**Configuration Version**: 2.0.0 (Gen2)
+**Firebase Functions**: Gen2
