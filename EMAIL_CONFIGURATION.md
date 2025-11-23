@@ -10,7 +10,170 @@ When a customer makes a booking, they automatically receive a confirmation email
 - Selected services and pricing
 - Contact information for changes/cancellations
 
-## Email Service Setup
+## Email Delivery Methods
+
+The system supports two email delivery methods:
+
+1. **Firebase Firestore Send Email Extension (Recommended)** - Uses the official Firebase extension to handle email delivery, retries, and monitoring via Eventarc events.
+2. **Direct SMTP via Nodemailer (Legacy Fallback)** - Sends emails directly using Gmail SMTP and Nodemailer.
+
+By default, the system uses the Firebase extension method. You can control this with the `USE_EMAIL_EXTENSION` environment variable.
+
+---
+
+## Option 1: Firebase Firestore Send Email Extension (Recommended)
+
+### Why Use the Extension?
+
+The Firebase Firestore Send Email extension provides:
+- **Automatic retries** for failed email deliveries
+- **Eventarc event emissions** for monitoring and logging
+- **Better separation of concerns** - extension handles delivery logic
+- **Easier debugging** via Firestore document inspection
+- **Production-ready** solution officially maintained by Firebase
+
+### Extension Configuration
+
+The extension has been configured with the following settings:
+
+- **Extension Name**: Firestore Send Email (trigger-email-from-firestore)
+- **Email documents collection**: `mail`
+- **Default FROM address**: `tomirajala02@gmail.com`
+- **Firestore Instance location**: `eur3` (Europe West 3)
+- **SMTP connection URI**: `smtps://tomirajala02@gmail.com@smtp.gmail.com:465`
+- **Authentication Type**: Username/Password
+- **Event Location**: `europe-west4`
+
+### Installing the Extension
+
+To install the Firestore Send Email extension:
+
+#### Using Firebase Console:
+1. Go to the [Firebase Console](https://console.firebase.google.com/)
+2. Select your project
+3. Navigate to **Extensions** in the left sidebar
+4. Click **Install Extension**
+5. Search for "Trigger Email from Firestore"
+6. Click **Install**
+7. Configure with the settings shown above
+
+#### Using Firebase CLI:
+```bash
+# Install the extension
+firebase ext:install firebase/firestore-send-email \
+  --project=your-project-id
+
+# During installation, provide the following configuration:
+# - Email documents collection: mail
+# - Default FROM address: tomirajala02@gmail.com
+# - SMTP connection URI: smtps://tomirajala02@gmail.com:YOUR_APP_PASSWORD@smtp.gmail.com:465
+# - Event location: europe-west4
+```
+
+### Gmail App Password Setup
+
+The extension requires a Gmail App Password (same as Nodemailer method):
+
+1. Go to https://myaccount.google.com/security
+2. Enable 2-Step Verification
+3. Go to https://myaccount.google.com/apppasswords
+4. Generate an App Password for "Mail" / "Other"
+5. Use this password in the SMTP connection URI
+
+### Environment Variables
+
+Set the following environment variables for the extension integration:
+
+```bash
+# Enable/disable the extension (default: true)
+USE_EMAIL_EXTENSION=true
+
+# Mail collection name (default: 'mail')
+MAIL_COLLECTION_NAME=mail
+
+# Default FROM address (optional, extension default is used if not set)
+EMAIL_FROM=tomirajala02@gmail.com
+```
+
+For local development, add to `functions/.env`:
+```env
+USE_EMAIL_EXTENSION=true
+MAIL_COLLECTION_NAME=mail
+EMAIL_FROM=tomirajala02@gmail.com
+```
+
+For production, use Firebase secrets:
+```bash
+firebase functions:secrets:set USE_EMAIL_EXTENSION
+# Enter: true
+
+firebase functions:secrets:set MAIL_COLLECTION_NAME  
+# Enter: mail
+
+firebase functions:secrets:set EMAIL_FROM
+# Enter: tomirajala02@gmail.com
+```
+
+### How It Works
+
+1. When a booking is created in Firestore (`varaukset` collection)
+2. The Cloud Function `onBookingCreated` is triggered
+3. The function creates a document in the `mail` collection with:
+   - `to`: Customer email address
+   - `from`: Default FROM address (tomirajala02@gmail.com)
+   - `message.subject`: "Varausvahvistus - Rajala Services"
+   - `message.html`: Formatted HTML email body
+   - `metadata`: Booking ID and timestamp
+4. The extension monitors the `mail` collection
+5. When a new document is detected, the extension sends the email
+6. The extension updates the document with delivery status
+7. Eventarc events are emitted for monitoring
+
+### Monitoring and Debugging
+
+#### Check Email Document Status:
+```bash
+# View documents in the mail collection
+firebase firestore:get mail/DOCUMENT_ID
+```
+
+The extension adds these fields to email documents:
+- `delivery.state`: Current state (PENDING, PROCESSING, SUCCESS, ERROR)
+- `delivery.attempts`: Number of delivery attempts
+- `delivery.startTime`: When processing started
+- `delivery.endTime`: When processing completed
+- `delivery.error`: Error message if delivery failed
+
+#### Eventarc Events:
+The extension emits the following Eventarc events in `europe-west4`:
+- `firebase.extensions.firestore-send-email.v1.onStart` - Email processing started
+- `firebase.extensions.firestore-send-email.v1.onSuccess` - Email sent successfully
+- `firebase.extensions.firestore-send-email.v1.onError` - Email delivery failed
+
+You can create Cloud Functions to listen to these events for custom logging or notifications.
+
+### Service Account Permissions
+
+The extension creates its own service account. Ensure it has:
+- **Firestore read/write permissions** on the `mail` collection
+- **Secret Manager access** if using secrets for SMTP credentials
+
+These permissions are usually granted automatically during installation.
+
+### Fallback to Nodemailer
+
+If the extension fails or is not configured, the system automatically falls back to the direct Nodemailer method. You can also explicitly disable the extension:
+
+```bash
+# Disable extension and use Nodemailer only
+firebase functions:config:set email.use_extension=false
+# or set environment variable
+USE_EMAIL_EXTENSION=false
+```
+
+---
+
+## Option 2: Direct SMTP via Nodemailer (Legacy Fallback)
 
 The system uses Gmail SMTP for sending emails. You'll need:
 1. A Gmail account (or Google Workspace account)

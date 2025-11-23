@@ -9,6 +9,7 @@ const nodemailer = require('nodemailer');
 const { onRequest } = require('firebase-functions/v2/https');
 const { onDocumentCreated, onDocumentUpdated, onDocumentDeleted } = require('firebase-functions/v2/firestore');
 const { defineString } = require('firebase-functions/params');
+const { createEmailDocumentForBooking } = require('./emailExtensionAdapter');
 
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -64,6 +65,7 @@ const googleCalendarId = defineString('GOOGLE_CALENDAR_ID');
 const emailUser = defineString('EMAIL_USER');
 const emailPassword = defineString('EMAIL_PASSWORD');
 const emailFrom = defineString('EMAIL_FROM');
+const useEmailExtension = defineString('USE_EMAIL_EXTENSION');
 
 // =======================
 // CONSTANTS
@@ -595,6 +597,7 @@ exports.onBookingCreated = onDocumentCreated({
   region: 'us-central1'
 }, async (event) => {
   const bookingData = event.data.data();
+  const bookingId = event.params.bookingId;
   
   if (!bookingData) {
     console.log('No booking data found');
@@ -608,8 +611,27 @@ exports.onBookingCreated = onDocumentCreated({
   }
 
   try {
-    await sendBookingConfirmationEmail(bookingData);
-    console.log('Email trigger completed for booking:', event.params.bookingId);
+    // Check if we should use the email extension (default: true)
+    const useExtensionVal = safeGetParamValue(useEmailExtension, 'USE_EMAIL_EXTENSION');
+    const shouldUseExtension = useExtensionVal === null || useExtensionVal === undefined || 
+                               useExtensionVal === '' || useExtensionVal === 'true';
+    
+    if (shouldUseExtension) {
+      // Try to use the email extension
+      try {
+        await createEmailDocumentForBooking(db, bookingData, bookingId);
+        console.log('Email document created via extension for booking:', bookingId);
+      } catch (extErr) {
+        console.warn('Failed to create email via extension, falling back to Nodemailer:', extErr.message);
+        // Fallback to Nodemailer
+        await sendBookingConfirmationEmail(bookingData);
+        console.log('Email sent via Nodemailer fallback for booking:', bookingId);
+      }
+    } else {
+      // Use Nodemailer directly when USE_EMAIL_EXTENSION=false
+      await sendBookingConfirmationEmail(bookingData);
+      console.log('Email sent via Nodemailer (extension disabled) for booking:', bookingId);
+    }
   } catch (err) {
     console.error('Error in email trigger:', err.message || err);
     // Don't throw error - email failure shouldn't affect booking
