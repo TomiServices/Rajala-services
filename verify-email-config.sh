@@ -17,7 +17,7 @@ NC='\033[0m' # No Color
 echo "1. Checking Nodemailer Installation..."
 if [ -f "functions/package.json" ]; then
     if grep -q '"nodemailer"' functions/package.json; then
-        NODEMAILER_VERSION=$(grep -A 1 '"nodemailer":' functions/package.json | grep -oP '\^?\K[0-9.]+' | head -1)
+        NODEMAILER_VERSION=$(grep '"nodemailer":' functions/package.json | sed 's/[^0-9.]*\([0-9.]*\).*/\1/')
         echo -e "${GREEN}✓${NC} Nodemailer installed: v$NODEMAILER_VERSION"
     else
         echo -e "${RED}✗${NC} Nodemailer not found in package.json"

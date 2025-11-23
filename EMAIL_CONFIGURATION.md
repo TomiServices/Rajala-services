@@ -308,7 +308,7 @@ For issues with email configuration:
 
 - **Email Feature Version**: 1.0.0
 - **Node.js Version**: 20
-- **Nodemailer Version**: 6.9.x
+- **Nodemailer Version**: 7.0.x
 - **Last Updated**: 2024-11-23
 
 ---
