@@ -1,9 +1,11 @@
 // index.js - Firebase Functions for Rajala Services Booking System (fixed)
 // Robust date parsing: replaced direct toDate() calls with parseFirestoreDate
 // Safe Google service account handling and defensive logging.
+// Email notifications for booking confirmations and updates.
 
 const admin = require('firebase-admin');
 const axios = require('axios');
+const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 const { onRequest } = require('firebase-functions/v2/https');
 const { onDocumentUpdated, onDocumentDeleted } = require('firebase-functions/v2/firestore');
@@ -19,6 +21,13 @@ const db = admin.firestore();
 const recaptchaSecret = defineString('RECAPTCHA_SECRET');
 const googleServiceAccount = defineString('GOOGLE_SERVICE_ACCOUNT');
 const googleCalendarId = defineString('GOOGLE_CALENDAR_ID');
+
+// Email configuration parameters (optional)
+const emailHost = defineString('EMAIL_HOST', {default: ''});
+const emailPort = defineString('EMAIL_PORT', {default: '587'});
+const emailUser = defineString('EMAIL_USER', {default: ''});
+const emailPassword = defineString('EMAIL_PASSWORD', {default: ''});
+const emailFrom = defineString('EMAIL_FROM', {default: 'noreply@rajala-services.com'});
 
 // =======================
 // CONSTANTS
@@ -118,6 +127,211 @@ function initializeGoogleCalendar() {
   } catch (err) {
     console.error('Failed to initialize Google Calendar client:', err.message || err);
     return null;
+  }
+}
+
+// =======================
+// EMAIL CONFIGURATION & SENDING
+// =======================
+let emailTransporter = null;
+
+/**
+ * Initialize email transporter (lazy initialization)
+ */
+function initializeEmailTransporter() {
+  if (emailTransporter) return emailTransporter;
+
+  try {
+    const host = safeGetParamValue(emailHost, 'EMAIL_HOST');
+    const port = safeGetParamValue(emailPort, 'EMAIL_PORT');
+    const user = safeGetParamValue(emailUser, 'EMAIL_USER');
+    const password = safeGetParamValue(emailPassword, 'EMAIL_PASSWORD');
+
+    // Check if email is configured
+    if (!host || !user || !password) {
+      console.log('Email not configured - email notifications disabled');
+      return null;
+    }
+
+    // Create transporter
+    emailTransporter = nodemailer.createTransport({
+      host: host,
+      port: parseInt(port, 10) || 587,
+      secure: parseInt(port, 10) === 465, // true for 465, false for other ports
+      auth: {
+        user: user,
+        pass: password
+      }
+    });
+
+    console.log('Email transporter initialized');
+    return emailTransporter;
+  } catch (err) {
+    console.error('Failed to initialize email transporter:', err.message || err);
+    return null;
+  }
+}
+
+/**
+ * Send booking confirmation email to customer
+ */
+async function sendBookingConfirmationEmail(bookingData) {
+  const transporter = initializeEmailTransporter();
+  if (!transporter) {
+    console.log('Email transporter not available, skipping email');
+    return false;
+  }
+
+  try {
+    const fromAddress = safeGetParamValue(emailFrom, 'EMAIL_FROM') || 'noreply@rajala-services.com';
+    const bookingDate = parseFirestoreDate(bookingData.aika);
+    
+    if (!bookingDate) {
+      console.warn('Invalid booking date for email, skipping');
+      return false;
+    }
+
+    // Format services for email
+    const servicesList = (bookingData.services || []).map(s => 
+      `  • ${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}`
+    ).join('\n') || '  • Palvelu ei määritelty';
+
+    // Format date and time for Finnish locale
+    const formattedDate = bookingDate.toLocaleDateString('fi-FI', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    const formattedTime = bookingDate.toLocaleTimeString('fi-FI', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    // Email content
+    const subject = 'Varausvahvistus - Rajala Services';
+    const text = `Hei ${bookingData.nimi},
+
+Kiitos varauksestasi! Olemme vastaanottaneet varauksen seuraavilla tiedoilla:
+
+VARAUKSEN TIEDOT:
+─────────────────
+Aika: ${formattedDate} klo ${formattedTime}
+Kesto: 1 tunti
+
+Asiakas: ${bookingData.nimi}
+Puhelin: ${bookingData.puhelin}
+Sähköposti: ${bookingData.sahkoposti}
+
+VALITUT PALVELUT:
+─────────────────
+${servicesList}
+
+Kokonaishinta: ${bookingData.totalPrice || 'Hinta sovittaessa'}
+
+HUOMIOITAVAA:
+─────────────────
+• Saavuthan paikalle ajoissa
+• Mikäli tarvitset muutoksia varaukseen, ole yhteydessä meihin
+• Peruutukset tulee tehdä viimeistään 24h ennen varattua aikaa
+
+Nähdään pian!
+
+Ystävällisin terveisin,
+Rajala Services
+www.rajala-services.com
+`;
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background-color: #2c3e50; color: white; padding: 20px; text-align: center; }
+    .content { background-color: #f9f9f9; padding: 20px; margin: 20px 0; border-radius: 5px; }
+    .section { margin: 20px 0; }
+    .section-title { font-weight: bold; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px; margin-bottom: 10px; }
+    .info-row { margin: 10px 0; }
+    .service-item { padding: 5px 0 5px 20px; }
+    .footer { text-align: center; padding: 20px; color: #7f8c8d; font-size: 12px; }
+    .highlight { background-color: #3498db; color: white; padding: 10px; border-radius: 5px; margin: 15px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Varausvahvistus</h1>
+      <p>Rajala Services</p>
+    </div>
+    
+    <div class="content">
+      <p>Hei <strong>${bookingData.nimi}</strong>,</p>
+      <p>Kiitos varauksestasi! Olemme vastaanottaneet varauksen seuraavilla tiedoilla:</p>
+      
+      <div class="highlight">
+        <div><strong>Aika:</strong> ${formattedDate} klo ${formattedTime}</div>
+        <div><strong>Kesto:</strong> 1 tunti</div>
+      </div>
+      
+      <div class="section">
+        <div class="section-title">ASIAKASTIEDOT</div>
+        <div class="info-row"><strong>Nimi:</strong> ${bookingData.nimi}</div>
+        <div class="info-row"><strong>Puhelin:</strong> ${bookingData.puhelin}</div>
+        <div class="info-row"><strong>Sähköposti:</strong> ${bookingData.sahkoposti}</div>
+      </div>
+      
+      <div class="section">
+        <div class="section-title">VALITUT PALVELUT</div>
+        ${(bookingData.services || []).map(s => 
+          `<div class="service-item">• ${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}</div>`
+        ).join('') || '<div class="service-item">• Palvelu ei määritelty</div>'}
+      </div>
+      
+      <div class="section">
+        <div class="section-title">HINTA</div>
+        <div class="info-row"><strong>Kokonaishinta:</strong> ${bookingData.totalPrice || 'Hinta sovittaessa'}</div>
+      </div>
+      
+      <div class="section">
+        <div class="section-title">HUOMIOITAVAA</div>
+        <ul>
+          <li>Saavuthan paikalle ajoissa</li>
+          <li>Mikäli tarvitset muutoksia varaukseen, ole yhteydessä meihin</li>
+          <li>Peruutukset tulee tehdä viimeistään 24h ennen varattua aikaa</li>
+        </ul>
+      </div>
+      
+      <p><strong>Nähdään pian!</strong></p>
+    </div>
+    
+    <div class="footer">
+      <p>Ystävällisin terveisin,<br>
+      <strong>Rajala Services</strong><br>
+      www.rajala-services.com</p>
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+    // Send email
+    const info = await transporter.sendMail({
+      from: fromAddress,
+      to: bookingData.sahkoposti,
+      subject: subject,
+      text: text,
+      html: html
+    });
+
+    console.log('Confirmation email sent:', info.messageId);
+    return true;
+  } catch (err) {
+    console.error('Failed to send confirmation email:', err.message || err);
+    // Don't throw - email sending is optional
+    return false;
   }
 }
 
@@ -394,8 +608,13 @@ exports.book = onRequest({
       const createdSnap = await bookingRef.get();
       const createdData = createdSnap.data();
 
+      // Async operations (don't block response)
       (async () => {
         try {
+          // Send confirmation email
+          await sendBookingConfirmationEmail(createdData);
+          
+          // Sync to Google Calendar
           const eventId = await createGoogleCalendarEvent(createdData);
           if (eventId) {
             await bookingRef.update({
@@ -405,7 +624,7 @@ exports.book = onRequest({
             });
           }
         } catch (e) {
-          console.error('Async Google sync failed for booking', bookingRef.id, e.message || e);
+          console.error('Async operations failed for booking', bookingRef.id, e.message || e);
         }
       })();
 
