@@ -2,6 +2,9 @@
 # Email Configuration Verification Script
 # This script helps verify the email configuration for booking confirmations
 
+# Enable error handling for undefined variables
+set -u
+
 echo "================================================"
 echo "Email Configuration Verification"
 echo "================================================"

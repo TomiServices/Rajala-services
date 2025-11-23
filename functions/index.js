@@ -43,6 +43,19 @@ function getLegacyConfigValue(path) {
 }
 
 // =======================
+// UTILITY: HTML Escaping
+// =======================
+function escapeHtml(text) {
+  if (!text) return '';
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// =======================
 // ENVIRONMENT PARAMETERS (Gen2 / fallback to env)
 // =======================
 const recaptchaSecret = defineString('RECAPTCHA_SECRET');
@@ -211,8 +224,14 @@ async function sendBookingConfirmationEmail(bookingData) {
       minute: '2-digit'
     });
 
+    // Escape user input to prevent XSS
+    const escapedName = escapeHtml(bookingData.nimi);
+    const escapedEmail = escapeHtml(bookingData.sahkoposti);
+    const escapedPhone = escapeHtml(bookingData.puhelin);
+    const escapedTotalPrice = escapeHtml(bookingData.totalPrice);
+
     const servicesText = (bookingData.services || [])
-      .map(s => `  • ${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}`)
+      .map(s => `  • ${escapeHtml(s.serviceName || '')} - ${escapeHtml(s.taskName || '')}${s.price ? ': ' + escapeHtml(s.price) : ''}`)
       .join('\n') || '  Palvelu ei määritelty';
 
     const mailOptions = {
@@ -222,21 +241,21 @@ async function sendBookingConfirmationEmail(bookingData) {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #c41e3a;">Varausvahvistus</h2>
-          <p>Hei ${bookingData.nimi || 'asiakas'},</p>
+          <p>Hei ${escapedName || 'asiakas'},</p>
           <p>Olemme vastaanottaneet varauksesi. Tässä varauksen tiedot:</p>
           
           <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
             <h3 style="margin-top: 0; color: #333;">Varauksen tiedot</h3>
             <p><strong>Aika:</strong> ${formattedDate} klo ${formattedTime}</p>
-            <p><strong>Asiakas:</strong> ${bookingData.nimi || ''}</p>
-            <p><strong>Puhelin:</strong> ${bookingData.puhelin || ''}</p>
-            <p><strong>Sähköposti:</strong> ${bookingData.sahkoposti || ''}</p>
+            <p><strong>Asiakas:</strong> ${escapedName}</p>
+            <p><strong>Puhelin:</strong> ${escapedPhone}</p>
+            <p><strong>Sähköposti:</strong> ${escapedEmail}</p>
           </div>
           
           <div style="background-color: #fff4f4; padding: 15px; border-radius: 5px; margin: 20px 0;">
             <h3 style="margin-top: 0; color: #333;">Valitut palvelut</h3>
             <p style="white-space: pre-line;">${servicesText}</p>
-            <p><strong>Kokonaishinta:</strong> ${bookingData.totalPrice || 'Hinta sovittaessa'}</p>
+            <p><strong>Kokonaishinta:</strong> ${escapedTotalPrice || 'Hinta sovittaessa'}</p>
           </div>
           
           <p>Otamme sinuun yhteyttä tarvittaessa ennen varattua aikaa.</p>
