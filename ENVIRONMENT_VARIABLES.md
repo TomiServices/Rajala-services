@@ -95,6 +95,42 @@ firebase functions:config:set google.calendar_id="your-calendar-id@group.calenda
 }
 ```
 
+#### 4. Email Configuration (Optional - for confirmation emails)
+
+**Purpose**: Send automatic confirmation emails to customers after booking.
+
+**Configuration**:
+```bash
+# Set email credentials
+firebase functions:config:set email.user="your-email@gmail.com"
+firebase functions:config:set email.password="your-gmail-app-password"
+firebase functions:config:set email.from="Rajala Services <noreply@rajala-services.com>"
+```
+
+**Details**:
+- Type: String values
+- Format: 
+  - `email.user`: Gmail account email address
+  - `email.password`: Gmail App Password (16 characters, NOT regular password)
+  - `email.from`: Display name and email for sender
+- Required: Optional (email features disabled if not configured)
+- Obtain App Password from: Google Account > Security > 2-Step Verification > App passwords
+
+**Local Development**:
+```json
+{
+  "email": {
+    "user": "your-email@gmail.com",
+    "password": "abcdefghijklmnop",
+    "from": "Rajala Services <noreply@rajala-services.com>"
+  }
+}
+```
+
+**Security Warning**: ⚠️ Use Gmail App Password, NOT your regular password! Enable 2-Step Verification first.
+
+**For detailed email setup, see**: [EMAIL_CONFIGURATION.md](./EMAIL_CONFIGURATION.md)
+
 ## Complete Configuration Example
 
 ### Production (Firebase CLI)
@@ -104,7 +140,10 @@ firebase functions:config:set google.calendar_id="your-calendar-id@group.calenda
 firebase functions:config:set \
   recaptcha.secret="6Lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" \
   google.service_account="$(cat service-account-key.json | jq -c)" \
-  google.calendar_id="fixnero-varaukset@group.calendar.google.com"
+  google.calendar_id="fixnero-varaukset@group.calendar.google.com" \
+  email.user="bookings@gmail.com" \
+  email.password="abcdefghijklmnop" \
+  email.from="Rajala Services <noreply@rajala-services.com>"
 
 # Verify configuration
 firebase functions:config:get
@@ -133,6 +172,11 @@ Create `functions/.runtimeconfig.json`:
       "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/fixnero-calendar-sync%40your-project-id.iam.gserviceaccount.com"
     },
     "calendar_id": "fixnero-varaukset@group.calendar.google.com"
+  },
+  "email": {
+    "user": "bookings@gmail.com",
+    "password": "abcdefghijklmnop",
+    "from": "Rajala Services <noreply@rajala-services.com>"
   }
 }
 ```
@@ -168,6 +212,11 @@ const RECAPTCHA_SECRET = functions.config().recaptcha?.secret || process.env.REC
 // Google Calendar credentials
 const serviceAccount = functions.config().google?.service_account;
 const calendarId = functions.config().google?.calendar_id;
+
+// Email credentials
+const emailUser = functions.config().email?.user || process.env.EMAIL_USER;
+const emailPassword = functions.config().email?.password || process.env.EMAIL_PASSWORD;
+const emailFrom = functions.config().email?.from || process.env.EMAIL_FROM;
 ```
 
 ## Configuration Checklist
@@ -176,10 +225,16 @@ Before deploying to production, ensure:
 
 - [ ] reCAPTCHA secret key is configured
 - [ ] reCAPTCHA domains include: `rajala-services.com`, `www.rajala-services.com`
-- [ ] Google service account JSON is configured
-- [ ] Google Calendar ID is configured
-- [ ] Service account has access to the calendar
-- [ ] Calendar API is enabled in Google Cloud Console
+- [ ] Email user (Gmail account) is configured
+- [ ] Email password (Gmail App Password) is configured
+- [ ] Email from address is configured
+- [ ] 2-Step Verification is enabled on Gmail account
+- [ ] Gmail App Password generated (not regular password)
+- [ ] Test email sent successfully
+- [ ] Google service account JSON is configured (optional)
+- [ ] Google Calendar ID is configured (optional)
+- [ ] Service account has access to the calendar (if using Google Calendar)
+- [ ] Calendar API is enabled in Google Cloud Console (if using Google Calendar)
 - [ ] All secrets are NOT committed to version control
 - [ ] `.runtimeconfig.json` is in `.gitignore`
 
@@ -228,30 +283,44 @@ node -e "const config = require('./.runtimeconfig.json'); console.log('Service a
 2. Check that domains are registered in reCAPTCHA admin console
 3. Ensure secret key is correctly configured in Firebase Functions
 
+### Email Not Sending
+
+**Symptom**: Functions log "Email not configured" or "Email transporter not available"
+
+**Solution**:
+1. Verify email credentials are configured: `firebase functions:config:get`
+2. Check that 2-Step Verification is enabled on Gmail account
+3. Use Gmail App Password (not regular password)
+4. Test email configuration with verification script (see EMAIL_CONFIGURATION.md)
+
 ## Security Best Practices
 
 1. **Never commit secrets**: Add to `.gitignore`:
    ```
    functions/.runtimeconfig.json
+   functions/.env
    service-account-key.json
    ```
 
 2. **Rotate keys regularly**: 
    - Regenerate reCAPTCHA keys every 6-12 months
    - Rotate service account keys annually
+   - Rotate Gmail App Passwords every 6-12 months
 
 3. **Limit permissions**:
    - Service account should only have Calendar API access
+   - Gmail account should be dedicated for sending only
    - Use principle of least privilege
 
 4. **Monitor usage**:
    - Check Google Cloud Console for API usage
+   - Monitor Gmail sending limits (500/day for free accounts)
    - Set up billing alerts
    - Monitor Firebase Functions logs
 
 5. **Use environment-specific configs**:
-   - Development: Use `.runtimeconfig.json`
-   - Production: Use `firebase functions:config:set`
+   - Development: Use `.runtimeconfig.json` or `.env`
+   - Production: Use `firebase functions:config:set` or Firebase secrets
    - Never mix dev and prod credentials
 
 ## Support
@@ -259,10 +328,10 @@ node -e "const config = require('./.runtimeconfig.json'); console.log('Service a
 For issues with configuration:
 1. Check Firebase Functions logs: `firebase functions:log`
 2. Verify Google Cloud Console for API status
-3. Review this documentation
+3. Review this documentation and [EMAIL_CONFIGURATION.md](./EMAIL_CONFIGURATION.md)
 4. Contact the development team
 
 ---
 
-**Last Updated**: 2025-11-19
-**Configuration Version**: 1.0.0
+**Last Updated**: 2024-11-23
+**Configuration Version**: 1.1.0 (Added email configuration)
