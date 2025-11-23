@@ -5,8 +5,9 @@
 const admin = require('firebase-admin');
 const axios = require('axios');
 const { google } = require('googleapis');
+const nodemailer = require('nodemailer');
 const { onRequest } = require('firebase-functions/v2/https');
-const { onDocumentUpdated, onDocumentDeleted } = require('firebase-functions/v2/firestore');
+const { onDocumentCreated, onDocumentUpdated, onDocumentDeleted } = require('firebase-functions/v2/firestore');
 const { defineString } = require('firebase-functions/params');
 
 // Initialize Firebase Admin
@@ -19,6 +20,9 @@ const db = admin.firestore();
 const recaptchaSecret = defineString('RECAPTCHA_SECRET');
 const googleServiceAccount = defineString('GOOGLE_SERVICE_ACCOUNT');
 const googleCalendarId = defineString('GOOGLE_CALENDAR_ID');
+const emailUser = defineString('EMAIL_USER');
+const emailPassword = defineString('EMAIL_PASSWORD');
+const emailFrom = defineString('EMAIL_FROM');
 
 // =======================
 // CONSTANTS
@@ -118,6 +122,141 @@ function initializeGoogleCalendar() {
   } catch (err) {
     console.error('Failed to initialize Google Calendar client:', err.message || err);
     return null;
+  }
+}
+
+// =======================
+// EMAIL CONFIGURATION
+// =======================
+let emailTransporter = null;
+
+function initializeEmailTransporter() {
+  if (emailTransporter) return emailTransporter;
+
+  let emailUserVal = safeGetParamValue(emailUser, 'EMAIL_USER');
+  let emailPasswordVal = safeGetParamValue(emailPassword, 'EMAIL_PASSWORD');
+
+  // Legacy fallback: read functions.config().email if needed
+  try {
+    // eslint-disable-next-line global-require
+    const legacyCfg = require('firebase-functions').config && require('firebase-functions').config().email;
+    if (legacyCfg) {
+      if (!emailUserVal && legacyCfg.user) emailUserVal = legacyCfg.user;
+      if (!emailPasswordVal && legacyCfg.password) emailPasswordVal = legacyCfg.password;
+    }
+  } catch (e) {
+    // ignore if not available
+  }
+
+  if (!emailUserVal || !emailPasswordVal) {
+    console.log('Email not configured (missing EMAIL_USER or EMAIL_PASSWORD)');
+    return null;
+  }
+
+  try {
+    emailTransporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: emailUserVal,
+        pass: emailPasswordVal
+      }
+    });
+    console.log('Email transporter initialized');
+    return emailTransporter;
+  } catch (err) {
+    console.error('Failed to initialize email transporter:', err.message || err);
+    return null;
+  }
+}
+
+async function sendBookingConfirmationEmail(bookingData) {
+  const transporter = initializeEmailTransporter();
+  if (!transporter) {
+    console.log('Email transporter not available - skipping email');
+    return false;
+  }
+
+  try {
+    let emailFromVal = safeGetParamValue(emailFrom, 'EMAIL_FROM') || safeGetParamValue(emailUser, 'EMAIL_USER');
+    
+    // Legacy fallback for email.from
+    try {
+      // eslint-disable-next-line global-require
+      const legacyCfg = require('firebase-functions').config && require('firebase-functions').config().email;
+      if (legacyCfg && !emailFromVal && legacyCfg.from) {
+        emailFromVal = legacyCfg.from;
+      }
+    } catch (e) {
+      // ignore if not available
+    }
+    
+    const startDate = parseFirestoreDate(bookingData.aika);
+    if (!startDate || Number.isNaN(startDate.getTime())) {
+      console.warn('Invalid booking date for email, skipping:', bookingData);
+      return false;
+    }
+
+    const formattedDate = startDate.toLocaleDateString('fi-FI', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    const formattedTime = startDate.toLocaleTimeString('fi-FI', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    const servicesText = (bookingData.services || [])
+      .map(s => `  • ${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}`)
+      .join('\n') || '  Palvelu ei määritelty';
+
+    const mailOptions = {
+      from: emailFromVal,
+      to: bookingData.sahkoposti,
+      subject: 'Varausvahvistus - Rajala Services',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #c41e3a;">Varausvahvistus</h2>
+          <p>Hei ${bookingData.nimi || 'asiakas'},</p>
+          <p>Olemme vastaanottaneet varauksesi. Tässä varauksen tiedot:</p>
+          
+          <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <h3 style="margin-top: 0; color: #333;">Varauksen tiedot</h3>
+            <p><strong>Aika:</strong> ${formattedDate} klo ${formattedTime}</p>
+            <p><strong>Asiakas:</strong> ${bookingData.nimi || ''}</p>
+            <p><strong>Puhelin:</strong> ${bookingData.puhelin || ''}</p>
+            <p><strong>Sähköposti:</strong> ${bookingData.sahkoposti || ''}</p>
+          </div>
+          
+          <div style="background-color: #fff4f4; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <h3 style="margin-top: 0; color: #333;">Valitut palvelut</h3>
+            <p style="white-space: pre-line;">${servicesText}</p>
+            <p><strong>Kokonaishinta:</strong> ${bookingData.totalPrice || 'Hinta sovittaessa'}</p>
+          </div>
+          
+          <p>Otamme sinuun yhteyttä tarvittaessa ennen varattua aikaa.</p>
+          <p>Jos sinun täytyy perua tai muuttaa varausta, ota yhteyttä:</p>
+          <ul>
+            <li>Puhelin: <a href="tel:+358401234567">+358 40 123 4567</a></li>
+            <li>Sähköposti: <a href="mailto:info@rajala-services.com">info@rajala-services.com</a></li>
+          </ul>
+          
+          <p style="margin-top: 30px;">Ystävällisin terveisin,<br><strong>Rajala Services</strong></p>
+          <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+          <p style="font-size: 12px; color: #666;">
+            Tämä on automaattinen vahvistusviesti. Älä vastaa tähän viestiin.
+          </p>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Confirmation email sent to:', bookingData.sahkoposti);
+    return true;
+  } catch (err) {
+    console.error('Failed to send confirmation email:', err.message || err);
+    return false;
   }
 }
 
@@ -426,6 +565,35 @@ exports.book = onRequest({
 // =======================
 // Firestore Triggers (v2)
 // =======================
+
+// Email confirmation trigger - sends email when new booking is created
+exports.onBookingCreated = onDocumentCreated({
+  document: `${BOOKINGS_COLLECTION}/{bookingId}`,
+  region: 'us-central1'
+}, async (event) => {
+  const bookingData = event.data.data();
+  
+  if (!bookingData) {
+    console.log('No booking data found');
+    return null;
+  }
+
+  // Skip email for bookings synced from Google Calendar
+  if (bookingData.syncedFromGoogle) {
+    console.log('Booking synced from Google Calendar - skipping email');
+    return null;
+  }
+
+  try {
+    await sendBookingConfirmationEmail(bookingData);
+    console.log('Email trigger completed for booking:', event.params.bookingId);
+  } catch (err) {
+    console.error('Error in email trigger:', err.message || err);
+    // Don't throw error - email failure shouldn't affect booking
+  }
+
+  return null;
+});
 
 exports.onBookingUpdated = onDocumentUpdated({
   document: `${BOOKINGS_COLLECTION}/{bookingId}`,
