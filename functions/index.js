@@ -1,6 +1,6 @@
-// index.js - Firebase Functions for Rajala Services Booking System (updated)
-// Rewritten to be more robust: fixed date parsing, safer Google service account handling,
-// improved CORS handling for HTTP endpoints, and defensive error handling.
+// index.js - Firebase Functions for Rajala Services Booking System (fixed)
+// Robust date parsing: replaced direct toDate() calls with parseFirestoreDate
+// Safe Google service account handling and defensive logging.
 
 const admin = require('firebase-admin');
 const axios = require('axios');
@@ -38,7 +38,6 @@ let googleCalendar = null;
 let calendarId = null;
 
 function safeGetParamValue(param, envNameFallback) {
-  // param is a firebase-functions/params object; calling .value() may throw if not available at runtime
   try {
     const v = param.value();
     if (v === undefined || v === null || v === '') return process.env[envNameFallback] || null;
@@ -49,14 +48,9 @@ function safeGetParamValue(param, envNameFallback) {
 }
 
 function parseServiceAccountInput(input) {
-  // input may be:
-  // - JSON string
-  // - base64 encoded JSON string
-  // - already an object
   if (!input) return null;
   if (typeof input === 'object') return input;
   let s = input.trim();
-  // likely base64 if contains many '=' or not starting with '{'
   if (!s.startsWith('{')) {
     try {
       const decoded = Buffer.from(s, 'base64').toString('utf8');
@@ -77,17 +71,27 @@ function parseServiceAccountInput(input) {
 
 function normalizePrivateKey(sa) {
   if (!sa || typeof sa.private_key !== 'string') return sa;
-  // Replace escaped newlines with real newlines
   sa.private_key = sa.private_key.replace(/\\n/g, '\n');
   return sa;
 }
 
 function initializeGoogleCalendar() {
-  // Return existing client if already initialized
   if (googleCalendar && calendarId) return googleCalendar;
 
-  const saRaw = safeGetParamValue(googleServiceAccount, 'GOOGLE_SERVICE_ACCOUNT');
-  const calIdRaw = safeGetParamValue(googleCalendarId, 'GOOGLE_CALENDAR_ID');
+  let saRaw = safeGetParamValue(googleServiceAccount, 'GOOGLE_SERVICE_ACCOUNT');
+  let calIdRaw = safeGetParamValue(googleCalendarId, 'GOOGLE_CALENDAR_ID');
+
+  // Legacy fallback: read functions.config().google if needed
+  try {
+    // eslint-disable-next-line global-require
+    const legacyCfg = require('firebase-functions').config && require('firebase-functions').config().google;
+    if (legacyCfg) {
+      if (!saRaw && legacyCfg.service_account) saRaw = legacyCfg.service_account;
+      if (!calIdRaw && legacyCfg.calendar_id) calIdRaw = legacyCfg.calendar_id;
+    }
+  } catch (e) {
+    // ignore if not available
+  }
 
   if (!saRaw || !calIdRaw) {
     console.log('Google Calendar not configured (missing service account or calendar id)');
@@ -184,7 +188,6 @@ async function verifyRecaptcha(token) {
       return false;
     }
 
-    // v3 may include score
     if (response.data.score !== undefined) {
       return response.data.score > 0.5;
     }
@@ -276,9 +279,6 @@ function setCorsHeadersForRequest(req, res) {
   if (ALLOWED_ORIGINS.includes(origin)) {
     res.set('Access-Control-Allow-Origin', origin);
     res.set('Vary', 'Origin');
-  } else {
-    // Optionally allow requests from same origin if front and back are same host
-    // Do not set wildcard in production unless you intentionally allow it.
   }
   res.set('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.set('Access-Control-Allow-Headers', 'Content-Type,Authorization');
@@ -293,24 +293,21 @@ exports.bookings = onRequest({
 }, async (req, res) => {
   try {
     setCorsHeadersForRequest(req, res);
-    if (req.method === 'OPTIONS') {
-      return res.status(204).send('');
-    }
-    if (req.method !== 'GET') {
-      return res.status(405).json({ error: 'Method not allowed' });
-    }
+    if (req.method === 'OPTIONS') return res.status(204).send('');
+    if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
     const snapshot = await db.collection(BOOKINGS_COLLECTION).orderBy('aika', 'asc').get();
-    const bookings = [];
+    console.log('bookings snapshot size:', snapshot.size);
 
+    const bookings = [];
     snapshot.forEach(doc => {
       const data = doc.data();
       const dt = parseFirestoreDate(data.aika);
       if (!dt) {
         console.warn('Invalid/empty aika for doc', doc.id, 'raw=', data.aika);
-        // skip invalid date documents
-        return;
+        return; // skip invalid document
       }
+
       bookings.push({
         id: doc.id,
         aika: dt.toISOString(),
@@ -340,15 +337,10 @@ exports.book = onRequest({
 }, async (req, res) => {
   try {
     setCorsHeadersForRequest(req, res);
-    if (req.method === 'OPTIONS') {
-      return res.status(204).send('');
-    }
-    if (req.method !== 'POST') {
-      return res.status(405).json({ error: 'Method not allowed' });
-    }
+    if (req.method === 'OPTIONS') return res.status(204).send('');
+    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
     const { name, email, phone, aika, services, totalPrice, totalNumericPrice, recaptcha } = req.body;
-
     if (!name || !email || !phone || !aika || !services || !recaptcha) {
       return res.status(400).json({ error: 'Täytä kaikki pakolliset kentät' });
     }
@@ -360,29 +352,19 @@ exports.book = onRequest({
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Virheellinen sähköpostiosoite' });
-    }
+    if (!emailRegex.test(email)) return res.status(400).json({ error: 'Virheellinen sähköpostiosoite' });
 
     const phoneRegex = /^\+358\s?(40|41|42|43|44|45|46|47|48|49|50)\s?\d{7}$/;
-    if (!phoneRegex.test(phone)) {
-      return res.status(400).json({ error: 'Virheellinen puhelinnumero. Käytä muotoa: +358 40XXXXXXX' });
-    }
+    if (!phoneRegex.test(phone)) return res.status(400).json({ error: 'Virheellinen puhelinnumero. Käytä muotoa: +358 40XXXXXXX' });
 
     const bookingDate = new Date(aika);
     const now = new Date();
-    if (Number.isNaN(bookingDate.getTime()) || bookingDate <= now) {
-      return res.status(400).json({ error: 'Valitse tuleva aika' });
-    }
+    if (Number.isNaN(bookingDate.getTime()) || bookingDate <= now) return res.status(400).json({ error: 'Valitse tuleva aika' });
 
     const dayOfWeek = bookingDate.getDay();
     const hour = bookingDate.getHours();
-    if (dayOfWeek === 0 || dayOfWeek === 6) {
-      return res.status(400).json({ error: 'Varaukset vain arkipäivisin' });
-    }
-    if (hour < 9 || hour >= 17) {
-      return res.status(400).json({ error: 'Varaukset klo 9-17 välillä' });
-    }
+    if (dayOfWeek === 0 || dayOfWeek === 6) return res.status(400).json({ error: 'Varaukset vain arkipäivisin' });
+    if (hour < 9 || hour >= 17) return res.status(400).json({ error: 'Varaukset klo 9-17 välillä' });
 
     const bookingRef = db.collection(BOOKINGS_COLLECTION).doc();
 
@@ -409,7 +391,6 @@ exports.book = onRequest({
 
       console.log('Booking created:', bookingRef.id);
 
-      // Fetch created booking and try to sync to Google Calendar asynchronously
       const createdSnap = await bookingRef.get();
       const createdData = createdSnap.data();
 
@@ -429,7 +410,6 @@ exports.book = onRequest({
       })();
 
       return res.status(200).json({ success: true, id: bookingRef.id, message: 'Varaus onnistui' });
-
     } catch (txErr) {
       if (txErr.message === 'SLOT_UNAVAILABLE') {
         console.log('Slot unavailable for booking');
@@ -534,7 +514,7 @@ exports.calendarWebhook = onRequest({
   region: 'us-central1'
 }, async (req, res) => {
   try {
-    // Respond quickly for Google's webhook to avoid retries
+    // Respond quickly for Google's webhook
     res.status(200).send('OK');
 
     const calendar = initializeGoogleCalendar();
@@ -574,7 +554,6 @@ exports.calendarWebhook = onRequest({
           .get();
 
         if (existingSnapshot.empty) {
-          // parse description for customer info
           const desc = eventItem.description || '';
           const nameMatch = desc.match(/Asiakas:\s*(.+)/);
           const phoneMatch = desc.match(/Puhelin:\s*(.+)/);
@@ -626,6 +605,5 @@ exports.calendarWebhook = onRequest({
     console.log('Calendar webhook completed');
   } catch (err) {
     console.error('calendarWebhook error:', err.message || err);
-    // return 200 already done above
   }
 });
