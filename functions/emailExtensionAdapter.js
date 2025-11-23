@@ -71,6 +71,26 @@ function safeGetParamValue(param, envNameFallback) {
 }
 
 /**
+ * Formats booking services for email display
+ * @param {Array} services - Array of service objects
+ * @returns {string} - Formatted services text
+ */
+function formatServicesForEmail(services) {
+  if (!services || services.length === 0) {
+    return '  Palvelu ei määritelty';
+  }
+  
+  return services
+    .map(s => {
+      const serviceName = escapeHtml(s.serviceName || '');
+      const taskName = escapeHtml(s.taskName || '');
+      const price = s.price ? ': ' + escapeHtml(s.price) : '';
+      return `  • ${serviceName} - ${taskName}${price}`;
+    })
+    .join('\n');
+}
+
+/**
  * Creates an email document in Firestore for the Firebase Send Email extension
  * @param {FirebaseFirestore.Firestore} db - Firestore database instance
  * @param {Object} booking - Booking data object
@@ -108,9 +128,7 @@ async function createEmailDocumentForBooking(db, booking, bookingId = null) {
     const escapedTotalPrice = escapeHtml(booking.totalPrice);
 
     // Build services text with sanitized data
-    const servicesText = (booking.services || [])
-      .map(s => `  • ${escapeHtml(s.serviceName || '')} - ${escapeHtml(s.taskName || '')}${s.price ? ': ' + escapeHtml(s.price) : ''}`)
-      .join('\n') || '  Palvelu ei määritelty';
+    const servicesText = formatServicesForEmail(booking.services || []);
 
     // Build HTML email body
     const htmlBody = `

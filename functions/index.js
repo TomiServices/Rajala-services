@@ -613,8 +613,7 @@ exports.onBookingCreated = onDocumentCreated({
   try {
     // Check if we should use the email extension (default: true)
     const useExtensionVal = safeGetParamValue(useEmailExtension, 'USE_EMAIL_EXTENSION');
-    const shouldUseExtension = useExtensionVal === null || useExtensionVal === undefined || 
-                               useExtensionVal === '' || useExtensionVal === 'true';
+    const shouldUseExtension = useExtensionVal !== 'false';
     
     if (shouldUseExtension) {
       // Try to use the email extension

@@ -77,7 +77,7 @@ EOF
 )
 
 # Use Firebase CLI to add the document
-BOOKING_ID=$(firebase firestore:add varaukset "$BOOKING_DATA" --project="$PROJECT_ID" 2>&1 | grep -oP "(?<=Document ID: ).*" || echo "")
+BOOKING_ID=$(firebase firestore:add varaukset "$BOOKING_DATA" --project="$PROJECT_ID" 2>&1 | grep "Document ID:" | sed 's/.*Document ID: //' || echo "")
 
 if [ -z "$BOOKING_ID" ]; then
     echo -e "${RED}Failed to create booking document. Make sure Firebase CLI is installed and authenticated.${NC}"

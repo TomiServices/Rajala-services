@@ -40,7 +40,7 @@ The extension has been configured with the following settings:
 - **Email documents collection**: `mail`
 - **Default FROM address**: `tomirajala02@gmail.com`
 - **Firestore Instance location**: `eur3` (Europe West 3)
-- **SMTP connection URI**: `smtps://tomirajala02@gmail.com@smtp.gmail.com:465`
+- **SMTP connection URI**: `smtps://tomirajala02@gmail.com:YOUR_APP_PASSWORD@smtp.gmail.com:465`
 - **Authentication Type**: Username/Password
 - **Event Location**: `europe-west4`
 
