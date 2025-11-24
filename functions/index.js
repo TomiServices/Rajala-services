@@ -369,12 +369,11 @@ async function verifyRecaptcha(token) {
     const verifyData = response.data || {};
     
     // Log Google verify response for debugging (DO NOT log secret or token)
+    // Note: challenge_ts and hostname are excluded to prevent information disclosure
     console.log('reCAPTCHA verify response:', {
       success: verifyData.success,
       score: verifyData.score,
       action: verifyData.action,
-      challenge_ts: verifyData.challenge_ts,
-      hostname: verifyData.hostname,
       'error-codes': verifyData['error-codes']
     });
 

@@ -16,10 +16,15 @@
 const https = require('https');
 const http = require('http');
 
+// Constants
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
 // Parse command line arguments
 const args = process.argv.slice(2);
-const testType = args[args.indexOf('--test') + 1] || 'missing-token';
-const customEndpoint = args[args.indexOf('--endpoint') + 1];
+const testIndex = args.indexOf('--test');
+const endpointIndex = args.indexOf('--endpoint');
+const testType = testIndex >= 0 ? args[testIndex + 1] : 'missing-token';
+const customEndpoint = endpointIndex >= 0 ? args[endpointIndex + 1] : undefined;
 
 // Default endpoint (production)
 const DEFAULT_ENDPOINT = 'https://us-central1-fxnr-web.cloudfunctions.net/book';
@@ -43,7 +48,7 @@ const baseBookingData = {
   name: 'Test User',
   email: 'test@example.com',
   phone: '+358 40 1234567',
-  aika: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
+  aika: new Date(Date.now() + ONE_DAY_MS).toISOString(), // Tomorrow
   services: [
     {
       category: 'washing',
