@@ -328,12 +328,31 @@ function parseFirestoreDate(val) {
 // =======================
 // reCAPTCHA verification
 // =======================
+/**
+ * Verifies reCAPTCHA token with Google's API
+ * @param {string} token - The reCAPTCHA token from the client
+ * @returns {Object} - { success: boolean, error?: string, details?: object }
+ */
 async function verifyRecaptcha(token) {
   try {
+    // Validate token presence and format
+    if (!token || typeof token !== 'string' || token.trim() === '') {
+      console.log('reCAPTCHA validation failed: missing or empty token');
+      return {
+        success: false,
+        error: 'missing recaptcha token',
+        details: { reason: 'Token was not provided or is empty' }
+      };
+    }
+
     const secretKey = safeGetParamValue(recaptchaSecret, 'RECAPTCHA_SECRET');
     if (!secretKey) {
-      console.error('reCAPTCHA secret not configured');
-      return false;
+      console.error('reCAPTCHA secret not configured in environment');
+      return {
+        success: false,
+        error: 'recaptcha configuration error',
+        details: { reason: 'Server misconfiguration - secret not set' }
+      };
     }
 
     const response = await axios.post(
@@ -347,18 +366,64 @@ async function verifyRecaptcha(token) {
       }
     );
 
-    if (!response.data || response.data.success !== true) {
-      console.log('reCAPTCHA validation failed:', response.data && response.data['error-codes']);
-      return false;
+    const verifyData = response.data || {};
+    
+    // Log Google verify response for debugging (DO NOT log secret or token)
+    console.log('reCAPTCHA verify response:', {
+      success: verifyData.success,
+      score: verifyData.score,
+      action: verifyData.action,
+      challenge_ts: verifyData.challenge_ts,
+      hostname: verifyData.hostname,
+      'error-codes': verifyData['error-codes']
+    });
+
+    if (!verifyData.success) {
+      const errorCodes = verifyData['error-codes'] || [];
+      console.log('reCAPTCHA validation failed. Error codes:', errorCodes);
+      
+      return {
+        success: false,
+        error: 'recaptcha verification failed',
+        details: {
+          'error-codes': errorCodes,
+          reason: 'Google reCAPTCHA verification returned success:false'
+        }
+      };
     }
 
-    if (response.data.score !== undefined) {
-      return response.data.score > 0.5;
+    // Check score for v3 reCAPTCHA (score-based validation)
+    if (verifyData.score !== undefined) {
+      const score = verifyData.score;
+      const threshold = 0.5;
+      
+      if (score <= threshold) {
+        console.log(`reCAPTCHA score too low: ${score} (threshold: ${threshold})`);
+        return {
+          success: false,
+          error: 'recaptcha verification failed',
+          details: {
+            score: score,
+            threshold: threshold,
+            reason: 'Score below acceptable threshold'
+          }
+        };
+      }
+      
+      console.log(`reCAPTCHA verification passed with score: ${score}`);
     }
-    return true;
+
+    return { success: true };
   } catch (err) {
-    console.error('reCAPTCHA check error:', err.message || err);
-    return false;
+    console.error('reCAPTCHA verification error:', err.message || err);
+    return {
+      success: false,
+      error: 'recaptcha verification failed',
+      details: {
+        reason: 'Error communicating with Google reCAPTCHA service',
+        error: err.message || 'Unknown error'
+      }
+    };
   }
 }
 
@@ -505,14 +570,30 @@ exports.book = onRequest({
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
     const { name, email, phone, aika, services, totalPrice, totalNumericPrice, recaptcha } = req.body;
-    if (!name || !email || !phone || !aika || !services || !recaptcha) {
+    
+    // Validate required fields (excluding recaptcha for now to give specific error)
+    if (!name || !email || !phone || !aika || !services) {
       return res.status(400).json({ error: 'Täytä kaikki pakolliset kentät' });
     }
 
-    const isValidRecaptcha = await verifyRecaptcha(recaptcha);
-    if (!isValidRecaptcha) {
-      console.log('reCAPTCHA failed for booking');
-      return res.status(401).json({ error: 'Turvavarmennus epäonnistui. Yritä uudelleen.' });
+    // Specific check for missing recaptcha token
+    if (!recaptcha || typeof recaptcha !== 'string' || recaptcha.trim() === '') {
+      console.log('Booking request missing recaptcha token');
+      return res.status(400).json({ 
+        error: 'missing recaptcha token',
+        message: 'Turvavarmennus puuttuu. Päivitä sivu ja yritä uudelleen.'
+      });
+    }
+
+    // Verify reCAPTCHA token with Google
+    const recaptchaResult = await verifyRecaptcha(recaptcha);
+    if (!recaptchaResult.success) {
+      console.log('reCAPTCHA verification failed for booking:', recaptchaResult.error);
+      return res.status(401).json({ 
+        error: 'recaptcha verification failed',
+        message: 'Turvavarmennus epäonnistui. Yritä uudelleen.',
+        details: recaptchaResult.details
+      });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
