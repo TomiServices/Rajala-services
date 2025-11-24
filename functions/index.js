@@ -1,6 +1,6 @@
-// index.js - Firebase Functions for Rajala Services Booking System (fixed)
-// Robust date parsing: replaced direct toDate() calls with parseFirestoreDate
-// Safe Google service account handling and defensive logging.
+// index.js - Firebase Functions for Rajala Services Booking System (updated)
+// Added: watchRegistrar + improved calendarWebhook with syncToken handling
+// Preserves all existing features; small, well-commented additions.
 
 const admin = require('firebase-admin');
 const axios = require('axios');
@@ -64,11 +64,13 @@ const googleCalendarId = defineString('GOOGLE_CALENDAR_ID');
 const emailUser = defineString('EMAIL_USER');
 const emailPassword = defineString('EMAIL_PASSWORD');
 const emailFrom = defineString('EMAIL_FROM');
+const watchCallbackEnv = defineString('WATCH_CALLBACK_URL'); // optional preconfigured callback URL
 
 // =======================
 // CONSTANTS
 // =======================
 const BOOKINGS_COLLECTION = 'varaukset';
+const WATCH_COLLECTION = 'calendarWatch';
 const ALLOWED_ORIGINS = [
   'https://www.rajala-services.com',
   'https://rajala-services.com',
@@ -699,7 +701,108 @@ exports.onBookingDeleted = onDocumentDeleted({
 });
 
 // =======================
-// Google Calendar webhook
+// Helper: register watch (used by watchRegistrar / renewCalendarWatch)
+// =======================
+async function registerCalendarWatch(callbackUrl) {
+  if (!callbackUrl) throw new Error('Missing callbackUrl');
+  const calendarIdEnv = safeGetParamValue(googleCalendarId, 'GOOGLE_CALENDAR_ID') || getLegacyConfigValue('google.calendar_id');
+  if (!calendarIdEnv) throw new Error('Missing GOOGLE_CALENDAR_ID');
+
+  // Use workload identity / function's SA (ADC) when available
+  const authClient = await google.auth.getClient({
+    scopes: ['https://www.googleapis.com/auth/calendar']
+  });
+  const calendar = google.calendar({ version: 'v3', auth: authClient });
+
+  const channelId = `fxnr-web-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+  const requestBody = {
+    id: channelId,
+    type: 'web_hook',
+    address: callbackUrl,
+    // optional token or params can be added here for validation
+  };
+
+  const resp = await calendar.events.watch({
+    calendarId: calendarIdEnv,
+    requestBody
+  });
+
+  const data = resp.data || {};
+  const doc = {
+    channelId: data.id || channelId,
+    resourceId: data.resourceId || null,
+    expiration: data.expiration ? Number(data.expiration) : null,
+    calendarId: calendarIdEnv,
+    callbackUrl,
+    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    nextSyncToken: data.nextSyncToken || null,
+    raw: data
+  };
+
+  const docId = doc.channelId || `watch-${Date.now()}`;
+  await db.collection(WATCH_COLLECTION).doc(docId).set(doc);
+  return data;
+}
+
+// =======================
+// HTTP: watchRegistrar (register Google Calendar watch -> saves to Firestore)
+// Expects POST JSON: { "callbackUrl": "https://.../calendarWebhook" }
+// If WATCH_CALLBACK_URL env var is set, that will be used as default.
+// =======================
+exports.watchRegistrar = onRequest({
+  region: 'us-central1'
+}, async (req, res) => {
+  try {
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Method not allowed. Use POST' });
+    }
+
+    const bodyCb = (req.body && req.body.callbackUrl) ? req.body.callbackUrl : null;
+    const envCb = safeGetParamValue(watchCallbackEnv, 'WATCH_CALLBACK_URL') || getLegacyConfigValue('watch.callback_url');
+    const callbackUrl = bodyCb || envCb;
+
+    if (!callbackUrl) {
+      return res.status(400).json({ error: 'Missing callbackUrl in request body and no WATCH_CALLBACK_URL configured' });
+    }
+
+    const data = await registerCalendarWatch(callbackUrl);
+    return res.status(200).json({ ok: true, watch: data });
+  } catch (err) {
+    console.error('watchRegistrar error:', err && (err.message || err));
+    return res.status(500).json({ error: err && (err.message || JSON.stringify(err)) });
+  }
+});
+
+// =======================
+// HTTP: renewCalendarWatch (simple helper to re-register watch if needed)
+// If you want scheduler to auto-run this, create Cloud Scheduler job calling this endpoint.
+// =======================
+exports.renewCalendarWatch = onRequest({
+  region: 'us-central1'
+}, async (req, res) => {
+  try {
+    // Allow POST only for safety
+    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+    // We will re-register watch using same callback as last known watch (if available)
+    const last = await db.collection(WATCH_COLLECTION).orderBy('createdAt', 'desc').limit(1).get();
+    const doc = last.docs[0];
+    const callbackUrl = (req.body && req.body.callbackUrl) ? req.body.callbackUrl : (doc ? doc.data().callbackUrl : null);
+
+    if (!callbackUrl) {
+      return res.status(400).json({ error: 'No callbackUrl found (provide in POST body or register watch first)' });
+    }
+
+    const data = await registerCalendarWatch(callbackUrl);
+    return res.status(200).json({ ok: true, watch: data });
+  } catch (err) {
+    console.error('renewCalendarWatch error:', err && (err.message || err));
+    return res.status(500).json({ error: err && (err.message || JSON.stringify(err)) });
+  }
+});
+
+// =======================
+// Google Calendar webhook (improved with syncToken handling)
 // =======================
 exports.calendarWebhook = onRequest({
   region: 'us-central1'
@@ -708,7 +811,22 @@ exports.calendarWebhook = onRequest({
     // Respond quickly for Google's webhook
     res.status(200).send('OK');
 
-    const calendar = initializeGoogleCalendar();
+    // If calendar isn't configured via explicit service account, we will try ADC via getClient
+    const calendar = initializeGoogleCalendar() || (await (async () => {
+      try {
+        const authClient = await google.auth.getClient({
+          scopes: ['https://www.googleapis.com/auth/calendar']
+        });
+        const calIdEnv = safeGetParamValue(googleCalendarId, 'GOOGLE_CALENDAR_ID') || getLegacyConfigValue('google.calendar_id');
+        if (!calIdEnv) return null;
+        calendarId = calIdEnv;
+        return google.calendar({ version: 'v3', auth: authClient });
+      } catch (e) {
+        console.error('calendarWebhook auth getClient failed:', e && (e.message || e));
+        return null;
+      }
+    })());
+
     if (!calendar || !calendarId) {
       console.log('Calendar not configured - ignoring webhook');
       return;
@@ -720,60 +838,111 @@ exports.calendarWebhook = onRequest({
       return;
     }
 
-    const now = new Date();
-    const oneMonthAgo = new Date(now);
-    oneMonthAgo.setMonth(now.getMonth() - 1);
+    // We'll attempt to use saved nextSyncToken for incremental sync.
+    const watchSnap = await db.collection(WATCH_COLLECTION).orderBy('createdAt', 'desc').limit(1).get();
+    const watchDoc = watchSnap.docs[0];
+    const syncToken = watchDoc ? (watchDoc.data().nextSyncToken || null) : null;
 
-    const response = await calendar.events.list({
-      calendarId,
-      timeMin: oneMonthAgo.toISOString(),
-      maxResults: 250,
-      singleEvents: true,
-      orderBy: 'startTime'
-    });
+    let events = [];
+    async function doFullListAndSaveToken(docRef) {
+      // full list (time range recent month) to avoid massive payloads
+      const now = new Date();
+      const oneMonthAgo = new Date(now);
+      oneMonthAgo.setMonth(now.getMonth() - 1);
 
-    const events = response.data.items || [];
+      const resp = await calendar.events.list({
+        calendarId,
+        timeMin: oneMonthAgo.toISOString(),
+        singleEvents: true,
+        maxResults: 2500,
+        orderBy: 'startTime'
+      });
+      events = resp.data.items || [];
+      if (resp.data.nextSyncToken && docRef) {
+        await docRef.update({ nextSyncToken: resp.data.nextSyncToken, lastSyncAt: admin.firestore.FieldValue.serverTimestamp() });
+      }
+    }
 
+    try {
+      if (syncToken && watchDoc) {
+        try {
+          const resp = await calendar.events.list({
+            calendarId,
+            syncToken,
+            singleEvents: true,
+            maxResults: 2500
+          });
+          events = resp.data.items || [];
+          if (resp.data.nextSyncToken) {
+            await watchDoc.ref.update({ nextSyncToken: resp.data.nextSyncToken, lastSyncAt: admin.firestore.FieldValue.serverTimestamp() });
+          }
+        } catch (err) {
+          // If sync token invalid/expired, fall back to full list
+          const isSyncInvalid = (err && (err.code === 410 ||
+            (err.errors && err.errors[0] && err.errors[0].reason === 'syncTokenInvalid')));
+          if (isSyncInvalid) {
+            console.warn('Sync token invalid/expired, doing full list and replacing token');
+            await doFullListAndSaveToken(watchDoc ? watchDoc.ref : null);
+          } else {
+            throw err;
+          }
+        }
+      } else {
+        await doFullListAndSaveToken(watchDoc ? watchDoc.ref : null);
+      }
+    } catch (err) {
+      console.error('Failed to fetch events from Google Calendar:', err && (err.message || err));
+      // safe fallback - abort further processing to avoid deleting things incorrectly
+      return;
+    }
+
+    // Upsert events into Firestore (create or update)
     for (const eventItem of events) {
       try {
-        if (!eventItem.start?.dateTime) continue;
+        if (!eventItem || !eventItem.id) continue;
+        if (!eventItem.start || !eventItem.start.dateTime) continue;
+
         const startTime = new Date(eventItem.start.dateTime);
+        if (Number.isNaN(startTime.getTime())) continue;
 
         const existingSnapshot = await db.collection(BOOKINGS_COLLECTION)
           .where('googleEventId', '==', eventItem.id)
           .limit(1)
           .get();
 
-        if (existingSnapshot.empty) {
-          const desc = eventItem.description || '';
-          const nameMatch = desc.match(/Asiakas:\s*(.+)/);
-          const phoneMatch = desc.match(/Puhelin:\s*(.+)/);
-          const emailMatch = desc.match(/Sähköposti:\s*(.+)/);
+        const desc = eventItem.description || '';
+        const nameMatch = desc.match(/Asiakas:\s*(.+)/);
+        const phoneMatch = desc.match(/Puhelin:\s*(.+)/);
+        const emailMatch = desc.match(/Sähköposti:\s*(.+)/);
 
+        const upsertData = {
+          nimi: nameMatch ? nameMatch[1].trim() : 'Google Calendar -varaus',
+          puhelin: phoneMatch ? phoneMatch[1].trim() : '',
+          sahkoposti: emailMatch ? emailMatch[1].trim() : '',
+          aika: admin.firestore.Timestamp.fromDate(startTime),
+          services: [], // we don't have service data from Google events
+          totalPrice: 'Hinta sovittaessa',
+          googleEventId: eventItem.id,
+          syncedFromGoogle: true,
+          googleSyncedAt: admin.firestore.FieldValue.serverTimestamp(),
+        };
+
+        if (existingSnapshot.empty) {
           await db.collection(BOOKINGS_COLLECTION).add({
-            nimi: nameMatch ? nameMatch[1].trim() : 'Google Calendar -varaus',
-            puhelin: phoneMatch ? phoneMatch[1].trim() : '',
-            sahkoposti: emailMatch ? emailMatch[1].trim() : '',
-            aika: admin.firestore.Timestamp.fromDate(startTime),
-            services: [],
-            totalPrice: 'Hinta sovittaessa',
-            googleEventId: eventItem.id,
-            syncedFromGoogle: true,
-            googleSyncedAt: admin.firestore.FieldValue.serverTimestamp(),
+            ...upsertData,
             luotu: admin.firestore.FieldValue.serverTimestamp()
           });
           console.log('Created booking from calendar event:', eventItem.id);
         } else {
           const docRef = existingSnapshot.docs[0].ref;
           await docRef.update({
-            aika: admin.firestore.Timestamp.fromDate(startTime),
-            syncedFromGoogle: true,
-            googleSyncedAt: admin.firestore.FieldValue.serverTimestamp()
+            ...upsertData,
+            // do not overwrite luotu
           });
           console.log('Updated booking from calendar event:', eventItem.id);
         }
       } catch (evtErr) {
-        console.error('Error processing calendar event', eventItem.id, evtErr.message || evtErr);
+        console.error('Error processing calendar event', eventItem && eventItem.id, evtErr && (evtErr.message || evtErr));
       }
     }
 
@@ -786,15 +955,21 @@ exports.calendarWebhook = onRequest({
     for (const doc of allBookings.docs) {
       const booking = doc.data();
       if (booking.googleEventId && !eventIds.has(booking.googleEventId)) {
-        await doc.ref.update({ deletedFromGoogle: true });
-        await new Promise(r => setTimeout(r, 100));
-        await doc.ref.delete();
-        console.log('Deleted booking removed from Google Calendar:', doc.id);
+        try {
+          await doc.ref.update({ deletedFromGoogle: true });
+          await new Promise(r => setTimeout(r, 100));
+          await doc.ref.delete();
+          console.log('Deleted booking removed from Google Calendar:', doc.id);
+        } catch (delErr) {
+          console.error('Failed to remove booking for missing Google event:', doc.id, delErr && (delErr.message || delErr));
+        }
       }
     }
 
     console.log('Calendar webhook completed');
   } catch (err) {
-    console.error('calendarWebhook error:', err.message || err);
+    console.error('calendarWebhook error:', err && (err.message || err));
   }
 });
+
+// End of file
