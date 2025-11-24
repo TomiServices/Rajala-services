@@ -134,6 +134,7 @@ const req = client.request(options, (res) => {
   });
   
   res.on('end', () => {
+    clearTimeout(timeoutId); // Clear timeout on successful response
     console.log('\nResponse:');
     console.log('-'.repeat(60));
     console.log(`Status Code: ${res.statusCode}`);
@@ -186,6 +187,7 @@ const req = client.request(options, (res) => {
 });
 
 req.on('error', (error) => {
+  clearTimeout(timeoutId); // Clear timeout on error
   console.error('');
   console.error('❌ Request Error:');
   console.error(error.message);
@@ -205,7 +207,7 @@ req.write(postData);
 req.end();
 
 // Timeout after 30 seconds
-setTimeout(() => {
+const timeoutId = setTimeout(() => {
   console.error('');
   console.error('❌ Request timed out after 30 seconds');
   process.exit(1);

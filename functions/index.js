@@ -394,9 +394,11 @@ async function verifyRecaptcha(token) {
     // Check score for v3 reCAPTCHA (score-based validation)
     if (verifyData.score !== undefined) {
       const score = verifyData.score;
-      const threshold = 0.5;
+      // Score threshold configurable via environment (default: 0.5)
+      // Note: Using < means scores exactly equal to threshold are accepted
+      const threshold = parseFloat(process.env.RECAPTCHA_SCORE_THRESHOLD || '0.5');
       
-      if (score <= threshold) {
+      if (score < threshold) {
         console.log(`reCAPTCHA score too low: ${score} (threshold: ${threshold})`);
         return {
           success: false,
@@ -570,27 +572,22 @@ exports.book = onRequest({
 
     const { name, email, phone, aika, services, totalPrice, totalNumericPrice, recaptcha } = req.body;
     
-    // Validate required fields (excluding recaptcha for now to give specific error)
+    // Validate required fields (excluding recaptcha for more specific error message)
     if (!name || !email || !phone || !aika || !services) {
       return res.status(400).json({ error: 'Täytä kaikki pakolliset kentät' });
     }
 
-    // Specific check for missing recaptcha token
-    if (!recaptcha || typeof recaptcha !== 'string' || recaptcha.trim() === '') {
-      console.log('Booking request missing recaptcha token');
-      return res.status(400).json({ 
-        error: 'missing recaptcha token',
-        message: 'Turvavarmennus puuttuu. Päivitä sivu ja yritä uudelleen.'
-      });
-    }
-
-    // Verify reCAPTCHA token with Google
+    // Verify reCAPTCHA token with Google (includes presence and format validation)
     const recaptchaResult = await verifyRecaptcha(recaptcha);
     if (!recaptchaResult.success) {
+      // Determine appropriate status code based on error type
+      const statusCode = recaptchaResult.error === 'missing recaptcha token' ? 400 : 401;
       console.log('reCAPTCHA verification failed for booking:', recaptchaResult.error);
-      return res.status(401).json({ 
-        error: 'recaptcha verification failed',
-        message: 'Turvavarmennus epäonnistui. Yritä uudelleen.',
+      return res.status(statusCode).json({ 
+        error: recaptchaResult.error,
+        message: recaptchaResult.error === 'missing recaptcha token' 
+          ? 'Turvavarmennus puuttuu. Päivitä sivu ja yritä uudelleen.'
+          : 'Turvavarmennus epäonnistui. Yritä uudelleen.',
         details: recaptchaResult.details
       });
     }
