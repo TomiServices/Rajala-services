@@ -14,7 +14,7 @@
 
 const { google } = require('googleapis');
 const admin = require('firebase-admin');
-const { getGoogleClient } = require('../lib/auth-client');
+const { getGoogleClient } = require('./lib/auth-client');
 
 // init firebase-admin once
 function ensureAdminInit() {
