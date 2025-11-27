@@ -128,6 +128,9 @@ function initializeGoogleCalendar() {
   let saRaw = safeGetParamValue(googleServiceAccount, 'GOOGLE_SERVICE_ACCOUNT');
   let calIdRaw = safeGetParamValue(googleCalendarId, 'GOOGLE_CALENDAR_ID');
 
+  // Support GOOGLE_SERVICE_ACCOUNT_JSON (for harmony with lib/auth-client.js)
+  if (!saRaw) saRaw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON || null;
+
   // Legacy fallback: read functions.config().google if needed
   if (!saRaw) saRaw = getLegacyConfigValue('google.service_account');
   if (!calIdRaw) calIdRaw = getLegacyConfigValue('google.calendar_id');
@@ -331,10 +334,14 @@ function parseFirestoreDate(val) {
 /**
  * Verifies reCAPTCHA token with Google's API
  * @param {string} token - The reCAPTCHA token from the client
+ * @param {Object} options - Optional parameters
+ * @param {string} options.expectedAction - If provided, validates verifyData.action matches this value
  * @returns {Object} - { success: boolean, error?: string, details?: object }
  */
-async function verifyRecaptcha(token) {
+async function verifyRecaptcha(token, options = {}) {
   try {
+    const { expectedAction } = options;
+
     // Validate token presence and format
     if (!token || typeof token !== 'string' || token.trim() === '') {
       console.log('reCAPTCHA validation failed: missing or empty token');
@@ -391,6 +398,20 @@ async function verifyRecaptcha(token) {
       };
     }
 
+    // Check action for v3 reCAPTCHA (action-based validation)
+    if (expectedAction && verifyData.action !== undefined) {
+      if (verifyData.action !== expectedAction) {
+        console.log(`reCAPTCHA action mismatch: expected '${expectedAction}', got '${verifyData.action}'`);
+        return {
+          success: false,
+          error: 'recaptcha verification failed',
+          details: {
+            reason: 'Action mismatch'
+          }
+        };
+      }
+    }
+
     // Check score for v3 reCAPTCHA (score-based validation)
     if (verifyData.score !== undefined) {
       const score = verifyData.score;
@@ -404,8 +425,6 @@ async function verifyRecaptcha(token) {
           success: false,
           error: 'recaptcha verification failed',
           details: {
-            score: score,
-            threshold: threshold,
             reason: 'Score below acceptable threshold'
           }
         };
@@ -414,7 +433,13 @@ async function verifyRecaptcha(token) {
       console.log(`reCAPTCHA verification passed with score: ${score}`);
     }
 
-    return { success: true };
+    return {
+      success: true,
+      details: {
+        score: verifyData.score,
+        action: verifyData.action
+      }
+    };
   } catch (err) {
     console.error('reCAPTCHA verification error:', err.message || err);
     return {
@@ -570,7 +595,10 @@ exports.book = onRequest({
     if (req.method === 'OPTIONS') return res.status(204).send('');
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-    const { name, email, phone, aika, services, totalPrice, totalNumericPrice, recaptcha } = req.body;
+    const { name, email, phone, aika, services, totalPrice, totalNumericPrice } = req.body;
+
+    // Accept multiple common recaptcha token field names from client
+    const recaptchaToken = req.body.recaptcha || req.body.recaptchaToken || req.body['g-recaptcha-response'];
     
     // Validate required fields (excluding recaptcha for more specific error message)
     if (!name || !email || !phone || !aika || !services) {
@@ -578,7 +606,8 @@ exports.book = onRequest({
     }
 
     // Verify reCAPTCHA token with Google (includes presence and format validation)
-    const recaptchaResult = await verifyRecaptcha(recaptcha);
+    // Pass expectedAction to validate action matches 'submit_booking'
+    const recaptchaResult = await verifyRecaptcha(recaptchaToken, { expectedAction: 'submit_booking' });
     if (!recaptchaResult.success) {
       // Determine appropriate status code based on error type
       const statusCode = recaptchaResult.error === 'missing recaptcha token' ? 400 : 401;
@@ -595,8 +624,10 @@ exports.book = onRequest({
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) return res.status(400).json({ error: 'Virheellinen sähköpostiosoite' });
 
-    const phoneRegex = /^\+358\s?(40|41|42|43|44|45|46|47|48|49|50)\s?\d{7}$/;
-    if (!phoneRegex.test(phone)) return res.status(400).json({ error: 'Virheellinen puhelinnumero. Käytä muotoa: +358 40XXXXXXX' });
+    // More permissive phone regex: accepts Finnish numbers in common formats
+    // Supports: +358 XX XXXXXXX, 0XX XXXXXXX, or just digits (6-12 digits)
+    const phoneRegex = /^(?:\+358|0)?\s?\d{6,12}$/;
+    if (!phoneRegex.test(phone)) return res.status(400).json({ error: 'Virheellinen puhelinnumero. Käytä muotoa: +358 40XXXXXXX tai 040XXXXXXX' });
 
     const bookingDate = new Date(aika);
     const now = new Date();
@@ -995,14 +1026,12 @@ exports.renewCalendarWatch = onRequest({
 
 // =======================
 // Google Calendar webhook (improved with syncToken handling)
+// FIX: Respond 200 OK AFTER processing completes to avoid premature termination
 // =======================
 exports.calendarWebhook = onRequest({
   region: 'us-central1'
 }, async (req, res) => {
   try {
-    // Respond quickly for Google's webhook
-    res.status(200).send('OK');
-
     // If calendar isn't configured via explicit service account, we will try ADC via getClient
     const calendar = initializeGoogleCalendar() || (await (async () => {
       try {
@@ -1021,13 +1050,13 @@ exports.calendarWebhook = onRequest({
 
     if (!calendar || !calendarId) {
       console.log('Calendar not configured - ignoring webhook');
-      return;
+      return res.status(200).send('OK');
     }
 
     const resourceState = req.headers['x-goog-resource-state'];
     if (!resourceState || (resourceState !== 'exists' && resourceState !== 'updated')) {
       console.log('Ignoring webhook state:', resourceState);
-      return;
+      return res.status(200).send('OK');
     }
 
     // We'll attempt to use saved nextSyncToken for incremental sync.
@@ -1085,7 +1114,7 @@ exports.calendarWebhook = onRequest({
     } catch (err) {
       console.error('Failed to fetch events from Google Calendar:', err && (err.message || err));
       // safe fallback - abort further processing to avoid deleting things incorrectly
-      return;
+      return res.status(200).send('OK');
     }
 
     // Upsert events into Firestore (create or update)
@@ -1159,8 +1188,12 @@ exports.calendarWebhook = onRequest({
     }
 
     console.log('Calendar webhook completed');
+    // Respond 200 OK after all processing is complete
+    return res.status(200).send('OK');
   } catch (err) {
     console.error('calendarWebhook error:', err && (err.message || err));
+    // Still return 200 to acknowledge receipt to Google (prevents retries)
+    return res.status(200).send('OK');
   }
 });
 
