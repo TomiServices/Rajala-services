@@ -140,9 +140,9 @@ Removes deleted bookings from Google Calendar.
 *Optional: Google Calendar sync features will be disabled if not configured
 **Required for email confirmations: Email features will be disabled if not configured
 
-> ⚠️ **TÄRKEÄÄ:** `RECAPTCHA_SECRET` TULEE asettaa vain Secret Managerin kautta!
-> Älä lisää sitä `.env`-tiedostoon, koska se aiheuttaa käyttöönottovirheen.
-> Katso: [docs/SECRET_MANAGER.md](../docs/SECRET_MANAGER.md)
+> ⚠️ **IMPORTANT / TÄRKEÄÄ:** `RECAPTCHA_SECRET` must ONLY be set via Secret Manager!
+> Do not add it to the `.env` file, as this will cause deployment failures.
+> See: [docs/SECRET_MANAGER.md](../docs/SECRET_MANAGER.md) (in Finnish)
 
 ### Setting Production Variables
 
@@ -191,7 +191,7 @@ curl -X POST http://localhost:5001/your-project/us-central1/book \
 
 ## 📚 Documentation
 
-- [Secret Manager Guide](../docs/SECRET_MANAGER.md) - **TÄRKEÄ:** Salasanojen hallinta (suomeksi)
+- [Secret Manager Guide](../docs/SECRET_MANAGER.md) - **IMPORTANT:** Secret management instructions (in Finnish)
 - [Email Configuration Guide](../EMAIL_CONFIGURATION.md) - Complete email setup instructions
 - [Gen2 Migration Guide](../FIREBASE_FUNCTIONS_GEN2_MIGRATION.md) - Complete migration documentation
 - [Migration Summary](../FIREBASE_GEN2_MIGRATION_SUMMARY.md) - Quick overview of changes

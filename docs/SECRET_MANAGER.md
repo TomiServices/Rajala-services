@@ -35,11 +35,18 @@ Komentorivi pyytää syöttämään arvon. Liitä reCAPTCHA secret key ja paina 
 
 ### Vaihe 3: Varmista toimivuus
 
-Tarkista, että salasana on asetettu oikein:
+Tarkista, että salasana on asetettu oikein (näyttää todellisen arvon):
+
+```bash
+# Näytä salasanan arvo (varoitus: tulostaa arvon näytölle)
+firebase functions:secrets:access RECAPTCHA_SECRET
+```
+
+Vaihtoehtoisesti, voit tarkistaa vain salasanan olemassaolon ilman arvon näyttämistä:
 
 ```bash
 # Listaa kaikki salasanat
-firebase functions:secrets:access RECAPTCHA_SECRET
+firebase functions:secrets:get
 ```
 
 ### Vaihe 4: Ota käyttöön
