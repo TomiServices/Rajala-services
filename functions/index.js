@@ -480,16 +480,32 @@ async function isSlotAvailable(dateTime) {
 // Google Calendar helpers
 // =======================
 async function createGoogleCalendarEvent(bookingData) {
+  console.log('createGoogleCalendarEvent called with bookingData:', {
+    nimi: bookingData.nimi,
+    sahkoposti: bookingData.sahkoposti,
+    aika: bookingData.aika,
+    servicesCount: (bookingData.services || []).length
+  });
+
   const calendar = initializeGoogleCalendar();
   if (!calendar || !calendarId) {
-    console.log('Google Calendar client missing - skipping event creation');
+    console.error('Google Calendar integration not configured:', {
+      calendarInitialized: !!calendar,
+      calendarIdSet: !!calendarId,
+      serviceAccountConfigured: !!safeGetParamValue(googleServiceAccount, 'GOOGLE_SERVICE_ACCOUNT'),
+      calendarIdConfigured: !!safeGetParamValue(googleCalendarId, 'GOOGLE_CALENDAR_ID')
+    });
     return null;
   }
 
   try {
     const startDate = parseFirestoreDate(bookingData.aika) || new Date(bookingData.aika);
     if (!startDate || Number.isNaN(startDate.getTime())) {
-      console.warn('Invalid booking date for Google event, skipping:', bookingData);
+      console.error('Invalid booking date for Google event:', {
+        originalAika: bookingData.aika,
+        parsedDate: startDate,
+        isNaN: Number.isNaN(startDate?.getTime())
+      });
       return null;
     }
 
@@ -513,16 +529,34 @@ async function createGoogleCalendarEvent(bookingData) {
       colorId: '11'
     };
 
+    console.log('Creating Google Calendar event:', {
+      summary: event.summary,
+      start: event.start.dateTime,
+      end: event.end.dateTime,
+      calendarId: calendarId
+    });
+
     const resp = await calendar.events.insert({
       calendarId,
       requestBody: event
     });
 
-    console.log('Google event created id=', resp.data && resp.data.id);
+    console.log('Google Calendar event created successfully:', {
+      eventId: resp.data && resp.data.id,
+      htmlLink: resp.data && resp.data.htmlLink,
+      status: resp.data && resp.data.status
+    });
     return resp.data && resp.data.id;
   } catch (err) {
-    console.error('createGoogleCalendarEvent error:', err.message || err);
-    return null;
+    console.error('createGoogleCalendarEvent failed:', {
+      errorMessage: err.message || err,
+      errorCode: err.code,
+      errorStatus: err.status,
+      errors: err.errors || [],
+      calendarId: calendarId
+    });
+    // Re-throw to propagate error for better debugging in caller
+    throw err;
   }
 }
 
@@ -606,8 +640,9 @@ exports.book = onRequest({
     }
 
     // Verify reCAPTCHA token with Google (includes presence and format validation)
-    // Pass expectedAction to validate action matches 'submit_booking'
-    const recaptchaResult = await verifyRecaptcha(recaptchaToken, { expectedAction: 'submit_booking' });
+    // FIX: Updated expectedAction to match frontend which sends 'booking'
+    // Previously was 'submit_booking' which caused action mismatch failures
+    const recaptchaResult = await verifyRecaptcha(recaptchaToken, { expectedAction: 'booking' });
     if (!recaptchaResult.success) {
       // Determine appropriate status code based on error type
       const statusCode = recaptchaResult.error === 'missing recaptcha token' ? 400 : 401;
@@ -661,16 +696,25 @@ exports.book = onRequest({
         transaction.set(bookingRef, bookingData);
       });
 
-      console.log('Booking created:', bookingRef.id);
+      console.log('Booking created in Firestore:', bookingRef.id);
 
       const createdSnap = await bookingRef.get();
       const createdData = createdSnap.data();
+      
+      console.log('Booking data retrieved from Firestore:', {
+        id: bookingRef.id,
+        nimi: createdData.nimi,
+        aika: createdData.aika,
+        servicesCount: (createdData.services || []).length
+      });
 
       // FIX: Create Google Calendar event SYNCHRONOUSLY before returning response
       // Previously this was done in an async IIFE which could be cut off when the
       // HTTP function lifecycle ended, causing events to not be created in Google Calendar
       let googleEventId = null;
+      let googleCalendarError = null;
       try {
+        console.log('Attempting to create Google Calendar event for booking:', bookingRef.id);
         googleEventId = await createGoogleCalendarEvent(createdData);
         if (googleEventId) {
           await bookingRef.update({
@@ -678,16 +722,34 @@ exports.book = onRequest({
             syncedToGoogle: true,
             googleSyncedAt: admin.firestore.FieldValue.serverTimestamp()
           });
-          console.log('Google Calendar event created and linked:', googleEventId);
+          console.log('Google Calendar event created and linked successfully:', {
+            bookingId: bookingRef.id,
+            googleEventId: googleEventId
+          });
         } else {
-          console.log('Google Calendar not configured or event creation returned null');
+          console.warn('Google Calendar event creation returned null - calendar may not be configured');
+          googleCalendarError = 'Calendar not configured';
         }
       } catch (calendarError) {
-        // Log error but don't fail the booking - calendar sync is secondary
-        console.error('Google Calendar sync failed for booking', bookingRef.id, calendarError.message || calendarError);
+        // Log detailed error but don't fail the booking - calendar sync is secondary
+        console.error('Google Calendar sync failed for booking:', {
+          bookingId: bookingRef.id,
+          errorMessage: calendarError.message || calendarError,
+          errorCode: calendarError.code,
+          errorStack: calendarError.stack
+        });
+        googleCalendarError = calendarError.message || 'Calendar sync failed';
       }
 
-      return res.status(200).json({ success: true, id: bookingRef.id, message: 'Varaus onnistui', googleEventId: googleEventId });
+      // Return success with detailed info for debugging
+      return res.status(200).json({ 
+        success: true, 
+        id: bookingRef.id, 
+        message: 'Varaus onnistui', 
+        googleEventId: googleEventId,
+        googleCalendarSynced: !!googleEventId,
+        googleCalendarError: googleCalendarError
+      });
     } catch (txErr) {
       if (txErr.message === 'SLOT_UNAVAILABLE') {
         console.log('Slot unavailable for booking');
@@ -801,8 +863,10 @@ async function createEmailDocument(bookingData, bookingId) {
 }
 
 // Email confirmation trigger - sends email when new booking is created
-// FIX: Now writes to 'mail' collection for Firebase Email Extension instead of using Nodemailer directly
-// This ensures emails are sent via the configured SMTP settings in the extension
+// FIX: Dual-path email sending:
+// 1. Primary: Write to 'mail' collection for Firebase Email Extension (if installed)
+// 2. Fallback: Use Nodemailer directly if email credentials are configured
+// This ensures emails are sent regardless of which method is available
 exports.onBookingCreated = onDocumentCreated({
   document: `${BOOKINGS_COLLECTION}/{bookingId}`,
   region: 'us-central1'
@@ -810,35 +874,99 @@ exports.onBookingCreated = onDocumentCreated({
   const bookingData = event.data.data();
   const bookingId = event.params.bookingId;
   
+  console.log('onBookingCreated triggered for booking:', bookingId);
+  
   if (!bookingData) {
-    console.log('No booking data found');
+    console.log('No booking data found for:', bookingId);
     return null;
   }
 
   // Skip email for bookings synced from Google Calendar
   if (bookingData.syncedFromGoogle) {
-    console.log('Booking synced from Google Calendar - skipping email');
+    console.log('Booking synced from Google Calendar - skipping email for:', bookingId);
     return null;
   }
 
   // Validate email address exists
   if (!bookingData.sahkoposti) {
-    console.log('No email address in booking - skipping email');
+    console.log('No email address in booking - skipping email for:', bookingId);
     return null;
   }
 
+  console.log('Processing email for booking:', {
+    bookingId: bookingId,
+    customerEmail: bookingData.sahkoposti,
+    customerName: bookingData.nimi
+  });
+
+  let emailSent = false;
+  let mailDocId = null;
+
   try {
-    // Create email document for Firebase Email Extension (Trigger Email from Firestore)
-    const mailDocId = await createEmailDocument(bookingData, bookingId);
+    // Primary path: Create email document for Firebase Email Extension (Trigger Email from Firestore)
+    mailDocId = await createEmailDocument(bookingData, bookingId);
     if (mailDocId) {
-      console.log('Email trigger completed for booking:', bookingId, '- mail doc:', mailDocId);
+      console.log('Email document created for Firebase Email Extension:', {
+        bookingId: bookingId,
+        mailDocId: mailDocId,
+        method: 'firebase-extension'
+      });
+      emailSent = true;
     } else {
-      console.log('Email document creation skipped or failed for booking:', bookingId);
+      console.log('Firebase Email Extension document creation failed, trying Nodemailer fallback');
     }
   } catch (err) {
-    console.error('Error in email trigger:', err.message || err);
-    // Don't throw error - email failure shouldn't affect booking
+    console.error('Firebase Email Extension failed:', {
+      bookingId: bookingId,
+      error: err.message || err
+    });
   }
+
+  // Fallback path: Use Nodemailer directly if Firebase Extension failed and Nodemailer is configured
+  if (!emailSent) {
+    try {
+      const nodemailerResult = await sendBookingConfirmationEmail(bookingData);
+      if (nodemailerResult) {
+        console.log('Email sent via Nodemailer fallback:', {
+          bookingId: bookingId,
+          method: 'nodemailer'
+        });
+        emailSent = true;
+      } else {
+        console.warn('Nodemailer fallback also failed or not configured:', bookingId);
+      }
+    } catch (nodemailerErr) {
+      console.error('Nodemailer fallback failed:', {
+        bookingId: bookingId,
+        error: nodemailerErr.message || nodemailerErr
+      });
+    }
+  }
+
+  // Update booking document with email status for tracking
+  try {
+    const updateData = {
+      emailSent: emailSent,
+      emailSentAt: emailSent ? admin.firestore.FieldValue.serverTimestamp() : null,
+      emailMethod: mailDocId ? 'firebase-extension' : (emailSent ? 'nodemailer' : null)
+    };
+    await db.collection(BOOKINGS_COLLECTION).doc(bookingId).update(updateData);
+    console.log('Booking updated with email status:', {
+      bookingId: bookingId,
+      emailSent: emailSent
+    });
+  } catch (updateErr) {
+    console.error('Failed to update booking with email status:', {
+      bookingId: bookingId,
+      error: updateErr.message || updateErr
+    });
+  }
+
+  console.log('Email trigger completed for booking:', {
+    bookingId: bookingId,
+    emailSent: emailSent,
+    method: mailDocId ? 'firebase-extension' : (emailSent ? 'nodemailer' : 'none')
+  });
 
   return null;
 });
@@ -1027,10 +1155,19 @@ exports.renewCalendarWatch = onRequest({
 // =======================
 // Google Calendar webhook (improved with syncToken handling)
 // FIX: Respond 200 OK AFTER processing completes to avoid premature termination
+// FIX: Enhanced logging for better debugging of sync issues
 // =======================
 exports.calendarWebhook = onRequest({
   region: 'us-central1'
 }, async (req, res) => {
+  console.log('Calendar webhook received:', {
+    method: req.method,
+    resourceState: req.headers['x-goog-resource-state'],
+    channelId: req.headers['x-goog-channel-id'],
+    resourceId: req.headers['x-goog-resource-id'],
+    messageNumber: req.headers['x-goog-message-number']
+  });
+
   try {
     // If calendar isn't configured via explicit service account, we will try ADC via getClient
     const calendar = initializeGoogleCalendar() || (await (async () => {
@@ -1055,14 +1192,21 @@ exports.calendarWebhook = onRequest({
 
     const resourceState = req.headers['x-goog-resource-state'];
     if (!resourceState || (resourceState !== 'exists' && resourceState !== 'updated')) {
-      console.log('Ignoring webhook state:', resourceState);
+      console.log('Ignoring webhook with state:', resourceState);
       return res.status(200).send('OK');
     }
+
+    console.log('Processing calendar webhook with state:', resourceState);
 
     // We'll attempt to use saved nextSyncToken for incremental sync.
     const watchSnap = await db.collection(WATCH_COLLECTION).orderBy('createdAt', 'desc').limit(1).get();
     const watchDoc = watchSnap.docs[0];
     const syncToken = watchDoc ? (watchDoc.data().nextSyncToken || null) : null;
+
+    console.log('Sync token status:', {
+      hasSyncToken: !!syncToken,
+      hasWatchDoc: !!watchDoc
+    });
 
     let events = [];
     async function doFullListAndSaveToken(docRef) {
@@ -1070,6 +1214,8 @@ exports.calendarWebhook = onRequest({
       const now = new Date();
       const oneMonthAgo = new Date(now);
       oneMonthAgo.setMonth(now.getMonth() - 1);
+
+      console.log('Performing full calendar list from:', oneMonthAgo.toISOString());
 
       const resp = await calendar.events.list({
         calendarId,
@@ -1079,14 +1225,18 @@ exports.calendarWebhook = onRequest({
         orderBy: 'startTime'
       });
       events = resp.data.items || [];
+      console.log('Full list returned', events.length, 'events');
+      
       if (resp.data.nextSyncToken && docRef) {
         await docRef.update({ nextSyncToken: resp.data.nextSyncToken, lastSyncAt: admin.firestore.FieldValue.serverTimestamp() });
+        console.log('Updated nextSyncToken in watch document');
       }
     }
 
     try {
       if (syncToken && watchDoc) {
         try {
+          console.log('Attempting incremental sync with syncToken');
           const resp = await calendar.events.list({
             calendarId,
             syncToken,
@@ -1094,30 +1244,41 @@ exports.calendarWebhook = onRequest({
             maxResults: 2500
           });
           events = resp.data.items || [];
+          console.log('Incremental sync returned', events.length, 'events');
+          
           if (resp.data.nextSyncToken) {
             await watchDoc.ref.update({ nextSyncToken: resp.data.nextSyncToken, lastSyncAt: admin.firestore.FieldValue.serverTimestamp() });
+            console.log('Updated nextSyncToken after incremental sync');
           }
         } catch (err) {
           // If sync token invalid/expired, fall back to full list
           const isSyncInvalid = (err && (err.code === 410 ||
             (err.errors && err.errors[0] && err.errors[0].reason === 'syncTokenInvalid')));
           if (isSyncInvalid) {
-            console.warn('Sync token invalid/expired, doing full list and replacing token');
+            console.warn('Sync token invalid/expired, falling back to full list');
             await doFullListAndSaveToken(watchDoc ? watchDoc.ref : null);
           } else {
             throw err;
           }
         }
       } else {
+        console.log('No sync token available, performing full list');
         await doFullListAndSaveToken(watchDoc ? watchDoc.ref : null);
       }
     } catch (err) {
-      console.error('Failed to fetch events from Google Calendar:', err && (err.message || err));
+      console.error('Failed to fetch events from Google Calendar:', {
+        error: err.message || err,
+        code: err.code
+      });
       // safe fallback - abort further processing to avoid deleting things incorrectly
       return res.status(200).send('OK');
     }
 
     // Upsert events into Firestore (create or update)
+    let createdCount = 0;
+    let updatedCount = 0;
+    let deletedCount = 0;
+
     for (const eventItem of events) {
       try {
         if (!eventItem || !eventItem.id) continue;
@@ -1153,6 +1314,7 @@ exports.calendarWebhook = onRequest({
             ...upsertData,
             luotu: admin.firestore.FieldValue.serverTimestamp()
           });
+          createdCount++;
           console.log('Created booking from calendar event:', eventItem.id);
         } else {
           const docRef = existingSnapshot.docs[0].ref;
@@ -1160,10 +1322,14 @@ exports.calendarWebhook = onRequest({
             ...upsertData,
             // do not overwrite luotu
           });
+          updatedCount++;
           console.log('Updated booking from calendar event:', eventItem.id);
         }
       } catch (evtErr) {
-        console.error('Error processing calendar event', eventItem && eventItem.id, evtErr && (evtErr.message || evtErr));
+        console.error('Error processing calendar event:', {
+          eventId: eventItem && eventItem.id,
+          error: evtErr.message || evtErr
+        });
       }
     }
 
@@ -1180,18 +1346,31 @@ exports.calendarWebhook = onRequest({
           await doc.ref.update({ deletedFromGoogle: true });
           await new Promise(r => setTimeout(r, 100));
           await doc.ref.delete();
+          deletedCount++;
           console.log('Deleted booking removed from Google Calendar:', doc.id);
         } catch (delErr) {
-          console.error('Failed to remove booking for missing Google event:', doc.id, delErr && (delErr.message || delErr));
+          console.error('Failed to remove booking for missing Google event:', {
+            docId: doc.id,
+            error: delErr.message || delErr
+          });
         }
       }
     }
 
-    console.log('Calendar webhook completed');
+    console.log('Calendar webhook completed:', {
+      eventsProcessed: events.length,
+      bookingsCreated: createdCount,
+      bookingsUpdated: updatedCount,
+      bookingsDeleted: deletedCount
+    });
+    
     // Respond 200 OK after all processing is complete
     return res.status(200).send('OK');
   } catch (err) {
-    console.error('calendarWebhook error:', err && (err.message || err));
+    console.error('calendarWebhook error:', {
+      error: err.message || err,
+      stack: err.stack
+    });
     // Still return 200 to acknowledge receipt to Google (prevents retries)
     return res.status(200).send('OK');
   }
