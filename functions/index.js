@@ -555,8 +555,9 @@ async function createGoogleCalendarEvent(bookingData) {
       errors: err.errors || [],
       calendarId: calendarId
     });
-    // Re-throw to propagate error for better debugging in caller
-    throw err;
+    // Return null to allow booking to succeed even if calendar sync fails
+    // The caller handles null as "calendar not configured or sync failed"
+    return null;
   }
 }
 
@@ -945,10 +946,18 @@ exports.onBookingCreated = onDocumentCreated({
 
   // Update booking document with email status for tracking
   try {
+    // Determine email method for tracking
+    let emailMethodUsed = null;
+    if (mailDocId) {
+      emailMethodUsed = 'firebase-extension';
+    } else if (emailSent) {
+      emailMethodUsed = 'nodemailer';
+    }
+
     const updateData = {
       emailSent: emailSent,
       emailSentAt: emailSent ? admin.firestore.FieldValue.serverTimestamp() : null,
-      emailMethod: mailDocId ? 'firebase-extension' : (emailSent ? 'nodemailer' : null)
+      emailMethod: emailMethodUsed
     };
     await db.collection(BOOKINGS_COLLECTION).doc(bookingId).update(updateData);
     console.log('Booking updated with email status:', {
@@ -962,10 +971,18 @@ exports.onBookingCreated = onDocumentCreated({
     });
   }
 
+  // Determine method for logging
+  let logMethod = 'none';
+  if (mailDocId) {
+    logMethod = 'firebase-extension';
+  } else if (emailSent) {
+    logMethod = 'nodemailer';
+  }
+
   console.log('Email trigger completed for booking:', {
     bookingId: bookingId,
     emailSent: emailSent,
-    method: mailDocId ? 'firebase-extension' : (emailSent ? 'nodemailer' : 'none')
+    method: logMethod
   });
 
   return null;

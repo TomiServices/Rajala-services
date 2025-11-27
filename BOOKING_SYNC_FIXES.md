@@ -208,4 +208,4 @@ After deployment, monitor the Firebase Console logs for:
 
 ## Version History
 
-- **2024-11-27:** Initial fixes for reCAPTCHA action mismatch, email dual-path, and enhanced logging
+- **v1.2.0:** Initial fixes for reCAPTCHA action mismatch, email dual-path, and enhanced logging
