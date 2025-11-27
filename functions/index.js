@@ -78,6 +78,11 @@ const ALLOWED_ORIGINS = [
   'https://fxnr-web.firebaseapp.com'
 ];
 
+// Company branding constants - used for emails and notifications
+const COMPANY_NAME = 'Fixnero';
+const COMPANY_EMAIL = 'info@fixnero.fi';
+const COMPANY_PHONE = '+358401935001';
+
 // =======================
 // GOOGLE CALENDAR CLIENT (lazy init)
 // =======================
@@ -242,7 +247,7 @@ async function sendBookingConfirmationEmail(bookingData) {
     const mailOptions = {
       from: emailFromVal,
       to: bookingData.sahkoposti,
-      subject: 'Varausvahvistus - Rajala Services',
+      subject: `Varausvahvistus - ${COMPANY_NAME}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #c41e3a;">Varausvahvistus</h2>
@@ -266,11 +271,11 @@ async function sendBookingConfirmationEmail(bookingData) {
           <p>Otamme sinuun yhteyttä tarvittaessa ennen varattua aikaa.</p>
           <p>Jos sinun täytyy perua tai muuttaa varausta, ota yhteyttä:</p>
           <ul>
-            <li>Puhelin: <a href="tel:+358401234567">+358 40 123 4567</a></li>
-            <li>Sähköposti: <a href="mailto:info@rajala-services.com">info@rajala-services.com</a></li>
+            <li>Puhelin: <a href="tel:${COMPANY_PHONE}">${COMPANY_PHONE.replace('+358', '0')}</a></li>
+            <li>Sähköposti: <a href="mailto:${COMPANY_EMAIL}">${COMPANY_EMAIL}</a></li>
           </ul>
           
-          <p style="margin-top: 30px;">Ystävällisin terveisin,<br><strong>Rajala Services</strong></p>
+          <p style="margin-top: 30px;">Ystävällisin terveisin,<br><strong>${COMPANY_NAME}</strong></p>
           <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
           <p style="font-size: 12px; color: #666;">
             Tämä on automaattinen vahvistusviesti. Älä vastaa tähän viestiin.
@@ -813,7 +818,7 @@ async function createEmailDocument(bookingData, bookingId) {
     const mailDoc = {
       to: bookingData.sahkoposti,
       message: {
-        subject: 'Varausvahvistus - Fixnero',
+        subject: `Varausvahvistus - ${COMPANY_NAME}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #333333;">Varausvahvistus</h2>
@@ -837,11 +842,11 @@ async function createEmailDocument(bookingData, bookingId) {
             <p>Otamme sinuun yhteyttä tarvittaessa ennen varattua aikaa.</p>
             <p>Jos sinun täytyy perua tai muuttaa varausta, ota yhteyttä:</p>
             <ul>
-              <li>Puhelin: <a href="tel:+358401935001">040 1935001</a></li>
-              <li>Sähköposti: <a href="mailto:info@fixnero.fi">info@fixnero.fi</a></li>
+              <li>Puhelin: <a href="tel:${COMPANY_PHONE}">${COMPANY_PHONE.replace('+358', '0')}</a></li>
+              <li>Sähköposti: <a href="mailto:${COMPANY_EMAIL}">${COMPANY_EMAIL}</a></li>
             </ul>
             
-            <p style="margin-top: 30px;">Ystävällisin terveisin,<br><strong>Fixnero</strong></p>
+            <p style="margin-top: 30px;">Ystävällisin terveisin,<br><strong>${COMPANY_NAME}</strong></p>
             <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
             <p style="font-size: 12px; color: #666;">
               Tämä on automaattinen vahvistusviesti. Älä vastaa tähän viestiin.
@@ -944,16 +949,17 @@ exports.onBookingCreated = onDocumentCreated({
     }
   }
 
+  // Helper function to determine email method used
+  function getEmailMethod(docId, sent) {
+    if (docId) return 'firebase-extension';
+    if (sent) return 'nodemailer';
+    return null;
+  }
+
+  const emailMethodUsed = getEmailMethod(mailDocId, emailSent);
+
   // Update booking document with email status for tracking
   try {
-    // Determine email method for tracking
-    let emailMethodUsed = null;
-    if (mailDocId) {
-      emailMethodUsed = 'firebase-extension';
-    } else if (emailSent) {
-      emailMethodUsed = 'nodemailer';
-    }
-
     const updateData = {
       emailSent: emailSent,
       emailSentAt: emailSent ? admin.firestore.FieldValue.serverTimestamp() : null,
@@ -971,18 +977,10 @@ exports.onBookingCreated = onDocumentCreated({
     });
   }
 
-  // Determine method for logging
-  let logMethod = 'none';
-  if (mailDocId) {
-    logMethod = 'firebase-extension';
-  } else if (emailSent) {
-    logMethod = 'nodemailer';
-  }
-
   console.log('Email trigger completed for booking:', {
     bookingId: bookingId,
     emailSent: emailSent,
-    method: logMethod
+    method: emailMethodUsed || 'none'
   });
 
   return null;
