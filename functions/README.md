@@ -127,25 +127,32 @@ Removes deleted bookings from Google Calendar.
 
 ### Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `RECAPTCHA_SECRET` | reCAPTCHA v3 secret key from Google | Yes |
-| `EMAIL_USER` | Gmail account for sending confirmation emails | Yes** |
-| `EMAIL_PASSWORD` | Gmail App Password (not regular password) | Yes** |
-| `EMAIL_FROM` | Display name and email for sent emails | Optional** |
-| `GOOGLE_SERVICE_ACCOUNT` | Google service account JSON (stringified) | Optional* |
-| `GOOGLE_CALENDAR_ID` | Google Calendar ID for sync | Optional* |
+| Variable | Description | Required | Storage |
+|----------|-------------|----------|---------|
+| `RECAPTCHA_SECRET` | reCAPTCHA v3 secret key from Google | Yes | **Secret Manager only** |
+| `EMAIL_USER` | Gmail account for sending confirmation emails | Yes** | `.env` or Secret Manager |
+| `EMAIL_PASSWORD` | Gmail App Password (not regular password) | Yes** | Secret Manager recommended |
+| `EMAIL_FROM` | Display name and email for sent emails | Optional** | `.env` |
+| `GOOGLE_SERVICE_ACCOUNT` | Google service account JSON (stringified) | Optional* | `.env` or Secret Manager |
+| `GOOGLE_CALENDAR_ID` | Google Calendar ID for sync | Optional* | `.env` |
+| `WATCH_CALLBACK_URL` | Calendar webhook callback URL | Optional* | `.env` |
 
 *Optional: Google Calendar sync features will be disabled if not configured
 **Required for email confirmations: Email features will be disabled if not configured
 
+> ⚠️ **IMPORTANT / TÄRKEÄÄ:** `RECAPTCHA_SECRET` must ONLY be set via Secret Manager!
+> Do not add it to the `.env` file, as this will cause deployment failures.
+> See: [docs/SECRET_MANAGER.md](../docs/SECRET_MANAGER.md) (in Finnish)
+
 ### Setting Production Variables
 
 ```bash
-# Using Firebase CLI
+# RECAPTCHA_SECRET - Must use Secret Manager (required)
 firebase functions:secrets:set RECAPTCHA_SECRET
+
+# Optional: Other secrets can also use Secret Manager
+firebase functions:secrets:set EMAIL_PASSWORD
 firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT
-firebase functions:secrets:set GOOGLE_CALENDAR_ID
 ```
 
 ## 🚢 Deployment
@@ -184,6 +191,7 @@ curl -X POST http://localhost:5001/your-project/us-central1/book \
 
 ## 📚 Documentation
 
+- [Secret Manager Guide](../docs/SECRET_MANAGER.md) - **IMPORTANT:** Secret management instructions (in Finnish)
 - [Email Configuration Guide](../EMAIL_CONFIGURATION.md) - Complete email setup instructions
 - [Gen2 Migration Guide](../FIREBASE_FUNCTIONS_GEN2_MIGRATION.md) - Complete migration documentation
 - [Migration Summary](../FIREBASE_GEN2_MIGRATION_SUMMARY.md) - Quick overview of changes
