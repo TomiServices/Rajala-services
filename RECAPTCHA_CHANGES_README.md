@@ -110,12 +110,28 @@ async function verifyRecaptcha(token, options = {}) {
 
 Add reCAPTCHA verification in the `/book` endpoint before processing the booking.
 
-### 4. Configure Firebase
+### 4. Configure Firebase (Gen2 Functions)
 
-Set the reCAPTCHA secret key:
+For Gen2 Functions using `defineString()`, set the reCAPTCHA secret as an environment parameter.
+
+**Option A: Using Firebase CLI (recommended for production)**
+
+Create a `.env` file in the functions directory:
 
 ```bash
-firebase functions:config:set recaptcha.secret="YOUR_SECRET_KEY"
+# functions/.env
+RECAPTCHA_SECRET=YOUR_SECRET_KEY
+```
+
+Or set it via the Firebase Console under Functions > Configuration > Environment Variables.
+
+**Option B: For local development/emulation**
+
+Create a `.env.local` file in the functions directory:
+
+```bash
+# functions/.env.local
+RECAPTCHA_SECRET=YOUR_SECRET_KEY
 ```
 
 ### 5. Deploy

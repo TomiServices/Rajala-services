@@ -58,8 +58,9 @@ function escapeHtml(text) {
 // =======================
 // ENVIRONMENT PARAMETERS (Gen2 / fallback to env)
 // =======================
-// NOTE: reCAPTCHA has been disabled - the recaptchaSecret parameter is no longer used
-// To re-enable reCAPTCHA in the future, see RECAPTCHA_CHANGES_README.md
+// NOTE: reCAPTCHA has been disabled - the recaptchaSecret parameter definition was removed
+// To re-enable reCAPTCHA, add: const recaptchaSecret = defineString('RECAPTCHA_SECRET');
+// See RECAPTCHA_CHANGES_README.md for full re-enablement instructions
 const googleServiceAccount = defineString('GOOGLE_SERVICE_ACCOUNT');
 const googleCalendarId = defineString('GOOGLE_CALENDAR_ID');
 const emailUser = defineString('EMAIL_USER');
