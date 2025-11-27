@@ -635,22 +635,28 @@ exports.book = onRequest({
       const createdSnap = await bookingRef.get();
       const createdData = createdSnap.data();
 
-      (async () => {
-        try {
-          const eventId = await createGoogleCalendarEvent(createdData);
-          if (eventId) {
-            await bookingRef.update({
-              googleEventId: eventId,
-              syncedToGoogle: true,
-              googleSyncedAt: admin.firestore.FieldValue.serverTimestamp()
-            });
-          }
-        } catch (e) {
-          console.error('Async Google sync failed for booking', bookingRef.id, e.message || e);
+      // FIX: Create Google Calendar event SYNCHRONOUSLY before returning response
+      // Previously this was done in an async IIFE which could be cut off when the
+      // HTTP function lifecycle ended, causing events to not be created in Google Calendar
+      let googleEventId = null;
+      try {
+        googleEventId = await createGoogleCalendarEvent(createdData);
+        if (googleEventId) {
+          await bookingRef.update({
+            googleEventId: googleEventId,
+            syncedToGoogle: true,
+            googleSyncedAt: admin.firestore.FieldValue.serverTimestamp()
+          });
+          console.log('Google Calendar event created and linked:', googleEventId);
+        } else {
+          console.log('Google Calendar not configured or event creation returned null');
         }
-      })();
+      } catch (calendarError) {
+        // Log error but don't fail the booking - calendar sync is secondary
+        console.error('Google Calendar sync failed for booking', bookingRef.id, calendarError.message || calendarError);
+      }
 
-      return res.status(200).json({ success: true, id: bookingRef.id, message: 'Varaus onnistui' });
+      return res.status(200).json({ success: true, id: bookingRef.id, message: 'Varaus onnistui', googleEventId: googleEventId });
     } catch (txErr) {
       if (txErr.message === 'SLOT_UNAVAILABLE') {
         console.log('Slot unavailable for booking');
@@ -668,12 +674,110 @@ exports.book = onRequest({
 // Firestore Triggers (v2)
 // =======================
 
+// Email collection name used by Firebase Email Extension (Trigger Email from Firestore)
+const MAIL_COLLECTION = 'mail';
+
+/**
+ * Creates an email document in the 'mail' collection for Firebase Email Extension
+ * This triggers the "Trigger Email from Firestore" extension to send the email via SMTP
+ * 
+ * @param {Object} bookingData - The booking data from Firestore
+ * @param {string} bookingId - The booking document ID
+ * @returns {Promise<string|null>} - The created mail document ID or null on failure
+ */
+async function createEmailDocument(bookingData, bookingId) {
+  try {
+    const startDate = parseFirestoreDate(bookingData.aika);
+    if (!startDate || Number.isNaN(startDate.getTime())) {
+      console.warn('Invalid booking date for email, skipping:', bookingData);
+      return null;
+    }
+
+    const formattedDate = startDate.toLocaleDateString('fi-FI', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    const formattedTime = startDate.toLocaleTimeString('fi-FI', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    // Escape user input to prevent XSS
+    const escapedName = escapeHtml(bookingData.nimi);
+    const escapedEmail = escapeHtml(bookingData.sahkoposti);
+    const escapedPhone = escapeHtml(bookingData.puhelin);
+    const escapedTotalPrice = escapeHtml(bookingData.totalPrice);
+
+    const servicesHtml = (bookingData.services || [])
+      .map(s => `<li>${escapeHtml(s.serviceName || '')} - ${escapeHtml(s.taskName || '')}${s.price ? ': ' + escapeHtml(s.price) : ''}</li>`)
+      .join('') || '<li>Palvelu ei määritelty</li>';
+
+    // Create email document for Firebase Email Extension
+    // The extension reads from 'mail' collection and sends emails via configured SMTP
+    const mailDoc = {
+      to: bookingData.sahkoposti,
+      message: {
+        subject: 'Varausvahvistus - Fixnero',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #333333;">Varausvahvistus</h2>
+            <p>Hei ${escapedName || 'asiakas'},</p>
+            <p>Kiitos varauksestasi! Olemme vastaanottaneet varauksesi. Tässä varauksen tiedot:</p>
+            
+            <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+              <h3 style="margin-top: 0; color: #333;">Varauksen tiedot</h3>
+              <p><strong>Aika:</strong> ${formattedDate} klo ${formattedTime}</p>
+              <p><strong>Asiakas:</strong> ${escapedName}</p>
+              <p><strong>Puhelin:</strong> ${escapedPhone}</p>
+              <p><strong>Sähköposti:</strong> ${escapedEmail}</p>
+            </div>
+            
+            <div style="background-color: #f0f0f0; padding: 15px; border-radius: 5px; margin: 20px 0;">
+              <h3 style="margin-top: 0; color: #333;">Valitut palvelut</h3>
+              <ul style="margin: 0; padding-left: 20px;">${servicesHtml}</ul>
+              <p style="margin-top: 15px;"><strong>Kokonaishinta:</strong> ${escapedTotalPrice || 'Hinta sovittaessa'}</p>
+            </div>
+            
+            <p>Otamme sinuun yhteyttä tarvittaessa ennen varattua aikaa.</p>
+            <p>Jos sinun täytyy perua tai muuttaa varausta, ota yhteyttä:</p>
+            <ul>
+              <li>Puhelin: <a href="tel:+358401935001">040 1935001</a></li>
+              <li>Sähköposti: <a href="mailto:info@fixnero.fi">info@fixnero.fi</a></li>
+            </ul>
+            
+            <p style="margin-top: 30px;">Ystävällisin terveisin,<br><strong>Fixnero</strong></p>
+            <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+            <p style="font-size: 12px; color: #666;">
+              Tämä on automaattinen vahvistusviesti. Älä vastaa tähän viestiin.
+            </p>
+          </div>
+        `
+      },
+      // Metadata for tracking
+      bookingId: bookingId,
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+
+    const mailRef = await db.collection(MAIL_COLLECTION).add(mailDoc);
+    console.log('Email document created for Firebase Email Extension:', mailRef.id);
+    return mailRef.id;
+  } catch (err) {
+    console.error('Failed to create email document:', err.message || err);
+    return null;
+  }
+}
+
 // Email confirmation trigger - sends email when new booking is created
+// FIX: Now writes to 'mail' collection for Firebase Email Extension instead of using Nodemailer directly
+// This ensures emails are sent via the configured SMTP settings in the extension
 exports.onBookingCreated = onDocumentCreated({
   document: `${BOOKINGS_COLLECTION}/{bookingId}`,
   region: 'us-central1'
 }, async (event) => {
   const bookingData = event.data.data();
+  const bookingId = event.params.bookingId;
   
   if (!bookingData) {
     console.log('No booking data found');
@@ -686,9 +790,20 @@ exports.onBookingCreated = onDocumentCreated({
     return null;
   }
 
+  // Validate email address exists
+  if (!bookingData.sahkoposti) {
+    console.log('No email address in booking - skipping email');
+    return null;
+  }
+
   try {
-    await sendBookingConfirmationEmail(bookingData);
-    console.log('Email trigger completed for booking:', event.params.bookingId);
+    // Create email document for Firebase Email Extension (Trigger Email from Firestore)
+    const mailDocId = await createEmailDocument(bookingData, bookingId);
+    if (mailDocId) {
+      console.log('Email trigger completed for booking:', bookingId, '- mail doc:', mailDocId);
+    } else {
+      console.log('Email document creation skipped or failed for booking:', bookingId);
+    }
   } catch (err) {
     console.error('Error in email trigger:', err.message || err);
     // Don't throw error - email failure shouldn't affect booking
