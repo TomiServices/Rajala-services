@@ -82,6 +82,23 @@ const ALLOWED_ORIGINS = [
 const COMPANY_NAME = 'Fixnero';
 const COMPANY_EMAIL = 'info@fixnero.fi';
 const COMPANY_PHONE = '+358401935001';
+// Format phone number for display (remove +358 prefix and replace with 0)
+const COMPANY_PHONE_DISPLAY = COMPANY_PHONE.replace('+358', '0');
+
+// =======================
+// UTILITY: Email Method Helper
+// =======================
+/**
+ * Determines which email method was used based on the mail document ID and email sent status
+ * @param {string|null} mailDocId - The Firebase Email Extension mail document ID (if created)
+ * @param {boolean} emailSent - Whether an email was successfully sent
+ * @returns {string|null} - 'firebase-extension', 'nodemailer', or null
+ */
+function getEmailMethod(mailDocId, emailSent) {
+  if (mailDocId) return 'firebase-extension';
+  if (emailSent) return 'nodemailer';
+  return null;
+}
 
 // =======================
 // GOOGLE CALENDAR CLIENT (lazy init)
@@ -271,7 +288,7 @@ async function sendBookingConfirmationEmail(bookingData) {
           <p>Otamme sinuun yhteyttä tarvittaessa ennen varattua aikaa.</p>
           <p>Jos sinun täytyy perua tai muuttaa varausta, ota yhteyttä:</p>
           <ul>
-            <li>Puhelin: <a href="tel:${COMPANY_PHONE}">${COMPANY_PHONE.replace('+358', '0')}</a></li>
+            <li>Puhelin: <a href="tel:${COMPANY_PHONE}">${COMPANY_PHONE_DISPLAY}</a></li>
             <li>Sähköposti: <a href="mailto:${COMPANY_EMAIL}">${COMPANY_EMAIL}</a></li>
           </ul>
           
@@ -842,7 +859,7 @@ async function createEmailDocument(bookingData, bookingId) {
             <p>Otamme sinuun yhteyttä tarvittaessa ennen varattua aikaa.</p>
             <p>Jos sinun täytyy perua tai muuttaa varausta, ota yhteyttä:</p>
             <ul>
-              <li>Puhelin: <a href="tel:${COMPANY_PHONE}">${COMPANY_PHONE.replace('+358', '0')}</a></li>
+              <li>Puhelin: <a href="tel:${COMPANY_PHONE}">${COMPANY_PHONE_DISPLAY}</a></li>
               <li>Sähköposti: <a href="mailto:${COMPANY_EMAIL}">${COMPANY_EMAIL}</a></li>
             </ul>
             
@@ -949,13 +966,7 @@ exports.onBookingCreated = onDocumentCreated({
     }
   }
 
-  // Helper function to determine email method used
-  function getEmailMethod(docId, sent) {
-    if (docId) return 'firebase-extension';
-    if (sent) return 'nodemailer';
-    return null;
-  }
-
+  // Use module-level getEmailMethod helper function
   const emailMethodUsed = getEmailMethod(mailDocId, emailSent);
 
   // Update booking document with email status for tracking
