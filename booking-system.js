@@ -1,58 +1,10 @@
 // NOTE: No Firebase config in HTML for security. Use server endpoints instead.
 
 // ============================================================================
-// RECAPTCHA v3 CONFIGURATION
+// RECAPTCHA CONFIGURATION - DISABLED
 // ============================================================================
-// reCAPTCHA v3 runs invisibly and returns a score (0.0-1.0) indicating likelihood of being a bot
-// Higher scores (closer to 1.0) = more likely human, Lower scores (closer to 0.0) = more likely bot
-// The site key is embedded in the script tag in index.html
-const RECAPTCHA_SITE_KEY = '6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM';
-
-/**
- * Executes reCAPTCHA v3 and returns a token
- * @param {string} action - The action name for this reCAPTCHA check
- * @returns {Promise<string>} - The reCAPTCHA token
- */
-async function executeRecaptcha(action) {
-    try {
-        // Check if grecaptcha is loaded
-        if (typeof grecaptcha === 'undefined' || !grecaptcha.ready) {
-            throw new Error('reCAPTCHA ei ole ladattu. Päivitä sivu ja yritä uudelleen.');
-        }
-        
-        // Wait for reCAPTCHA to be ready using callback-based approach
-        // grecaptcha.ready() accepts a callback function, not a Promise
-        return new Promise((resolve, reject) => {
-            try {
-                grecaptcha.ready(() => {
-                    try {
-                        grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: action })
-                            .then(token => {
-                                if (!token) {
-                                    reject(new Error('Turvavarmennus epäonnistui - token puuttuu'));
-                                } else {
-                                    resolve(token);
-                                }
-                            })
-                            .catch(executeError => {
-                                console.error('reCAPTCHA execute error:', executeError);
-                                reject(new Error('Turvavarmennus epäonnistui. Tarkista verkkoyhteytesi ja yritä uudelleen.'));
-                            });
-                    } catch (innerError) {
-                        console.error('reCAPTCHA inner execution error:', innerError);
-                        reject(new Error('Turvavarmennus epäonnistui. Päivitä sivu ja yritä uudelleen.'));
-                    }
-                });
-            } catch (readyError) {
-                console.error('reCAPTCHA ready error:', readyError);
-                reject(new Error('Turvavarmennus ei ole valmis. Päivitä sivu ja yritä uudelleen.'));
-            }
-        });
-    } catch (error) {
-        console.error('reCAPTCHA execution error:', error);
-        throw error;
-    }
-}
+// reCAPTCHA has been disabled in this booking system.
+// To re-enable reCAPTCHA in the future, see RECAPTCHA_CHANGES_README.md
 
 
 // ============================================================================
@@ -1812,13 +1764,7 @@ function initializeBookingSystem() {
             }, 10);
             
             try {
-                // Execute reCAPTCHA v3 to get token
-                let recaptchaToken;
-                try {
-                    recaptchaToken = await executeRecaptcha('booking');
-                } catch (recaptchaError) {
-                    throw new Error('Turvavarmennus epäonnistui. Päivitä sivu ja yritä uudelleen.');
-                }
+                // reCAPTCHA has been disabled - proceeding without token verification
                 
                 // Prepare structured service data with prices
                 const serviceData = prepareServiceData();
@@ -1829,8 +1775,7 @@ function initializeBookingSystem() {
                     aika: selectedSlot.toISOString(),
                     services: serviceData.services,
                     totalPrice: serviceData.totalPrice,
-                    totalNumericPrice: serviceData.totalNumericPrice,
-                    recaptcha: recaptchaToken
+                    totalNumericPrice: serviceData.totalNumericPrice
                 };
                 
                 const result = await fetchWithRetry(

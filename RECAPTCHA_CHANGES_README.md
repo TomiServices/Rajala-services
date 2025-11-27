@@ -1,53 +1,136 @@
-# reCAPTCHA v2 to v3 Migration - Change Summary
+# reCAPTCHA Status - DISABLED
 
-## What Was This PR About?
+## Current Status
+
+**reCAPTCHA has been disabled in this booking system.**
+
+The reCAPTCHA functionality was causing issues with the booking system and preventing "function only deploy" operations. To resolve these issues, reCAPTCHA has been completely removed from both the frontend and backend.
+
+---
+
+## What Was Removed?
+
+### Frontend Changes (index.html)
+- Removed the reCAPTCHA v3 script tag: `<script src="https://www.google.com/recaptcha/api.js?render=SITE_KEY" ...>`
+- Removed reCAPTCHA badge CSS styles
+- Updated comments to reflect disabled status
+
+### Frontend Changes (booking-system.js)
+- Removed `RECAPTCHA_SITE_KEY` constant
+- Removed `executeRecaptcha()` function
+- Removed reCAPTCHA token generation from booking form submission
+- Updated comments to reflect disabled status
+
+### Backend Changes (functions/index.js)
+- Removed `recaptchaSecret` parameter definition
+- Removed `verifyRecaptcha()` function
+- Removed reCAPTCHA token verification from `/book` endpoint
+- Updated comments to reflect disabled status
+
+---
+
+## How to Re-enable reCAPTCHA
+
+To restore reCAPTCHA functionality in the future, follow these steps:
+
+### 1. Frontend - index.html
+
+Add the reCAPTCHA script in the `<head>` section:
+
+```html
+<script src="https://www.google.com/recaptcha/api.js?render=YOUR_SITE_KEY" async defer></script>
+```
+
+Add the badge CSS styles:
+
+```css
+.grecaptcha-badge {
+    visibility: hidden !important;
+}
+```
+
+### 2. Frontend - booking-system.js
+
+Add the reCAPTCHA site key and executeRecaptcha function at the top:
+
+```javascript
+const RECAPTCHA_SITE_KEY = 'YOUR_SITE_KEY';
+
+async function executeRecaptcha(action) {
+    return new Promise((resolve, reject) => {
+        grecaptcha.ready(() => {
+            grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: action })
+                .then(token => resolve(token))
+                .catch(error => reject(error));
+        });
+    });
+}
+```
+
+Update the form submission to include reCAPTCHA:
+
+```javascript
+// In the form onsubmit handler:
+try {
+    const recaptchaToken = await executeRecaptcha('booking');
+    
+    const bookingData = {
+        name, email, phone,
+        aika: selectedSlot.toISOString(),
+        services: serviceData.services,
+        totalPrice: serviceData.totalPrice,
+        totalNumericPrice: serviceData.totalNumericPrice,
+        recaptcha: recaptchaToken
+    };
+    // ... rest of submission code
+}
+```
+
+### 3. Backend - functions/index.js
+
+Add the reCAPTCHA secret parameter:
+
+```javascript
+const recaptchaSecret = defineString('RECAPTCHA_SECRET');
+```
+
+Add the verifyRecaptcha function:
+
+```javascript
+async function verifyRecaptcha(token, options = {}) {
+    const secretKey = safeGetParamValue(recaptchaSecret, 'RECAPTCHA_SECRET');
+    const response = await axios.post(
+        'https://www.google.com/recaptcha/api/siteverify',
+        null,
+        { params: { secret: secretKey, response: token } }
+    );
+    return response.data;
+}
+```
+
+Add reCAPTCHA verification in the `/book` endpoint before processing the booking.
+
+### 4. Configure Firebase
+
+Set the reCAPTCHA secret key:
+
+```bash
+firebase functions:config:set recaptcha.secret="YOUR_SECRET_KEY"
+```
+
+### 5. Deploy
+
+```bash
+firebase deploy --only hosting,functions
+```
+
+---
+
+## Previous reCAPTCHA v2 to v3 Migration (Historical)
 
 **Task**: Migrate from reCAPTCHA v2 (checkbox) to reCAPTCHA v3 (invisible, score-based)
 
 **Reason**: The site key was configured as v3 in Google reCAPTCHA Admin Console, but the code was using v2 implementation, causing "Invalid Key Type" errors.
-
----
-
-## What Changed?
-
-### ✅ Code Changes (3 files)
-
-#### 1. **index.html** - Updated reCAPTCHA script loading
-- **Before:** v2 checkbox with lazy loading
-- **After:** v3 invisible script with render parameter
-- **Changes:**
-  - Removed `<div class="g-recaptcha">` checkbox element
-  - Updated script tag to v3 format: `api.js?render=SITE_KEY`
-  - Removed v2-specific comments
-
-#### 2. **booking-system.js** - Simplified reCAPTCHA implementation
-- **Before:** 90+ lines of v2 lazy loading code
-- **After:** 20 lines of v3 token generation
-- **Changes:**
-  - Removed `loadRecaptcha()` function
-  - Removed `bookingObserver` intersection observer
-  - Removed `grecaptcha.getResponse()` validation
-  - Removed `grecaptcha.reset()` call
-  - Added `executeRecaptcha()` helper function
-  - Added automatic token generation on form submit
-- **Net Result:** -87 lines of code (simpler!)
-
-#### 3. **functions/index.js.js** - Enhanced backend validation
-- **Before:** Simple v2 token verification
-- **After:** Score-based v3 validation
-- **Changes:**
-  - Added `RECAPTCHA_SCORE_THRESHOLD` constant (0.5)
-  - Added score validation logic
-  - Added score logging for monitoring
-  - Added action parameter verification
-  - Enhanced error messages
-
-### ✅ Documentation Updates (4 files)
-
-#### 4. **RECAPTCHA_CONFIGURATION.md** - Complete rewrite
-- Updated for v3 implementation
-- Added score threshold documentation
-- Added v3-specific troubleshooting
 
 #### 5. **RECAPTCHA_TROUBLESHOOTING.md** - Updated for v3
 - Added v3-specific error scenarios

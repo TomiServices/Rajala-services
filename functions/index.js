@@ -58,7 +58,8 @@ function escapeHtml(text) {
 // =======================
 // ENVIRONMENT PARAMETERS (Gen2 / fallback to env)
 // =======================
-const recaptchaSecret = defineString('RECAPTCHA_SECRET');
+// NOTE: reCAPTCHA has been disabled - the recaptchaSecret parameter is no longer used
+// To re-enable reCAPTCHA in the future, see RECAPTCHA_CHANGES_README.md
 const googleServiceAccount = defineString('GOOGLE_SERVICE_ACCOUNT');
 const googleCalendarId = defineString('GOOGLE_CALENDAR_ID');
 const emailUser = defineString('EMAIL_USER');
@@ -351,129 +352,10 @@ function parseFirestoreDate(val) {
 }
 
 // =======================
-// reCAPTCHA verification
+// reCAPTCHA verification - DISABLED
 // =======================
-/**
- * Verifies reCAPTCHA token with Google's API
- * @param {string} token - The reCAPTCHA token from the client
- * @param {Object} options - Optional parameters
- * @param {string} options.expectedAction - If provided, validates verifyData.action matches this value
- * @returns {Object} - { success: boolean, error?: string, details?: object }
- */
-async function verifyRecaptcha(token, options = {}) {
-  try {
-    const { expectedAction } = options;
-
-    // Validate token presence and format
-    if (!token || typeof token !== 'string' || token.trim() === '') {
-      console.log('reCAPTCHA validation failed: missing or empty token');
-      return {
-        success: false,
-        error: 'missing recaptcha token',
-        details: { reason: 'Token was not provided or is empty' }
-      };
-    }
-
-    const secretKey = safeGetParamValue(recaptchaSecret, 'RECAPTCHA_SECRET');
-    if (!secretKey) {
-      console.error('reCAPTCHA secret not configured in environment');
-      return {
-        success: false,
-        error: 'recaptcha configuration error',
-        details: { reason: 'Server misconfiguration - secret not set' }
-      };
-    }
-
-    const response = await axios.post(
-      'https://www.google.com/recaptcha/api/siteverify',
-      null,
-      {
-        params: {
-          secret: secretKey,
-          response: token
-        }
-      }
-    );
-
-    const verifyData = response.data || {};
-    
-    // Log Google verify response for debugging (DO NOT log secret or token)
-    // Note: challenge_ts and hostname are excluded to prevent information disclosure
-    console.log('reCAPTCHA verify response:', {
-      success: verifyData.success,
-      score: verifyData.score,
-      action: verifyData.action,
-      'error-codes': verifyData['error-codes']
-    });
-
-    if (!verifyData.success) {
-      const errorCodes = verifyData['error-codes'] || [];
-      console.log('reCAPTCHA validation failed. Error codes:', errorCodes);
-      
-      return {
-        success: false,
-        error: 'recaptcha verification failed',
-        details: {
-          'error-codes': errorCodes,
-          reason: 'Google reCAPTCHA verification returned success:false'
-        }
-      };
-    }
-
-    // Check action for v3 reCAPTCHA (action-based validation)
-    if (expectedAction && verifyData.action !== undefined) {
-      if (verifyData.action !== expectedAction) {
-        console.log(`reCAPTCHA action mismatch: expected '${expectedAction}', got '${verifyData.action}'`);
-        return {
-          success: false,
-          error: 'recaptcha verification failed',
-          details: {
-            reason: 'Action mismatch'
-          }
-        };
-      }
-    }
-
-    // Check score for v3 reCAPTCHA (score-based validation)
-    if (verifyData.score !== undefined) {
-      const score = verifyData.score;
-      // Score threshold configurable via environment (default: 0.5)
-      // Note: Using < means scores exactly equal to threshold are accepted
-      const threshold = parseFloat(process.env.RECAPTCHA_SCORE_THRESHOLD || '0.5');
-      
-      if (score < threshold) {
-        console.log(`reCAPTCHA score too low: ${score} (threshold: ${threshold})`);
-        return {
-          success: false,
-          error: 'recaptcha verification failed',
-          details: {
-            reason: 'Score below acceptable threshold'
-          }
-        };
-      }
-      
-      console.log(`reCAPTCHA verification passed with score: ${score}`);
-    }
-
-    return {
-      success: true,
-      details: {
-        score: verifyData.score,
-        action: verifyData.action
-      }
-    };
-  } catch (err) {
-    console.error('reCAPTCHA verification error:', err.message || err);
-    return {
-      success: false,
-      error: 'recaptcha verification failed',
-      details: {
-        reason: 'Error communicating with Google reCAPTCHA service',
-        error: err.message || 'Unknown error'
-      }
-    };
-  }
-}
+// reCAPTCHA has been disabled in this booking system.
+// To re-enable reCAPTCHA in the future, see RECAPTCHA_CHANGES_README.md
 
 // =======================
 // Slot availability check
@@ -654,29 +536,12 @@ exports.book = onRequest({
 
     const { name, email, phone, aika, services, totalPrice, totalNumericPrice } = req.body;
 
-    // Accept multiple common recaptcha token field names from client
-    const recaptchaToken = req.body.recaptcha || req.body.recaptchaToken || req.body['g-recaptcha-response'];
+    // NOTE: reCAPTCHA has been disabled - no token verification is performed
+    // To re-enable reCAPTCHA in the future, see RECAPTCHA_CHANGES_README.md
     
-    // Validate required fields (excluding recaptcha for more specific error message)
+    // Validate required fields
     if (!name || !email || !phone || !aika || !services) {
       return res.status(400).json({ error: 'Täytä kaikki pakolliset kentät' });
-    }
-
-    // Verify reCAPTCHA token with Google (includes presence and format validation)
-    // FIX: Updated expectedAction to match frontend which sends 'booking'
-    // Previously was 'submit_booking' which caused action mismatch failures
-    const recaptchaResult = await verifyRecaptcha(recaptchaToken, { expectedAction: 'booking' });
-    if (!recaptchaResult.success) {
-      // Determine appropriate status code based on error type
-      const statusCode = recaptchaResult.error === 'missing recaptcha token' ? 400 : 401;
-      console.log('reCAPTCHA verification failed for booking:', recaptchaResult.error);
-      return res.status(statusCode).json({ 
-        error: recaptchaResult.error,
-        message: recaptchaResult.error === 'missing recaptcha token' 
-          ? 'Turvavarmennus puuttuu. Päivitä sivu ja yritä uudelleen.'
-          : 'Turvavarmennus epäonnistui. Yritä uudelleen.',
-        details: recaptchaResult.details
-      });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
