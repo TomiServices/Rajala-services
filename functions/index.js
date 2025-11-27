@@ -392,9 +392,6 @@ async function verifyRecaptcha(token, options = {}) {
         success: false,
         error: 'recaptcha verification failed',
         details: {
-          success: verifyData.success,
-          score: verifyData.score,
-          action: verifyData.action,
           'error-codes': errorCodes,
           reason: 'Google reCAPTCHA verification returned success:false'
         }
@@ -409,10 +406,6 @@ async function verifyRecaptcha(token, options = {}) {
           success: false,
           error: 'recaptcha verification failed',
           details: {
-            success: verifyData.success,
-            score: verifyData.score,
-            action: verifyData.action,
-            expectedAction: expectedAction,
             reason: 'Action mismatch'
           }
         };
@@ -432,10 +425,6 @@ async function verifyRecaptcha(token, options = {}) {
           success: false,
           error: 'recaptcha verification failed',
           details: {
-            success: verifyData.success,
-            score: score,
-            action: verifyData.action,
-            threshold: threshold,
             reason: 'Score below acceptable threshold'
           }
         };
@@ -447,7 +436,6 @@ async function verifyRecaptcha(token, options = {}) {
     return {
       success: true,
       details: {
-        success: verifyData.success,
         score: verifyData.score,
         action: verifyData.action
       }
@@ -610,7 +598,7 @@ exports.book = onRequest({
     const { name, email, phone, aika, services, totalPrice, totalNumericPrice } = req.body;
 
     // Accept multiple common recaptcha token field names from client
-    const recaptchaToken = req.body.recaptcha || req.body.recaptchaToken || req.body['g-recaptcha-response'] || req.body.token;
+    const recaptchaToken = req.body.recaptcha || req.body.recaptchaToken || req.body['g-recaptcha-response'];
     
     // Validate required fields (excluding recaptcha for more specific error message)
     if (!name || !email || !phone || !aika || !services) {
