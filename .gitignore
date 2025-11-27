@@ -2,7 +2,14 @@
 *.tmp
 *.bak
 *.log
+
+# Ignore environment files (except .env.example)
 *.env
+.env.*
+!.env.example
+functions/.env
+functions/.env.*
+!functions/.env.example
 
 # Ignore node_modules folders
 node_modules/
