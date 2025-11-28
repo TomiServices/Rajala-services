@@ -81,4 +81,4 @@ firebase deploy --only functions --project fxnr-web
 
 ---
 
-**Last Updated:** November 2024
+**Last Updated:** November 28, 2024

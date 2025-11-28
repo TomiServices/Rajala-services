@@ -1,6 +1,6 @@
 # Service account credentials
-fxnr-web-759e0ffdc7f2.json
 *service-account*.json
+*.json.credentials
 
 # Environment files that may conflict with Secret Manager
 .env.fxnr-web
