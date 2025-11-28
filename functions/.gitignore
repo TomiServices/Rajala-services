@@ -1,1 +1,18 @@
-fxnr-web-759e0ffdc7f2.json git add .gitignore
+# Service account credentials
+fxnr-web-759e0ffdc7f2.json
+*service-account*.json
+
+# Environment files that may conflict with Secret Manager
+.env.fxnr-web
+.env.local
+.env.production
+.env
+
+# Keep example files
+!.env.example
+
+# Node modules
+node_modules/
+
+# Runtime config
+.runtimeconfig.json

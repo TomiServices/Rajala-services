@@ -25,7 +25,8 @@ cp .env.example .env
 
 2. Edit `.env` and add your configuration values:
 ```env
-RECAPTCHA_SECRET=your_recaptcha_secret_key
+# NOTE: RECAPTCHA_SECRET must be set via Secret Manager, not in .env!
+# See: firebase functions:secrets:set RECAPTCHA_SECRET
 GOOGLE_SERVICE_ACCOUNT={"type":"service_account",...}
 GOOGLE_CALENDAR_ID=your_calendar_id@group.calendar.google.com
 ```
