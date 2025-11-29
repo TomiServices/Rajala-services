@@ -58,7 +58,6 @@ function escapeHtml(text) {
 // =======================
 // ENVIRONMENT PARAMETERS (Gen2 / fallback to env)
 // =======================
-const recaptchaSecret = defineString('RECAPTCHA_SECRET');
 const googleServiceAccount = defineString('GOOGLE_SERVICE_ACCOUNT');
 const googleCalendarId = defineString('GOOGLE_CALENDAR_ID');
 const emailUser = defineString('EMAIL_USER');
@@ -374,7 +373,7 @@ async function verifyRecaptcha(token, options = {}) {
       };
     }
 
-    const secretKey = safeGetParamValue(recaptchaSecret, 'RECAPTCHA_SECRET');
+    const secretKey = process.env.RECAPTCHA_SECRET;
     if (!secretKey) {
       console.error('reCAPTCHA secret not configured in environment');
       return {
