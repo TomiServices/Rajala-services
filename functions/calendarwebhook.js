@@ -166,8 +166,16 @@ exports.calendarWebhook = async (req, res) => {
     }
 
     // Prepare calendar client
-    const client = await getGoogleClient();
-    const calendar = google.calendar({ version: 'v3', auth: client });
+    let calendar;
+    try {
+      const client = await getGoogleClient();
+      console.log('calendarWebhook auth client used: adc');
+      calendar = google.calendar({ version: 'v3', auth: client });
+    } catch (authErr) {
+      console.error('calendarWebhook: Failed to get auth client:', authErr.message || authErr);
+      res.status(500).send({ ok: false, error: 'Auth initialization failed' });
+      return;
+    }
 
     // Get latest watch doc for this calendar
     const watchDoc = await findLatestWatchDoc(calendarId);
