@@ -2552,13 +2552,19 @@
             }
             .fc-toolbar {
                 flex-wrap: wrap;
+                padding: 12px 8px !important;
             }
             .fc-toolbar-title {
-                font-size: 1.2rem;
+                font-size: 1rem !important;
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
             .fc-toolbar-title::before {
-                width: 20px;
-                height: 20px;
+                width: 18px;
+                height: 18px;
+                font-size: 1rem;
             }
             .fc-button {
                 padding: 0.3em 0.5em;
@@ -2803,6 +2809,21 @@
             .fc-timegrid-slot-lane {
                 position: relative;
                 overflow: hidden;
+            }
+        }
+        
+        /* Extra small screens (iPhone SE, etc.) - ensure month title fits */
+        @media (max-width: 400px) {
+            .fc-toolbar-title {
+                font-size: 0.85rem !important;
+                letter-spacing: -0.5px;
+            }
+            .fc-toolbar-title::before {
+                font-size: 0.85rem;
+                margin-right: 4px;
+            }
+            .fc-toolbar {
+                padding: 10px 6px !important;
             }
         }
         
@@ -4851,15 +4872,13 @@
             console.log('✓ FullCalendar loaded successfully');
             fullCalendarLoaded = true;
             
-            // Wait a moment for script to fully initialize before calling the booking system
-            setTimeout(() => {
-                if (window.initializeBookingSystem) {
-                    console.log('Initializing booking system...');
-                    window.initializeBookingSystem();
-                } else {
-                    console.error('initializeBookingSystem function not found');
-                }
-            }, 100);
+            // FIX: Initialize immediately without delay for faster rendering
+            if (window.initializeBookingSystem) {
+                console.log('Initializing booking system...');
+                window.initializeBookingSystem();
+            } else {
+                console.error('initializeBookingSystem function not found');
+            }
         };
         
         // FIX: Error handler - retry or show fallback calendar if loading fails
@@ -4868,17 +4887,15 @@
             
             // Retry if we haven't exceeded max attempts
             if (loadAttempts < MAX_LOAD_ATTEMPTS) {
-                console.log('Retrying FullCalendar load in 1 second...');
-                setTimeout(loadFullCalendar, 1000);
+                console.log('Retrying FullCalendar load in 500ms...');
+                setTimeout(loadFullCalendar, 500);
             } else {
                 console.error('FullCalendar failed to load after maximum attempts. Fallback calendar will be shown.');
                 fullCalendarLoaded = true; // Prevent further attempts
                 
                 // Trigger booking system initialization which will use fallback
                 if (window.initializeBookingSystem) {
-                    setTimeout(() => {
-                        window.initializeBookingSystem();
-                    }, 100);
+                    window.initializeBookingSystem();
                 }
             }
         };
@@ -4891,13 +4908,14 @@
     if ('requestIdleCallback' in window) {
         requestIdleCallback(() => {
             loadFullCalendar();
-        }, { timeout: 500 });
+        }, { timeout: 100 });
     } else {
         // Fallback for browsers without requestIdleCallback
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', loadFullCalendar);
         } else {
-            setTimeout(loadFullCalendar, 100);
+            // DOM is already ready, load immediately
+            loadFullCalendar();
         }
     }
 })();
