@@ -166,11 +166,11 @@ exports.calendarWebhook = async (req, res) => {
     }
 
     // Prepare calendar client
-    let authClientUsed = 'adc'; // Default to ADC since getGoogleClient uses ADC as fallback
+    let calendar;
     try {
       const client = await getGoogleClient();
       console.log('calendarWebhook auth client used: adc');
-      var calendar = google.calendar({ version: 'v3', auth: client });
+      calendar = google.calendar({ version: 'v3', auth: client });
     } catch (authErr) {
       console.error('calendarWebhook: Failed to get auth client:', authErr.message || authErr);
       res.status(500).send({ ok: false, error: 'Auth initialization failed' });
