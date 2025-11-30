@@ -1139,9 +1139,8 @@ function initializeBookingSystem() {
         // Ensure bookings is an array
         bookings = Array.isArray(bookings) ? bookings : [];
         
-        const today = new Date();
-        const now = new Date(); // Keep full datetime for time slot checks
-        const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const now = new Date();
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         
         // Find next available slot within next 60 days (increased from 30)
         for (let daysFromToday = 0; daysFromToday < 60; daysFromToday++) {
@@ -1167,8 +1166,9 @@ function initializeBookingSystem() {
             let availableSlots = 8;
             if (daysFromToday === 0) {
                 // For today, count only future time slots
+                // Business hours are 9-17 (slots: 9,10,11,12,13,14,15,16 = 8 slots)
+                // If current hour is 11, next available slot is 12, so available: 12,13,14,15,16 = 5 slots
                 const currentHour = now.getHours();
-                // Slots from 9-17, so if current hour is 11, only slots 12-16 are available (5 slots)
                 availableSlots = Math.max(0, 17 - Math.max(9, currentHour + 1));
             }
             
