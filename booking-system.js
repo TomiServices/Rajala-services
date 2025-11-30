@@ -15,16 +15,28 @@ const RECAPTCHA_SITE_KEY = '6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM';
  */
 async function executeRecaptcha(action) {
     try {
-        // Check if grecaptcha is loaded
-        if (typeof grecaptcha === 'undefined' || !grecaptcha.ready) {
+        // Check if grecaptcha is loaded - check for the ready function specifically
+        if (typeof grecaptcha === 'undefined') {
+            console.error('reCAPTCHA not loaded: grecaptcha is undefined');
             throw new Error('reCAPTCHA ei ole ladattu. Päivitä sivu ja yritä uudelleen.');
+        }
+        
+        if (typeof grecaptcha.ready !== 'function') {
+            console.error('reCAPTCHA not ready: grecaptcha.ready is not a function');
+            throw new Error('reCAPTCHA ei ole valmis. Päivitä sivu ja yritä uudelleen.');
         }
         
         // Wait for reCAPTCHA to be ready using callback-based approach
         // grecaptcha.ready() accepts a callback function, not a Promise
         return new Promise((resolve, reject) => {
+            // Set a timeout in case grecaptcha.ready never calls back
+            const timeoutId = setTimeout(() => {
+                reject(new Error('Turvavarmennus aikakatkaisu. Päivitä sivu ja yritä uudelleen.'));
+            }, 10000); // 10 second timeout
+            
             try {
                 grecaptcha.ready(() => {
+                    clearTimeout(timeoutId);
                     try {
                         grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: action })
                             .then(token => {
@@ -44,6 +56,7 @@ async function executeRecaptcha(action) {
                     }
                 });
             } catch (readyError) {
+                clearTimeout(timeoutId);
                 console.error('reCAPTCHA ready error:', readyError);
                 reject(new Error('Turvavarmennus ei ole valmis. Päivitä sivu ja yritä uudelleen.'));
             }
@@ -1127,10 +1140,11 @@ function initializeBookingSystem() {
         bookings = Array.isArray(bookings) ? bookings : [];
         
         const today = new Date();
+        const now = new Date(); // Keep full datetime for time slot checks
         const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
         
-        // Find next available slot within next 30 days
-        for (let daysFromToday = 0; daysFromToday < 30; daysFromToday++) {
+        // Find next available slot within next 60 days (increased from 30)
+        for (let daysFromToday = 0; daysFromToday < 60; daysFromToday++) {
             const checkDate = new Date(startOfToday);
             checkDate.setDate(startOfToday.getDate() + daysFromToday);
             
@@ -1142,20 +1156,31 @@ function initializeBookingSystem() {
             const dateKey = getDateKey(checkDate);
             if (!dateKey) continue; // Skip invalid dates
             
+            // Count booked slots for this day
             const dayBookingCount = bookings.filter(b => {
                 const bookingDateKey = getDateKey(b.aika);
                 return bookingDateKey === dateKey;
             }).length;
             
-            // If day has less than 2 bookings, it has available slots
-            if (dayBookingCount < 2) {
+            // FIX: There are 8 business hours (9-17) per day
+            // But if it's today, we need to account for past hours
+            let availableSlots = 8;
+            if (daysFromToday === 0) {
+                // For today, count only future time slots
+                const currentHour = now.getHours();
+                // Slots from 9-17, so if current hour is 11, only slots 12-16 are available (5 slots)
+                availableSlots = Math.max(0, 17 - Math.max(9, currentHour + 1));
+            }
+            
+            // A day has available slots if bookings < available time slots
+            if (dayBookingCount < availableSlots) {
                 calendar.gotoDate(checkDate);
-                console.log('Navigated to week containing next available slot:', checkDate.toLocaleDateString('fi-FI'));
+                console.log('Navigated to date with next available slot:', checkDate.toLocaleDateString('fi-FI'));
                 return checkDate;
             }
         }
         
-        console.log('No available slots found in next 30 days');
+        console.log('No available slots found in next 60 days');
         return null;
     }
 
@@ -1490,105 +1515,104 @@ function initializeBookingSystem() {
         if (calendar) {
             // Wrap render in try-catch to handle any rendering errors gracefully
             try {
-                // FIX: Minimal delay to ensure DOM is fully ready before render
-                setTimeout(() => {
-                    try {
-                        calendar.render();
-                        
-                        // FIX: Move all post-render setup inside the timeout to ensure calendar is fully initialized
-                        // Navigation button state management for month view
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
-                        
-                        function updateNavigationButtons() {
-                            if (!calendar || !calendar.getDate || !calendar.view) {
-                                return;
-                            }
-                            
-                            const prevBtn = document.getElementById('prevWeekBtn');
-                            const nextBtn = document.getElementById('nextWeekBtn');
-                            
-                            if (!prevBtn || !nextBtn) {
-                                return;
-                            }
-                            
-                            const view = calendar.view;
-                            const viewStart = view.currentStart;
-                            const viewEnd = view.currentEnd;
-                            
-                            // Disable prev button if view start is at or before today
-                            const todayStart = new Date(today);
-                            todayStart.setHours(0, 0, 0, 0);
-                            prevBtn.disabled = (viewStart <= todayStart);
-                            
-                            // Disable next button if we're at the valid range end
-                            const validRangeEnd = new Date(today.getFullYear(), today.getMonth() + 2, 0);
-                            nextBtn.disabled = (viewEnd >= validRangeEnd);
+                // FIX: Render immediately without delay to prevent white screen
+                try {
+                    calendar.render();
+                    
+                    // FIX: Setup immediately after render (no nested setTimeout for better loading)
+                    // Navigation button state management for month view
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    
+                    function updateNavigationButtons() {
+                        if (!calendar || !calendar.getDate || !calendar.view) {
+                            return;
                         }
                         
-                        // Previous/Next month buttons
                         const prevBtn = document.getElementById('prevWeekBtn');
                         const nextBtn = document.getElementById('nextWeekBtn');
                         
-                        if (prevBtn) {
-                            prevBtn.addEventListener('click', function() {
-                                if (calendar && calendar.prev) {
-                                    calendar.prev();
-                                    updateNavigationButtons();
-                                    populateAvailableSlots(calendar, bookings);
-                                }
-                            });
+                        if (!prevBtn || !nextBtn) {
+                            return;
                         }
                         
-                        if (nextBtn) {
-                            nextBtn.addEventListener('click', function() {
-                                if (calendar && calendar.next) {
-                                    calendar.next();
-                                    updateNavigationButtons();
-                                    populateAvailableSlots(calendar, bookings);
-                                }
-                            });
-                        }
+                        const view = calendar.view;
+                        const viewStart = view.currentStart;
+                        const viewEnd = view.currentEnd;
                         
-                        // Navigate to week with next available booking slot
-                        setTimeout(() => {
-                            if (calendar && calendar.gotoDate) {
-                                findAndNavigateToNextAvailableWeek(calendar, bookings);
+                        // Disable prev button if view start is at or before today
+                        const todayStart = new Date(today);
+                        todayStart.setHours(0, 0, 0, 0);
+                        prevBtn.disabled = (viewStart <= todayStart);
+                        
+                        // Disable next button if we're at the valid range end
+                        const validRangeEnd = new Date(today.getFullYear(), today.getMonth() + 2, 0);
+                        nextBtn.disabled = (viewEnd >= validRangeEnd);
+                    }
+                    
+                    // Previous/Next month buttons
+                    const prevBtn = document.getElementById('prevWeekBtn');
+                    const nextBtn = document.getElementById('nextWeekBtn');
+                    
+                    if (prevBtn) {
+                        prevBtn.addEventListener('click', function() {
+                            if (calendar && calendar.prev) {
+                                calendar.prev();
                                 updateNavigationButtons();
                                 populateAvailableSlots(calendar, bookings);
                             }
-                            
-                            // Don't show time selection grid initially - user must click a day first
-                            const timeGridContainer = document.getElementById('time-selection-grid');
-                            if (timeGridContainer) {
-                                timeGridContainer.style.display = 'none';
-                            }
-                            
-                            // Make calendar compact initially, expand on first interaction
-                            calendarEl.classList.add('compact');
-                            
-                            // Expand calendar on first click
-                            let hasInteracted = false;
-                            const expandCalendar = function() {
-                                if (!hasInteracted) {
-                                    calendarEl.classList.remove('compact');
-                                    calendarEl.classList.add('expanded');
-                                    hasInteracted = true;
-                                }
-                            };
-                            
-                            calendarEl.addEventListener('click', expandCalendar, { once: false });
-                            calendarEl.addEventListener('touchstart', expandCalendar, { once: false });
-                            
-                            setupDropdownEventListener();
-                        }, 100);
-                        
-                    } catch (renderError) {
-                        console.error('FullCalendar render failed:', renderError);
-                        calendar = null; // Reset calendar to null so fallback can activate
-                        return; // Exit early to trigger fallback
+                        });
                     }
-                }, 50);
+                    
+                    if (nextBtn) {
+                        nextBtn.addEventListener('click', function() {
+                            if (calendar && calendar.next) {
+                                calendar.next();
+                                updateNavigationButtons();
+                                populateAvailableSlots(calendar, bookings);
+                            }
+                        });
+                    }
+                    
+                    // FIX: Navigate to next available slot immediately after render
+                    // Using requestAnimationFrame instead of setTimeout for better timing
+                    requestAnimationFrame(() => {
+                        if (calendar && calendar.gotoDate) {
+                            findAndNavigateToNextAvailableWeek(calendar, bookings);
+                            updateNavigationButtons();
+                            populateAvailableSlots(calendar, bookings);
+                        }
+                        
+                        // Don't show time selection grid initially - user must click a day first
+                        const timeGridContainer = document.getElementById('time-selection-grid');
+                        if (timeGridContainer) {
+                            timeGridContainer.style.display = 'none';
+                        }
+                        
+                        // Make calendar compact initially, expand on first interaction
+                        calendarEl.classList.add('compact');
+                        
+                        // Expand calendar on first click
+                        let hasInteracted = false;
+                        const expandCalendar = function() {
+                            if (!hasInteracted) {
+                                calendarEl.classList.remove('compact');
+                                calendarEl.classList.add('expanded');
+                                hasInteracted = true;
+                            }
+                        };
+                        
+                        calendarEl.addEventListener('click', expandCalendar, { once: false });
+                        calendarEl.addEventListener('touchstart', expandCalendar, { once: false });
+                        
+                        setupDropdownEventListener();
+                    });
+                    
+                } catch (renderError) {
+                    console.error('FullCalendar render failed:', renderError);
+                    calendar = null; // Reset calendar to null so fallback can activate
+                    return; // Exit early to trigger fallback
+                }
             } catch (error) {
                 console.error('Error preparing calendar render:', error);
                 calendar = null;
