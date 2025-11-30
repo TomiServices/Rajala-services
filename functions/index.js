@@ -9,6 +9,7 @@ const nodemailer = require('nodemailer');
 const { onRequest } = require('firebase-functions/v2/https');
 const { onDocumentCreated, onDocumentUpdated, onDocumentDeleted } = require('firebase-functions/v2/firestore');
 const { defineString } = require('firebase-functions/params');
+const { getGoogleClient } = require('./lib/auth-client');
 
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -508,16 +509,40 @@ async function createGoogleCalendarEvent(bookingData) {
     servicesCount: (bookingData.services || []).length
   });
 
-  const calendar = initializeGoogleCalendar();
-  if (!calendar || !calendarId) {
-    console.error('Google Calendar integration not configured:', {
-      calendarInitialized: !!calendar,
-      calendarIdSet: !!calendarId,
-      serviceAccountConfigured: !!safeGetParamValue(googleServiceAccount, 'GOOGLE_SERVICE_ACCOUNT'),
-      calendarIdConfigured: !!safeGetParamValue(googleCalendarId, 'GOOGLE_CALENDAR_ID')
-    });
-    return null;
+  // Track which auth method was used for logging
+  let authMethod = 'jwt';
+  let calendar = initializeGoogleCalendar();
+  let effectiveCalendarId = calendarId;
+  
+  // If service account initialization fails, try ADC fallback
+  if (!calendar || !effectiveCalendarId) {
+    const calIdEnv = safeGetParamValue(googleCalendarId, 'GOOGLE_CALENDAR_ID') || getLegacyConfigValue('google.calendar_id');
+    
+    try {
+      const authClient = await getGoogleClient(['https://www.googleapis.com/auth/calendar']);
+      if (authClient && calIdEnv) {
+        effectiveCalendarId = calIdEnv;
+        calendar = google.calendar({ version: 'v3', auth: authClient });
+        authMethod = 'adc';
+        console.log('Google Calendar initialized via ADC fallback (getGoogleClient).');
+      }
+    } catch (adcErr) {
+      console.warn('ADC fallback failed:', adcErr.message || adcErr);
+    }
+    
+    // If still not configured after ADC fallback, log and return null
+    if (!calendar || !effectiveCalendarId) {
+      console.error('Google Calendar integration not configured:', {
+        calendarInitialized: !!calendar,
+        calendarIdSet: !!effectiveCalendarId,
+        serviceAccountConfigured: !!safeGetParamValue(googleServiceAccount, 'GOOGLE_SERVICE_ACCOUNT'),
+        calendarIdConfigured: !!safeGetParamValue(googleCalendarId, 'GOOGLE_CALENDAR_ID')
+      });
+      return null;
+    }
   }
+  
+  console.log('Google Calendar client used:', authMethod);
 
   try {
     const startDate = parseFirestoreDate(bookingData.aika) || new Date(bookingData.aika);
@@ -554,18 +579,19 @@ async function createGoogleCalendarEvent(bookingData) {
       summary: event.summary,
       start: event.start.dateTime,
       end: event.end.dateTime,
-      calendarId: calendarId
+      calendarId: effectiveCalendarId
     });
 
     const resp = await calendar.events.insert({
-      calendarId,
+      calendarId: effectiveCalendarId,
       requestBody: event
     });
 
     console.log('Google Calendar event created successfully:', {
       eventId: resp.data && resp.data.id,
       htmlLink: resp.data && resp.data.htmlLink,
-      status: resp.data && resp.data.status
+      status: resp.data && resp.data.status,
+      authMethod: authMethod
     });
     return resp.data && resp.data.id;
   } catch (err) {
@@ -574,7 +600,7 @@ async function createGoogleCalendarEvent(bookingData) {
       errorCode: err.code,
       errorStatus: err.status,
       errors: err.errors || [],
-      calendarId: calendarId
+      calendarId: effectiveCalendarId
     });
     // Return null to allow booking to succeed even if calendar sync fails
     // The caller handles null as "calendar not configured or sync failed"

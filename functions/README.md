@@ -242,6 +242,15 @@ functions/
 
 ## 🔄 Version History
 
+### v2.1.0 (Nov 30, 2024)
+- **Improved Google Calendar authentication reliability**
+  - Added ADC (Application Default Credentials) fallback when service account JSON is not configured or fails to parse
+  - Created `src/googleCalendarAuth.js` helper for consistent JWT/ADC auth handling
+  - Modified `createGoogleCalendarEvent` in `index.js` to automatically fall back to ADC
+  - Added logging to indicate which authentication method (jwt/adc) is being used
+  - Updated `calendarwebhook.js` with improved error handling and auth logging
+- **Recommendation**: Use Secret Manager or ADC instead of committing service account JSON keys to the repository
+
 ### v2.0.0 (Nov 22, 2024)
 - Migrated all functions to Gen2 syntax
 - Replaced `functions.config()` with environment variables
@@ -261,6 +270,6 @@ For issues or questions:
 
 ---
 
-**Last Updated**: November 22, 2024  
+**Last Updated**: November 30, 2024  
 **Firebase Functions Version**: Gen2  
 **Node.js Version**: 20
