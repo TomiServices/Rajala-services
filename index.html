@@ -1810,6 +1810,26 @@
             color: #999999;
         }
         
+        /* FIX Issue 2: Ensure day cell content displays only the day number
+           This prevents the month name (e.g., "joulukuu") from appearing in the first cell
+           and breaking the layout on mobile devices */
+        #calendar .fc-daygrid-day-frame {
+            overflow: hidden;
+        }
+        
+        #calendar .fc-daygrid-day-top {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #calendar .fc-daygrid-day-number {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #333333;
+            padding: 4px 8px;
+        }
+        
         /* Calendar navigation buttons */
         .calendar-nav-container {
             display: flex;

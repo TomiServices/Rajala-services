@@ -1305,13 +1305,26 @@ function initializeBookingSystem() {
             hiddenDays: [], // Show all days including weekends
             displayEventTime: false,
             dayMaxEventRows: 3,
+            // FIX Issue 2: Prevent month name from appearing in first day cell
+            // FullCalendar Finnish locale shows "joulukuu" (December) in the first cell by default
+            // This override ensures only the day number is shown, fixing the layout issue
+            dayCellContent: function(arg) {
+                return { html: '<span class="fc-daygrid-day-number">' + arg.dayNumberText.replace(/\D/g, '') + '</span>' };
+            },
             viewDidMount: function(info) {
-                // Small delay to ensure view is fully rendered
-                setTimeout(() => {
-                    if (calendar && info && info.view) {
-                        populateAvailableSlots(calendar, bookings);
-                    }
-                }, 50);
+                // FIX Issue 1: Force calendar re-render on mobile to ensure cells are visible
+                // Using double requestAnimationFrame for reliable DOM timing
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        if (calendar && info && info.view) {
+                            populateAvailableSlots(calendar, bookings);
+                            // Force calendar to update its size for mobile devices
+                            if (isMobileView && calendar.updateSize) {
+                                calendar.updateSize();
+                            }
+                        }
+                    });
+                });
             },
             // Mobile-specific improvements
             height: 'auto',
@@ -1589,16 +1602,32 @@ function initializeBookingSystem() {
                             timeGridContainer.style.display = 'none';
                         }
                         
-                        // Make calendar compact initially, expand on first interaction
-                        calendarEl.classList.add('compact');
+                        // FIX Issue 1: For mobile devices, don't apply compact class initially
+                        // This ensures cells are visible immediately when calendar appears
+                        // Also force updateSize to ensure proper rendering
+                        if (isMobileView) {
+                            // Skip compact class on mobile to prevent empty cells issue
+                            calendarEl.classList.add('expanded');
+                            // Force calendar to recalculate size after DOM is ready
+                            if (calendar && calendar.updateSize) {
+                                calendar.updateSize();
+                            }
+                        } else {
+                            // Make calendar compact initially on desktop, expand on first interaction
+                            calendarEl.classList.add('compact');
+                        }
                         
-                        // Expand calendar on first click
+                        // Expand calendar on first click (for desktop users)
                         let hasInteracted = false;
                         const expandCalendar = function() {
                             if (!hasInteracted) {
                                 calendarEl.classList.remove('compact');
                                 calendarEl.classList.add('expanded');
                                 hasInteracted = true;
+                                // Force calendar to update its size after expanding
+                                if (calendar && calendar.updateSize) {
+                                    calendar.updateSize();
+                                }
                             }
                         };
                         
