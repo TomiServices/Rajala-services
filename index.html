@@ -658,11 +658,30 @@
             }
             
             /* Make service sections scale better on small phones */
+            /* Increased margin for better spacing on mobile devices */
             .services-container section {
                 transform: scale(1.02);
                 transform-origin: center;
                 padding: 20px 15px;
-                margin: 20px auto;
+                margin: 40px auto !important;
+            }
+            
+            /* Ensure pricing section has adequate spacing on small screens */
+            #hinnasto {
+                margin-top: 40px !important;
+                margin-bottom: 40px !important;
+                padding: 24px 15px !important;
+            }
+            
+            /* Ensure UKK section has proper spacing */
+            #ukk {
+                margin-top: 40px !important;
+                margin-bottom: 40px !important;
+            }
+            
+            /* Ensure Yhteystiedot section has proper spacing */
+            #yhteystiedot {
+                margin-top: 40px !important;
             }
             
             #pesupalvelut h2, 
