@@ -1202,6 +1202,52 @@
             }
         }
         
+        /* Tablet breakpoint (769px - 1100px) - Fix text/image layout for half-screen Chrome */
+        /* This breakpoint addresses the issue where text becomes cramped on half-screen desktop */
+        @media (min-width: 769px) and (max-width: 1100px) {
+            .polishing-content,
+            .tire-services-content,
+            .interior-cleaning-content {
+                flex-direction: column;
+                gap: 25px;
+            }
+            
+            .polishing-image,
+            .tire-services-image,
+            .interior-cleaning-image {
+                flex: 1;
+                max-width: 100%;
+                margin: 20px 0 0 0;
+                order: 1;
+            }
+            
+            .polishing-image img,
+            .tire-services-image img,
+            .interior-cleaning-image img {
+                width: 100%;
+                max-width: 600px;
+                height: auto;
+                margin: 0 auto;
+                display: block;
+            }
+            
+            .polishing-text,
+            .tire-services-text,
+            .interior-cleaning-text {
+                min-width: 100%;
+            }
+            
+            /* Ensure #lasikorjaus image also follows tablet layout */
+            #lasikorjaus .polishing-image {
+                flex: 1;
+                max-width: 100%;
+            }
+            
+            #lasikorjaus .polishing-image img {
+                max-width: 450px;
+            }
+        }
+        
         
         /* Slow-moving pattern for sisapuhdistus */
         #sisapuhdistus::before {
