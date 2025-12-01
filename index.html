@@ -1501,7 +1501,7 @@
         
         @media (max-width: 1200px) {
             .services-container {
-                max-width: 850px;
+                max-width: 1000px;
             }
         }
         
@@ -3721,6 +3721,166 @@
             background: linear-gradient(135deg, #333333 0%, #555555 100%);
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 0, 0, 0.4);
             transform: translateY(-2px);
+        }
+        
+        /* ========================================
+           IMPROVED SCALING FOR MEDIUM-LARGE SCREENS
+           These rules have highest precedence to ensure 
+           proper scaling above tablet breakpoints
+           ======================================== */
+        
+        /* Medium screens (1101px - 1400px) - stack content vertically for better readability */
+        @media (min-width: 1101px) and (max-width: 1400px) {
+            section {
+                max-width: 1000px !important;
+                padding: 30px 25px !important;
+            }
+            
+            .services-container {
+                max-width: 1100px !important;
+                padding: 0 30px !important;
+            }
+            
+            /* Stack content vertically for better text readability */
+            .polishing-content,
+            .tire-services-content,
+            .interior-cleaning-content {
+                flex-direction: column !important;
+                gap: 30px !important;
+            }
+            
+            .polishing-image,
+            .tire-services-image,
+            .interior-cleaning-image {
+                flex: none !important;
+                max-width: 100% !important;
+                order: 1 !important;
+            }
+            
+            .polishing-image img,
+            .tire-services-image img,
+            .interior-cleaning-image img {
+                width: 100% !important;
+                max-width: 650px !important;
+                height: auto !important;
+                margin: 0 auto !important;
+                display: block !important;
+            }
+            
+            .polishing-text,
+            .tire-services-text,
+            .interior-cleaning-text {
+                width: 100% !important;
+                order: 0 !important;
+            }
+            
+            /* Lasikorjaus section */
+            #lasikorjaus .polishing-image {
+                max-width: 100% !important;
+            }
+            
+            #lasikorjaus .polishing-image img {
+                max-width: 500px !important;
+            }
+            
+            /* Better text readability */
+            section p, section li {
+                font-size: 0.95rem;
+                line-height: 1.7;
+            }
+            
+            .ajanvaraus-container {
+                max-width: 1000px !important;
+            }
+        }
+        
+        /* Larger medium screens (1401px - 1599px) - side-by-side with balanced proportions */
+        @media (min-width: 1401px) and (max-width: 1599px) {
+            section {
+                max-width: 1100px !important;
+                padding: 32px 28px !important;
+            }
+            
+            .services-container {
+                max-width: 1200px !important;
+                padding: 0 35px !important;
+            }
+            
+            .polishing-content,
+            .tire-services-content,
+            .interior-cleaning-content {
+                max-width: 100% !important;
+                gap: 40px !important;
+            }
+            
+            .polishing-image,
+            .tire-services-image,
+            .interior-cleaning-image {
+                flex: 0 0 45% !important;
+                max-width: 45% !important;
+            }
+            
+            .polishing-text,
+            .tire-services-text,
+            .interior-cleaning-text {
+                flex: 1 !important;
+                min-width: 0 !important;
+            }
+            
+            #lasikorjaus .polishing-image {
+                flex: 0 0 40% !important;
+                max-width: 40% !important;
+            }
+            
+            section p, section li {
+                font-size: 0.96rem;
+                line-height: 1.7;
+            }
+            
+            .ajanvaraus-container {
+                max-width: 1100px !important;
+            }
+        }
+        
+        /* Pre-Full HD screens (1600px - 1919px) */
+        @media (min-width: 1600px) and (max-width: 1919px) {
+            section {
+                max-width: 1150px !important;
+                padding: 32px 30px !important;
+            }
+            
+            .services-container {
+                max-width: 1300px !important;
+                padding: 0 40px !important;
+            }
+            
+            .polishing-content,
+            .tire-services-content,
+            .interior-cleaning-content {
+                max-width: 100% !important;
+                gap: 45px !important;
+            }
+            
+            .polishing-image,
+            .tire-services-image,
+            .interior-cleaning-image {
+                flex: 0 0 48% !important;
+                max-width: 48% !important;
+            }
+            
+            #lasikorjaus .polishing-image {
+                flex: 0 0 42% !important;
+                max-width: 42% !important;
+            }
+            
+            section p, section li {
+                font-size: 0.98rem;
+                line-height: 1.7;
+            }
+            
+            .ajanvaraus-container {
+                max-width: 1150px !important;
+            }
         }
     </style>
 </head>
