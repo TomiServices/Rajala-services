@@ -1207,6 +1207,7 @@
         
         /* Tablet breakpoint (769px - 1100px) - Fix text/image layout for half-screen Chrome */
         /* This breakpoint addresses the issue where text becomes cramped on half-screen desktop */
+        /* FIX: Added text-align: center to image containers for proper centering under text */
         @media (min-width: 769px) and (max-width: 1100px) {
             .polishing-content,
             .tire-services-content,
@@ -1215,12 +1216,16 @@
                 gap: 25px;
             }
             
+            /* FIX: Image container centering - added text-align: center and width: 100% */
+            /* This ensures images center properly under text in tablet view */
             .polishing-image,
             .tire-services-image,
             .interior-cleaning-image {
                 max-width: 100%;
-                margin: 20px 0 0 0;
+                width: 100%;
+                margin: 20px auto 0 auto;
                 order: 1;
+                text-align: center;
             }
             
             .polishing-image img,
@@ -1656,6 +1661,42 @@
             /* Standardize spacing for Yhteystiedot section */
             #yhteystiedot {
                 margin-top: 50px !important;
+            }
+        }
+        
+        /* 
+         * FIX: Tablet breakpoint (769px - 1100px) section spacing
+         * Ensures consistent paragraph/section spacing on tablet-sized screens
+         * Prevents visual overlap and maintains typographic aesthetics
+         */
+        @media (min-width: 769px) and (max-width: 1100px) {
+            /* Unified section spacing for tablet view */
+            .services-container section {
+                margin: 45px auto;
+            }
+            
+            /* Standardize section padding for consistent visual appearance */
+            section {
+                padding: 28px 22px 22px 22px;
+            }
+            
+            /* Ensure proper spacing between sections */
+            #lasikorjaus {
+                margin-bottom: 50px;
+            }
+            
+            #hinnasto {
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+            
+            #ukk {
+                margin-top: 50px;
+                margin-bottom: 45px;
+            }
+            
+            #yhteystiedot {
+                margin-top: 45px;
             }
         }
         
