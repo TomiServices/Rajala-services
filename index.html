@@ -1058,14 +1058,6 @@
                 margin: 20px 0 0 0;
                 order: 1;
             }
-            
-            .tire-services-image img {
-                width: 100%;
-                max-width: 500px;
-                height: auto;
-                margin: 0 auto;
-                display: block;
-            }
         }
         
         /* Extra small mobile devices - optimize layout for iPhone 15 Pro and similar */
@@ -1073,12 +1065,6 @@
             .tire-services-image {
                 max-width: 100%;
                 margin: 15px 0 0 0;
-            }
-            
-            .tire-services-image img {
-                max-width: 400px;
-                margin: 0 auto;
-                display: block;
             }
         }
         
@@ -1133,7 +1119,10 @@
                 order: 1;
             }
             
-            .interior-cleaning-image img {
+            /* Shared mobile image centering for all service sections */
+            .interior-cleaning-image img,
+            .tire-services-image img,
+            .polishing-image img {
                 width: 100%;
                 max-width: 500px;
                 height: auto;
@@ -1149,10 +1138,11 @@
                 margin: 15px 0 0 0;
             }
             
-            .interior-cleaning-image img {
+            /* Shared smaller max-width for extra small screens */
+            .interior-cleaning-image img,
+            .tire-services-image img,
+            .polishing-image img {
                 max-width: 400px;
-                margin: 0 auto;
-                display: block;
             }
         }
         
@@ -1205,14 +1195,6 @@
                 margin: 20px 0 0 0;
                 order: 1;
             }
-            
-            .polishing-image img {
-                width: 100%;
-                max-width: 500px;
-                height: auto;
-                margin: 0 auto;
-                display: block;
-            }
         }
         
         /* Extra small mobile devices - optimize layout for iPhone 15 Pro and similar */
@@ -1220,12 +1202,6 @@
             .polishing-image {
                 max-width: 100%;
                 margin: 15px 0 0 0;
-            }
-            
-            .polishing-image img {
-                max-width: 400px;
-                margin: 0 auto;
-                display: block;
             }
         }
         
