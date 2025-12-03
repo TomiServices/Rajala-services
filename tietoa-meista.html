@@ -124,7 +124,7 @@
             transition: all 0.3s ease;
         }
         nav img:hover {
-            transform: scale(1.05);
+            transform: translateY(-2px) scale(1.05);
             filter: brightness(1.2);
         }
         nav a {
@@ -144,12 +144,8 @@
             color: #ffffff;
             transform: translateY(-2px);
         }
-        nav a.nav-active {
-            box-shadow: 0 0 15px rgba(63, 169, 245, 0.4);
-            border-bottom: 2px solid #3FA9F5;
-        }
         
-        /* Laptop screen adjustments (1280px - 1366px) to prevent navigation overflow */
+        /* Laptop screen adjustments */
         @media (min-width: 1280px) and (max-width: 1366px) {
             nav {
                 padding: 0 10px;
@@ -166,6 +162,7 @@
             }
         }
         
+        /* Hamburger menu */
         .hamburger-menu {
             display: none;
             cursor: pointer;
@@ -218,6 +215,7 @@
         .hamburger-menu.active span:nth-child(3) {
             transform: rotate(-45deg) translate(6px, -6px);
         }
+        
         @media (max-width: 1279px) {
             .hamburger-menu { display: flex !important; align-items: center; justify-content: center; }
             nav {
