@@ -170,14 +170,14 @@
             padding: 0;
             background: linear-gradient(135deg, rgba(40,40,40,0.95), rgba(20,20,20,0.95));
             position: fixed;
-            top: 28px; right: 12px;
+            top: 22px; right: 12px;
             z-index: 1004;
             border-radius: 8px;
-            width: 36px;
-            height: 36px;
+            width: 48px;
+            height: 48px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.3);
+            border: 1px solid white;
             /* Reset button styles */
             font: inherit;
             color: inherit;
@@ -228,7 +228,7 @@
             nav {
                 flex-direction: column;
                 align-items: flex-start;
-                width: 300px;
+                width: 250px;
                 top: 0;
                 left: 0;
                 transform: translateX(-100%);
@@ -246,26 +246,27 @@
                 box-shadow: 8px 0 50px rgba(0,0,0,0.8);
             }
             nav > a:first-child {
-                background: #ffffff;
+                background: #000000;
                 padding: 20px;
                 text-align: center;
                 width: 100%;
-                border-bottom: 2px solid #000;
+                border-bottom: 2px solid rgba(255,255,255,0.2);
                 margin: 0;
             }
             nav > a:nth-child(2) {
-                background: #ffffff;
+                background: #000000;
                 padding: 20px;
                 text-align: center;
                 width: 100%;
-                border-bottom: 2px solid #000;
+                border-bottom: 2px solid rgba(255,255,255,0.2);
                 margin: 0;
             }
             nav > a:first-child img,
             nav > a:nth-child(2) img {
                 margin: 0;
-                max-width: 200px;
+                max-width: 180px;
                 height: auto;
+                filter: brightness(1.1);
             }
             nav a:not(:first-child) {
                 color: #ecf0f1;
