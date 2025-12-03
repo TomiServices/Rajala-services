@@ -93,7 +93,7 @@ function initializeUIInteractions() {
     if (window.location.pathname === '/' || window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('index') || currentPage === '' || currentPage === 'index') {
         const sections = document.querySelectorAll('section[id]');
         const navLinks = document.querySelectorAll('nav a[href^="#"]');
-        const navLogoLinks = document.querySelectorAll('nav a.nav-logo-desktop, nav a.nav-logo-mobile');
+        const navLogoLinks = document.querySelectorAll('nav a:first-child');
         
         function highlightNavigation() {
             // Refined offset: activates when section reaches middle of viewport
