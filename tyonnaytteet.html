@@ -118,13 +118,6 @@
             transform: scale(1.05);
             filter: brightness(1.2);
         }
-        /* Show desktop logo on desktop, hide mobile logo */
-        .nav-logo-mobile {
-            display: none;
-        }
-        .nav-logo-desktop {
-            display: block;
-        }
         nav a {
             color: #ffffff;
             padding: 16px 18px;
@@ -218,13 +211,6 @@
         }
         @media (max-width: 1279px) {
             .hamburger-menu { display: flex; align-items: center; justify-content: center; }
-            /* Hide desktop logo, show mobile logo on mobile */
-            .nav-logo-desktop {
-                display: none;
-            }
-            .nav-logo-mobile {
-                display: block;
-            }
             nav {
                 flex-direction: column;
                 align-items: flex-start;
@@ -248,29 +234,18 @@
             nav > a:first-child {
                 background: #000000;
                 padding: 20px;
-                text-align: center;
+                text-align: left;
                 width: 100%;
                 border-bottom: 2px solid rgba(255,255,255,0.2);
                 margin: 0;
                 display: flex;
-                justify-content: center;
+                justify-content: flex-start;
                 align-items: center;
             }
-            nav > a:nth-child(2) {
-                background: #000000;
-                padding: 20px;
-                text-align: center;
-                width: 100%;
-                border-bottom: 2px solid rgba(255,255,255,0.2);
+            nav > a:first-child img {
                 margin: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-            nav > a:first-child img,
-            nav > a:nth-child(2) img {
-                margin: 0 auto;
-                max-width: 180px;
+                margin-left: 10px;
+                max-width: 200px;
                 height: auto;
                 filter: brightness(1.1);
             }
@@ -567,13 +542,11 @@
                 width: 260px;
             }
             
-            nav > a:first-child,
-            nav > a:nth-child(2) {
+            nav > a:first-child {
                 padding: 15px 10px;
             }
             
-            nav > a:first-child img,
-            nav > a:nth-child(2) img {
+            nav > a:first-child img {
                 max-width: 160px;
                 height: auto;
             }
@@ -612,8 +585,7 @@
     </button>
 
     <nav id="nav">
-        <a href="index#top" class="nav-logo-desktop"><img src="FXNRv.webp" alt="Fixnero - Työnäytteet, asiakasautot ja palvelut"></a>
-        <a href="index#top" class="nav-logo-mobile"><img src="FXNR.webp" alt="Fixnero - Autohuolto Espoo" loading="lazy" style="max-height: 60px; max-width: 200px;"></a>
+        <a href="index#top"><img src="FXNRv.webp" alt="Fixnero - Työnäytteet, asiakasautot ja palvelut"></a>
         <a href="index#pesupalvelut">Pesupalvelut</a>
         <a href="index#rengastyot">Rengastyöt</a>
         <a href="index#korjaustyot">Korjaustyöt</a>
