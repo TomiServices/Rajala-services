@@ -3731,6 +3731,84 @@
             }
         }
         
+        /* Pricing accordion for mobile devices */
+        .pricing-accordion {
+            margin: 20px 0;
+        }
+        
+        .pricing-category {
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #ffffff;
+        }
+        
+        .pricing-category-header {
+            background: linear-gradient(135deg, #333333, #1a1a1a);
+            color: #ffffff;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        
+        .pricing-category-header:hover {
+            background: linear-gradient(135deg, #4a4a4a, #2a2a2a);
+        }
+        
+        .pricing-category-header:active {
+            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+        }
+        
+        .pricing-category-icon {
+            font-size: 1.3rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .pricing-category.active .pricing-category-icon {
+            transform: rotate(180deg);
+        }
+        
+        .pricing-category-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+        
+        .pricing-category.active .pricing-category-content {
+            max-height: 3000px;
+            transition: max-height 0.6s ease-in;
+        }
+        
+        .pricing-category-inner {
+            padding: 15px;
+        }
+        
+        /* Only show accordion on mobile devices */
+        @media (min-width: 769px) {
+            .pricing-accordion {
+                display: none;
+            }
+            .pricing-desktop {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .pricing-accordion {
+                display: block;
+            }
+            .pricing-desktop {
+                display: none;
+            }
+        }
+        
         /* Modern button style with silver-blue highlight */
         .btn-read-more {
             display: inline-block;
@@ -3936,8 +4014,6 @@
 </head>
 <body id="top">
     <div class="top-banner">
-        <a href="tel:+358401935001" style="color: inherit; text-decoration: none;">📞 Puhelin: 040 1935001</a> | 
-        <a href="mailto:info@fixnero.fi" style="color: inherit; text-decoration: none;">📧 info@fixnero.fi</a> | 
         <a href="#kartta" style="color: inherit; text-decoration: none;">📍 Tiilenvalajantie 6, 02330 Espoo</a>
     </div>
 
@@ -4617,9 +4693,10 @@
             <div class="polishing-text">
                 <p>Alta löydät kattavan hinnastomme kaikista palveluistamme. Kaikki hinnat sisältävät arvonlisäveron. Lopullinen hinta määräytyy auton koon, kunnon ja mahdollisten lisätöiden mukaan.</p>
 
-                <h3>🚗 Ulkopesut ja pikapesut</h3>
-                
-                <div style="overflow-x: auto; margin: 20px 0;">
+                <!-- Desktop pricing (shown on larger screens) -->
+                <div class="pricing-desktop">
+<h3>🚗 Ulkopesut ja pikapesut</h3>
+<div style="overflow-x: auto; margin: 20px 0;">
                     <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
                         <thead>
                             <tr style="background: #f0f0f0;">
@@ -4671,8 +4748,7 @@
                 </div>
 
                 <h3>🧽 Sisätilojen puhdistus</h3>
-                
-                <div style="overflow-x: auto; margin: 20px 0;">
+<div style="overflow-x: auto; margin: 20px 0;">
                     <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
                         <thead>
                             <tr style="background: #f0f0f0;">
@@ -4730,8 +4806,7 @@
                 </div>
 
                 <h3>✨ Vahaukset ja pintakäsittelyt</h3>
-                
-                <div style="overflow-x: auto; margin: 20px 0;">
+<div style="overflow-x: auto; margin: 20px 0;">
                     <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
                         <thead>
                             <tr style="background: #f0f0f0;">
@@ -4771,8 +4846,7 @@
                 </div>
 
                 <h3>💎 Kiillotukset ja myllytykset</h3>
-                
-                <div style="overflow-x: auto; margin: 20px 0;">
+<div style="overflow-x: auto; margin: 20px 0;">
                     <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
                         <thead>
                             <tr style="background: #f0f0f0;">
@@ -4802,8 +4876,7 @@
                 </div>
 
                 <h3>🛞 Rengastyöt ja kausisäilytys</h3>
-                
-                <div style="overflow-x: auto; margin: 20px 0;">
+<div style="overflow-x: auto; margin: 20px 0;">
                     <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
                         <thead>
                             <tr style="background: #f0f0f0;">
@@ -4837,8 +4910,7 @@
                 </div>
 
                 <h3>⚙️ Uusien renkaiden asennus</h3>
-                
-                <div style="overflow-x: auto; margin: 20px 0;">
+<div style="overflow-x: auto; margin: 20px 0;">
                     <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
                         <thead>
                             <tr style="background: #f0f0f0;">
@@ -4888,8 +4960,7 @@
                 </div>
 
                 <h3>🪟 Tuulilasipalvelut</h3>
-                
-                <div style="overflow-x: auto; margin: 20px 0;">
+<div style="overflow-x: auto; margin: 20px 0;">
                     <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
                         <thead>
                             <tr style="background: #f0f0f0;">
@@ -4915,8 +4986,7 @@
                 </div>
 
                 <h3>🔧 Korjaustyöt</h3>
-                
-                <div style="overflow-x: auto; margin: 20px 0;">
+<div style="overflow-x: auto; margin: 20px 0;">
                     <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
                         <thead>
                             <tr style="background: #f0f0f0;">
@@ -4959,8 +5029,7 @@
 
                 
                 <h3>🔨 Kolhujen korjaus</h3>
-                
-                <div style="overflow-x: auto; margin: 20px 0;">
+<div style="overflow-x: auto; margin: 20px 0;">
                     <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
                         <thead>
                             <tr style="background: #f0f0f0;">
@@ -4986,8 +5055,7 @@
                 </div>
 
                 <h3>🔧 Muut palvelut</h3>
-                
-                <div style="overflow-x: auto; margin: 20px 0;">
+<div style="overflow-x: auto; margin: 20px 0;">
                     <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
                         <thead>
                             <tr style="background: #f0f0f0;">
@@ -5004,7 +5072,492 @@
                     </table>
                 </div>
 
-                <div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin-top: 30px; border-left: 4px solid #ffc107;">
+                
+                </div>
+
+                <!-- Mobile accordion (shown on mobile devices) -->
+                <div class="pricing-accordion">
+
+<div class="pricing-category">
+    <div class="pricing-category-header" onclick="togglePricingCategory(this)">
+        <span>🚗 Ulkopesut ja pikapesut</span>
+        <span class="pricing-category-icon">▼</span>
+    </div>
+    <div class="pricing-category-content">
+        <div class="pricing-category-inner">
+<div style="overflow-x: auto; margin: 20px 0;">
+                    <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                        <thead>
+                            <tr style="background: #f0f0f0;">
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Palvelu</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Henkilöauto</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Maasturi</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Pakettiauto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Käsinpesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">23 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">28 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">38 €</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Nanohoitopesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">33 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">38 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">–</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Pikakiillopesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">43 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">48 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">58 €</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Talvipesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">48 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">53 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">63 €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Moottoritilan pesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">23 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">23 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">23 €</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Täyshuoltopesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">267 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">267 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">267 €</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                
+        </div>
+    </div>
+</div>
+<div class="pricing-category">
+    <div class="pricing-category-header" onclick="togglePricingCategory(this)">
+        <span>🧽 Sisätilojen puhdistus</span>
+        <span class="pricing-category-icon">▼</span>
+    </div>
+    <div class="pricing-category-content">
+        <div class="pricing-category-inner">
+<div style="overflow-x: auto; margin: 20px 0;">
+                    <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                        <thead>
+                            <tr style="background: #f0f0f0;">
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Palvelu</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Henkilöauto</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Maasturi</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Pakettiauto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Sisäpuhdistus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">38 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">43 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">48 €</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Kankaanpesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">88 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">88 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">68 €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Täyssiivous</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">148 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">148 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">148 €</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Otsonointi</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">85 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">85 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">85 €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Nahkapenkkien hoito ja suojaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">80 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">80 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">80 €</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Allergiapuhdistus ja desinfiointi</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">90 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">90 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">90 €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Kangaspintojen suojaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">70 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">70 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">70 €</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                
+        </div>
+    </div>
+</div>
+<div class="pricing-category">
+    <div class="pricing-category-header" onclick="togglePricingCategory(this)">
+        <span>✨ Vahaukset ja pintakäsittelyt</span>
+        <span class="pricing-category-icon">▼</span>
+    </div>
+    <div class="pricing-category-content">
+        <div class="pricing-category-inner">
+<div style="overflow-x: auto; margin: 20px 0;">
+                    <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                        <thead>
+                            <tr style="background: #f0f0f0;">
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Palvelu</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Henkilöauto</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Maasturi</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Pakettiauto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vahakäsittely</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">98 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">108 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">118 €</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Kovavaha</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">118 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">128 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">148 €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Ultra Shine</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">168 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">178 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">198 €</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Keraaminen</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Alk. 258 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Alk. 283 €</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">–</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                
+        </div>
+    </div>
+</div>
+<div class="pricing-category">
+    <div class="pricing-category-header" onclick="togglePricingCategory(this)">
+        <span>💎 Kiillotukset ja myllytykset</span>
+        <span class="pricing-category-icon">▼</span>
+    </div>
+    <div class="pricing-category-content">
+        <div class="pricing-category-inner">
+<div style="overflow-x: auto; margin: 20px 0;">
+                    <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                        <thead>
+                            <tr style="background: #f0f0f0;">
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Palvelu</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Hinta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>1-vaiheinen kiillotus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Alk. 248 €</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>2-vaiheinen kiillotus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Alk. 598 €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>3-vaiheinen kiillotus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Alk. 898 €</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vesihionta</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Sop. mukaan</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                
+        </div>
+    </div>
+</div>
+<div class="pricing-category">
+    <div class="pricing-category-header" onclick="togglePricingCategory(this)">
+        <span>🛞 Rengastyöt ja kausisäilytys</span>
+        <span class="pricing-category-icon">▼</span>
+    </div>
+    <div class="pricing-category-content">
+        <div class="pricing-category-inner">
+<div style="overflow-x: auto; margin: 20px 0;">
+                    <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                        <thead>
+                            <tr style="background: #f0f0f0;">
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Palvelu</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Hinta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Renkaiden vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">28–38 €</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Asennus + tasapainotus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Alk. 78 €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vuotavan renkaan paikkaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">23 €</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vanteiden pesu (4 kpl)</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">8 €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Rengashotelli / kausisäilytys</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">68–73 €</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                
+        </div>
+    </div>
+</div>
+<div class="pricing-category">
+    <div class="pricing-category-header" onclick="togglePricingCategory(this)">
+        <span>⚙️ Uusien renkaiden asennus</span>
+        <span class="pricing-category-icon">▼</span>
+    </div>
+    <div class="pricing-category-content">
+        <div class="pricing-category-inner">
+<div style="overflow-x: auto; margin: 20px 0;">
+                    <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                        <thead>
+                            <tr style="background: #f0f0f0;">
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Ajoneuvoluokka</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Koko</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Hinta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Henkilöauto</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">15" ja alle</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>80 €</strong></td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;">Henkilöauto</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">16–17"</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>90 €</strong></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Henkilöauto</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">18" ja 19"</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>95 €</strong></td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;">Henkilöauto</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">20" ja yli</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>105 €</strong></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Maasturi/Paketti</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">17" ja alle</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>105 €</strong></td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;">Maasturi/Paketti</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">18" ja yli</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>120 €</strong></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Muut ajoneuvot</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">–</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Sop. mukaan</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                
+        </div>
+    </div>
+</div>
+<div class="pricing-category">
+    <div class="pricing-category-header" onclick="togglePricingCategory(this)">
+        <span>🪟 Tuulilasipalvelut</span>
+        <span class="pricing-category-icon">▼</span>
+    </div>
+    <div class="pricing-category-content">
+        <div class="pricing-category-inner">
+<div style="overflow-x: auto; margin: 20px 0;">
+                    <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                        <thead>
+                            <tr style="background: #f0f0f0;">
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Palvelu</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Hinta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Korjaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">50 € / lasiturvalla ilmainen</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Lasinvaihto lasivakuutuksella</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Maksat vain omavastuun</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Lasinvaihto ilman vakuutusta</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Kysy tarjous</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                
+        </div>
+    </div>
+</div>
+<div class="pricing-category">
+    <div class="pricing-category-header" onclick="togglePricingCategory(this)">
+        <span>🔧 Korjaustyöt</span>
+        <span class="pricing-category-icon">▼</span>
+    </div>
+    <div class="pricing-category-content">
+        <div class="pricing-category-inner">
+<div style="overflow-x: auto; margin: 20px 0;">
+                    <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                        <thead>
+                            <tr style="background: #f0f0f0;">
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Palvelu</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Hinta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vikakoodien luku ja nollaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">40 €</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Moottoriöljyjen vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Alk. 79 €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Iskunvaimentimien ja jousituksen uusiminen</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Tukivarsien, nivelien ja raidetankojen vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vakaajatangon ja koiranluiden vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Jarrulevyjen, palojen ja käsijarrujen vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Pakoputkistojen korjaukset</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                
+                
+        </div>
+    </div>
+</div>
+<div class="pricing-category">
+    <div class="pricing-category-header" onclick="togglePricingCategory(this)">
+        <span>🔨 Kolhujen korjaus</span>
+        <span class="pricing-category-icon">▼</span>
+    </div>
+    <div class="pricing-category-content">
+        <div class="pricing-category-inner">
+<div style="overflow-x: auto; margin: 20px 0;">
+                    <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                        <thead>
+                            <tr style="background: #f0f0f0;">
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Palvelu</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Hinta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Pieni lommo</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Alk. 125 €</td>
+                            </tr>
+                            <tr style="background: #f9f9f9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Iso lommo</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Alk. 150 €</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Maalipinnan jälkien hionta ja maalaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                
+        </div>
+    </div>
+</div>
+<div class="pricing-category">
+    <div class="pricing-category-header" onclick="togglePricingCategory(this)">
+        <span>🔧 Muut palvelut</span>
+        <span class="pricing-category-icon">▼</span>
+    </div>
+    <div class="pricing-category-content">
+        <div class="pricing-category-inner">
+<div style="overflow-x: auto; margin: 20px 0;">
+                    <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                        <thead>
+                            <tr style="background: #f0f0f0;">
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Palvelu</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Hinta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Ajovalojen kirkastus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">50 € / kpl</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                
+        </div>
+    </div>
+</div>
+                </div>
+
+<div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin-top: 30px; border-left: 4px solid #ffc107;">
                     <h4 style="margin-top: 0;">💡 Huomioitavaa</h4>
                     <ul style="margin-bottom: 0;">
                         <li>Kaikki hinnat sisältävät arvonlisäveron.</li>
@@ -5019,8 +5572,7 @@
                 </p>
             </div>
         </div>
-    </section>
-    </div>
+    </section>    </div>
     <!-- End of services container -->
     
     <!-- FAQ Section - Link to Tietoa meistä page -->
@@ -5120,6 +5672,53 @@
             </div>
         </div>
     </footer>
+<script>
+// Pricing accordion toggle function for mobile devices
+function togglePricingCategory(header) {
+    const category = header.parentElement;
+    const wasActive = category.classList.contains('active');
+    
+    // Close all categories
+    document.querySelectorAll('.pricing-category').forEach(cat => {
+        cat.classList.remove('active');
+    });
+    
+    // If this wasn't active, open it
+    if (!wasActive) {
+        category.classList.add('active');
+    }
+}
+
+// Add keyboard accessibility for accordion
+document.addEventListener('DOMContentLoaded', function() {
+    const headers = document.querySelectorAll('.pricing-category-header');
+    headers.forEach(header => {
+        header.setAttribute('role', 'button');
+        header.setAttribute('tabindex', '0');
+        header.setAttribute('aria-expanded', 'false');
+        
+        // Add keyboard support
+        header.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                togglePricingCategory(this);
+                const category = this.parentElement;
+                const isExpanded = category.classList.contains('active');
+                this.setAttribute('aria-expanded', isExpanded);
+            }
+        });
+        
+        // Update aria-expanded when clicked
+        header.addEventListener('click', function() {
+            const category = this.parentElement;
+            setTimeout(() => {
+                const isExpanded = category.classList.contains('active');
+                this.setAttribute('aria-expanded', isExpanded);
+            }, 50);
+        });
+    });
+});
+</script>
 <script>
 // FIX: Load FullCalendar immediately on page load instead of lazy loading
 // This prevents the white screen issue when users navigate to the booking section
