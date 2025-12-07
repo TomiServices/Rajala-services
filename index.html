@@ -762,6 +762,19 @@
             background-color: #ffffff !important;
         }
         
+        /* Hinnasto (Pricing) category button - black background with blue hover effect */
+        .category-box-hinnasto {
+            background-color: #000000 !important;
+        }
+        
+        .category-box-hinnasto::after {
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+        }
+        
+        .category-box-hinnasto:hover::after {
+            background: linear-gradient(to top, rgba(63, 169, 245, 0.6) 0%, rgba(63, 169, 245, 0.3) 50%, rgba(0,0,0,0.3) 100%);
+        }
+        
         /* Lasikorjaus (Glass Replacement) category button - slightly larger for desktop only */
         /* This icon has a different shape, so we increase its size for better visibility */
         @media (min-width: 901px) {
@@ -3745,7 +3758,7 @@
         }
         
         .pricing-category-header {
-            background: linear-gradient(135deg, #3FA9F5 0%, #3FA9F5 50%, #000000 50%, #000000 100%);
+            background: #000000;
             color: #ffffff;
             padding: 15px 20px;
             cursor: pointer;
@@ -3756,17 +3769,17 @@
             font-size: 1.1rem;
             transition: all 0.3s ease;
             user-select: none;
-            box-shadow: 0 4px 12px rgba(63, 169, 245, 0.4), 0 4px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
         
         .pricing-category-header:hover {
-            background: linear-gradient(135deg, #5CBEFF 0%, #5CBEFF 50%, #1a1a1a 50%, #1a1a1a 100%);
+            background: linear-gradient(135deg, #3FA9F5 0%, #2E8DD6 100%);
             box-shadow: 0 6px 16px rgba(63, 169, 245, 0.5), 0 6px 16px rgba(0, 0, 0, 0.3);
             transform: translateY(-1px);
         }
         
         .pricing-category-header:active {
-            background: linear-gradient(135deg, #2E8DD6 0%, #2E8DD6 50%, #000000 50%, #000000 100%);
+            background: linear-gradient(135deg, #2E8DD6 0%, #1a7ab8 100%);
             box-shadow: 0 2px 8px rgba(63, 169, 245, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
             transform: translateY(0px);
         }
@@ -4150,7 +4163,7 @@
                 <div class="category-box" style="background-image: url('Tyonaytteet.webp');" onclick="location.href='tyonnaytteet'" role="button" tabindex="0" aria-label="Siirry työnäytteisiin">Työnäytteet</div>
                 <div class="category-box category-box-tietoa-meista" style="background-image: url('FXNRv.webp');" onclick="location.href='tietoa-meista'" role="button" tabindex="0" aria-label="Siirry Tietoa meistä -sivulle">Tietoa meistä</div>
                 <div class="category-box" style="background-image: url('Ajanvaraus.webp');" onclick="scrollToSection('#ajanvaraus')" role="button" tabindex="0" aria-label="Siirry ajanvaraukseen">Ajanvaraus</div>
-                <div class="category-box" style="background-image: url('hinnasto.webp');" onclick="scrollToSection('#hinnasto')" role="button" tabindex="0" aria-label="Siirry hinnastoon">Hinnasto</div>
+                <div class="category-box category-box-hinnasto" style="background-image: url('hinnasto.webp');" onclick="scrollToSection('#hinnasto')" role="button" tabindex="0" aria-label="Siirry hinnastoon">Hinnasto</div>
                 <div class="category-box" style="background-image: url('yhteystiedot.webp');" onclick="scrollToSection('#yhteystiedot')" role="button" tabindex="0" aria-label="Siirry yhteystietoihin">Yhteystiedot</div>
             </div>
         </div>
