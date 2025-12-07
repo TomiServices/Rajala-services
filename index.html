@@ -3745,7 +3745,7 @@
         }
         
         .pricing-category-header {
-            background: linear-gradient(135deg, #333333, #1a1a1a);
+            background: linear-gradient(135deg, #3FA9F5 0%, #3FA9F5 50%, #000000 50%, #000000 100%);
             color: #ffffff;
             padding: 15px 20px;
             cursor: pointer;
@@ -3756,14 +3756,19 @@
             font-size: 1.1rem;
             transition: all 0.3s ease;
             user-select: none;
+            box-shadow: 0 4px 12px rgba(63, 169, 245, 0.4), 0 4px 12px rgba(0, 0, 0, 0.2);
         }
         
         .pricing-category-header:hover {
-            background: linear-gradient(135deg, #4a4a4a, #2a2a2a);
+            background: linear-gradient(135deg, #5CBEFF 0%, #5CBEFF 50%, #1a1a1a 50%, #1a1a1a 100%);
+            box-shadow: 0 6px 16px rgba(63, 169, 245, 0.5), 0 6px 16px rgba(0, 0, 0, 0.3);
+            transform: translateY(-1px);
         }
         
         .pricing-category-header:active {
-            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+            background: linear-gradient(135deg, #2E8DD6 0%, #2E8DD6 50%, #000000 50%, #000000 100%);
+            box-shadow: 0 2px 8px rgba(63, 169, 245, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(0px);
         }
         
         .pricing-category-icon {
