@@ -3785,6 +3785,13 @@
             transform: translateY(0px);
         }
         
+        /* Keep hover effect active when category is open */
+        .pricing-category.active .pricing-category-header {
+            background: linear-gradient(135deg, #3FA9F5 0%, #2E8DD6 100%);
+            box-shadow: 0 6px 16px rgba(63, 169, 245, 0.5), 0 6px 16px rgba(0, 0, 0, 0.3);
+            transform: translateY(-1px);
+        }
+        
         .pricing-category-icon {
             font-size: 1.3rem;
             transition: transform 0.3s ease;
