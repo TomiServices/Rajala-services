@@ -320,15 +320,19 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         .back-button {
-            display: inline-block;
-            padding: 8px 16px;
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 18px;
             background: linear-gradient(135deg, #666666, #444444);
             color: white;
             text-decoration: none;
             border-radius: 25px;
-            margin-bottom: 30px;
             font-weight: 600;
             font-size: 0.8rem;
+            line-height: 1.2;
+            height: 40px;
+            min-width: 160px;
+            white-space: nowrap;
             transition: all 0.3s ease;
         }
         .back-button:hover {
@@ -373,14 +377,19 @@
             color: #1a1a1a;
         }
         .btn-read-more {
-            display: inline-block;
-            padding: 8px 19px;
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 18px;
             background: #3FA9F5;
             color: #ffffff;
             text-decoration: none;
             border-radius: 25px;
             font-weight: 600;
             font-size: 0.8rem;
+            line-height: 1.2;
+            height: 40px;
+            min-width: 160px;
+            white-space: nowrap;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(63, 169, 245, 0.3);
         }
@@ -388,6 +397,15 @@
             background: #5CB8FF;
             box-shadow: 0 0 20px rgba(63, 169, 245, 0.6), 0 0 40px rgba(63, 169, 245, 0.4);
             transform: translateY(-2px);
+        }
+        .service-nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: nowrap;
+            margin-bottom: 25px;
+            width: 100%;
         }
         .cta-section {
             background: linear-gradient(135deg, #666666, #444444);
@@ -459,7 +477,7 @@
         }
         /* Tablet and larger devices - center buttons with proper gap */
         @media (min-width: 769px) {
-            .container > div:first-child {
+            .service-nav-buttons {
                 justify-content: center !important;
                 gap: 20px !important;
             }
@@ -479,26 +497,27 @@
             .back-button {
                 font-size: 0.8rem;
                 padding: 8px 14px;
+                height: 36px;
             }
             .btn-read-more {
                 font-size: 0.8rem;
                 padding: 8px 14px;
+                height: 36px;
             }
             .links-section {
                 grid-template-columns: 1fr;
             }
             /* Stack buttons vertically on mobile for better spacing */
-            .container > div:first-child {
+            .service-nav-buttons {
                 flex-direction: column;
                 align-items: center !important;
                 gap: 10px !important;
             }
-            .container > div:first-child .back-button,
-            .container > div:first-child .btn-read-more {
+            .service-nav-buttons .back-button,
+            .service-nav-buttons .btn-read-more {
                 width: auto;
                 max-width: 85%;
                 text-align: center;
-                margin: 0 !important;
                 white-space: normal;
                 word-wrap: break-word;
                 padding: 9px 16px;
@@ -516,31 +535,15 @@
                 font-size: 0.72rem;
                 padding: 7px 12px;
                 max-width: 80%;
+                height: 34px;
             }
             .btn-read-more {
                 font-size: 0.72rem;
                 padding: 7px 12px;
                 max-width: 80%;
-                white-space: normal;
+                height: 34px;
             }
-            .container > div:first-child {
-                gap: 8px !important;
-            }
-        }
-            h1 { font-size: 1.9rem; }
-            h2 { font-size: 1.6rem; }
-            .back-button {
-                font-size: 0.8rem;
-                padding: 10px 15px;
-                max-width: 100%;
-            }
-            .btn-read-more {
-                font-size: 0.8rem;
-                padding: 10px 15px;
-                max-width: 100%;
-                white-space: normal;
-            }
-            .container > div:first-child {
+            .service-nav-buttons {
                 gap: 8px !important;
             }
         }
@@ -569,9 +572,9 @@
     </nav>
 
     <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; margin-bottom: 25px;">
-            <a href="index#rengastyot" class="back-button" style="margin-bottom: 0;">← Takaisin palveluihin</a>
-            <a href="lasikorjaus" class="btn-read-more" style="margin: 0; white-space: nowrap;">Lue Lasikorjaus palvelusta →</a>
+        <div class="service-nav-buttons">
+            <a href="index#rengastyot" class="back-button">← Takaisin palveluihin</a>
+            <a href="lasikorjaus" class="btn-read-more">Lue Lasikorjaus palvelusta →</a>
         </div>
         
         <h1 style="margin-bottom: 25px;">Renkaiden vaihto Espoo - Renkaiden asennus, tasapainotus ja rengashotelli</h1>
