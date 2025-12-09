@@ -297,7 +297,6 @@
             text-rendering: optimizeLegibility;
             /* Prevent font weight simulation which can cause blurriness */
             font-synthesis: none;
-            -moz-font-synthesis: none;
         }
         
         /* Additional optimization for desktop to prevent blurry text */
@@ -305,7 +304,6 @@
             h1, h2, h3, h4, h5, h6, strong, b, .hero-subtitle {
                 /* Use transform3d to enable GPU acceleration for crisp text rendering */
                 transform: translateZ(0);
-                -webkit-transform: translateZ(0);
                 /* Prevent subpixel rendering issues */
                 -webkit-backface-visibility: hidden;
                 backface-visibility: hidden;
