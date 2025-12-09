@@ -297,13 +297,12 @@
             text-rendering: optimizeLegibility;
             /* Prevent font weight simulation which can cause blurriness */
             font-synthesis: none;
-            -webkit-font-synthesis: none;
             -moz-font-synthesis: none;
         }
         
         /* Additional optimization for desktop to prevent blurry text */
         @media (min-width: 1024px) {
-            h1, h2, h3, h4, h5, h6, strong, b {
+            h1, h2, h3, h4, h5, h6, strong, b, .hero-subtitle {
                 /* Use transform3d to enable GPU acceleration for crisp text rendering */
                 transform: translateZ(0);
                 -webkit-transform: translateZ(0);
@@ -868,7 +867,6 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             font-synthesis: none;
-            -webkit-font-synthesis: none;
         }
         
         section h3 {
@@ -882,7 +880,6 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             font-synthesis: none;
-            -webkit-font-synthesis: none;
         }
         
         /* Smaller h3 for service subsections (previously h4) */
@@ -903,7 +900,6 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             font-synthesis: none;
-            -webkit-font-synthesis: none;
         }
         
         section p, section li {
