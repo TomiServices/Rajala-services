@@ -219,7 +219,7 @@
     }
     </script>
     
-    <link rel="preload" href="FXNRv.webp" as="image">
+    <link rel="preload" href="FXNRpng.webp" as="image">
     <!-- Preload hero images for faster loading -->
     <link rel="preload" href="Hero2.webp" as="image" media="(max-width: 2559px)">
     <link rel="preload" href="Hero1.webp" as="image" media="(min-width: 2560px)">
@@ -299,6 +299,24 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
+        }
+        
+        /* Improve text clarity for bold fonts on desktop */
+        /* Using subpixel antialiasing on desktop for sharper bold text */
+        @media (min-width: 1024px) {
+            body, h1, h2, h3, h4, h5, h6, strong, b, .hero-subtitle {
+                -webkit-font-smoothing: subpixel-antialiased;
+                -moz-osx-font-smoothing: auto;
+                text-rendering: optimizeLegibility;
+            }
+        }
+        
+        /* Keep antialiased for mobile devices for better readability */
+        @media (max-width: 1023px) {
+            body, h1, h2, h3, h4, h5, h6, strong, b, .hero-subtitle {
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
         }
         .top-banner {
             position: fixed;
@@ -1371,6 +1389,45 @@
             .hero-subtitle::after {
                 animation: none;
                 opacity: 0;
+            }
+        }
+        
+        /* Hero logo image responsive styles */
+        .hero-logo-img {
+            display: block;
+            object-fit: contain;
+        }
+        
+        /* Desktop - logo should be larger */
+        @media (min-width: 769px) {
+            .hero-logo-img {
+                max-height: 140px !important;
+                min-height: 100px;
+            }
+            .hero-subtitle {
+                font-size: 2rem !important;
+            }
+        }
+        
+        /* Tablet */
+        @media (max-width: 768px) and (min-width: 481px) {
+            .hero-logo-img {
+                max-height: 100px !important;
+                min-height: 70px;
+            }
+            .hero-subtitle {
+                font-size: 1.6rem !important;
+            }
+        }
+        
+        /* Mobile */
+        @media (max-width: 480px) {
+            .hero-logo-img {
+                max-height: 80px !important;
+                min-height: 60px;
+            }
+            .hero-subtitle {
+                font-size: 1.4rem !important;
             }
         }
         
@@ -4116,17 +4173,22 @@
             color: #ffffff;
         ">
             <div style="margin-bottom: 40px;">
-                <h1 class="brand-name" style="
-                    font-size: 3rem; 
-                    margin-bottom: 20px; 
-                    font-weight: 700;
-                    color: #ffffff;
-                    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-                    line-height: 1.3;
-                    letter-spacing: 1px;
-                    font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
-                ">FIXNERO</h1>
-                <p style="
+                <!-- FIXNERO Logo Image - replaces text for better scaling -->
+                <div style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-bottom: 20px;
+                ">
+                    <img src="FXNRpng.webp" alt="FIXNERO" style="
+                        max-width: 90%;
+                        width: auto;
+                        height: auto;
+                        max-height: 120px;
+                        filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.8));
+                    " class="hero-logo-img">
+                </div>
+                <p class="hero-subtitle" style="
                     font-size: 2rem; 
                     margin-bottom: 10px; 
                     font-weight: 700;
