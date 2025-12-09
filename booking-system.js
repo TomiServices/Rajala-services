@@ -1071,10 +1071,6 @@ function initializeBookingSystem() {
     // Helper function to update slot summary display with two-line layout
     function updateSlotSummary(aikaTxt) {
         const slotSummary = document.getElementById('slot-summary');
-        // Clear existing content safely
-        while (slotSummary.firstChild) {
-            slotSummary.removeChild(slotSummary.firstChild);
-        }
         
         const label = document.createElement('span');
         label.style.fontSize = '1.0rem';
@@ -1086,8 +1082,8 @@ function initializeBookingSystem() {
         value.style.fontWeight = '800';
         value.textContent = aikaTxt;
         
-        slotSummary.appendChild(label);
-        slotSummary.appendChild(value);
+        // Replace all children efficiently using modern API
+        slotSummary.replaceChildren(label, value);
     }
 
     // Show booking form with selected time and service info
