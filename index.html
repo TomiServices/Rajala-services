@@ -1398,11 +1398,11 @@
             object-fit: contain;
         }
         
-        /* Desktop - logo should be larger */
+        /* Desktop - logo should be larger (reduced by 50% from 140px to 70px) */
         @media (min-width: 769px) {
             .hero-logo-img {
-                max-height: 140px !important;
-                min-height: 100px;
+                max-height: 70px !important;
+                min-height: 50px;
             }
             .hero-subtitle {
                 font-size: 2rem !important;
@@ -1412,19 +1412,19 @@
         /* Tablet */
         @media (max-width: 768px) and (min-width: 481px) {
             .hero-logo-img {
-                max-height: 100px !important;
-                min-height: 70px;
+                max-height: 80px !important;
+                min-height: 56px;
             }
             .hero-subtitle {
                 font-size: 1.6rem !important;
             }
         }
         
-        /* Mobile */
+        /* Mobile (reduced by 20% from 80px to 64px) */
         @media (max-width: 480px) {
             .hero-logo-img {
-                max-height: 80px !important;
-                min-height: 60px;
+                max-height: 64px !important;
+                min-height: 48px;
             }
             .hero-subtitle {
                 font-size: 1.4rem !important;
@@ -3170,23 +3170,9 @@
             position: relative;
         }
         
+        /* Removed lighting effect animation as requested */
         .services-lighting-effect::before {
-            content: '';
-            position: absolute;
-            top: -80px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 300px;
-            height: 120px;
-            background: radial-gradient(ellipse 300px 120px at center, 
-                rgba(255, 255, 255, 0.15) 0%, 
-                rgba(255, 255, 255, 0.08) 30%, 
-                rgba(255, 255, 255, 0.04) 50%, 
-                transparent 70%);
-            pointer-events: none;
-            z-index: 1;
-            border-radius: 50%;
-            filter: blur(2px);
+            display: none;
         }
         
         /* Company logo styling for services section - ENHANCED */
@@ -3282,10 +3268,9 @@
         }
         
         @media (max-width: 768px) {
+            /* Removed lighting effect animation for mobile as requested */
             .services-lighting-effect::before {
-                width: 250px;
-                height: 100px;
-                top: -60px;
+                display: none;
             }
             
             .services-logo {
@@ -4184,7 +4169,7 @@
                         max-width: 90%;
                         width: auto;
                         height: auto;
-                        max-height: 120px;
+                        max-height: 60px;
                         filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.8));
                     " class="hero-logo-img">
                 </div>
@@ -4228,16 +4213,16 @@
     
     <!-- Services Section with Categories -->
     <section id="palvelumme" style="background: #fff url('Elementti1.webp') center/cover; margin: 30px auto; padding: 24px 18px 18px 18px; max-width: 1200px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 18px; position: relative; overflow: visible;">
-        <!-- Background overlay for better text readability -->
-        <div aria-hidden="true" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.90); z-index: 1; border-radius: 18px;"></div>
+        <!-- Background overlay adjusted for white text readability -->
+        <div aria-hidden="true" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.60); z-index: 1; border-radius: 18px;"></div>
         <div style="position: relative; z-index: 2;">
         
-        <!-- Updated text color to monochrome grayscale theme -->
-        <h2 style="text-align: center; margin-bottom: 30px; font-size: 2.2rem; color: #1a1a1a; font-weight: 600;">Palvelumme</h2>
+        <!-- Updated text color to white as requested -->
+        <h2 style="text-align: center; margin-bottom: 30px; font-size: 2.2rem; color: #ffffff; font-weight: 600;">Palvelumme</h2>
         
         <!-- Tietoa meistä introduction text -->
         <div style="text-align: center; max-width: 900px; margin: 0 auto 40px auto; padding: 0 20px;">
-            <p style="font-size: 1.15rem; line-height: 1.8; color: #333333; margin-bottom: 30px;">
+            <p style="font-size: 1.15rem; line-height: 1.8; color: #ffffff; margin-bottom: 30px;">
                 Hei, mahtavaa että löysit tiesi meille! Olemme Espoossa toimiva auton kunnostuksen ammattilainen. Tarjoamme laajan kirjon eri palveluita, jotta voit tuoda autosi aina samaan paikkaan sen tarvitessa huolenpitoa. Voit tutustua alta palveluihimme tarkemmin ja varata ajan vaikka heti silmäterällesi!
             </p>
         </div>
