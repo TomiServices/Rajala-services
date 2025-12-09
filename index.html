@@ -1339,64 +1339,13 @@
             }
         }
         
-        /* Shine animation for hero title - elegant and subtle */
-        @keyframes shine {
-            0% {
-                transform: translateX(-100%);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.6;
-            }
-            50% {
-                opacity: 0.8;
-            }
-            90% {
-                opacity: 0.6;
-            }
-            100% {
-                transform: translateX(200%);
-                opacity: 0;
-            }
-        }
-        
         .hero-subtitle {
-            /* Base text is completely orange */
-            color: #333333 !important;
+            /* Base text is white for better readability */
+            color: #ffffff !important;
             /* Remove transparency fill */
-            -webkit-text-fill-color: #333333;
+            -webkit-text-fill-color: #ffffff;
             position: relative;
             display: inline-block;
-            overflow: hidden;
-        }
-        
-        /* Elegant shine overlay effect that moves across white text */
-        .hero-subtitle::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 20%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent 0%,
-                rgba(255, 255, 255, 0.15) 20%,
-                rgba(255, 255, 255, 0.25) 50%,
-                rgba(255, 255, 255, 0.15) 80%,
-                transparent 100%
-            );
-            animation: shine 4s ease-in-out infinite;
-            pointer-events: none;
-            will-change: transform, opacity;
-        }
-        
-        /* Support for browsers that don't support the animation */
-        @media (prefers-reduced-motion: reduce) {
-            .hero-subtitle::after {
-                animation: none;
-                opacity: 0;
-            }
         }
         
         /* Hero logo image responsive styles */
