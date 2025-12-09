@@ -1081,7 +1081,10 @@ function initializeBookingSystem() {
             const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                 ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
             
-            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+            // Split label and value into two lines for better readability
+            document.getElementById('slot-summary').innerHTML = 
+                '<span style="font-size: 1.0rem; font-weight: 600;">Valittu aika:</span>' +
+                '<span style="font-size: 1.15rem; font-weight: 800;">' + aikaTxt + '</span>';
             document.getElementById('aika').value = aikaTxt;
             
             // Store all services as comma-separated values
@@ -1719,7 +1722,10 @@ function initializeBookingSystem() {
                             selectedSlot = selectedDateTime;
                             const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                                 ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
-                            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+                            // Split label and value into two lines for better readability
+                            document.getElementById('slot-summary').innerHTML = 
+                                '<span style="font-size: 1.0rem; font-weight: 600;">Valittu aika:</span>' +
+                                '<span style="font-size: 1.15rem; font-weight: 800;">' + aikaTxt + '</span>';
                             document.getElementById('aika').value = aikaTxt;
                             document.getElementById('bookingForm').style.display = '';
                             document.getElementById('error').textContent = '';
