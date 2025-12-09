@@ -2551,21 +2551,27 @@
             color: #ffffff;
             text-align: center;
             box-shadow: 0 8px 24px rgba(63, 169, 245, 0.4), 0 4px 12px rgba(0, 0, 0, 0.2);
-            line-height: 1.6;
+            line-height: 1.8;
             position: relative;
             overflow: hidden;
             font-family: 'Inter', sans-serif;
+            /* Split label and value into two lines */
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            align-items: center;
         }
         
         #slot-summary::before {
             content: "✓";
             position: absolute;
             top: 50%;
-            right: 24px;
+            right: 20px;
             transform: translateY(-50%);
-            font-size: 2.5rem;
-            color: rgba(255,255,255,0.3);
+            font-size: 2.2rem;
+            color: rgba(255,255,255,0.25);
             font-weight: bold;
+            pointer-events: none;
         }
         
         #slot-summary:empty {
@@ -3735,8 +3741,29 @@
                 padding: 12.75px;
             }
             
-            #total-amount-container strong {
-                font-size: 1.02rem;
+            #total-amount-container > div {
+                gap: 3px;
+            }
+            
+            #total-amount-container > div > span:first-child {
+                font-size: 0.95rem;
+            }
+            
+            #total-amount-container > div > #total-amount {
+                font-size: 1.2rem;
+            }
+            
+            #slot-summary {
+                gap: 3px;
+                padding: 15px 20px;
+            }
+            
+            #slot-summary > span:first-child {
+                font-size: 0.9rem;
+            }
+            
+            #slot-summary > span:last-child {
+                font-size: 1.05rem;
             }
         }
         
@@ -4348,7 +4375,10 @@
         
         <!-- Estimated total price -->
         <div id="total-amount-container" style="display: none; margin: 25px 0; padding: 17px; background: linear-gradient(135deg, #3FA9F5 0%, #3FA9F5 50%, #000000 50%, #000000 100%); border-radius: 16px; border: none; text-align: center; box-shadow: 0 4px 12px rgba(63, 169, 245, 0.4), 0 4px 12px rgba(0, 0, 0, 0.2);" aria-hidden="true">
-          <strong style="font-size: 1.275rem; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">Varauksen hinta: <span id="total-amount" style="color: #ffffff; font-weight: 800;">0 €</span></strong>
+          <div style="display: flex; flex-direction: column; gap: 5px; align-items: center;">
+            <span style="font-size: 1.1rem; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.2); font-weight: 600;">Varauksen hinta:</span>
+            <span id="total-amount" style="font-size: 1.4rem; color: #ffffff; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">0 €</span>
+          </div>
         </div>
         
         <!-- Repair services disclaimer -->
