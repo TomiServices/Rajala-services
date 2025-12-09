@@ -258,21 +258,8 @@
     <style>
         /* Font loading optimization: ensure text is visible immediately with fallback fonts */
         /* This prevents FOIT (Flash of Invisible Text) and improves LCP */
-        @font-face {
-            font-family: 'Bebas Neue';
-            font-style: normal;
-            font-weight: 400;
-            font-display: swap;
-            src: local('Impact'), local('Arial Black');
-        }
-        
-        @font-face {
-            font-family: 'Yanone Kaffeesatz';
-            font-style: normal;
-            font-weight: 700;
-            font-display: swap;
-            src: local('Impact'), local('Arial Black');
-        }
+        /* Removed problematic @font-face declarations that used local() fallbacks */
+        /* Google Fonts will load properly via the <link> tag with font-display: swap */
         
         /* Hide reCAPTCHA badge on desktop devices (show only on mobile for transparency) */
         .grecaptcha-badge {
@@ -296,26 +283,30 @@
             margin: 0;
             padding: 0;
             line-height: 1.6;
+            /* Optimized font rendering for all devices */
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
         }
         
-        /* Improve text clarity for bold fonts on desktop */
-        /* Using subpixel antialiasing on desktop for sharper bold text */
-        @media (min-width: 1024px) {
-            body, h1, h2, h3, h4, h5, h6, strong, b, .hero-subtitle {
-                -webkit-font-smoothing: subpixel-antialiased;
-                -moz-osx-font-smoothing: auto;
-                text-rendering: optimizeLegibility;
-            }
+        /* Optimized text rendering for headings and bold text */
+        /* Use consistent antialiasing across all screen sizes for better clarity */
+        h1, h2, h3, h4, h5, h6, strong, b, .hero-subtitle {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            /* Prevent font weight simulation which can cause blurriness */
+            font-synthesis: none;
         }
         
-        /* Keep antialiased for mobile devices for better readability */
-        @media (max-width: 1023px) {
-            body, h1, h2, h3, h4, h5, h6, strong, b, .hero-subtitle {
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
+        /* Additional optimization for desktop to prevent blurry text */
+        @media (min-width: 1024px) {
+            h1, h2, h3, h4, h5, h6, strong, b, .hero-subtitle {
+                /* Use transform3d to enable GPU acceleration for crisp text rendering */
+                transform: translateZ(0);
+                /* Prevent subpixel rendering issues */
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
             }
         }
         .top-banner {
@@ -687,6 +678,10 @@
                 /* Apply Serpentine-like font style */
                 font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
                 letter-spacing: 0.05em;
+                /* Improved text rendering for mobile */
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                font-synthesis: none;
             }
         }
         .categories-row {
@@ -866,6 +861,10 @@
             /* Apply Serpentine-like font style */
             font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
             letter-spacing: 0.05em;
+            /* Improved text rendering for better clarity */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-synthesis: none;
         }
         
         section h3 {
@@ -875,6 +874,10 @@
             /* Apply same Serpentine-like font style as h2 */
             font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
             letter-spacing: 0.05em;
+            /* Improved text rendering for better clarity */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-synthesis: none;
         }
         
         /* Smaller h3 for service subsections (previously h4) */
@@ -891,6 +894,10 @@
             /* Apply same Serpentine-like font style as h2 */
             font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
             letter-spacing: 0.05em;
+            /* Improved text rendering for better clarity */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-synthesis: none;
         }
         
         section p, section li {
