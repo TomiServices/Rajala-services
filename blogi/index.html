@@ -203,6 +203,7 @@
                 background: #000000;
                 box-shadow: 8px 0 40px rgba(0,0,0,0.6);
                 overflow-y: auto;
+                overflow-x: hidden;
                 backdrop-filter: blur(20px);
                 border-right: 1px solid rgba(255,255,255,0.1);
             }
@@ -280,10 +281,16 @@
             font-size: 2.8rem;
             color: #1a1a1a;
             letter-spacing: 0.05em;
+        }
+        header h1 .gradient-text {
             background: linear-gradient(135deg, #333333, #555555);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+        header h1 .emoji {
+            -webkit-text-fill-color: initial;
+            font-style: normal;
         }
         header p {
             margin: 10px 0 0 0;
@@ -418,6 +425,10 @@
         }
         
         @media (max-width: 768px) {
+            .top-banner {
+                font-size: 0.75rem;
+                padding: 6px 0;
+            }
             .blog-grid {
                 grid-template-columns: 1fr;
             }
@@ -436,11 +447,6 @@
             }
             nav > a:first-child {
                 padding: 15px 10px;
-            }
-            nav > a:first-child img {
-                max-width: 160px;
-                height: auto;
-                filter: brightness(1.1);
             }
             header h1 {
                 font-size: 1.8rem;
@@ -479,22 +485,11 @@
         <a href="../index" class="back-link">← Takaisin etusivulle</a>
         
         <header>
-            <h1>📰 Fixnero Blogi</h1>
+            <h1><span class="emoji">📰</span> <span class="gradient-text">Fixnero Blogi</span></h1>
             <p>Vinkkejä ja ohjeita auton hoitoon ja huoltoon</p>
         </header>
         
         <div class="blog-grid">
-            <!-- Blog Post 1 -->
-            <article class="blog-card">
-                <img src="../Rengas.jpg" alt="Renkaiden vaihto" loading="lazy">
-                <div class="blog-card-content">
-                    <h2>Milloin on aika vaihtaa renkaat?</h2>
-                    <span class="date">📅 21. lokakuuta 2025</span>
-                    <p>Renkaiden vaihto oikeaan aikaan on tärkeää sekä turvallisuuden että lain näkökulmasta. Lue vinkkimme oikea-aikaiseen renkaiden vaihtoon Espoossa.</p>
-                    <a href="milloin-vaihtaa-renkaat">Lue artikkeli →</a>
-                </div>
-            </article>
-            
             <!-- Blog Post 2 -->
             <article class="blog-card">
                 <img src="../kiilloitus.jpg" alt="Auton kiillotus" loading="lazy">

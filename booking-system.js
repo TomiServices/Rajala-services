@@ -1068,6 +1068,24 @@ function initializeBookingSystem() {
         return null;
     }
 
+    // Helper function to update slot summary display with two-line layout
+    function updateSlotSummary(aikaTxt) {
+        const slotSummary = document.getElementById('slot-summary');
+        
+        const label = document.createElement('span');
+        label.style.fontSize = '1.0rem';
+        label.style.fontWeight = '600';
+        label.textContent = 'Valittu aika:';
+        
+        const value = document.createElement('span');
+        value.style.fontSize = '1.15rem';
+        value.style.fontWeight = '800';
+        value.textContent = aikaTxt;
+        
+        // Replace all children efficiently using modern API
+        slotSummary.replaceChildren(label, value);
+    }
+
     // Show booking form with selected time and service info
     function showBookingForm(selectedDateTime) {
         const serviceSelect = document.getElementById('serviceSelect');
@@ -1081,7 +1099,9 @@ function initializeBookingSystem() {
             const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                 ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
             
-            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+            // Update slot summary display with two-line layout
+            updateSlotSummary(aikaTxt);
+            
             document.getElementById('aika').value = aikaTxt;
             
             // Store all services as comma-separated values
@@ -1719,7 +1739,10 @@ function initializeBookingSystem() {
                             selectedSlot = selectedDateTime;
                             const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                                 ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
-                            document.getElementById('slot-summary').textContent = 'Valittu aika: ' + aikaTxt;
+                            
+                            // Update slot summary display with two-line layout
+                            updateSlotSummary(aikaTxt);
+                            
                             document.getElementById('aika').value = aikaTxt;
                             document.getElementById('bookingForm').style.display = '';
                             document.getElementById('error').textContent = '';

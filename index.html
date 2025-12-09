@@ -219,7 +219,7 @@
     }
     </script>
     
-    <link rel="preload" href="FXNRv.webp" as="image">
+    <link rel="preload" href="FXNRpng.webp" as="image">
     <!-- Preload hero images for faster loading -->
     <link rel="preload" href="Hero2.webp" as="image" media="(max-width: 2559px)">
     <link rel="preload" href="Hero1.webp" as="image" media="(min-width: 2560px)">
@@ -299,6 +299,24 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
+        }
+        
+        /* Improve text clarity for bold fonts on desktop */
+        /* Using subpixel antialiasing on desktop for sharper bold text */
+        @media (min-width: 1024px) {
+            body, h1, h2, h3, h4, h5, h6, strong, b, .hero-subtitle {
+                -webkit-font-smoothing: subpixel-antialiased;
+                -moz-osx-font-smoothing: auto;
+                text-rendering: optimizeLegibility;
+            }
+        }
+        
+        /* Keep antialiased for mobile devices for better readability */
+        @media (max-width: 1023px) {
+            body, h1, h2, h3, h4, h5, h6, strong, b, .hero-subtitle {
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
         }
         .top-banner {
             position: fixed;
@@ -486,6 +504,7 @@
                 background: #000000;
                 box-shadow: 8px 0 40px rgba(0,0,0,0.6);
                 overflow-y: auto;
+                overflow-x: hidden;
                 backdrop-filter: blur(20px);
                 border-right: 1px solid rgba(255,255,255,0.1);
             }
@@ -625,12 +644,6 @@
             
             nav > a:first-child {
                 padding: 15px 10px;
-            }
-            
-            nav > a:first-child img {
-                max-width: 160px;
-                height: auto;
-                filter: brightness(1.1);
             }
             
             /* Make service sections scale better on small phones */
@@ -1376,6 +1389,45 @@
             .hero-subtitle::after {
                 animation: none;
                 opacity: 0;
+            }
+        }
+        
+        /* Hero logo image responsive styles */
+        .hero-logo-img {
+            display: block;
+            object-fit: contain;
+        }
+        
+        /* Desktop - logo should be larger */
+        @media (min-width: 769px) {
+            .hero-logo-img {
+                max-height: 140px !important;
+                min-height: 100px;
+            }
+            .hero-subtitle {
+                font-size: 2rem !important;
+            }
+        }
+        
+        /* Tablet */
+        @media (max-width: 768px) and (min-width: 481px) {
+            .hero-logo-img {
+                max-height: 100px !important;
+                min-height: 70px;
+            }
+            .hero-subtitle {
+                font-size: 1.6rem !important;
+            }
+        }
+        
+        /* Mobile */
+        @media (max-width: 480px) {
+            .hero-logo-img {
+                max-height: 80px !important;
+                min-height: 60px;
+            }
+            .hero-subtitle {
+                font-size: 1.4rem !important;
             }
         }
         
@@ -2556,21 +2608,27 @@
             color: #ffffff;
             text-align: center;
             box-shadow: 0 8px 24px rgba(63, 169, 245, 0.4), 0 4px 12px rgba(0, 0, 0, 0.2);
-            line-height: 1.6;
+            line-height: 1.8;
             position: relative;
             overflow: hidden;
             font-family: 'Inter', sans-serif;
+            /* Split label and value into two lines */
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            align-items: center;
         }
         
         #slot-summary::before {
             content: "✓";
             position: absolute;
             top: 50%;
-            right: 24px;
+            right: 20px;
             transform: translateY(-50%);
-            font-size: 2.5rem;
-            color: rgba(255,255,255,0.3);
+            font-size: 2.2rem;
+            color: rgba(255,255,255,0.25);
             font-weight: bold;
+            pointer-events: none;
         }
         
         #slot-summary:empty {
@@ -3740,8 +3798,29 @@
                 padding: 12.75px;
             }
             
-            #total-amount-container strong {
-                font-size: 1.02rem;
+            #total-amount-container > div {
+                gap: 3px;
+            }
+            
+            #total-amount-container > div > span:first-child {
+                font-size: 0.95rem;
+            }
+            
+            #total-amount-container > div > #total-amount {
+                font-size: 1.2rem;
+            }
+            
+            #slot-summary {
+                gap: 3px;
+                padding: 15px 20px;
+            }
+            
+            #slot-summary > span:first-child {
+                font-size: 0.9rem;
+            }
+            
+            #slot-summary > span:last-child {
+                font-size: 1.05rem;
             }
         }
         
@@ -3783,6 +3862,13 @@
             background: linear-gradient(135deg, #2E8DD6 0%, #1a7ab8 100%);
             box-shadow: 0 2px 8px rgba(63, 169, 245, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
             transform: translateY(0px);
+        }
+        
+        /* Keep hover effect active when category is open */
+        .pricing-category.active .pricing-category-header {
+            background: linear-gradient(135deg, #3FA9F5 0%, #2E8DD6 100%);
+            box-shadow: 0 6px 16px rgba(63, 169, 245, 0.5), 0 6px 16px rgba(0, 0, 0, 0.3);
+            transform: translateY(-1px);
         }
         
         .pricing-category-icon {
@@ -4087,17 +4173,22 @@
             color: #ffffff;
         ">
             <div style="margin-bottom: 40px;">
-                <h1 class="brand-name" style="
-                    font-size: 3rem; 
-                    margin-bottom: 20px; 
-                    font-weight: 700;
-                    color: #ffffff;
-                    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-                    line-height: 1.3;
-                    letter-spacing: 1px;
-                    font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
-                ">FIXNERO</h1>
-                <p style="
+                <!-- FIXNERO Logo Image - replaces text for better scaling -->
+                <div style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-bottom: 20px;
+                ">
+                    <img src="FXNRpng.webp" alt="FIXNERO" style="
+                        max-width: 90%;
+                        width: auto;
+                        height: auto;
+                        max-height: 120px;
+                        filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.8));
+                    " class="hero-logo-img">
+                </div>
+                <p class="hero-subtitle" style="
                     font-size: 2rem; 
                     margin-bottom: 10px; 
                     font-weight: 700;
@@ -4346,7 +4437,10 @@
         
         <!-- Estimated total price -->
         <div id="total-amount-container" style="display: none; margin: 25px 0; padding: 17px; background: linear-gradient(135deg, #3FA9F5 0%, #3FA9F5 50%, #000000 50%, #000000 100%); border-radius: 16px; border: none; text-align: center; box-shadow: 0 4px 12px rgba(63, 169, 245, 0.4), 0 4px 12px rgba(0, 0, 0, 0.2);" aria-hidden="true">
-          <strong style="font-size: 1.275rem; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">Varauksen hinta: <span id="total-amount" style="color: #ffffff; font-weight: 800;">0 €</span></strong>
+          <div style="display: flex; flex-direction: column; gap: 5px; align-items: center;">
+            <span style="font-size: 1.1rem; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.2); font-weight: 600;">Varauksen hinta:</span>
+            <span id="total-amount" style="font-size: 1.4rem; color: #ffffff; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">0 €</span>
+          </div>
         </div>
         
         <!-- Repair services disclaimer -->
