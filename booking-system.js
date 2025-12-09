@@ -1084,7 +1084,10 @@ function initializeBookingSystem() {
             // Split label and value into two lines for better readability
             // Using DOM manipulation instead of innerHTML to avoid potential XSS issues
             const slotSummary = document.getElementById('slot-summary');
-            slotSummary.innerHTML = ''; // Clear existing content
+            // Clear existing content safely
+            while (slotSummary.firstChild) {
+                slotSummary.removeChild(slotSummary.firstChild);
+            }
             
             const label = document.createElement('span');
             label.style.fontSize = '1.0rem';
@@ -1740,7 +1743,10 @@ function initializeBookingSystem() {
                             // Split label and value into two lines for better readability
                             // Using DOM manipulation instead of innerHTML to avoid potential XSS issues
                             const slotSummary = document.getElementById('slot-summary');
-                            slotSummary.innerHTML = ''; // Clear existing content
+                            // Clear existing content safely
+                            while (slotSummary.firstChild) {
+                                slotSummary.removeChild(slotSummary.firstChild);
+                            }
                             
                             const label = document.createElement('span');
                             label.style.fontSize = '1.0rem';
