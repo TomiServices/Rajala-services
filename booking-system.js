@@ -1068,6 +1068,28 @@ function initializeBookingSystem() {
         return null;
     }
 
+    // Helper function to update slot summary display with two-line layout
+    function updateSlotSummary(aikaTxt) {
+        const slotSummary = document.getElementById('slot-summary');
+        // Clear existing content safely
+        while (slotSummary.firstChild) {
+            slotSummary.removeChild(slotSummary.firstChild);
+        }
+        
+        const label = document.createElement('span');
+        label.style.fontSize = '1.0rem';
+        label.style.fontWeight = '600';
+        label.textContent = 'Valittu aika:';
+        
+        const value = document.createElement('span');
+        value.style.fontSize = '1.15rem';
+        value.style.fontWeight = '800';
+        value.textContent = aikaTxt;
+        
+        slotSummary.appendChild(label);
+        slotSummary.appendChild(value);
+    }
+
     // Show booking form with selected time and service info
     function showBookingForm(selectedDateTime) {
         const serviceSelect = document.getElementById('serviceSelect');
@@ -1081,26 +1103,8 @@ function initializeBookingSystem() {
             const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                 ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
             
-            // Split label and value into two lines for better readability
-            // Using DOM manipulation instead of innerHTML to avoid potential XSS issues
-            const slotSummary = document.getElementById('slot-summary');
-            // Clear existing content safely
-            while (slotSummary.firstChild) {
-                slotSummary.removeChild(slotSummary.firstChild);
-            }
-            
-            const label = document.createElement('span');
-            label.style.fontSize = '1.0rem';
-            label.style.fontWeight = '600';
-            label.textContent = 'Valittu aika:';
-            
-            const value = document.createElement('span');
-            value.style.fontSize = '1.15rem';
-            value.style.fontWeight = '800';
-            value.textContent = aikaTxt;
-            
-            slotSummary.appendChild(label);
-            slotSummary.appendChild(value);
+            // Update slot summary display with two-line layout
+            updateSlotSummary(aikaTxt);
             
             document.getElementById('aika').value = aikaTxt;
             
@@ -1740,26 +1744,8 @@ function initializeBookingSystem() {
                             const aikaTxt = selectedDateTime.toLocaleDateString('fi-FI', { weekday: 'long', day: 'numeric', month: 'numeric' }) +
                                 ', klo ' + selectedDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
                             
-                            // Split label and value into two lines for better readability
-                            // Using DOM manipulation instead of innerHTML to avoid potential XSS issues
-                            const slotSummary = document.getElementById('slot-summary');
-                            // Clear existing content safely
-                            while (slotSummary.firstChild) {
-                                slotSummary.removeChild(slotSummary.firstChild);
-                            }
-                            
-                            const label = document.createElement('span');
-                            label.style.fontSize = '1.0rem';
-                            label.style.fontWeight = '600';
-                            label.textContent = 'Valittu aika:';
-                            
-                            const value = document.createElement('span');
-                            value.style.fontSize = '1.15rem';
-                            value.style.fontWeight = '800';
-                            value.textContent = aikaTxt;
-                            
-                            slotSummary.appendChild(label);
-                            slotSummary.appendChild(value);
+                            // Update slot summary display with two-line layout
+                            updateSlotSummary(aikaTxt);
                             
                             document.getElementById('aika').value = aikaTxt;
                             document.getElementById('bookingForm').style.display = '';
