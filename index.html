@@ -2560,17 +2560,20 @@
             flex-direction: column;
             gap: 5px;
             align-items: center;
+            /* Position context for the checkmark icon */
+            position: relative;
         }
         
         #slot-summary::before {
             content: "✓";
             position: absolute;
             top: 50%;
-            right: 24px;
+            right: 20px;
             transform: translateY(-50%);
-            font-size: 2.5rem;
-            color: rgba(255,255,255,0.3);
+            font-size: 2.2rem;
+            color: rgba(255,255,255,0.25);
             font-weight: bold;
+            pointer-events: none;
         }
         
         #slot-summary:empty {
