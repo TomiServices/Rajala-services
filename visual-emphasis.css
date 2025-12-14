@@ -1,0 +1,181 @@
+/* Visual Emphasis Utilities for Rajala Services / Fixnero
+ * Shared styles for text clarity and visual emphasis across all pages
+ * Purpose: Improve customer experience, facilitate contact, and increase sales
+ */
+
+/* Text Emphasis Classes */
+.highlight-price {
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 1.1em;
+}
+
+.highlight-contact {
+    color: #3FA9F5;
+    font-weight: 600;
+}
+
+.highlight-benefit {
+    color: #2a2a2a;
+    font-weight: 600;
+}
+
+.highlight-important {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
+    padding: 15px 20px;
+    border-radius: 8px;
+    border-left: 4px solid #ffc107;
+    margin: 20px 0;
+}
+
+/* Visual Icons and Emojis for Better UX */
+.icon-phone::before {
+    content: "📞 ";
+}
+
+.icon-email::before {
+    content: "📧 ";
+}
+
+.icon-location::before {
+    content: "📍 ";
+}
+
+.icon-calendar::before {
+    content: "📅 ";
+}
+
+.icon-check::before {
+    content: "✓ ";
+    color: #28a745;
+    font-weight: bold;
+}
+
+.icon-info::before {
+    content: "💡 ";
+}
+
+/* Enhanced Strong Elements for Prices */
+strong.price {
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 1.1em;
+    display: inline-block;
+}
+
+/* Contact Information Emphasis */
+.contact-emphasis {
+    display: inline-block;
+    padding: 2px 6px;
+    background: rgba(63, 169, 245, 0.1);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.contact-emphasis:hover {
+    background: rgba(63, 169, 245, 0.2);
+}
+
+/* Service Benefits List Enhancement */
+ul.benefits-list li {
+    margin-bottom: 12px;
+    position: relative;
+    padding-left: 25px;
+}
+
+ul.benefits-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #28a745;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+/* Key Points Box */
+.key-points-box {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid #4caf50;
+    margin: 25px 0;
+}
+
+.key-points-box h3 {
+    margin-top: 0;
+    color: #2e7d32;
+}
+
+/* Warning/Notice Box */
+.notice-box {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
+    padding: 15px 20px;
+    border-radius: 8px;
+    border-left: 4px solid #ffc107;
+    margin: 20px 0;
+}
+
+.notice-box strong {
+    color: #856404;
+}
+
+/* CTA Enhancement */
+.cta-emphasis {
+    font-size: 1.1em;
+    font-weight: 600;
+    padding: 3px 8px;
+    background: linear-gradient(135deg, rgba(63, 169, 245, 0.15), rgba(63, 169, 245, 0.25));
+    border-radius: 5px;
+    display: inline-block;
+}
+
+/* Service Feature Highlights */
+.feature-highlight {
+    background: rgba(63, 169, 245, 0.08);
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin: 10px 0;
+    border-left: 3px solid #3FA9F5;
+}
+
+/* Number/Statistic Emphasis */
+.stat-number {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: #3FA9F5;
+}
+
+/* Special Offer Box */
+.special-offer-box {
+    background: linear-gradient(135deg, #ffe0e0 0%, #ffcccc 100%);
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #ff6b6b;
+    margin: 25px 0;
+    text-align: center;
+}
+
+.special-offer-box h3 {
+    color: #c92a2a;
+    margin-top: 0;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+    .highlight-price,
+    strong.price {
+        font-size: 1.05em;
+    }
+    
+    .key-points-box,
+    .notice-box,
+    .special-offer-box {
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    ul.benefits-list li {
+        padding-left: 20px;
+        font-size: 0.95em;
+    }
+}
