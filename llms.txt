@@ -1,0 +1,4 @@
+# Manage crawling preferences
+User-agent: *
+Disallow: /private/
+Allow: /
