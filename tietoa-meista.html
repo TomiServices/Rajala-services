@@ -398,34 +398,6 @@
             opacity: 0.9;
             filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
         }
-        .reviews-section {
-            margin: 50px 0;
-        }
-        .review-card {
-            background: white;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            border-left: 4px solid #666666;
-        }
-        .review-stars {
-            color: #ffd700;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-        .review-author {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 1rem;
-        }
-        .review-text {
-            color: #5a5a5a;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            font-style: italic;
-        }
         .links-section {
             margin: 50px 0;
             display: grid;
@@ -495,21 +467,6 @@
             .container { margin: 100px 20px 40px; padding: 20px; }
             h1 { font-size: 2.2rem; }
             .links-section { grid-template-columns: 1fr 1fr; }
-            
-            /* Reduce review card size on mobile */
-            .review-card {
-                padding: 18px;
-                margin: 15px 0;
-            }
-            .review-stars {
-                font-size: 1rem;
-            }
-            .review-author {
-                font-size: 1rem;
-            }
-            .review-text {
-                font-size: 0.9rem;
-            }
         }
         @media (max-width: 480px) {
             nav {
@@ -525,24 +482,6 @@
                 font-size: 1rem;
             }
             .links-section { grid-template-columns: 1fr; }
-            
-            /* Further reduce review card size on very small screens */
-            .review-card {
-                padding: 15px;
-                margin: 12px 0;
-            }
-            .review-stars {
-                font-size: 0.95rem;
-                margin-bottom: 8px;
-            }
-            .review-author {
-                font-size: 0.95rem;
-                margin-bottom: 8px;
-            }
-            .review-text {
-                font-size: 0.85rem;
-                line-height: 1.5;
-            }
         }
     </style>
 </head>
@@ -651,58 +590,83 @@
             </div>
         </div>
 
-        <h2>Asiakkaidemme kokemuksia Googlessa</h2>
-        <div class="reviews-section">
-            <div class="review-card">
+        <h2 style="text-align: center; margin-bottom: 15px; font-size: 1.8rem; color: #333333; font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;">Asiakasarvostelut</h2>
+        <p style="text-align: center; color: #666666; margin-bottom: 30px; font-size: 1rem;">Lue mitä asiakkaamme sanovat palveluistamme</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
+            <!-- Review 1 - Authentic Google Review -->
+            <div style="background: rgba(255,255,255,0.9); padding: 18px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); border-left: 4px solid #FFD700; border: 1px solid rgba(255,215,0,0.3);">
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                    <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="18" height="18" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                         <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
                         <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
                         <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
                         <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
                         <path fill="none" d="M0 0h48v48H0z"/>
                     </svg>
-                    <span style="font-size: 0.9rem; color: #5a5a5a;">Google-arvostelu</span>
+                    <span style="font-size: 0.85rem; color: #666666;">Google-arvostelu</span>
                 </div>
-                <div class="review-stars">⭐⭐⭐⭐⭐ 5/5</div>
-                <div class="review-author">Veera Impiö</div>
-                <div style="font-size: 0.9rem; color: #6e6e6e; margin-bottom: 10px;">3 vuotta sitten</div>
-                <div class="review-text">"Auton pinnassa ollut kattomaali puhdistui täydellisesti auton mustalta maalipinnalta ja ikkunoista. Hyvää asiakaspalvelua!"</div>
+                <div style="display: flex; align-items: center; margin-bottom: 10px; gap: 10px;">
+                    <div style="color: #FFD700; font-size: 1.1rem;">★★★★★</div>
+                    <span style="color: #666666; font-size: 0.85rem;">5/5</span>
+                </div>
+                <p style="color: #666666; line-height: 1.5; margin-bottom: 10px; font-style: italic; font-size: 0.95rem;">"Auton pinnassa ollut kattomaali puhdistui täydellisesti auton mustalta maalipinnalta ja ikkunoista. Hyvää asiakaspalvelua!"</p>
+                <p style="color: #333333; font-weight: 600; margin: 0; font-size: 0.9rem;">Veera Impiö</p>
+                <p style="font-size: 0.8rem; color: #999999; margin-top: 5px;">2022</p>
             </div>
             
-            <div class="review-card">
+            <!-- Review 2 - Authentic Google Review -->
+            <div style="background: rgba(255,255,255,0.9); padding: 18px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); border-left: 4px solid #FFD700; border: 1px solid rgba(255,215,0,0.3);">
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                    <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="18" height="18" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                         <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
                         <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
                         <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
                         <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
                         <path fill="none" d="M0 0h48v48H0z"/>
                     </svg>
-                    <span style="font-size: 0.9rem; color: #5a5a5a;">Google-arvostelu</span>
+                    <span style="font-size: 0.85rem; color: #666666;">Google-arvostelu</span>
                 </div>
-                <div class="review-stars">⭐⭐⭐⭐⭐ 5/5</div>
-                <div class="review-author">Tuomas Tenhunen</div>
-                <div style="font-size: 0.9rem; color: #6e6e6e; margin-bottom: 10px;">Vuosi sitten</div>
-                <div class="review-text">"Friendly chap, excellent attention to detail. Couldn't be happier with the results."</div>
+                <div style="display: flex; align-items: center; margin-bottom: 10px; gap: 10px;">
+                    <div style="color: #FFD700; font-size: 1.1rem;">★★★★★</div>
+                    <span style="color: #666666; font-size: 0.85rem;">5/5</span>
+                </div>
+                <p style="color: #666666; line-height: 1.5; margin-bottom: 10px; font-style: italic; font-size: 0.95rem;">"Friendly chap, excellent attention to detail. Couldn't be happier with the results."</p>
+                <p style="color: #333333; font-weight: 600; margin: 0; font-size: 0.9rem;">Tuomas Tenhunen</p>
+                <p style="font-size: 0.8rem; color: #999999; margin-top: 5px;">2024</p>
             </div>
             
-            <div class="review-card">
+            <!-- Review 3 - Authentic Google Review -->
+            <div style="background: rgba(255,255,255,0.9); padding: 18px; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); border-left: 4px solid #FFD700; border: 1px solid rgba(255,215,0,0.3);">
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                    <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="18" height="18" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                         <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
                         <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
                         <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
                         <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
                         <path fill="none" d="M0 0h48v48H0z"/>
                     </svg>
-                    <span style="font-size: 0.9rem; color: #5a5a5a;">Google-arvostelu</span>
+                    <span style="font-size: 0.85rem; color: #666666;">Google-arvostelu</span>
                 </div>
-                <div class="review-stars">⭐⭐⭐⭐⭐ 5/5</div>
-                <div class="review-author">Jesse Korvenranta</div>
-                <div style="font-size: 0.9rem; color: #6e6e6e; margin-bottom: 10px;">3 vuotta sitten</div>
-                <div class="review-text">"Loistavaa palvelua!"</div>
+                <div style="display: flex; align-items: center; margin-bottom: 10px; gap: 10px;">
+                    <div style="color: #FFD700; font-size: 1.1rem;">★★★★★</div>
+                    <span style="color: #666666; font-size: 0.85rem;">5/5</span>
+                </div>
+                <p style="color: #666666; line-height: 1.5; margin-bottom: 10px; font-style: italic; font-size: 0.95rem;">"Loistavaa palvelua!"</p>
+                <p style="color: #333333; font-weight: 600; margin: 0; font-size: 0.9rem;">Jesse Korvenranta</p>
+                <p style="font-size: 0.8rem; color: #999999; margin-top: 5px;">2022</p>
             </div>
+        </div>
+        
+        <p style="text-align: center; color: #999999; font-size: 0.9rem; margin-bottom: 20px;"><em>Lähde: Google Maps</em></p>
+        
+        <div style="text-align: center; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <a href="https://g.page/r/CbXKs5P_S1ts/review" target="_blank" rel="noopener" style="display: inline-block; background: linear-gradient(135deg, #000000, #000000); color: #ffffff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.3s; box-shadow: 0 3px 10px rgba(0,0,0,0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 3px 10px rgba(0,0,0,0.2)'">
+                📝 Jätä Google-arvostelu
+            </a>
+            <a href="index#ajanvaraus" style="display: inline-block; background: linear-gradient(135deg, #3FA9F5, #5CB8FF); color: #ffffff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.3s; box-shadow: 0 3px 10px rgba(63, 169, 245, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(63, 169, 245, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 3px 10px rgba(63, 169, 245, 0.3)'">
+                🚗 Liity joukkoon - varaa aika
+            </a>
         </div>
 
         <!-- FAQ Section for better SEO and user guidance -->
