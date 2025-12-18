@@ -5877,6 +5877,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- Critical inline JavaScript - executed immediately for instant functionality -->
+<!-- NOTE: These functions are intentionally duplicated from ui-interactions.js for performance -->
+<!-- Inlining ensures instant availability without waiting for external JS file download -->
 <script>
 // Inline critical scroll function for immediate availability
 window.scrollToSection = function(sectionId) {
@@ -5893,11 +5895,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const hamburger = document.querySelector('.hamburger-menu');
     const nav = document.getElementById('nav');
     if (hamburger && nav) {
-        hamburger.addEventListener('click', () => {
+        const toggleMenu = () => {
             nav.classList.toggle('active');
             hamburger.classList.toggle('active');
             const isExpanded = nav.classList.contains('active');
             hamburger.setAttribute('aria-expanded', isExpanded);
+        };
+        hamburger.addEventListener('click', toggleMenu);
+        hamburger.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleMenu();
+            }
         });
     }
 });
