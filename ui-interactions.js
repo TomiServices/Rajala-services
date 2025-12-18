@@ -1,16 +1,31 @@
-// Global scroll function with proper offset for fixed header
-// Exported to window so it can be used by inline onclick handlers
-window.scrollToSection = function(sectionId) {
-    const element = document.querySelector(sectionId);
+// Utility function to batch DOM reads and writes for smooth scrolling
+// Prevents forced reflow by separating read and write phases
+function batchedScrollTo(element, onComplete) {
     if (!element) return;
     
-    // Account for fixed header: top banner (20px) + nav bar (~82px) = ~102px
-    // Adding extra 10px margin for better visibility = 112px total
-    const offset = window.innerWidth <= 1279 ? 0 : 112;
-    const rect = element.getBoundingClientRect();
-    const scrollTop = window.pageYOffset + rect.top - offset;
-    
-    window.scrollTo({ top: scrollTop, behavior: 'smooth' });
+    // Batch DOM reads in first rAF
+    requestAnimationFrame(() => {
+        // Read phase - all layout reads together
+        const rect = element.getBoundingClientRect();
+        const scrollTop = window.pageYOffset;
+        const windowWidth = window.innerWidth;
+        const offset = windowWidth <= 1279 ? 0 : 112;
+        const targetScroll = scrollTop + rect.top - offset;
+        
+        // Write phase - scroll action in second rAF
+        requestAnimationFrame(() => {
+            window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+            if (onComplete) onComplete();
+        });
+    });
+}
+
+// Global scroll function with proper offset for fixed header
+// Exported to window so it can be used by inline onclick handlers
+// Optimized with requestAnimationFrame to batch DOM reads/writes and prevent forced reflow
+window.scrollToSection = function(sectionId) {
+    const element = document.querySelector(sectionId);
+    batchedScrollTo(element);
 };
 
 // Defer non-critical UI initialization to reduce main-thread blocking
@@ -43,23 +58,17 @@ function initializeUIInteractions() {
         link.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
             if (href.startsWith('#') && href.length > 1) {
-            const scrollToElement = document.querySelector(href);
-            if (scrollToElement) {
-                e.preventDefault();
-                // Batch layout reads/writes using requestAnimationFrame
-                requestAnimationFrame(() => {
-                    // Account for fixed header: top banner (20px) + nav bar (~82px) = ~102px
-                    // Adding extra 10px margin for better visibility = 112px total
-                    const offset = window.innerWidth <= 1279 ? 0 : 112;
-                    const rect = scrollToElement.getBoundingClientRect();
-                    const scrollTop = window.pageYOffset + rect.top - offset;
-                    window.scrollTo({ top: scrollTop, behavior: 'smooth' });
-                    nav.classList.remove('active'); // Close mobile nav
-                });
+                const scrollToElement = document.querySelector(href);
+                if (scrollToElement) {
+                    e.preventDefault();
+                    // Use batched scroll utility to prevent forced reflow
+                    batchedScrollTo(scrollToElement, () => {
+                        nav.classList.remove('active'); // Close mobile nav
+                    });
+                }
             }
-        }
+        });
     });
-});
 
     // Highlight current page in navigation (for subpages)
     const currentPage = window.location.pathname.split('/').pop().replace('.html', '');

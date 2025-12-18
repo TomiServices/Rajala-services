@@ -224,10 +224,10 @@
     }
     </script>
     
-    <link rel="preload" href="FXNRpng.webp" as="image">
-    <!-- Preload hero images for faster loading -->
-    <link rel="preload" href="Hero2.webp" as="image" media="(max-width: 2559px)">
-    <link rel="preload" href="Hero1.webp" as="image" media="(min-width: 2560px)">
+    <!-- Preload critical images for faster LCP -->
+    <link rel="preload" href="Hero2.webp" as="image" type="image/webp" media="(max-width: 2559px)" fetchpriority="high">
+    <link rel="preload" href="Hero1.webp" as="image" type="image/webp" media="(min-width: 2560px)" fetchpriority="high">
+    <link rel="preload" href="FXNRv.webp" as="image" type="image/webp" fetchpriority="high">
     <!-- FullCalendar styles are bundled in index.global.min.js, no separate CSS needed -->
     <!-- Google Font for service titles - bold italic style similar to Serpentine -->
     <!-- Optimized for performance: preconnect + dns-prefetch + async load with font-display swap -->
@@ -237,29 +237,9 @@
     <!-- Reduced font weights and async loading with media print trick for better performance -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap"></noscript>
-    <!-- Google reCAPTCHA v3 (FREE version, NOT Enterprise) -->
-    <!-- v3 runs invisibly in the background and generates a score (0.0-1.0) indicating likelihood of being a bot -->
-    <!-- Script is loaded automatically with the render parameter -->
+    <!-- Google reCAPTCHA v3 - Deferred loading for better performance -->
+    <!-- Loaded only when user scrolls to booking form via IntersectionObserver -->
     <!-- Site Key: 6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM -->
-    <!-- 
-        IMPORTANT NOTE ON COOKIES AND LIGHTHOUSE SCORE:
-        reCAPTCHA v3 sets approximately 17 cookies (e.g., _GRECAPTCHA, NID, 1P_JAR, etc.) 
-        which are essential for fraud detection and cannot be eliminated without removing reCAPTCHA.
-        These cookies may affect Lighthouse "Best Practices" score, but they are necessary for:
-        - Bot detection and fraud prevention
-        - User behavior analysis across sessions
-        - Maintaining security of the booking system
-        
-        Current optimizations in place:
-        - Lazy loading: Script loads only when needed (see bottom of page)
-        - Cookie consent banner: GDPR compliant (cookie-consent.js)
-        - Badge hidden: Better UX while maintaining functionality
-        - Limited scope: Only loaded on pages with booking form
-        
-        Alternative solutions would require removing reCAPTCHA entirely, which would 
-        significantly reduce security and increase spam/bot submissions.
-    -->
-    <script src="https://www.google.com/recaptcha/api.js?render=6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM" async defer></script>
     <style>
         /* Font loading optimization: ensure text is visible immediately with fallback fonts */
         /* This prevents FOIT (Flash of Invisible Text) and improves LCP */
@@ -372,6 +352,9 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 20px;
+            /* Performance optimizations */
+            contain: layout style;
+            will-change: transform;
         }
         
         /* REMOVED: Navbar animation to improve LCP performance
@@ -720,11 +703,15 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), box-shadow 0.4s ease, filter 0.4s ease, border 0.4s ease;
             text-shadow: 0 2px 8px rgba(0,0,0,0.9), 0 1px 3px rgba(0,0,0,1);
             border: 2px solid rgba(255,255,255,0.1);
             /* Enhanced brightness and contrast for better icon visibility */
             filter: brightness(1.15) contrast(1.1);
+            /* Performance optimizations */
+            will-change: transform;
+            backface-visibility: hidden;
+            transform: translateZ(0);
         }
         
         /* Lighter overlay to show more of the background image while maintaining text readability */
@@ -737,11 +724,10 @@
             transition: all 0.3s ease;
         }
         .category-box:hover {
-            transform: translateY(-8px) scale(1.05);
+            transform: translateY(-8px) scale(1.05) translateZ(0);
             box-shadow: 0 20px 50px rgba(63, 169, 245, 0.4), 0 0 30px rgba(63, 169, 245, 0.3);
             /* Enhanced brightness on hover for more vibrant appearance */
             filter: brightness(1.25) contrast(1.15);
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             border: 2px solid #3FA9F5;
         }
         .category-box:hover::after {
@@ -928,6 +914,8 @@
             margin: 50px auto;
             max-width: 950px;
             padding: 0 20px;
+            /* Performance optimization */
+            contain: layout style paint;
         }
         
         /* Ensure services sections within container have proper spacing */
@@ -4070,7 +4058,7 @@
         <span></span><span></span><span></span>
     </button>
     <nav id="nav">
-        <a href="#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" loading="lazy"></a>
+        <a href="#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" width="200" height="50" loading="eager"></a>
         <a href="#pesupalvelut">Autopesu</a>
         <a href="#sisapuhdistus">Sisäpuhdistus</a>
         <a href="#kiilloitus">Kiillotus</a>
@@ -4124,13 +4112,13 @@
                     align-items: center;
                     margin-bottom: 20px;
                 ">
-                    <img src="fixnero.webp" alt="FIXNERO - Autohuolto Espoo: Kiillotus, keraamiset pinnoitteet, autopesu, sisäpuhdistus, rengastyöt, kolhukorjaus ja korjauspalvelut Kivenlahdessa" style="
+                    <img src="fixnero.webp" alt="FIXNERO - Autohuolto Espoo: Kiillotus, keraamiset pinnoitteet, autopesu, sisäpuhdistus, rengastyöt, kolhukorjaus ja korjauspalvelut Kivenlahdessa" width="300" height="60" style="
                         max-width: 90%;
                         width: auto;
                         height: auto;
                         max-height: 60px;
                         filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.8));
-                    " class="hero-logo-img">
+                    " class="hero-logo-img" loading="eager" fetchpriority="high">
                 </div>
                 <h1 style="
                     font-size: 2.5rem; 
@@ -4561,7 +4549,7 @@
                 <p>Halutessasi voit täydentää autopesun lisäpalveluilla, jotka tuovat lisäsuojaa ja kiiltoa autollesi. Tarjoamme pesun yhteydessä suihkutettavan vettä ja likaa hylkivän pinnoitteen, joka helpottaa auton puhtaana pitämistä ja pidentää pesun vaikutusta.</p>
             </div>
             <div class="polishing-image">
-                <img src="Pesupalvelut.webp" alt="Pesupalvelut Espoo - Ammattitaitoinen käsinpesu, vahaukset ja auton puhdistus" loading="lazy">
+                <img src="Pesupalvelut.webp" alt="Pesupalvelut Espoo - Ammattitaitoinen käsinpesu, vahaukset ja auton puhdistus" width="400" height="300" loading="lazy">
             </div>
         </div>
         <p style="margin-top: 30px; text-align: center;">
@@ -4597,7 +4585,7 @@
                 <p>Voit yhdistää sisäpuhdistuksen myös ulkopesuun tai kiillotukseen kokonaisvaltaista lopputulosta varten.</p>
             </div>
             <div class="interior-cleaning-image">
-                <img src="sisapuhdistus.webp" alt="Sisäpuhdistus Espoo - Syväpuhdistus, otsonointi ja sisätilojen hoito" loading="lazy">
+                <img src="sisapuhdistus.webp" alt="Sisäpuhdistus Espoo - Syväpuhdistus, otsonointi ja sisätilojen hoito" width="400" height="300" loading="lazy">
             </div>
         </div>
         <p style="margin-top: 30px; text-align: center;">
@@ -4625,7 +4613,7 @@
                 <p>Varaa aika myllytykseen, vahaukseen tai keraamiseen pinnoitukseen varauskalenterista.</p>
             </div>
             <div class="polishing-image">
-                <img src="Tyonaytteet.webp" alt="Kiillotus ja pinnoitus Espoo - Keraaminen pinnoitus ja auton kiillotus" loading="lazy">
+                <img src="Tyonaytteet.webp" alt="Kiillotus ja pinnoitus Espoo - Keraaminen pinnoitus ja auton kiillotus" width="400" height="300" loading="lazy">
             </div>
         </div>
         <p style="margin-top: 30px; text-align: center;">
@@ -4653,7 +4641,7 @@
                 <p>Ota yhteyttä, niin annamme sinulle tarkan arvion korjauksesta ja kustannuksista!</p>
             </div>
             <div class="polishing-image">
-                <img src="kolhukorjaus.webp" alt="Kolhukorjaus Espoo - Lommojen oikaisu ja maalipinnan korjaukset" loading="lazy">
+                <img src="kolhukorjaus.webp" alt="Kolhukorjaus Espoo - Lommojen oikaisu ja maalipinnan korjaukset" width="400" height="300" loading="lazy">
             </div>
         </div>
         <p style="margin-top: 30px; text-align: center;">
@@ -4684,7 +4672,7 @@
                 <p>Epävarma mistä vika johtuu? Tuo autosi meille katsastettavaksi – selvitämme ongelman ja annamme realistisen arvion korjauskustannuksista ennen töiden aloittamista.</p>
             </div>
             <div class="polishing-image">
-                <img src="Korjaustyot.webp" alt="Korjaustyöt Espoo - Auton korjaus, vikakoodit ja jousitus huolto" loading="lazy">
+                <img src="Korjaustyot.webp" alt="Korjaustyöt Espoo - Auton korjaus, vikakoodit ja jousitus huolto" width="400" height="300" loading="lazy">
             </div>
         </div>
         <p style="margin-top: 30px; text-align: center;">
@@ -4719,7 +4707,7 @@
                 <p>Rengaspalvelumme on nopea, huolellinen ja täysin vaivaton – kysy lisää tai varaa aika suoraan!</p>
             </div>
             <div class="tire-services-image">
-                <img src="Rengas.webp" alt="Rengastyöt Espoo - Renkaiden vaihto, tasapainotus ja rengashotelli Kivenlahdessa" loading="lazy">
+                <img src="Rengas.webp" alt="Rengastyöt Espoo - Renkaiden vaihto, tasapainotus ja rengashotelli Kivenlahdessa" width="400" height="300" loading="lazy">
             </div>
         </div>
         <p style="margin-top: 30px; text-align: center;">
@@ -4738,7 +4726,7 @@
                 <p>Suoritamme tuulilasien vaihdot ja korjaukset kaikkiin henkilöautoihin, kuorma-autoihin sekä työkoneisiin. Meillä on laaja kokemus lasien vaihdoista ja korjauksista eri ajoneuvotyypeille.</p>
             </div>
             <div class="polishing-image">
-                <img src="lasikorjaus.webp" alt="Lasikorjaus Espoo - Tuulilasin korjaus ja vaihto ammattitaidolla" loading="lazy">
+                <img src="lasikorjaus.webp" alt="Lasikorjaus Espoo - Tuulilasin korjaus ja vaihto ammattitaidolla" width="400" height="300" loading="lazy">
             </div>
         </div>
         <p style="margin-top: 30px; text-align: center;">
@@ -5696,7 +5684,7 @@
                 </ul>
             </div>
             <div class="polishing-image">
-                <img src="yhteystiedot.webp" alt="Yhteystiedot - Ota yhteyttä Fixnero autohuoltoon Espoossa" loading="lazy">
+                <img src="yhteystiedot.webp" alt="Yhteystiedot - Ota yhteyttä Fixnero autohuoltoon Espoossa" width="400" height="300" loading="lazy">
             </div>
         </div>
     </section>
@@ -5713,7 +5701,7 @@
     <footer>
         <div class="footer">
             <div class="logo-container footer-section">
-                <a href="#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut" loading="lazy"></a>
+                <a href="#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut" width="200" height="50" loading="lazy"></a>
                 <p>Fixnero © 2026. All Rights Reserved.</p>
                 <p style="margin-top: 10px; font-size: 0.9rem;">
                     <a href="cookie-policy" style="color: #ffffff; text-decoration: none;">Evästekäytäntö</a> | 
@@ -5888,6 +5876,54 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 })();
 </script>
+<!-- Lazy load reCAPTCHA only when booking form is visible -->
+<script>
+(function() {
+    let recaptchaLoaded = false;
+    
+    function loadRecaptcha() {
+        if (recaptchaLoaded) return;
+        recaptchaLoaded = true;
+        
+        const script = document.createElement('script');
+        script.src = 'https://www.google.com/recaptcha/api.js?render=6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM';
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    }
+    
+    // Load reCAPTCHA when user scrolls near the booking form
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    loadRecaptcha();
+                    observer.disconnect();
+                }
+            });
+        }, {
+            rootMargin: '200px' // Load 200px before form is visible
+        });
+        
+        // Observe the booking form or a section above it
+        const bookingSection = document.querySelector('#varaa-aika, #ajanvaraus');
+        if (bookingSection) {
+            observer.observe(bookingSection);
+        } else {
+            // Fallback: load after page load
+            window.addEventListener('load', () => {
+                setTimeout(loadRecaptcha, 2000);
+            });
+        }
+    } else {
+        // Fallback for browsers without IntersectionObserver
+        window.addEventListener('load', () => {
+            setTimeout(loadRecaptcha, 2000);
+        });
+    }
+})();
+</script>
+
 <script type="module" src="booking-system.min.js" defer></script>
 <script src="ui-interactions.min.js" defer></script>
 
