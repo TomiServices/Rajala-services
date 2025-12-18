@@ -21,7 +21,6 @@ function initializeUIInteractions() {
     
     // Check if hamburger menu exists before attaching listeners
     if (!hamburger || !nav) {
-        console.warn('Hamburger menu or nav element not found, skipping initialization');
         return;
     }
     

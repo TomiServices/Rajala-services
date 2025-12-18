@@ -56,20 +56,32 @@
         
         const GA_MEASUREMENT_ID = 'G-SP5R1MN1H9';
         
-        const script = document.createElement('script');
-        script.async = true;
-        script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
-        document.head.appendChild(script);
+        // Use requestIdleCallback to defer analytics initialization
+        // This reduces main thread blocking during initial page load
+        function loadGoogleAnalytics() {
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
+            document.head.appendChild(script);
+            
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            window.gtag = gtag;
+            
+            gtag('js', new Date());
+            gtag('config', GA_MEASUREMENT_ID, {
+                'anonymize_ip': true,
+                'cookie_flags': 'SameSite=Lax;Secure'
+            });
+        }
         
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        window.gtag = gtag;
-        
-        gtag('js', new Date());
-        gtag('config', GA_MEASUREMENT_ID, {
-            'anonymize_ip': true,
-            'cookie_flags': 'SameSite=Lax;Secure'
-        });
+        // Defer analytics loading until browser is idle
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(loadGoogleAnalytics, { timeout: 2000 });
+        } else {
+            // Fallback for browsers without requestIdleCallback
+            setTimeout(loadGoogleAnalytics, 2000);
+        }
     }
     
     function showCookieBanner() {

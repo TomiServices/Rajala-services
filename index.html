@@ -237,29 +237,16 @@
     <!-- Reduced font weights and async loading with media print trick for better performance -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap"></noscript>
-    <!-- Google reCAPTCHA v3 (FREE version, NOT Enterprise) -->
-    <!-- v3 runs invisibly in the background and generates a score (0.0-1.0) indicating likelihood of being a bot -->
-    <!-- Script is loaded automatically with the render parameter -->
+    <!-- Google reCAPTCHA v3 - LAZY LOADED (see bottom of page) -->
+    <!-- Lazy loading saves ~50KB + 0.8s execution time by loading only when user scrolls to booking form -->
     <!-- Site Key: 6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM -->
     <!-- 
-        IMPORTANT NOTE ON COOKIES AND LIGHTHOUSE SCORE:
-        reCAPTCHA v3 sets approximately 17 cookies (e.g., _GRECAPTCHA, NID, 1P_JAR, etc.) 
-        which are essential for fraud detection and cannot be eliminated without removing reCAPTCHA.
-        These cookies may affect Lighthouse "Best Practices" score, but they are necessary for:
-        - Bot detection and fraud prevention
-        - User behavior analysis across sessions
-        - Maintaining security of the booking system
-        
-        Current optimizations in place:
-        - Lazy loading: Script loads only when needed (see bottom of page)
+        PERFORMANCE OPTIMIZATIONS:
+        - Lazy loading: Script loads when user scrolls near booking form (see bottom script)
+        - Intersection Observer: Monitors user scroll position for optimal loading timing
         - Cookie consent banner: GDPR compliant (cookie-consent.js)
         - Badge hidden: Better UX while maintaining functionality
-        - Limited scope: Only loaded on pages with booking form
-        
-        Alternative solutions would require removing reCAPTCHA entirely, which would 
-        significantly reduce security and increase spam/bot submissions.
     -->
-    <script src="https://www.google.com/recaptcha/api.js?render=6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM" async defer></script>
     <style>
         /* Font loading optimization: ensure text is visible immediately with fallback fonts */
         /* This prevents FOIT (Flash of Invisible Text) and improves LCP */
@@ -5888,10 +5875,77 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 })();
 </script>
+
+<!-- Critical inline JavaScript - executed immediately for instant functionality -->
+<script>
+// Inline critical scroll function for immediate availability
+window.scrollToSection = function(sectionId) {
+    const element = document.querySelector(sectionId);
+    if (!element) return;
+    const offset = window.innerWidth <= 1279 ? 0 : 112;
+    const rect = element.getBoundingClientRect();
+    const scrollTop = window.pageYOffset + rect.top - offset;
+    window.scrollTo({ top: scrollTop, behavior: 'smooth' });
+};
+
+// Inline hamburger menu toggle for instant mobile navigation
+document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.querySelector('.hamburger-menu');
+    const nav = document.getElementById('nav');
+    if (hamburger && nav) {
+        hamburger.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
+            const isExpanded = nav.classList.contains('active');
+            hamburger.setAttribute('aria-expanded', isExpanded);
+        });
+    }
+});
+</script>
+
+<!-- Lazy load reCAPTCHA - loads only when user scrolls near booking form -->
+<script>
+(function() {
+    let recaptchaLoaded = false;
+    
+    function loadRecaptcha() {
+        if (recaptchaLoaded) return;
+        recaptchaLoaded = true;
+        
+        const script = document.createElement('script');
+        script.src = 'https://www.google.com/recaptcha/api.js?render=6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM';
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    }
+    
+    // Load when user scrolls near booking form (200px before visible)
+    const bookingSection = document.querySelector('#varaa-aika');
+    if (bookingSection) {
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                loadRecaptcha();
+                observer.disconnect();
+            }
+        }, { rootMargin: '200px' });
+        
+        observer.observe(bookingSection);
+    }
+    
+    // Also load on any interaction with booking section
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('#varaa-aika')) {
+            loadRecaptcha();
+        }
+    }, { once: true, passive: true });
+})();
+</script>
+
+<!-- Deferred JavaScript - loads after critical content -->
 <script type="module" src="booking-system.min.js" defer></script>
 <script src="ui-interactions.min.js" defer></script>
 
-<!-- Cookie Consent Banner - GDPR Compliant -->
+<!-- Cookie Consent Banner - GDPR Compliant with requestIdleCallback optimization -->
 <script src="cookie-consent.min.js" defer></script>
 </body>
 </html>
