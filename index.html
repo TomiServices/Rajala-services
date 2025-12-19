@@ -606,6 +606,30 @@
             object-fit: cover;
         }
         
+        /* Hero text overlay at bottom of hero section */
+        .hero-text-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 2;
+            text-align: center;
+            padding: 20px 20px 30px 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%);
+        }
+        
+        .hero-text-overlay p {
+            color: #ffffff;
+            font-size: 0.95rem;
+            margin: 0;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            opacity: 0.9;
+            font-weight: 300;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
         /* Hero1: High-resolution screens (2K and above, >= 2560px) */
         @media (min-width: 2560px) {
             #hero {
@@ -4246,27 +4270,8 @@
         </div>
         
         <!-- Text overlay at bottom of hero section -->
-        <div class="hero-text-overlay" style="
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 2;
-            text-align: center;
-            padding: 20px 20px 30px 20px;
-            background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%);
-        ">
-            <p style="
-                color: #ffffff;
-                font-size: 0.95rem;
-                margin: 0;
-                text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-                opacity: 0.9;
-                font-weight: 300;
-                line-height: 1.6;
-                max-width: 1000px;
-                margin: 0 auto;
-            ">
+        <div class="hero-text-overlay">
+            <p>
                 Fixnero tarjoaa monipuoliset autopalvelut Espoossa ja Uudenmaan alueella – autopesuista ja kiillotuksista aina keraamisiin pinnoitteisiin, kolhukorjauksiin, renkaan vaihtoihin ja korjaustöihin.
             </p>
         </div>
