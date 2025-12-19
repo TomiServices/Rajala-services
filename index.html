@@ -6041,7 +6041,7 @@
                rel="noopener noreferrer"
                class="map-link"
                aria-label="Avaa kartta Google Mapsissa (avautuu uuteen välilehteen)">
-                📍 Avaa kartta Google Mapsissa
+                <span aria-hidden="true">📍</span> Avaa kartta Google Mapsissa
             </a>
             <p class="map-address">Tiilenvalajantie 6, 02330 Espoo (Kivenlahti)</p>
         </div>
@@ -6063,7 +6063,7 @@
             <!-- Fallback Content - Shown if iframe fails to load -->
             <div class="map-fallback" role="alert" aria-live="polite">
                 <div class="map-fallback-content">
-                    <div class="map-fallback-icon">📍</div>
+                    <div class="map-fallback-icon" aria-hidden="true">📍</div>
                     <h3 class="map-fallback-title">Kartta ei ole saatavilla</h3>
                     <p class="map-fallback-text">Kartan lataaminen epäonnistui. Voit avata sijaintimme Google Mapsissa alla olevasta linkistä.</p>
                     <a href="https://www.google.com/maps/place/Fixnero+Oy/@60.169,24.6384,15z/data=!4m6!3m5!1s0x468df303b8516281:0x6cdbfb4f93b4cab5!8m2!3d60.169!4d24.6384!16s%2Fg%2F11t_14wt0k" 
@@ -6345,20 +6345,6 @@ document.addEventListener('DOMContentLoaded', function() {
             clearTimeout(timeoutId);
             iframeLoaded = true;
             console.log('Google Maps iframe loaded successfully');
-            
-            // Additional check: verify iframe content is accessible
-            try {
-                // Some browsers may block access to iframe content
-                // If we can't access it, it might be blocked
-                const iframeDoc = mapIframe.contentDocument || mapIframe.contentWindow.document;
-                if (!iframeDoc) {
-                    showFallback('Iframe content blocked or inaccessible');
-                }
-            } catch (e) {
-                // Cross-origin restrictions are expected for Google Maps
-                // This is actually a sign that the iframe loaded correctly
-                console.log('Cross-origin check (expected for external iframe)');
-            }
         });
         
         // Handle iframe loading errors
@@ -6377,7 +6363,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Additional check: Monitor for network errors or blocked content
         // Some ad blockers or privacy extensions may block Google Maps
         window.addEventListener('error', function(e) {
-            if (e.target === mapIframe || (e.filename && e.filename.includes('google.com/maps'))) {
+            // Check if error is related to the iframe element
+            if (e.target === mapIframe) {
                 showFallback('Network error loading Google Maps');
             }
         }, true);
