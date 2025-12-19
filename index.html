@@ -258,6 +258,64 @@
             }
         }
         
+        /* SEO Optimization: Replace strong tags with semantic CSS classes */
+        /* Service names - for service listings */
+        .service-name {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        /* Prices - for pricing information */
+        .price {
+            font-weight: 600;
+            color: #333333;
+            font-size: 1.05em;
+        }
+        
+        /* Contact labels - for contact information headers */
+        .contact-label {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        /* Notice text - for important notices and warnings */
+        .notice-text {
+            font-weight: 600;
+            color: #856404;
+        }
+        
+        /* Category titles - for section categories */
+        .category-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        /* Section subtitles - replacement for h3/h4 headings to reduce heading count */
+        .section-subtitle {
+            color: #333333;
+            font-weight: 600;
+            font-size: 1.4rem;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+            letter-spacing: 0.05em;
+            margin: 20px 0 15px 0;
+        }
+        
+        /* Notice highlight - for long notice blocks replacing long strong tags */
+        .notice-highlight {
+            font-weight: 600;
+            color: #856404;
+            background: #fff3cd;
+            padding: 12px 18px;
+            border-radius: 6px;
+            margin: 15px 0;
+            display: block;
+        }
+        
+        .notice-icon {
+            font-weight: normal;
+            margin-right: 5px;
+        }
+        
         /* --- your full original CSS pasted here, unchanged --- */
         html {
             scroll-behavior: smooth;
@@ -4071,16 +4129,16 @@
         <span></span><span></span><span></span>
     </button>
     <nav id="nav">
-        <a href="#top"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" width="200" height="50" loading="eager"></a>
-        <a href="#pesupalvelut">Autopesu</a>
-        <a href="#sisapuhdistus">Sisäpuhdistus</a>
-        <a href="#kiilloitus">Kiillotus</a>
-        <a href="#kolhukorjaus">Kolhukorjaus</a>
-        <a href="#korjaustyot">Korjaustyöt</a>
-        <a href="#rengastyot">Rengastyöt</a>
-        <a href="#lasikorjaus">Lasikorjaus</a>
-        <a href="#hinnasto">Hinnasto</a>
-        <a href="#yhteystiedot">Yhteystiedot</a>
+        <a href="#top" aria-label="Palaa etusivulle" title="Fixnero Etusivu"><img src="FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut Kivenlahdessa" width="200" height="50" loading="eager"></a>
+        <a href="#pesupalvelut" aria-label="Siirry pesupalvelut-osioon" title="Autopesu Espoo - Pesupalvelut">Autopesu</a>
+        <a href="#sisapuhdistus" aria-label="Siirry sisäpuhdistus-osioon" title="Sisäpuhdistus Espoo - Auton sisätilojen puhdistus">Sisäpuhdistus</a>
+        <a href="#kiilloitus" aria-label="Siirry kiilloitus-osioon" title="Kiillotus Espoo - Koneellinen kiillotus ja pinnoitus">Kiillotus</a>
+        <a href="#kolhukorjaus" aria-label="Siirry kolhukorjaus-osioon" title="Kolhukorjaus Espoo - Lommojen oikaisu">Kolhukorjaus</a>
+        <a href="#korjaustyot" aria-label="Siirry korjaustyöt-osioon" title="Korjaustyöt Espoo - Autohuolto ja katsastuskorjaukset">Korjaustyöt</a>
+        <a href="#rengastyot" aria-label="Siirry rengastyöt-osioon" title="Rengastyöt Espoo - Renkaiden vaihto ja rengashotelli">Rengastyöt</a>
+        <a href="#lasikorjaus" aria-label="Siirry lasikorjaus-osioon" title="Lasikorjaus Espoo - Tuulilasin korjaus ja vaihto">Lasikorjaus</a>
+        <a href="#hinnasto" aria-label="Siirry hinnasto-osioon" title="Hinnasto - Palveluiden hinnat">Hinnasto</a>
+        <a href="#yhteystiedot" aria-label="Siirry yhteystiedot-osioon" title="Yhteystiedot - Ota yhteyttä">Yhteystiedot</a>
     </nav>
     <!-- Hero Section with Responsive Background Images -->
     <section id="hero" style="
@@ -4190,18 +4248,18 @@
         <!-- Lighting Effect and Service Categories -->
         <div class="services-lighting-effect">
             <div class="categories-row">
-                <div class="category-box" style="background-image: url('Pesupalvelut.webp');" onclick="scrollToSection('#pesupalvelut')" role="button" tabindex="0" aria-label="Siirry autopesuun">Autopesu</div>
-                <div class="category-box" style="background-image: url('sisapuhdistus.webp');" onclick="scrollToSection('#sisapuhdistus')" role="button" tabindex="0" aria-label="Siirry sisäpuhdistukseen">Sisäpuhdistus</div>
-                <div class="category-box" style="background-image: url('kiilloitus.webp');" onclick="scrollToSection('#kiilloitus')" role="button" tabindex="0" aria-label="Siirry kiillotukseen">Kiillotus</div>
-                <div class="category-box" style="background-image: url('kolhukorjaus.webp');" onclick="scrollToSection('#kolhukorjaus')" role="button" tabindex="0" aria-label="Kolhukorjaus Espoo - Lommojen oikaisu ja ruostekorjaukset">Kolhukorjaus</div>
-                <div class="category-box" style="background-image: url('Korjaustyot.webp');" onclick="scrollToSection('#korjaustyot')" role="button" tabindex="0" aria-label="Siirry korjaustöihin">Korjaustyöt</div>
-                <div class="category-box" style="background-image: url('Rengastyot.webp');" onclick="scrollToSection('#rengastyot')" role="button" tabindex="0" aria-label="Siirry rengastöihin">Rengastyöt</div>
-                <div class="category-box category-box-lasikorjaus" style="background-image: url('lasikorjaus.webp');" onclick="scrollToSection('#lasikorjaus')" role="button" tabindex="0" aria-label="Siirry lasikorjaukseen">Lasikorjaus</div>
-                <div class="category-box" style="background-image: url('Tyonaytteet.webp');" onclick="location.href='tyonnaytteet'" role="button" tabindex="0" aria-label="Siirry työnäytteisiin">Työnäytteet</div>
-                <div class="category-box category-box-tietoa-meista" style="background-image: url('FXNRv.webp');" onclick="location.href='tietoa-meista'" role="button" tabindex="0" aria-label="Siirry Tietoa meistä -sivulle">Tietoa meistä</div>
-                <div class="category-box" style="background-image: url('Ajanvaraus.webp');" onclick="scrollToSection('#ajanvaraus')" role="button" tabindex="0" aria-label="Siirry ajanvaraukseen">Ajanvaraus</div>
-                <div class="category-box category-box-hinnasto" style="background-image: url('hinnasto.webp');" onclick="scrollToSection('#hinnasto')" role="button" tabindex="0" aria-label="Siirry hinnastoon">Hinnasto</div>
-                <div class="category-box" style="background-image: url('yhteystiedot.webp');" onclick="scrollToSection('#yhteystiedot')" role="button" tabindex="0" aria-label="Siirry yhteystietoihin">Yhteystiedot</div>
+                <div class="category-box" style="background-image: url('Pesupalvelut.webp');" onclick="scrollToSection('#pesupalvelut')" role="button" tabindex="0" aria-label="Katso pesupalvelut ja hinnat" title="Autopesu Espoo - Käsinpesu ja vahaukset">Autopesu</div>
+                <div class="category-box" style="background-image: url('sisapuhdistus.webp');" onclick="scrollToSection('#sisapuhdistus')" role="button" tabindex="0" aria-label="Katso sisäpuhdistuspalvelut ja hinnat" title="Sisäpuhdistus Espoo - Auton sisätilojen puhdistus">Sisäpuhdistus</div>
+                <div class="category-box" style="background-image: url('kiilloitus.webp');" onclick="scrollToSection('#kiilloitus')" role="button" tabindex="0" aria-label="Katso kiillotuspalvelut ja hinnat" title="Kiillotus Espoo - Koneellinen kiillotus ja pinnoitus">Kiillotus</div>
+                <div class="category-box" style="background-image: url('kolhukorjaus.webp');" onclick="scrollToSection('#kolhukorjaus')" role="button" tabindex="0" aria-label="Katso kolhukorjauspalvelut ja hinnat" title="Kolhukorjaus Espoo - Lommojen oikaisu ja ruostekorjaukset">Kolhukorjaus</div>
+                <div class="category-box" style="background-image: url('Korjaustyot.webp');" onclick="scrollToSection('#korjaustyot')" role="button" tabindex="0" aria-label="Katso korjaustyöt ja hinnat" title="Korjaustyöt Espoo - Autohuolto ja katsastuskorjaukset">Korjaustyöt</div>
+                <div class="category-box" style="background-image: url('Rengastyot.webp');" onclick="scrollToSection('#rengastyot')" role="button" tabindex="0" aria-label="Katso rengastyöt ja hinnat" title="Rengastyöt Espoo - Renkaiden vaihto ja rengashotelli">Rengastyöt</div>
+                <div class="category-box category-box-lasikorjaus" style="background-image: url('lasikorjaus.webp');" onclick="scrollToSection('#lasikorjaus')" role="button" tabindex="0" aria-label="Katso lasikorjauspalvelut ja hinnat" title="Lasikorjaus Espoo - Tuulilasin korjaus ja vaihto">Lasikorjaus</div>
+                <div class="category-box" style="background-image: url('Tyonaytteet.webp');" onclick="location.href='tyonnaytteet'" role="button" tabindex="0" aria-label="Katso aiemmat työt ja esimerkit" title="Työnäytteet - Katsele aiempia töitämme">Työnäytteet</div>
+                <div class="category-box category-box-tietoa-meista" style="background-image: url('FXNRv.webp');" onclick="location.href='tietoa-meista'" role="button" tabindex="0" aria-label="Tutustu Fixnero autohuoltoon" title="Tietoa meistä - Tutustu Fixnero autohuoltoon">Tietoa meistä</div>
+                <div class="category-box" style="background-image: url('Ajanvaraus.webp');" onclick="scrollToSection('#ajanvaraus')" role="button" tabindex="0" aria-label="Varaa aika palveluun" title="Ajanvaraus - Varaa aika netissä">Ajanvaraus</div>
+                <div class="category-box category-box-hinnasto" style="background-image: url('hinnasto.webp');" onclick="scrollToSection('#hinnasto')" role="button" tabindex="0" aria-label="Katso palveluiden hinnasto" title="Hinnasto - Palveluiden hinnat">Hinnasto</div>
+                <div class="category-box" style="background-image: url('yhteystiedot.webp');" onclick="scrollToSection('#yhteystiedot')" role="button" tabindex="0" aria-label="Ota yhteyttä Fixnero autohuoltoon" title="Yhteystiedot - Ota yhteyttä">Yhteystiedot</div>
             </div>
         </div>
         </div>
@@ -4220,35 +4278,35 @@
             <div style="background: rgba(255,255,255,0.9); padding: 30px 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s; border: 1px solid rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'">
                 <div style="font-size: 3rem; margin-bottom: 15px;">👨‍🔧</div>
                 <!-- Updated text colors to dark for white background -->
-                <h3 style="color: #333333; font-size: 1.4rem; margin-bottom: 12px; font-weight: 600;">Ammattitaitoinen palvelu</h3>
+                <p class="section-subtitle" style="text-align: center;">Ammattitaitoinen palvelu</p>
                 <p style="color: #666666; line-height: 1.6; font-size: 1rem;">Kokeneet ammattilaiset huolehtivat autostasi parhaan osaamisen mukaan. Meillä jokainen ajoneuvo saa asiantuntevaa hoitoa ja huolellista käsittelyä.</p>
             </div>
             
             <!-- Reason 2 -->
             <div style="background: rgba(255,255,255,0.9); padding: 30px 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s; border: 1px solid rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'">
                 <div style="font-size: 3rem; margin-bottom: 15px;">⚡</div>
-                <h3 style="color: #333333; font-size: 1.4rem; margin-bottom: 12px; font-weight: 600;">Nopeat toimitusajat</h3>
+                <p class="section-subtitle" style="text-align: center;">Nopeat toimitusajat</p>
                 <p style="color: #666666; line-height: 1.6; font-size: 1rem;">Saat palvelun nopeasti ja tehokkaasti ilman pitkiä odotusaikoja. Arvostamme aikaasi ja tähtäämme joustavaan palveluun kaikissa tilanteissa.</p>
             </div>
             
             <!-- Reason 3 -->
             <div style="background: rgba(255,255,255,0.9); padding: 30px 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s; border: 1px solid rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'">
                 <div style="font-size: 3rem; margin-bottom: 15px;">⭐</div>
-                <h3 style="color: #333333; font-size: 1.4rem; margin-bottom: 12px; font-weight: 600;">Korkea asiakastyytyväisyys</h3>
+                <p class="section-subtitle" style="text-align: center;">Korkea asiakastyytyväisyys</p>
                 <p style="color: #666666; line-height: 1.6; font-size: 1rem;">Tyytyväiset asiakkaat ovat paras suosituksemme ja takuumme laadusta. Erinomainen palvelu ja luotettavuus ovat meille kunnia-asia.</p>
             </div>
             
             <!-- Reason 4 -->
             <div style="background: rgba(255,255,255,0.9); padding: 30px 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s; border: 1px solid rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'">
                 <div style="font-size: 3rem; margin-bottom: 15px;">💰</div>
-                <h3 style="color: #333333; font-size: 1.4rem; margin-bottom: 12px; font-weight: 600;">Kilpailukykyiset hinnat</h3>
+                <p class="section-subtitle" style="text-align: center;">Kilpailukykyiset hinnat</p>
                 <p style="color: #666666; line-height: 1.6; font-size: 1rem;">Tarjoamme laadukasta palvelua reiluun hintaan ilman piilokustannuksia. Hinta-laatusuhteemme on erinomainen ja läpinäkyvä kaikissa palveluissa.</p>
             </div>
         </div>
         
         <!-- Customer Reviews integrated into Miksi Valita section -->
         <div style="margin-top: 50px;">
-            <h3 style="text-align: center; margin-bottom: 15px; font-size: 1.8rem; color: #333333; font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;">Asiakasarvostelut</h3>
+            <p class="section-subtitle" style="text-align: center; font-size: 1.8rem;">Asiakasarvostelut</p>
             <p style="text-align: center; color: #666666; margin-bottom: 30px; font-size: 1rem;">Lue mitä asiakkaamme sanovat palveluistamme</p>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
@@ -4394,7 +4452,9 @@
         
         <!-- Repair services disclaimer -->
         <div id="repair-disclaimer" style="display: none; background: #ffffff; padding: 18px; border-radius: 12px; margin: 20px 0; text-align: center; border: 2px solid #e0e0e0; color: #333333; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" aria-hidden="true">
-          <strong>💡 Huomioithan että korjaustöiden hinnat ovat aina tapauskohtaisia. Voit olla meihin yhteydessä ennen korjausta hinta-arviota varten.</strong>
+          <div class="notice-highlight">
+            <span class="notice-icon">💡</span> Huomioithan että korjaustöiden hinnat ovat aina tapauskohtaisia. Voit olla meihin yhteydessä ennen korjausta hinta-arviota varten.
+          </div>
         </div>
       </div>
       
@@ -4558,7 +4618,7 @@
 
                 <p>Valitse tarpeisiisi sopiva autopesupalvelu tai yhdistä useampi palvelu kokonaisvaltaista tulosta varten. Kerro meille toiveesi, niin suunnittelemme parhaan ratkaisun juuri sinun autollesi.</p>
 
-                <h3>Autopesun lisäpalvelut</h3>
+                <p class="section-subtitle">Autopesun lisäpalvelut</p>
                 <p>Halutessasi voit täydentää autopesun lisäpalveluilla, jotka tuovat lisäsuojaa ja kiiltoa autollesi. Tarjoamme pesun yhteydessä suihkutettavan vettä ja likaa hylkivän pinnoitteen, joka helpottaa auton puhtaana pitämistä ja pidentää pesun vaikutusta.</p>
             </div>
             <div class="polishing-image">
@@ -4592,7 +4652,7 @@
 
                 <p>Voit myös tarvittaessa räätälöidä palvelut juuri sinulle sopivaksi – kerro meille toiveesi, niin suunnittelemme sisäpesun niiden mukaan.</p>
 
-                <h3>Lisäpalvelut</h3>
+                <p class="section-subtitle">Lisäpalvelut</p>
                 <p>Täydennä sisäpuhdistus lisäpalveluilla kuten otsonointi, syväpuhdistus (detailing), nahkapenkkien hoito, hajunpoisto tai allergiapuhdistus. Räätälöimme palvelun juuri sinun tarpeisiisi.</p>
 
                 <p>Voit yhdistää sisäpuhdistuksen myös ulkopesuun tai kiillotukseen kokonaisvaltaista lopputulosta varten.</p>
@@ -4642,7 +4702,7 @@
             <div class="polishing-text">
                 <p>Korjaamme autosi pienet kolhut, naarmut ja lommat nopeasti ja kustannustehokkaasti. Usein myös niin, että alkuperäinen maali säilyy ehjänä ja auto näyttää taas siistiltä – usein jopa saman päivän aikana.</p>
 
-                <h3>Palvelut</h3>
+                <p class="section-subtitle">Palvelut</p>
                 <ul>
                     <li>Pienet kolhut ja naarmut</li>
                     <li>Lommojen oikaisu ilman maalausta</li>
@@ -4670,7 +4730,7 @@
             <div class="polishing-text">
                 <p>Voit tuoda autosi meille myös korjaukseen jos esim. Katsastuksessa autosi sai hylätyn päätöksen. Teemme korjaustoimia laajasti merkistä riippumatta.</p>
 
-                <h3>Yleisimmät korjaustyömme</h3>
+                <p class="section-subtitle">Yleisimmät korjaustyömme</p>
                 <ul>
                     <li>Iskunvaimentimien ja jousituksen uusiminen</li>
                     <li>Tukivarsien, nivelien ja raidetankojen vaihto</li>
@@ -4709,7 +4769,7 @@
                     <li>Uusien renkaiden myynti ja asennus – pyydä tarjous puhelimitse tai sähköpostilla</li>
                 </ul>
 
-                <h3>Rengashotelli</h3>
+                <p class="section-subtitle">Rengashotelli</p>
                 <p>Meillä voit myös jättää renkaasi <strong>rengashotelliin</strong>, joka sisältää renkaiden pesun ja asianmukaisen säilytyksen. Sinun ei tarvitse enää kantaa renkaita mukanasi – varaat vain ajan renkaiden vaihtoon, ja me:</p>
                 <ul>
                     <li>Haemme puhtaat renkaasi suoraan varastosta</li>
@@ -4770,37 +4830,37 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Käsinpesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Käsinpesu</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">23 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">28 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">38 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Nanohoitopesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Nanohoitopesu</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">33 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">38 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">–</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Pikakiillopesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Pikakiillopesu</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">43 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">48 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">58 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Talvipesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Talvipesu</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">48 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">53 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">63 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Moottoritilan pesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Moottoritilan pesu</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">23 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">23 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">23 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Täyshuoltopesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Täyshuoltopesu</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">267 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">267 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">267 €</td>
@@ -4822,43 +4882,43 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Sisäpuhdistus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Sisäpuhdistus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">38 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">43 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">48 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Kankaanpesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Kankaanpesu</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">88 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">88 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">68 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Täyssiivous</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Täyssiivous</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">148 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">148 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">148 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Otsonointi</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Otsonointi</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">85 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">85 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">85 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Nahkapenkkien hoito ja suojaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Nahkapenkkien hoito ja suojaus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">80 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">80 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">80 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Allergiapuhdistus ja desinfiointi</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Allergiapuhdistus ja desinfiointi</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">90 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">90 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">90 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Kangaspintojen suojaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Kangaspintojen suojaus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">70 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">70 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">70 €</td>
@@ -4880,25 +4940,25 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vahakäsittely</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Vahakäsittely</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">98 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">108 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">118 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Kovavaha</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Kovavaha</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">118 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">128 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">148 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Ultra Shine</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Ultra Shine</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">168 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">178 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">198 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Keraaminen</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Keraaminen</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 258 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 283 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">–</td>
@@ -4918,19 +4978,19 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>1-vaiheinen kiillotus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">1-vaiheinen kiillotus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 248 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>2-vaiheinen kiillotus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">2-vaiheinen kiillotus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 598 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>3-vaiheinen kiillotus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">3-vaiheinen kiillotus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 898 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vesihionta</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Vesihionta</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Sop. mukaan</td>
                             </tr>
                         </tbody>
@@ -4948,23 +5008,23 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Renkaiden vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Renkaiden vaihto</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">28–38 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Asennus + tasapainotus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Asennus + tasapainotus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 78 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vuotavan renkaan paikkaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Vuotavan renkaan paikkaus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">23 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vanteiden pesu (4 kpl)</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Vanteiden pesu (4 kpl)</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">8 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Rengashotelli / kausisäilytys</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Rengashotelli / kausisäilytys</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">68–73 €</td>
                             </tr>
                         </tbody>
@@ -4985,32 +5045,32 @@
                             <tr>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Henkilöauto</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">15" ja alle</td>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>80 €</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">80 €</span></td>
                             </tr>
                             <tr style="background: #f9f9f9;">
                                 <td style="padding: 10px; border: 1px solid #ddd;">Henkilöauto</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">16–17"</td>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>90 €</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">90 €</span></td>
                             </tr>
                             <tr>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Henkilöauto</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">18" ja 19"</td>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>95 €</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">95 €</span></td>
                             </tr>
                             <tr style="background: #f9f9f9;">
                                 <td style="padding: 10px; border: 1px solid #ddd;">Henkilöauto</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">20" ja yli</td>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>105 €</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">105 €</span></td>
                             </tr>
                             <tr>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Maasturi/Paketti</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">17" ja alle</td>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>105 €</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">105 €</span></td>
                             </tr>
                             <tr style="background: #f9f9f9;">
                                 <td style="padding: 10px; border: 1px solid #ddd;">Maasturi/Paketti</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">18" ja yli</td>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>120 €</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">120 €</span></td>
                             </tr>
                             <tr>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Muut ajoneuvot</td>
@@ -5032,15 +5092,15 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Korjaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Korjaus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">50 € / lasiturvalla ilmainen</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Lasinvaihto lasivakuutuksella</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Lasinvaihto lasivakuutuksella</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Maksat vain omavastuun</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Lasinvaihto ilman vakuutusta</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Lasinvaihto ilman vakuutusta</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Kysy tarjous</td>
                             </tr>
                         </tbody>
@@ -5058,39 +5118,39 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vikakoodien luku ja nollaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Vikakoodien luku ja nollaus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">40 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Moottoriöljyjen vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Moottoriöljyjen vaihto</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 79 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Iskunvaimentimien ja jousituksen uusiminen</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Iskunvaimentimien ja jousituksen uusiminen</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Tukivarsien, nivelien ja raidetankojen vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Tukivarsien, nivelien ja raidetankojen vaihto</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vakaajatangon ja koiranluiden vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Vakaajatangon ja koiranluiden vaihto</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Jarrulevyjen, palojen ja käsijarrujen vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Jarrulevyjen, palojen ja käsijarrujen vaihto</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Pakoputkistojen korjaukset</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Pakoputkistojen korjaukset</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Pyöränlaakerien vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Pyöränlaakerien vaihto</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Kysy tarjous</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Muu viankorjaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Muu viankorjaus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Kysy tarjous</td>
                             </tr>
                         </tbody>
@@ -5109,15 +5169,15 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Pieni lommo</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Pieni lommo</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 125 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Iso lommo</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Iso lommo</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 150 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Maalipinnan jälkien hionta ja maalaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Maalipinnan jälkien hionta ja maalaus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
                             </tr>
                         </tbody>
@@ -5135,11 +5195,11 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Ajovalojen kirkastus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Ajovalojen kirkastus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">50 € / kpl</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Tarve auton kunnostukselle?</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Tarve auton kunnostukselle?</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
                             </tr>
                         </tbody>
@@ -5171,37 +5231,37 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Käsinpesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Käsinpesu</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">23 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">28 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">38 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Nanohoitopesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Nanohoitopesu</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">33 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">38 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">–</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Pikakiillopesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Pikakiillopesu</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">43 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">48 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">58 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Talvipesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Talvipesu</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">48 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">53 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">63 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Moottoritilan pesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Moottoritilan pesu</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">23 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">23 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">23 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Täyshuoltopesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Täyshuoltopesu</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">267 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">267 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">267 €</td>
@@ -5233,43 +5293,43 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Sisäpuhdistus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Sisäpuhdistus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">38 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">43 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">48 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Kankaanpesu</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Kankaanpesu</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">88 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">88 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">68 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Täyssiivous</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Täyssiivous</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">148 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">148 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">148 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Otsonointi</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Otsonointi</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">85 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">85 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">85 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Nahkapenkkien hoito ja suojaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Nahkapenkkien hoito ja suojaus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">80 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">80 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">80 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Allergiapuhdistus ja desinfiointi</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Allergiapuhdistus ja desinfiointi</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">90 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">90 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">90 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Kangaspintojen suojaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Kangaspintojen suojaus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">70 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">70 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">70 €</td>
@@ -5301,25 +5361,25 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vahakäsittely</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Vahakäsittely</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">98 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">108 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">118 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Kovavaha</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Kovavaha</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">118 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">128 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">148 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Ultra Shine</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Ultra Shine</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">168 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">178 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">198 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Keraaminen</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Keraaminen</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 258 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 283 €</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">–</td>
@@ -5349,19 +5409,19 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>1-vaiheinen kiillotus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">1-vaiheinen kiillotus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 248 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>2-vaiheinen kiillotus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">2-vaiheinen kiillotus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 598 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>3-vaiheinen kiillotus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">3-vaiheinen kiillotus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 898 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vesihionta</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Vesihionta</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Sop. mukaan</td>
                             </tr>
                         </tbody>
@@ -5389,23 +5449,23 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Renkaiden vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Renkaiden vaihto</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">28–38 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Asennus + tasapainotus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Asennus + tasapainotus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 78 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vuotavan renkaan paikkaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Vuotavan renkaan paikkaus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">23 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vanteiden pesu (4 kpl)</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Vanteiden pesu (4 kpl)</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">8 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Rengashotelli / kausisäilytys</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Rengashotelli / kausisäilytys</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">68–73 €</td>
                             </tr>
                         </tbody>
@@ -5436,32 +5496,32 @@
                             <tr>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Henkilöauto</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">15" ja alle</td>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>80 €</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">80 €</span></td>
                             </tr>
                             <tr style="background: #f9f9f9;">
                                 <td style="padding: 10px; border: 1px solid #ddd;">Henkilöauto</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">16–17"</td>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>90 €</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">90 €</span></td>
                             </tr>
                             <tr>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Henkilöauto</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">18" ja 19"</td>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>95 €</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">95 €</span></td>
                             </tr>
                             <tr style="background: #f9f9f9;">
                                 <td style="padding: 10px; border: 1px solid #ddd;">Henkilöauto</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">20" ja yli</td>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>105 €</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">105 €</span></td>
                             </tr>
                             <tr>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Maasturi/Paketti</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">17" ja alle</td>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>105 €</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">105 €</span></td>
                             </tr>
                             <tr style="background: #f9f9f9;">
                                 <td style="padding: 10px; border: 1px solid #ddd;">Maasturi/Paketti</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">18" ja yli</td>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>120 €</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">120 €</span></td>
                             </tr>
                             <tr>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Muut ajoneuvot</td>
@@ -5493,15 +5553,15 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Korjaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Korjaus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">50 € / lasiturvalla ilmainen</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Lasinvaihto lasivakuutuksella</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Lasinvaihto lasivakuutuksella</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Maksat vain omavastuun</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Lasinvaihto ilman vakuutusta</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Lasinvaihto ilman vakuutusta</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Kysy tarjous</td>
                             </tr>
                         </tbody>
@@ -5529,39 +5589,39 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vikakoodien luku ja nollaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Vikakoodien luku ja nollaus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">40 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Moottoriöljyjen vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Moottoriöljyjen vaihto</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 79 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Iskunvaimentimien ja jousituksen uusiminen</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Iskunvaimentimien ja jousituksen uusiminen</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Tukivarsien, nivelien ja raidetankojen vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Tukivarsien, nivelien ja raidetankojen vaihto</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Vakaajatangon ja koiranluiden vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Vakaajatangon ja koiranluiden vaihto</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Jarrulevyjen, palojen ja käsijarrujen vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Jarrulevyjen, palojen ja käsijarrujen vaihto</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Pakoputkistojen korjaukset</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Pakoputkistojen korjaukset</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Pyöränlaakerien vaihto</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Pyöränlaakerien vaihto</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Kysy tarjous</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Muu viankorjaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Muu viankorjaus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Kysy tarjous</td>
                             </tr>
                         </tbody>
@@ -5590,15 +5650,15 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Pieni lommo</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Pieni lommo</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 125 €</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Iso lommo</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Iso lommo</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Alk. 150 €</td>
                             </tr>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Maalipinnan jälkien hionta ja maalaus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Maalipinnan jälkien hionta ja maalaus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
                             </tr>
                         </tbody>
@@ -5626,11 +5686,11 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Ajovalojen kirkastus</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Ajovalojen kirkastus</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">50 € / kpl</td>
                             </tr>
                             <tr style="background: #f9f9f9;">
-                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Tarve auton kunnostukselle?</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><span class="service-name">Tarve auton kunnostukselle?</span></td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">Pyydä tarjous</td>
                             </tr>
                         </tbody>
@@ -5734,22 +5794,22 @@
                 </div>
             </div>
             <div class="services-section footer-section">
-                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: #ffffff;">Palvelumme</h3>
-                <a href="pesupalvelut" title="Autopesu Espoo - Käsinpesu ja vahaukset">Autopesu</a>
-                <a href="sisapuhdistus" title="Sisäpuhdistus Espoo - Auton sisätilojen puhdistus">Sisäpuhdistus</a>
-                <a href="kiilloitus" title="Kiillotus Espoo - Koneellinen kiillotus ja pinnoitus">Kiillotus</a>
-                <a href="kolhukorjaus" title="Kolhukorjaus Espoo - Lommojen oikaisu ja ruostekorjaukset">Kolhukorjaus</a>
-                <a href="korjaustyot" title="Korjaustyöt Espoo - Autohuolto ja katsastuskorjaukset">Korjaustyöt</a>
-                <a href="rengastyot" title="Rengastyöt Espoo - Renkaiden vaihto ja rengashotelli">Rengastyöt</a>
-                <a href="lasikorjaus">Lasikorjaus</a>
-                <a href="#hinnasto">Hinnasto</a>
-                <a href="#yhteystiedot">Yhteystiedot</a>
-                <a href="tyonnaytteet" title="Työnäytteet - Aiemmat työt">Työnäytteet</a>
-                <a href="tietoa-meista" title="Tietoa meistä - Tutustu Fixnero autohuoltoon">Tietoa meistä</a>
-                <a href="blogi/" title="Blogi - Vinkkejä auton hoitoon">Blogi</a>
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: #ffffff;">Autopalvelut Espoossa</h3>
+                <a href="pesupalvelut" aria-label="Lue lisää pesupalveluista" title="Autopesu Espoo - Käsinpesu ja vahaukset">Autopesu</a>
+                <a href="sisapuhdistus" aria-label="Lue lisää sisäpuhdistuksesta" title="Sisäpuhdistus Espoo - Auton sisätilojen puhdistus">Sisäpuhdistus</a>
+                <a href="kiilloitus" aria-label="Lue lisää kiillotuksesta" title="Kiillotus Espoo - Koneellinen kiillotus ja pinnoitus">Kiillotus</a>
+                <a href="kolhukorjaus" aria-label="Lue lisää kolhukorjauksesta" title="Kolhukorjaus Espoo - Lommojen oikaisu ja ruostekorjaukset">Kolhukorjaus</a>
+                <a href="korjaustyot" aria-label="Lue lisää korjaustöistä" title="Korjaustyöt Espoo - Autohuolto ja katsastuskorjaukset">Korjaustyöt</a>
+                <a href="rengastyot" aria-label="Lue lisää rengastöistä" title="Rengastyöt Espoo - Renkaiden vaihto ja rengashotelli">Rengastyöt</a>
+                <a href="lasikorjaus" aria-label="Lue lisää lasikorjauksesta" title="Lasikorjaus Espoo - Tuulilasin korjaus ja vaihto">Lasikorjaus</a>
+                <a href="#hinnasto" aria-label="Katso palveluiden hinnasto" title="Hinnasto - Palveluiden hinnat">Hinnasto</a>
+                <a href="#yhteystiedot" aria-label="Katso yhteystiedot" title="Yhteystiedot - Ota yhteyttä">Yhteystiedot</a>
+                <a href="tyonnaytteet" aria-label="Katso työnäytteet ja esimerkit" title="Työnäytteet - Aiemmat työt">Työnäytteet</a>
+                <a href="tietoa-meista" aria-label="Tutustu meihin paremmin" title="Tietoa meistä - Tutustu Fixnero autohuoltoon">Tietoa meistä</a>
+                <a href="blogi/" aria-label="Lue blogi ja vinkit auton hoitoon" title="Blogi - Vinkkejä auton hoitoon">Blogi</a>
             </div>
             <div class="contact-section footer-section">
-                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: #ffffff;">Yhteystiedot</h3>
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: #ffffff;">Ota yhteyttä</h3>
                 <p style="color: #ffffff;"><strong style="color: #ffffff;">📞 Puhelin:</strong> <a href="tel:+358401935001" style="color: #ffffff; text-decoration: none;">040 1935001</a></p>
                 <p style="color: #ffffff;"><strong style="color: #ffffff;">📧 Sähköposti:</strong> <a href="mailto:info@fixnero.fi" style="color: #ffffff;">info@fixnero.fi</a></p>
                 <p style="color: #ffffff;"><strong style="color: #ffffff;">🕐 Aukioloajat:</strong></p>
