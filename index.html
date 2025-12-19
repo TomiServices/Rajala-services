@@ -644,6 +644,14 @@
                 padding: 16px 32px !important;
                 font-size: 1.1rem !important;
             }
+            
+            /* Hero text overlay responsive for tablets */
+            .hero-text-overlay {
+                padding: 15px 15px 25px 15px !important;
+            }
+            .hero-text-overlay p {
+                font-size: 0.9rem !important;
+            }
         }
         
         @media (max-width: 480px) {
@@ -672,6 +680,15 @@
             #hero a {
                 padding: 14px 28px !important;
                 font-size: 1rem !important;
+            }
+            
+            /* Hero text overlay responsive for mobile */
+            .hero-text-overlay {
+                padding: 12px 12px 20px 12px !important;
+            }
+            .hero-text-overlay p {
+                font-size: 0.8rem !important;
+                line-height: 1.5 !important;
             }
             
             /* iPhone 15 Pro and similar small phones - optimize hamburger menu and logo */
@@ -4226,6 +4243,32 @@
                     Tutustu palveluihimme
                 </a>
             </div>
+        </div>
+        
+        <!-- Text overlay at bottom of hero section -->
+        <div class="hero-text-overlay" style="
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 2;
+            text-align: center;
+            padding: 20px 20px 30px 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%);
+        ">
+            <p style="
+                color: #ffffff;
+                font-size: 0.95rem;
+                margin: 0;
+                text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+                opacity: 0.9;
+                font-weight: 300;
+                line-height: 1.6;
+                max-width: 1000px;
+                margin: 0 auto;
+            ">
+                Fixnero tarjoaa monipuoliset autopalvelut Espoossa ja Uudenmaan alueella – autopesuista ja kiillotuksista aina keraamisiin pinnoitteisiin, kolhukorjauksiin, renkaan vaihtoihin ja korjaustöihin.
+            </p>
         </div>
     </section>
     
