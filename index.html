@@ -3223,9 +3223,6 @@
             text-align: center;
             margin-bottom: 20px;
             padding: 20px;
-            background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%);
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
         .map-link {
@@ -3264,10 +3261,6 @@
             position: relative;
             width: 100%;
             min-height: 450px;
-            background: #f0f0f0;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
         }
         
         .map-iframe-wrapper iframe {
@@ -6037,11 +6030,12 @@
         <!-- Accessible Link to Google Maps - Visible and SEO-friendly -->
         <div class="map-link-container">
             <a href="https://www.google.com/maps/place/Fixnero+Oy/@60.169,24.6384,15z/data=!4m6!3m5!1s0x468df303b8516281:0x6cdbfb4f93b4cab5!8m2!3d60.169!4d24.6384!16s%2Fg%2F11t_14wt0k" 
+               id="map-open-button"
                target="_blank" 
                rel="noopener noreferrer"
                class="map-link"
-               aria-label="Avaa kartta Google Mapsissa (avautuu uuteen välilehteen)">
-                <span aria-hidden="true">📍</span> Avaa kartta Google Mapsissa
+               aria-label="Avaa kartta sovelluksessa">
+                <span aria-hidden="true">📍</span> Avaa kartta sovelluksessa
             </a>
             <p class="map-address">Tiilenvalajantie 6, 02330 Espoo (Kivenlahti)</p>
         </div>
@@ -6375,6 +6369,63 @@ document.addEventListener('DOMContentLoaded', function() {
         document.addEventListener('DOMContentLoaded', initMapFallback);
     } else {
         initMapFallback();
+    }
+})();
+</script>
+
+<!-- Smart Map Button Handler - Mobile vs Desktop -->
+<script>
+(function() {
+    'use strict';
+    
+    // Detect if device is mobile
+    function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+               (window.innerWidth <= 768);
+    }
+    
+    // Initialize smart map button
+    function initMapButton() {
+        const mapButton = document.getElementById('map-open-button');
+        if (!mapButton) {
+            console.warn('Map button not found');
+            return;
+        }
+        
+        // Location coordinates for Fixnero Oy
+        const latitude = '60.169';
+        const longitude = '24.6384';
+        const placeName = 'Fixnero Oy';
+        const address = 'Tiilenvalajantie 6, 02330 Espoo';
+        
+        // Handle click event
+        mapButton.addEventListener('click', function(e) {
+            if (isMobileDevice()) {
+                // Mobile: Use geo: URI to trigger app selector
+                e.preventDefault();
+                
+                // geo: URI will prompt user to choose their preferred maps app
+                // This works on both iOS and Android
+                const geoUri = `geo:${latitude},${longitude}?q=${latitude},${longitude}(${encodeURIComponent(placeName + ', ' + address)})`;
+                
+                // Try to open with geo: URI first
+                window.location.href = geoUri;
+                
+                // Fallback to Google Maps if geo: doesn't work after a short delay
+                setTimeout(function() {
+                    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}&query_place_id=ChIJgWKRuAPvjUYRtcq0k0_7zdY`;
+                    window.open(googleMapsUrl, '_blank', 'noopener,noreferrer');
+                }, 500);
+            }
+            // Desktop: Default behavior - open Google Maps in new tab (no preventDefault needed)
+        });
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMapButton);
+    } else {
+        initMapButton();
     }
 })();
 </script>
