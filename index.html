@@ -6400,12 +6400,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Handle click event
         mapButton.addEventListener('click', function(e) {
             if (isMobileDevice()) {
-                // Mobile: Prevent default and use proper Google Maps URL
-                // This opens Google Maps app on mobile if installed, otherwise web version
+                // Mobile: Prevent default and use Google Maps Search API URL
+                // This approach avoids Safari error "cannot open page" that occurred with geo: URI
+                // Google Maps app will open if installed, otherwise opens in browser
                 e.preventDefault();
                 
                 // Use Google Maps URL with coordinates and place ID
-                // This format works reliably across iOS and Android
+                // This format works reliably across iOS Safari, Android Chrome, and all browsers
                 const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}&query_place_id=${placeId}`;
                 
                 // Open in new window/tab - will trigger Google Maps app on mobile
