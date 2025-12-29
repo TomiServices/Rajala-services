@@ -6412,12 +6412,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 // between Apple Maps and Google Maps (if installed)
                 // Format: https://maps.apple.com/?q=Name&address=Address
                 const appleMapsUrl = `https://maps.apple.com/?q=${encodeURIComponent(businessName)}&address=${encodeURIComponent(address)}&ll=${latitude},${longitude}`;
-                window.location.href = appleMapsUrl;
+                // Use window.open with _self to trigger app chooser while staying on same page if user cancels
+                window.open(appleMapsUrl, '_self');
             } else if (isMobileDevice()) {
                 // Android and other mobile: Use Google Maps directions URL with place name
                 // This allows Android to choose between installed map apps
                 const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(businessName + ', ' + address)}`;
-                window.location.href = googleMapsUrl;
+                // Use window.open with _self to trigger app chooser while staying on same page if user cancels
+                window.open(googleMapsUrl, '_self');
             } else {
                 // Desktop: Open Google Maps in new tab with search query
                 const desktopUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(businessName + ', ' + address)}`;
