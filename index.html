@@ -6034,8 +6034,8 @@
                target="_blank" 
                rel="noopener noreferrer"
                class="map-link"
-               aria-label="Avaa kartta sovelluksessa">
-                <span aria-hidden="true">📍</span> Avaa kartta sovelluksessa
+               aria-label="Avaa Google Mapsissa">
+                <span aria-hidden="true">📍</span> Avaa Google Mapsissa.
             </a>
             <p class="map-address">Tiilenvalajantie 6, 02330 Espoo (Kivenlahti)</p>
         </div>
@@ -6373,15 +6373,10 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 </script>
 
-<!-- Smart Map Button Handler - Universal Map Link for All Devices -->
+<!-- Simple Map Button Handler - Opens Google Maps on All Devices -->
 <script>
 (function() {
     'use strict';
-    
-    // Detect iOS devices specifically
-    function isIOSDevice() {
-        return /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    }
     
     // Detect if device is mobile
     function isMobileDevice() {
@@ -6389,7 +6384,7 @@ document.addEventListener('DOMContentLoaded', function() {
                (window.innerWidth <= 768);
     }
     
-    // Initialize smart map button
+    // Initialize map button
     function initMapButton() {
         const mapButton = document.getElementById('map-open-button');
         if (!mapButton) {
@@ -6400,30 +6395,20 @@ document.addEventListener('DOMContentLoaded', function() {
         // Fixnero Oy location details
         const businessName = 'Fixnero Oy';
         const address = 'Tiilenvalajantie 6, 02330 Espoo';
-        const latitude = '60.1699';
-        const longitude = '24.6384';
         
         // Handle click event
         mapButton.addEventListener('click', function(e) {
             e.preventDefault();
             
-            if (isIOSDevice()) {
-                // iOS: Use Apple Maps URL format which allows the system to offer a choice
-                // between Apple Maps and Google Maps (if installed)
-                // Format: https://maps.apple.com/?q=Name&address=Address
-                const appleMapsUrl = `https://maps.apple.com/?q=${encodeURIComponent(businessName)}&address=${encodeURIComponent(address)}&ll=${latitude},${longitude}`;
-                // Navigate to Apple Maps URL, which triggers iOS app chooser
-                window.location.href = appleMapsUrl;
-            } else if (isMobileDevice()) {
-                // Android and other mobile: Use Google Maps directions URL with place name
-                // This allows Android to choose between installed map apps
-                const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(businessName + ', ' + address)}`;
-                // Navigate to Google Maps URL, which triggers Android app chooser
+            // Google Maps URL that works on both mobile and desktop
+            const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(businessName + ', ' + address)}`;
+            
+            if (isMobileDevice()) {
+                // Mobile: Open directly in the same window, which will prompt to open the Google Maps app
                 window.location.href = googleMapsUrl;
             } else {
-                // Desktop: Open Google Maps in new tab with search query
-                const desktopUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(businessName + ', ' + address)}`;
-                window.open(desktopUrl, '_blank', 'noopener,noreferrer');
+                // Desktop: Open Google Maps in a new tab
+                window.open(googleMapsUrl, '_blank', 'noopener,noreferrer');
             }
         });
     }
