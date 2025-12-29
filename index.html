@@ -6029,7 +6029,7 @@
     <div id="map-container" class="map-container" role="region" aria-label="Kartan sijainti">
         <!-- Accessible Link to Google Maps - Visible and SEO-friendly -->
         <div class="map-link-container">
-            <a href="https://www.google.com/maps/search/?api=1&query=60.1699,24.6384&query_place_id=ChIJgWKRuAPvjUYRtcq0k0_7zdY" 
+            <a href="https://www.google.com/maps/search/?api=1&query=Fixnero+Oy%2C+Tiilenvalajantie+6%2C+02330+Espoo" 
                id="map-open-button"
                target="_blank" 
                rel="noopener noreferrer"
@@ -6060,7 +6060,7 @@
                     <div class="map-fallback-icon" aria-hidden="true">📍</div>
                     <h3 class="map-fallback-title">Kartta ei ole saatavilla</h3>
                     <p class="map-fallback-text">Kartan lataaminen epäonnistui. Voit avata sijaintimme Google Mapsissa alla olevasta linkistä.</p>
-                    <a href="https://www.google.com/maps/search/?api=1&query=60.1699,24.6384&query_place_id=ChIJgWKRuAPvjUYRtcq0k0_7zdY" 
+                    <a href="https://www.google.com/maps/search/?api=1&query=Fixnero+Oy%2C+Tiilenvalajantie+6%2C+02330+Espoo" 
                        target="_blank" 
                        rel="noopener noreferrer"
                        class="map-fallback-link"
@@ -6373,10 +6373,15 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 </script>
 
-<!-- Smart Map Button Handler - Mobile vs Desktop -->
+<!-- Smart Map Button Handler - Universal Map Link for All Devices -->
 <script>
 (function() {
     'use strict';
+    
+    // Detect iOS devices specifically
+    function isIOSDevice() {
+        return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
     
     // Detect if device is mobile
     function isMobileDevice() {
@@ -6392,27 +6397,32 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Location coordinates for Fixnero Oy - corrected to match schema.org
+        // Fixnero Oy location details
+        const businessName = 'Fixnero Oy';
+        const address = 'Tiilenvalajantie 6, 02330 Espoo';
         const latitude = '60.1699';
         const longitude = '24.6384';
-        const placeId = 'ChIJgWKRuAPvjUYRtcq0k0_7zdY';
         
         // Handle click event
         mapButton.addEventListener('click', function(e) {
-            if (isMobileDevice()) {
-                // Mobile: Prevent default and use Google Maps Search API URL
-                // This approach avoids Safari error "cannot open page" that occurred with geo: URI
-                // Google Maps app will open if installed, otherwise opens in browser
-                e.preventDefault();
-                
-                // Use Google Maps URL with coordinates and place ID
-                // This format works reliably across iOS Safari, Android Chrome, and all browsers
-                const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}&query_place_id=${placeId}`;
-                
-                // Open in new window/tab - will trigger Google Maps app on mobile
-                window.open(googleMapsUrl, '_blank', 'noopener,noreferrer');
+            e.preventDefault();
+            
+            if (isIOSDevice()) {
+                // iOS: Use Apple Maps URL format which allows the system to offer a choice
+                // between Apple Maps and Google Maps (if installed)
+                // Format: https://maps.apple.com/?q=Name&address=Address
+                const appleMapsUrl = `https://maps.apple.com/?q=${encodeURIComponent(businessName)}&address=${encodeURIComponent(address)}&ll=${latitude},${longitude}`;
+                window.location.href = appleMapsUrl;
+            } else if (isMobileDevice()) {
+                // Android and other mobile: Use Google Maps directions URL with place name
+                // This allows Android to choose between installed map apps
+                const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(businessName + ', ' + address)}`;
+                window.location.href = googleMapsUrl;
+            } else {
+                // Desktop: Open Google Maps in new tab with search query
+                const desktopUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(businessName + ', ' + address)}`;
+                window.open(desktopUrl, '_blank', 'noopener,noreferrer');
             }
-            // Desktop: Default behavior - open Google Maps in new tab (no preventDefault needed)
         });
     }
     
