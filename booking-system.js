@@ -720,7 +720,7 @@ function initializeBookingSystem() {
             name: 'Pesupalvelut',
             tasks: [
                 { id: 'quick-wash', name: 'Pikapesu', price: 'alkaen 20 €' },
-                { id: 'hand-wash', name: 'Käsinpesu', price: 'alkaen 25 €' },
+                { id: 'hand-wash', name: 'Käsinpesu', price: 'alkaen 30 €' },
                 { id: 'tire-wash', name: 'Renkaiden pesu', price: 'alkaen 15 €' },
                 { id: 'waxing', name: 'Vahaukset', price: 'alkaen 35 €' },
                 { id: 'hard-wax', name: 'Kova vaha', price: 'alkaen 45 €' },
