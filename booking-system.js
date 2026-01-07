@@ -755,7 +755,7 @@ function initializeBookingSystem() {
         dent: {
             name: 'Kolhukorjaus',
             tasks: [
-                { id: 'small-dent', name: 'Pieni lommo', price: 'alkaen 125 €' },
+                { id: 'small-dent', name: 'Pieni lommo', price: 'alkaen 100 €' },
                 { id: 'large-dent', name: 'Iso lommo', price: 'alkaen 150 €' },
                 { id: 'paint-repair', name: 'Maalipinnan jälkien hionta ja maalaus', price: '' },
                 { id: 'bumper-repair', name: 'Puskurin ja lokasuojan korjaukset', price: '' },
