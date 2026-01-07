@@ -766,7 +766,7 @@ function initializeBookingSystem() {
             name: 'Korjaustyöt',
             tasks: [
                 { id: 'diagnostics', name: 'Vikakoodien luku ja nollaus', price: 'alkaen 40 €' },
-                { id: 'oil-change', name: 'Moottoriöljyjen vaihto', price: 'alkaen 79 €' },
+                { id: 'oil-change', name: 'Moottoriöljyjen vaihto', price: 'alkaen 50 €' },
                 { id: 'shock-absorber', name: 'Iskunvaimentimien ja jousituksen uusiminen', price: '' },
                 { id: 'suspension-parts', name: 'Tukivarsien, nivelien ja raidetankojen vaihto', price: '' },
                 { id: 'stabilizer-bar', name: 'Vakaajatangon ja koiranluiden vaihto', price: '' },
