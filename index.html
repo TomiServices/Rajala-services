@@ -421,8 +421,6 @@
          */
         nav img {
             height: 50px;
-            max-width: 250px;
-            object-fit: contain;
             margin-left: 10px;
             margin-right: 15px;
             filter: brightness(1.1);
@@ -3113,6 +3111,13 @@
             flex: 1 1 220px;
             margin: 10px;
         }
+        /* Desktop-specific: Center align logo container */
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
         .logo-container img {
             max-width: 280px;
             height: auto;
@@ -3121,7 +3126,6 @@
         .footer-section a { color: #ffffff; text-decoration: underline; }
         .footer-section h3, .footer-section h4, .footer-section p, .footer-section a, .footer-section strong, .footer-section small {
             color: #ffffff;
-            text-align: center;
             margin: 7px 0;
         }
         @media (max-width: 900px) {
