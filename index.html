@@ -3216,147 +3216,20 @@
             border: 0;
         }
         
-        /* Enhanced Google Maps Container with Fallback Support */
+        /* Google Maps Container */
         .map-container {
             margin: 40px auto;
             max-width: 1200px;
             padding: 0 20px;
         }
         
-        /* Map Link Container - Visible above map for accessibility and SEO */
-        .map-link-container {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 20px;
-        }
-        
-        .map-link {
-            display: inline-block;
-            padding: 12px 24px;
-            background: #333333;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1.05rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-        
-        .map-link:hover {
-            background: #000000;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-        }
-        
-        .map-link:focus {
-            outline: 3px solid #3FA9F5;
-            outline-offset: 2px;
-        }
-        
-        .map-address {
-            margin-top: 12px;
-            color: #333333;
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-        
-        /* Map Iframe Wrapper with Fallback */
-        .map-iframe-wrapper {
-            position: relative;
-            width: 100%;
-            min-height: 450px;
-        }
-        
-        .map-iframe-wrapper iframe {
-            position: relative;
-            z-index: 2;
+        .map-container iframe {
             display: block;
             width: 100%;
             height: 450px;
             border: 0;
-        }
-        
-        /* Fallback Content - Hidden by default, shown on error */
-        .map-fallback {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
-            z-index: 3;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-        }
-        
-        .map-fallback.show {
-            display: flex;
-        }
-        
-        .map-fallback-content {
-            text-align: center;
-            max-width: 500px;
-        }
-        
-        .map-fallback-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            opacity: 0.7;
-        }
-        
-        .map-fallback-title {
-            color: #333333;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
-            letter-spacing: 0.05em;
-        }
-        
-        .map-fallback-text {
-            color: #666666;
-            font-size: 1rem;
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-        
-        .map-fallback-link {
-            display: inline-block;
-            padding: 14px 32px;
-            background: #333333;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            margin-bottom: 20px;
-        }
-        
-        .map-fallback-link:hover {
-            background: #000000;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-        }
-        
-        .map-fallback-link:focus {
-            outline: 3px solid #3FA9F5;
-            outline-offset: 2px;
-        }
-        
-        .map-fallback-address {
-            color: #333333;
-            font-size: 1rem;
-            line-height: 1.8;
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            border-left: 4px solid #333333;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         }
         
         /* Responsive adjustments for map container */
@@ -3365,34 +3238,8 @@
                 padding: 0 15px;
             }
             
-            .map-link-container {
-                padding: 15px;
-            }
-            
-            .map-link {
-                padding: 10px 20px;
-                font-size: 1rem;
-            }
-            
-            .map-iframe-wrapper {
-                min-height: 350px;
-            }
-            
-            .map-iframe-wrapper iframe {
+            .map-container iframe {
                 height: 350px;
-            }
-            
-            .map-fallback-icon {
-                font-size: 3rem;
-            }
-            
-            .map-fallback-title {
-                font-size: 1.3rem;
-            }
-            
-            .map-fallback-link {
-                padding: 12px 24px;
-                font-size: 1rem;
             }
         }
         
@@ -3401,34 +3248,8 @@
                 margin: 30px auto;
             }
             
-            .map-link {
-                font-size: 0.95rem;
-                padding: 10px 18px;
-            }
-            
-            .map-iframe-wrapper {
-                min-height: 300px;
-            }
-            
-            .map-iframe-wrapper iframe {
+            .map-container iframe {
                 height: 300px;
-            }
-            
-            .map-fallback {
-                padding: 30px 15px;
-            }
-            
-            .map-fallback-title {
-                font-size: 1.2rem;
-            }
-            
-            .map-fallback-text {
-                font-size: 0.95rem;
-            }
-            
-            .map-fallback-link {
-                padding: 10px 20px;
-                font-size: 0.95rem;
             }
         }
         
@@ -5973,56 +5794,19 @@
             </div>
         </div>
     </section>
-    <!-- Google Maps Location Container with Enhanced Fallback -->
+    <!-- Google Maps Location -->
     <div id="map-container" class="map-container" role="region" aria-label="Kartan sijainti">
-        <!-- Accessible Link to Google Maps - Visible and SEO-friendly -->
-        <div class="map-link-container">
-            <a href="https://www.google.com/maps/search/?api=1&query=Fixnero+Oy%2C+Tiilenvalajantie+6%2C+02330+Espoo" 
-               id="map-open-button"
-               target="_blank" 
-               rel="noopener noreferrer"
-               class="map-link"
-               aria-label="Avaa Google Mapsissa">
-                <span aria-hidden="true">📍</span> Avaa Google Mapsissa.
-            </a>
-            <p class="map-address">Tiilenvalajantie 6, 02330 Espoo (Kivenlahti)</p>
-        </div>
-        
-        <!-- Map Iframe Wrapper -->
-        <div class="map-iframe-wrapper">
-            <iframe
-              id="kartta"
-              class="kartanKehys"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d18887.359094037296!2d24.63555061554177!3d60.15939326820777!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x468df303b8516281%3A0x6cdbfb4f93b4cab5!2sFixnero%20Oy!5e0!3m2!1sfi!2sfi!4v1707568045504!5m2!1sfi!2sfi"
-              allowfullscreen
-              loading="lazy"
-              width="600"
-              height="450"
-              tabindex="0"
-              title="Fixnero kartta"
-              aria-label="Google Maps kartta, joka näyttää Fixnero Oy:n sijainnin Espoossa"></iframe>
-            
-            <!-- Fallback Content - Shown if iframe fails to load -->
-            <div class="map-fallback" role="alert" aria-live="polite">
-                <div class="map-fallback-content">
-                    <div class="map-fallback-icon" aria-hidden="true">📍</div>
-                    <h3 class="map-fallback-title">Kartta ei ole saatavilla</h3>
-                    <p class="map-fallback-text">Kartan lataaminen epäonnistui. Voit avata sijaintimme Google Mapsissa alla olevasta linkistä.</p>
-                    <a href="https://www.google.com/maps/search/?api=1&query=Fixnero+Oy%2C+Tiilenvalajantie+6%2C+02330+Espoo" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       class="map-fallback-link"
-                       aria-label="Avaa kartta Google Mapsissa">
-                        Avaa Google Maps →
-                    </a>
-                    <div class="map-fallback-address">
-                        <strong>Osoite:</strong><br>
-                        Tiilenvalajantie 6<br>
-                        02330 Espoo (Kivenlahti)
-                    </div>
-                </div>
-            </div>
-        </div>
+        <iframe
+          id="kartta"
+          class="kartanKehys"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d18887.359094037296!2d24.63555061554177!3d60.15939326820777!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x468df303b8516281%3A0x6cdbfb4f93b4cab5!2sFixnero%20Oy!5e0!3m2!1sfi!2sfi!4v1707568045504!5m2!1sfi!2sfi"
+          allowfullscreen
+          loading="lazy"
+          width="600"
+          height="450"
+          tabindex="0"
+          title="Fixnero kartta"
+          aria-label="Google Maps kartta, joka näyttää Fixnero Oy:n sijainnin Espoossa"></iframe>
     </div>
     <footer>
         <div class="footer">
@@ -6256,118 +6040,6 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Cookie Consent Banner - GDPR Compliant -->
 <script src="cookie-consent.min.js" defer></script>
 
-<!-- Google Maps Iframe Fallback Handler -->
-<script>
-(function() {
-    'use strict';
-    
-    // Initialize map fallback detection
-    function initMapFallback() {
-        const mapIframe = document.getElementById('kartta');
-        const mapFallback = document.querySelector('.map-fallback');
-        
-        if (!mapIframe || !mapFallback) {
-            console.warn('Map iframe or fallback element not found');
-            return;
-        }
-        
-        let iframeLoaded = false;
-        let timeoutId;
-        
-        // Function to show fallback
-        function showFallback(reason) {
-            console.log('Showing map fallback:', reason);
-            mapFallback.classList.add('show');
-            // Hide iframe to prevent showing broken content
-            mapIframe.style.display = 'none';
-        }
-        
-        // Check if iframe loaded successfully
-        mapIframe.addEventListener('load', function() {
-            clearTimeout(timeoutId);
-            iframeLoaded = true;
-            console.log('Google Maps iframe loaded successfully');
-        });
-        
-        // Handle iframe loading errors
-        mapIframe.addEventListener('error', function() {
-            clearTimeout(timeoutId);
-            showFallback('Iframe failed to load');
-        });
-        
-        // Timeout fallback - if iframe doesn't load within 10 seconds
-        timeoutId = setTimeout(function() {
-            if (!iframeLoaded) {
-                showFallback('Iframe loading timeout (10 seconds exceeded)');
-            }
-        }, 10000);
-        
-        // Additional check: Monitor for network errors or blocked content
-        // Some ad blockers or privacy extensions may block Google Maps
-        window.addEventListener('error', function(e) {
-            // Check if error is related to the iframe element
-            if (e.target === mapIframe) {
-                showFallback('Network error loading Google Maps');
-            }
-        }, true);
-    }
-    
-    // Initialize when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initMapFallback);
-    } else {
-        initMapFallback();
-    }
-})();
-</script>
 
-<!-- Simple Map Button Handler - Opens Google Maps on All Devices -->
-<script>
-(function() {
-    'use strict';
-    
-    // Detect if device is mobile
-    function isMobileDevice() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-               (window.innerWidth <= 768);
-    }
-    
-    // Initialize map button
-    function initMapButton() {
-        const mapButton = document.getElementById('map-open-button');
-        if (!mapButton) {
-            console.warn('Map button not found');
-            return;
-        }
-        
-        // Fixnero Oy location details
-        const businessName = 'Fixnero Oy';
-        const address = 'Tiilenvalajantie 6, 02330 Espoo';
-        
-        // Handle click event
-        mapButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Google Maps URL that works on both mobile and desktop
-            const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(businessName + ', ' + address)}`;
-            
-            if (isMobileDevice()) {
-                // Mobile: Open directly in the same window, which will prompt to open the Google Maps app
-                window.location.href = googleMapsUrl;
-            } else {
-                // Desktop: Open Google Maps in a new tab
-                window.open(googleMapsUrl, '_blank', 'noopener,noreferrer');
-            }
-        });
-    }
-    
-    // Initialize when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initMapButton);
-    } else {
-        initMapButton();
-    }
-})();
-</script>
 </body>
 </html>
