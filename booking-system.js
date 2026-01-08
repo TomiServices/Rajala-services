@@ -717,39 +717,39 @@ function initializeBookingSystem() {
     // Service and task data structure
     const serviceData = {
         washing: {
-            name: 'Pesupalvelut',
+            name: 'Autopesu',
             tasks: [
                 { id: 'quick-wash', name: 'Pikapesu', price: 'alkaen 20 €' },
                 { id: 'hand-wash', name: 'Käsinpesu', price: 'alkaen 30 €' },
-                { id: 'tire-wash', name: 'Renkaiden pesu', price: 'alkaen 15 €' },
-                { id: 'waxing', name: 'Vahaukset', price: 'alkaen 35 €' },
-                { id: 'hard-wax', name: 'Kova vaha', price: 'alkaen 45 €' },
-                { id: 'ceramic-spray', name: 'Ceramic spray -pinnoite', price: 'alkaen 60 €' },
-                { id: 'water-repellent', name: 'Vettä ja likaa hylkivä pinnoite', price: 'alkaen 40 €' }
+                { id: 'quick-polish-wash', name: 'Pikakiillopesu', price: 'alkaen 60 €' },
+                { id: 'winter-wash', name: 'Talvipesu', price: 'alkaen 50 €' },
+                { id: 'engine-wash', name: 'Moottoritilan pesu', price: '50 €' }
             ]
         },
         interior: {
             name: 'Sisäpuhdistus',
             tasks: [
-                { id: 'interior-cleaning', name: 'Sisätilojen puhdistus', price: 'alkaen 49 €' },
-                { id: 'interior-and-wash', name: 'Sisätila + käsinpesu', price: 'alkaen 65 €' },
-                { id: 'ozone', name: 'Otsonointi', price: 'alkaen 80 €' },
-                { id: 'deep-cleaning', name: 'Syväpuhdistus (detailing)', price: 'alkaen 150 €' },
-                { id: 'leather-care', name: 'Nahkapenkkien hoito ja suojaus', price: 'alkaen 75 €' },
-                { id: 'fabric-cleaning', name: 'Kankaan puhdistus kangaspesurilla', price: 'alkaen 60 €' },
-                { id: 'odor-removal', name: 'Hajunpoisto erikoisaineilla', price: 'alkaen 70 €' },
-                { id: 'allergy-cleaning', name: 'Allergiapuhdistus', price: 'alkaen 90 €' },
-                { id: 'fabric-protection', name: 'Kangaspintojen suojaus', price: 'alkaen 85 €' }
+                { id: 'interior-cleaning-car', name: 'Sisäpuhdistus - Henkilöauto', price: '50 €' },
+                { id: 'interior-cleaning-suv', name: 'Sisäpuhdistus - Maasturi', price: '60 €' },
+                { id: 'interior-cleaning-van', name: 'Sisäpuhdistus - Pakettiauto', price: '60 €' },
+                { id: 'textile-deep-clean', name: 'Tekstiilipintojen syväpuhdistus', price: '30 € / istuin' },
+                { id: 'full-cleaning', name: 'Täyssiivous', price: 'alkaen 150 €' },
+                { id: 'ozone', name: 'Otsonointi', price: '85 €' },
+                { id: 'leather-care', name: 'Nahkapenkkien hoito ja suojaus', price: '35 € / istuin' },
+                { id: 'allergy-cleaning', name: 'Allergiapuhdistus ja desinfiointi', price: '90 €' },
+                { id: 'fabric-protection', name: 'Kangaspintojen suojaus', price: '70 €' }
             ]
         },
         polishing: {
             name: 'Kiillotus ja pinnoitteet',
             tasks: [
-                { id: 'wax', name: 'Vahaus', price: 'alkaen 80 €' },
-                { id: '1-step-polish', name: '1-step kiillotus', price: 'alkaen 120 €' },
-                { id: '2-step-polish', name: '2-step kiillotus', price: 'alkaen 180 €' },
-                { id: '3-step-ceramic', name: '3-step + keraaminen pinnoitus', price: 'alkaen 300 €' },
-                { id: 'scratch-removal', name: 'Naarmujen poisto', price: 'alkaen 50 € / paneeli' }
+                { id: 'wax-treatment', name: 'Vahakäsittely', price: 'alkaen 80 €' },
+                { id: 'hard-wax', name: 'Kovavaha', price: 'alkaen 120 €' },
+                { id: 'ceramic-coating', name: 'Keraaminen pinnoite', price: 'alkaen 350 €' },
+                { id: '1-step-polish', name: '1-vaiheinen kiillotus', price: 'alkaen 248 €' },
+                { id: '2-step-polish', name: '2-vaiheinen kiillotus', price: 'alkaen 598 €' },
+                { id: '3-step-polish', name: '3-vaiheinen kiillotus', price: 'alkaen 898 €' },
+                { id: 'wet-sanding', name: 'Vesihionta', price: 'Sopimuksen mukaan' }
             ]
         },
         dent: {
@@ -757,41 +757,43 @@ function initializeBookingSystem() {
             tasks: [
                 { id: 'small-dent', name: 'Pieni lommo', price: 'alkaen 100 €' },
                 { id: 'large-dent', name: 'Iso lommo', price: 'alkaen 150 €' },
-                { id: 'paint-repair', name: 'Maalipinnan jälkien hionta ja maalaus', price: '' },
-                { id: 'bumper-repair', name: 'Puskurin ja lokasuojan korjaukset', price: '' },
-                { id: 'rust-repair', name: 'Ruostekorjaukset', price: '' }
+                { id: 'paint-repair', name: 'Maalipinnan korjaukset', price: 'Pyydä tarjous' }
             ]
         },
         repair: {
             name: 'Korjaustyöt',
             tasks: [
-                { id: 'diagnostics', name: 'Vikakoodien luku ja nollaus', price: 'alkaen 40 €' },
+                { id: 'diagnostics', name: 'Vikakoodien luku ja nollaus', price: '40 €' },
                 { id: 'oil-change', name: 'Moottoriöljyjen vaihto', price: 'alkaen 50 €' },
-                { id: 'shock-absorber', name: 'Iskunvaimentimien ja jousituksen uusiminen', price: '' },
-                { id: 'suspension-parts', name: 'Tukivarsien, nivelien ja raidetankojen vaihto', price: '' },
-                { id: 'stabilizer-bar', name: 'Vakaajatangon ja koiranluiden vaihto', price: '' },
-                { id: 'brake-repair', name: 'Jarrulevyjen, palojen ja käsijarrujen korjaukset', price: '' },
-                { id: 'exhaust-repair', name: 'Pakoputkistojen korjaukset', price: '' }
+                { id: 'shock-absorber', name: 'Iskunvaimentimien ja jousituksen uusiminen', price: 'Pyydä tarjous' },
+                { id: 'suspension-parts', name: 'Tukivarsien, nivelien ja raidetankojen vaihto', price: 'Pyydä tarjous' },
+                { id: 'stabilizer-bar', name: 'Vakaajatankojen ja koiranluiden vaihto', price: 'Pyydä tarjous' },
+                { id: 'brake-repair', name: 'Jarrulevyjen, -palojen ja käsijarrujen vaihto', price: 'Pyydä tarjous' },
+                { id: 'exhaust-repair', name: 'Pakoputkistojen korjaukset', price: 'Pyydä tarjous' },
+                { id: 'wheel-bearing', name: 'Pyöränlaakerien vaihto', price: 'Pyydä tarjous' },
+                { id: 'other-repair', name: 'Muu viankorjaus', price: 'Pyydä tarjous' }
             ]
         },
         tire: {
             name: 'Rengastyöt',
             tasks: [
-                { id: 'tire-change', name: 'Renkaiden vaihto', price: 'alkaen 35 €' },
-                { id: 'tire-change-14-16', name: 'Renkaiden vaihto (14-16 tuumaa)', price: 'alkaen 40 €' },
-                { id: 'tire-change-17-18', name: 'Renkaiden vaihto (17-18 tuumaa)', price: 'alkaen 45 €' },
-                { id: 'tire-change-19-22', name: 'Renkaiden vaihto (19-22 tuumaa)', price: 'alkaen 50 €' },
-                { id: 'balancing', name: 'Tasapainotus', price: '20 € / sarja' },
-                { id: 'tire-repair', name: 'Renkaan paikkaus', price: 'alkaen 25 €' },
-                { id: 'tire-hotel', name: 'Rengashotelli', price: '65 €' }
+                { id: 'tire-change-car', name: 'Renkaiden vaihto - Henkilöauto', price: '30 €' },
+                { id: 'tire-change-suv', name: 'Renkaiden vaihto - Maasturi', price: '40 €' },
+                { id: 'tire-change-van', name: 'Renkaiden vaihto - Pakettiauto', price: '45 €' },
+                { id: 'balancing', name: 'Renkaiden tasapainotus', price: '30 €' },
+                { id: 'tire-repair', name: 'Vuotavan renkaan paikkaus', price: '25 €' },
+                { id: 'rim-wash', name: 'Vanteiden pesu (4 kpl)', price: '15 €' },
+                { id: 'tire-hotel', name: 'Rengashotelli / kausisäilytys', price: '65 €' }
             ]
         },
         glass: {
             name: 'Lasikorjaus',
             tasks: [
-                { id: 'glass-repair', name: 'Tuulilasin korjaus', price: '50 € / lasiturvalla ilmainen' },
-                { id: 'glass-replacement-insured', name: 'Lasinvaihto lasivakuutuksella', price: 'Maksat vain omavastuun' },
-                { id: 'glass-replacement', name: 'Lasinvaihto ilman vakuutusta', price: 'Kysy tarjous' }
+                { id: 'glass-repair-first', name: 'Kiveniskemän korjaus - ensimmäinen', price: '50 €' },
+                { id: 'glass-repair-additional', name: 'Kiveniskemän korjaus - seuraava', price: '25 € / kpl' },
+                { id: 'glass-repair-insured', name: 'Kiveniskemän korjaus lasivakuutuksella', price: 'Ilmainen' },
+                { id: 'glass-replacement-insured', name: 'Lasinvaihto vakuutuksella', price: 'Omavastuu' },
+                { id: 'glass-replacement', name: 'Lasinvaihto ilman vakuutusta', price: 'Pyydä tarjous' }
             ]
         }
     };
