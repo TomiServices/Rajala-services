@@ -720,6 +720,11 @@ exports.book = onRequest({
     const phoneRegex = /^(?:\+358|0)?\s?\d{6,12}$/;
     if (!phoneRegex.test(phone)) return res.status(400).json({ error: 'Virheellinen puhelinnumero. Käytä muotoa: +358 40XXXXXXX tai 040XXXXXXX' });
 
+    // Validate vehicleType if provided (should be a non-empty string)
+    if (vehicleType !== undefined && typeof vehicleType !== 'string') {
+      return res.status(400).json({ error: 'Virheellinen ajoneuvotyyppi' });
+    }
+
     const bookingDate = new Date(aika);
     const now = new Date();
     if (Number.isNaN(bookingDate.getTime()) || bookingDate <= now) return res.status(400).json({ error: 'Valitse tuleva aika' });

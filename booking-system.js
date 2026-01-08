@@ -1159,6 +1159,16 @@ function initializeBookingSystem() {
         
         return selectedType;
     }
+    
+    // Helper function to validate vehicle type selection
+    function validateVehicleType() {
+        const vehicleType = getSelectedVehicleType();
+        if (!vehicleType || vehicleType.trim() === '') {
+            document.getElementById('error').textContent = 'Valitse ajoneuvotyyppi!';
+            return false;
+        }
+        return true;
+    }
 
     // Show booking form with selected time and service info
     function showBookingForm(selectedDateTime) {
@@ -1954,10 +1964,8 @@ function initializeBookingSystem() {
                 return;
             }
             
-            // Validate vehicle type is selected
-            const vehicleType = getSelectedVehicleType();
-            if (!vehicleType || vehicleType.trim() === '') {
-                document.getElementById('error').textContent = 'Valitse ajoneuvotyyppi!';
+            // Validate vehicle type is selected using helper function
+            if (!validateVehicleType()) {
                 return;
             }
             
