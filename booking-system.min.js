@@ -757,7 +757,7 @@ function initializeBookingSystem() {
                 },
                 { 
                     id: 'engine-wash', 
-                    name: 'Moottoritilanpesu', 
+                    name: 'Moottoritilan pesu', 
                     pricing: {
                         'Henkilöauto': '50 €',
                         'Maasturi': '50 €',
@@ -1148,8 +1148,14 @@ function initializeBookingSystem() {
                     const vehicleType = getSelectedVehicleType();
                     
                     // Populate task dropdown with vehicle-type specific pricing
+                    // Only show tasks that have valid pricing for the selected vehicle type
                     taskSelect.innerHTML = '<option value="">Valitse tyyppi...</option>';
                     serviceData[selectedService].tasks.forEach(task => {
+                        // Skip tasks that have vehicle-specific pricing but not for this vehicle type
+                        if (task.pricing && vehicleType && !task.pricing[vehicleType]) {
+                            return; // Skip this task
+                        }
+                        
                         const option = document.createElement('option');
                         option.value = task.id;
                         
