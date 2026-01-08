@@ -4485,10 +4485,39 @@
     <div class="ajanvaraus-container" id="ajanvaraus">
       <h2>Varaa aika silmäterällesi</h2>
       
-      <!-- Step 1: Select Service -->
-      <div class="booking-step" id="step-services">
+      <!-- Step 1: Select Vehicle Type -->
+      <div class="booking-step" id="step-vehicle-type">
         <h3 class="step-title">
           <span class="step-number">1</span>
+          Valitse ajoneuvotyyppi
+        </h3>
+        
+        <!-- Vehicle Type Selection Dropdown -->
+        <div id="vehicleTypeSelection" class="available-slots-section" style="display: block; margin: 0; padding: 20px;" aria-hidden="false">
+          <div class="available-slots-dropdown">
+            <label for="vehicleTypeSelect">Valitse ajoneuvotyyppi:</label>
+            <select id="vehicleTypeSelect" class="available-times-select">
+              <option value="">Valitse tyyppi...</option>
+              <option value="Henkilöauto">Henkilöauto</option>
+              <option value="Maasturi">Maasturi</option>
+              <option value="Pakettiauto">Pakettiauto</option>
+              <option value="Mopo / Moottoripyörä">Mopo / Moottoripyörä</option>
+              <option value="Muu">Muu</option>
+            </select>
+          </div>
+          
+          <!-- "Muu" text input field (shown when "Muu" is selected) -->
+          <div id="vehicleTypeOtherContainer" class="available-slots-dropdown" style="display: none; margin-top: 15px;" aria-hidden="true">
+            <label for="vehicleTypeOther">Tarkenna ajoneuvotyyppi:</label>
+            <input type="text" id="vehicleTypeOther" class="available-times-select" placeholder="Esim. Vene / kuorma-auto / työkone" style="padding: 12px; font-size: 1rem; border: 2px solid #e0e0e0; border-radius: 8px; width: 100%; box-sizing: border-box;">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Step 2: Select Service -->
+      <div class="booking-step" id="step-services">
+        <h3 class="step-title">
+          <span class="step-number">2</span>
           Valitse palvelu
         </h3>
         
@@ -4553,10 +4582,10 @@
         </div>
       </div>
       
-      <!-- Step 2: Choose Date & Time -->
+      <!-- Step 3: Choose Date & Time -->
       <div class="booking-step" id="step-calendar">
         <h3 class="step-title">
-          <span class="step-number">2</span>
+          <span class="step-number">3</span>
           Valitse päivä ja aika
         </h3>
         
@@ -4631,7 +4660,7 @@
       <!-- Step 3: Enter Contact Details -->
       <div class="booking-step" id="step-contact">
         <h3 class="step-title">
-          <span class="step-number">3</span>
+          <span class="step-number">4</span>
           Yhteystiedot
         </h3>
         
@@ -4639,6 +4668,7 @@
           <input type="hidden" name="aika" id="aika" />
           <input type="hidden" name="service" id="service" />
           <input type="hidden" name="task" id="task" />
+          <input type="hidden" name="vehicleType" id="vehicleType" />
           <label for="name">Nimi</label>
           <input type="text" id="name" name="name" required placeholder="Etunimi Sukunimi" autocomplete="name" />
           <label for="email">Sähköposti</label>
