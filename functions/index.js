@@ -256,6 +256,7 @@ async function sendBookingConfirmationEmail(bookingData) {
     const escapedEmail = escapeHtml(bookingData.sahkoposti);
     const escapedPhone = escapeHtml(bookingData.puhelin);
     const escapedTotalPrice = escapeHtml(bookingData.totalPrice);
+    const escapedVehicleType = escapeHtml(bookingData.vehicleType || 'Ei määritelty');
 
     const servicesText = (bookingData.services || [])
       .map(s => `  • ${escapeHtml(s.serviceName || '')} - ${escapeHtml(s.taskName || '')}${s.price ? ': ' + escapeHtml(s.price) : ''}`)
@@ -277,6 +278,7 @@ async function sendBookingConfirmationEmail(bookingData) {
             <p><strong>Asiakas:</strong> ${escapedName}</p>
             <p><strong>Puhelin:</strong> ${escapedPhone}</p>
             <p><strong>Sähköposti:</strong> ${escapedEmail}</p>
+            <p><strong>Ajoneuvotyyppi:</strong> ${escapedVehicleType}</p>
           </div>
           
           <div style="background-color: #fff4f4; padding: 15px; border-radius: 5px; margin: 20px 0;">
@@ -567,7 +569,8 @@ async function createGoogleCalendarEvent(bookingData) {
       description:
         `Asiakas: ${bookingData.nimi || ''}\n` +
         `Puhelin: ${bookingData.puhelin || ''}\n` +
-        `Sähköposti: ${bookingData.sahkoposti || ''}\n\n` +
+        `Sähköposti: ${bookingData.sahkoposti || ''}\n` +
+        `Ajoneuvotyyppi: ${bookingData.vehicleType || 'Ei määritelty'}\n\n` +
         `Palvelut:\n${serviceInfo}\n\n` +
         `Kokonaishinta: ${bookingData.totalPrice || 'Hinta sovittaessa'}`,
       start: { dateTime: startDate.toISOString(), timeZone: 'Europe/Helsinki' },
@@ -677,7 +680,7 @@ exports.book = onRequest({
     if (req.method === 'OPTIONS') return res.status(204).send('');
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-    const { name, email, phone, aika, services, totalPrice, totalNumericPrice } = req.body;
+    const { name, email, phone, aika, services, totalPrice, totalNumericPrice, vehicleType } = req.body;
 
     // Validate required fields
     if (!name || !email || !phone || !aika || !services) {
@@ -717,6 +720,11 @@ exports.book = onRequest({
     const phoneRegex = /^(?:\+358|0)?\s?\d{6,12}$/;
     if (!phoneRegex.test(phone)) return res.status(400).json({ error: 'Virheellinen puhelinnumero. Käytä muotoa: +358 40XXXXXXX tai 040XXXXXXX' });
 
+    // Validate vehicleType if provided (should be a non-empty string)
+    if (vehicleType !== undefined && typeof vehicleType !== 'string') {
+      return res.status(400).json({ error: 'Virheellinen ajoneuvotyyppi' });
+    }
+
     const bookingDate = new Date(aika);
     const now = new Date();
     if (Number.isNaN(bookingDate.getTime()) || bookingDate <= now) return res.status(400).json({ error: 'Valitse tuleva aika' });
@@ -741,6 +749,7 @@ exports.book = onRequest({
           services: services,
           totalPrice: totalPrice || 'Hinta sovittaessa',
           totalNumericPrice: totalNumericPrice || 0,
+          vehicleType: vehicleType || '',
           luotu: admin.firestore.FieldValue.serverTimestamp(),
           googleEventId: null,
           syncedToGoogle: false
@@ -855,6 +864,7 @@ async function createEmailDocument(bookingData, bookingId) {
     const escapedEmail = escapeHtml(bookingData.sahkoposti);
     const escapedPhone = escapeHtml(bookingData.puhelin);
     const escapedTotalPrice = escapeHtml(bookingData.totalPrice);
+    const escapedVehicleType = escapeHtml(bookingData.vehicleType || 'Ei määritelty');
 
     const servicesHtml = (bookingData.services || [])
       .map(s => `<li>${escapeHtml(s.serviceName || '')} - ${escapeHtml(s.taskName || '')}${s.price ? ': ' + escapeHtml(s.price) : ''}</li>`)
@@ -878,6 +888,7 @@ async function createEmailDocument(bookingData, bookingId) {
               <p><strong>Asiakas:</strong> ${escapedName}</p>
               <p><strong>Puhelin:</strong> ${escapedPhone}</p>
               <p><strong>Sähköposti:</strong> ${escapedEmail}</p>
+              <p><strong>Ajoneuvotyyppi:</strong> ${escapedVehicleType}</p>
             </div>
             
             <div style="background-color: #f0f0f0; padding: 15px; border-radius: 5px; margin: 20px 0;">

@@ -1103,6 +1103,72 @@ function initializeBookingSystem() {
         // Replace all children efficiently using modern API
         slotSummary.replaceChildren(label, value);
     }
+    
+    // Vehicle type selection event handler
+    function setupVehicleTypeSelection() {
+        const vehicleTypeSelect = document.getElementById('vehicleTypeSelect');
+        const vehicleTypeOtherContainer = document.getElementById('vehicleTypeOtherContainer');
+        const serviceSelection = document.getElementById('serviceSelection');
+        const stepServices = document.getElementById('step-services');
+        
+        if (vehicleTypeSelect) {
+            vehicleTypeSelect.addEventListener('change', function() {
+                const selectedType = this.value;
+                
+                // Show/hide the "Muu" textbox based on selection
+                if (selectedType === 'Muu') {
+                    vehicleTypeOtherContainer.style.display = 'block';
+                    vehicleTypeOtherContainer.setAttribute('aria-hidden', 'false');
+                } else {
+                    vehicleTypeOtherContainer.style.display = 'none';
+                    vehicleTypeOtherContainer.setAttribute('aria-hidden', 'true');
+                    // Clear the textbox when hiding
+                    document.getElementById('vehicleTypeOther').value = '';
+                }
+                
+                // If a vehicle type is selected, reveal the service selection step
+                if (selectedType && selectedType !== '') {
+                    stepServices.classList.add('visible');
+                    stepServices.style.display = 'block';
+                    
+                    // Smooth scroll to service selection step
+                    setTimeout(() => {
+                        stepServices.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100);
+                }
+            });
+        }
+    }
+    
+    // Helper function to get selected vehicle type (includes "Muu" text)
+    function getSelectedVehicleType() {
+        const vehicleTypeSelect = document.getElementById('vehicleTypeSelect');
+        const vehicleTypeOther = document.getElementById('vehicleTypeOther');
+        
+        if (!vehicleTypeSelect || !vehicleTypeSelect.value) {
+            return '';
+        }
+        
+        const selectedType = vehicleTypeSelect.value;
+        
+        // If "Muu" is selected, return the custom text if provided
+        if (selectedType === 'Muu') {
+            const otherText = vehicleTypeOther.value.trim();
+            return otherText ? otherText : 'Muu';
+        }
+        
+        return selectedType;
+    }
+    
+    // Helper function to validate vehicle type selection
+    function validateVehicleType() {
+        const vehicleType = getSelectedVehicleType();
+        if (!vehicleType || vehicleType.trim() === '') {
+            document.getElementById('error').textContent = 'Valitse ajoneuvotyyppi!';
+            return false;
+        }
+        return true;
+    }
 
     // Show booking form with selected time and service info
     function showBookingForm(selectedDateTime) {
@@ -1128,6 +1194,10 @@ function initializeBookingSystem() {
             document.getElementById('service').value = serviceValues;
             document.getElementById('task').value = taskValues;
             
+            // Store vehicle type
+            const vehicleType = getSelectedVehicleType();
+            document.getElementById('vehicleType').value = vehicleType;
+            
             // Show repair disclaimer if any repair service is selected
             updateRepairDisclaimer();
             
@@ -1149,7 +1219,8 @@ function initializeBookingSystem() {
         }
     }
 
-    // Call setupServiceSelection immediately
+    // Call setup functions immediately
+    setupVehicleTypeSelection();
     setupServiceSelection();
     
     // Setup "Add another service" button
@@ -1893,6 +1964,11 @@ function initializeBookingSystem() {
                 return;
             }
             
+            // Validate vehicle type is selected using helper function
+            if (!validateVehicleType()) {
+                return;
+            }
+            
             if (!selectedSlot || !name || !email || !phone) {
                 document.getElementById('error').textContent = 'Täytä kaikki kentät ja valitse aika!';
                 return;
@@ -1925,6 +2001,9 @@ function initializeBookingSystem() {
                 // Prepare structured service data with prices
                 const serviceData = prepareServiceData();
                 
+                // Get vehicle type
+                const vehicleType = getSelectedVehicleType();
+                
                 // Send booking to backend Firebase Function with retry logic
                 const bookingData = {
                     name, email, phone,
@@ -1932,6 +2011,7 @@ function initializeBookingSystem() {
                     services: serviceData.services,
                     totalPrice: serviceData.totalPrice,
                     totalNumericPrice: serviceData.totalNumericPrice,
+                    vehicleType: vehicleType,
                     recaptcha: recaptchaToken
                 };
                 
