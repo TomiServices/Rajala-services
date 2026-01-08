@@ -725,7 +725,9 @@ function initializeBookingSystem() {
                     pricing: {
                         'Henkilöauto': '20 €',
                         'Maasturi': '25 €',
-                        'Pakettiauto': '30 €'
+                        'Pakettiauto': '30 €',
+                        'Mopo / Moottoripyörä': '20 €',
+                        'Muu': '20 €'
                     }
                 },
                 { 
@@ -734,7 +736,9 @@ function initializeBookingSystem() {
                     pricing: {
                         'Henkilöauto': '30 €',
                         'Maasturi': '35 €',
-                        'Pakettiauto': '45 €'
+                        'Pakettiauto': '45 €',
+                        'Mopo / Moottoripyörä': '30 €',
+                        'Muu': '30 €'
                     }
                 },
                 { 
@@ -743,7 +747,9 @@ function initializeBookingSystem() {
                     pricing: {
                         'Henkilöauto': '60 €',
                         'Maasturi': '65 €',
-                        'Pakettiauto': '75 €'
+                        'Pakettiauto': '75 €',
+                        'Mopo / Moottoripyörä': '60 €',
+                        'Muu': '60 €'
                     }
                 },
                 { 
@@ -752,7 +758,9 @@ function initializeBookingSystem() {
                     pricing: {
                         'Henkilöauto': '50 €',
                         'Maasturi': '55 €',
-                        'Pakettiauto': '65 €'
+                        'Pakettiauto': '65 €',
+                        'Mopo / Moottoripyörä': '50 €',
+                        'Muu': '50 €'
                     }
                 },
                 { 
@@ -761,7 +769,9 @@ function initializeBookingSystem() {
                     pricing: {
                         'Henkilöauto': '50 €',
                         'Maasturi': '50 €',
-                        'Pakettiauto': '50 €'
+                        'Pakettiauto': '50 €',
+                        'Mopo / Moottoripyörä': '50 €',
+                        'Muu': '50 €'
                     }
                 }
             ]
