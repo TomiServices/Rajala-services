@@ -948,10 +948,10 @@ function initializeBookingSystem() {
         let displayPrice = '';
         if (taskObj.pricing && vehicleType && taskObj.pricing[vehicleType]) {
             // Use vehicle-specific price
-            displayPrice = formatPriceForVehicleType(taskObj.pricing[vehicleType], vehicleType);
+            displayPrice = formatPriceForVehicleType(taskObj.pricing[vehicleType]);
         } else if (taskObj.price) {
             // Use generic price
-            displayPrice = formatPriceForVehicleType(taskObj.price, vehicleType);
+            displayPrice = formatPriceForVehicleType(taskObj.price);
         }
         
         // Add to selected services array
@@ -1130,7 +1130,7 @@ function initializeBookingSystem() {
     }
 
     // Helper function to add "alkaen" prefix to price for specific vehicle types
-    function formatPriceForVehicleType(price, vehicleType) {
+    function formatPriceForVehicleType(price) {
         if (!price || price.trim() === '') return '';
         
         const vehicleTypeSelect = document.getElementById('vehicleTypeSelect');
@@ -1181,11 +1181,11 @@ function initializeBookingSystem() {
                         let displayPrice = '';
                         if (task.pricing && vehicleType && task.pricing[vehicleType]) {
                             // Use vehicle-specific price
-                            displayPrice = formatPriceForVehicleType(task.pricing[vehicleType], vehicleType);
+                            displayPrice = formatPriceForVehicleType(task.pricing[vehicleType]);
                             option.textContent = `${task.name} ${displayPrice}`;
                         } else if (task.price && task.price.trim() !== '') {
                             // Use generic price
-                            displayPrice = formatPriceForVehicleType(task.price, vehicleType);
+                            displayPrice = formatPriceForVehicleType(task.price);
                             option.textContent = `${task.name} ${displayPrice}`;
                         } else {
                             // No price available
