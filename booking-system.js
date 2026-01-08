@@ -733,11 +733,11 @@ function initializeBookingSystem() {
                 { id: 'interior-cleaning-suv', name: 'Sisäpuhdistus - Maasturi', price: '60 €' },
                 { id: 'interior-cleaning-van', name: 'Sisäpuhdistus - Pakettiauto', price: '60 €' },
                 { id: 'textile-deep-clean', name: 'Tekstiilipintojen syväpuhdistus', price: '30 € / istuin' },
-                { id: 'full-cleaning', name: 'Täyssiivous', price: 'alkaen 150 €' },
-                { id: 'ozone', name: 'Otsonointi', price: '85 €' },
                 { id: 'leather-care', name: 'Nahkapenkkien hoito ja suojaus', price: '35 € / istuin' },
-                { id: 'allergy-cleaning', name: 'Allergiapuhdistus ja desinfiointi', price: '90 €' },
-                { id: 'fabric-protection', name: 'Kangaspintojen suojaus', price: '70 €' }
+                { id: 'fabric-protection', name: 'Kangaspintojen suojaus', price: '70 €' },
+                { id: 'full-cleaning', name: 'Täyssiivous', price: '150 €' },
+                { id: 'ozone', name: 'Otsonointi', price: '85 €' },
+                { id: 'allergy-cleaning', name: 'Allergiapuhdistus ja desinfiointi', price: '90 €' }
             ]
         },
         polishing: {
