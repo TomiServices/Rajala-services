@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Booking Services</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #f5f5f5;
+        }
+        .service-category {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .service-category h2 {
+            color: #333;
+            margin-top: 0;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .service-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .service-item:last-child {
+            border-bottom: none;
+        }
+        .service-name {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .service-price {
+            color: #666;
+            float: right;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <h1>Booking Calendar Service Test</h1>
+    
+    <div class="note">
+        <strong>Purpose:</strong> This page displays the service structure from booking-system.js to verify alignment with the pricing page.
+    </div>
+    
+    <div id="services-container"></div>
+
+    <script type="module">
+        // Import service data from booking-system.js
+        // Since booking-system.js is a module, we'll extract the data inline
+        const serviceData = {
+            washing: {
+                name: 'Ulkopesut ja pikapesut',
+                tasks: [
+                    { id: 'quick-wash', name: 'Pikapesu', price: 'alkaen 20 €' },
+                    { id: 'hand-wash', name: 'Käsinpesu', price: 'alkaen 30 €' },
+                    { id: 'quick-polish-wash', name: 'Pikakiillopesu', price: 'alkaen 60 €' },
+                    { id: 'winter-wash', name: 'Talvipesu', price: 'alkaen 50 €' },
+                    { id: 'engine-wash', name: 'Moottoritilan pesu', price: '50 €' }
+                ]
+            },
+            interior: {
+                name: 'Sisätilojen puhdistus',
+                tasks: [
+                    { id: 'interior-cleaning', name: 'Sisäpuhdistus', price: 'alkaen 50 €' },
+                    { id: 'textile-deep-clean', name: 'Tekstiilipintojen syväpuhdistus', price: '30 € / istuin' },
+                    { id: 'leather-care', name: 'Nahkapenkkien hoito ja suojaus', price: '35 € / istuin' },
+                    { id: 'fabric-protection', name: 'Kangaspintojen suojaus', price: '70 €' },
+                    { id: 'full-cleaning', name: 'Täyssiivous', price: '150 €' },
+                    { id: 'ozone', name: 'Otsonointi', price: '85 €' },
+                    { id: 'allergy-cleaning', name: 'Allergiapuhdistus ja desinfiointi', price: '90 €' }
+                ]
+            },
+            waxing: {
+                name: 'Vahaukset ja pintakäsittelyt',
+                tasks: [
+                    { id: 'wax-treatment', name: 'Vahakäsittely', price: 'alkaen 80 €' },
+                    { id: 'hard-wax', name: 'Kovavaha', price: 'alkaen 120 €' },
+                    { id: 'ceramic-coating', name: 'Keraaminen pinnoite', price: 'alkaen 350 €' }
+                ]
+            },
+            polishing: {
+                name: 'Kiillotukset ja myllytykset',
+                tasks: [
+                    { id: '1-step-polish', name: '1-vaiheinen kiillotus', price: 'alkaen 248 €' },
+                    { id: '2-step-polish', name: '2-vaiheinen kiillotus', price: 'alkaen 598 €' },
+                    { id: '3-step-polish', name: '3-vaiheinen kiillotus', price: 'alkaen 898 €' },
+                    { id: 'wet-sanding', name: 'Vesihionta', price: 'Sopimuksen mukaan' }
+                ]
+            },
+            tire: {
+                name: 'Rengastyöt ja kausisäilytys',
+                tasks: [
+                    { id: 'tire-change', name: 'Renkaiden vaihto', price: 'alkaen 30 €' },
+                    { id: 'balancing', name: 'Renkaiden tasapainotus', price: '30 €' },
+                    { id: 'tire-repair', name: 'Vuotavan renkaan paikkaus', price: '25 €' },
+                    { id: 'rim-wash', name: 'Vanteiden pesu (4 kpl)', price: '15 €' },
+                    { id: 'tire-hotel', name: 'Rengashotelli / kausisäilytys', price: '65 €' }
+                ]
+            },
+            tireMounting: {
+                name: 'Renkaiden asennus vanteelle',
+                tasks: [
+                    { id: 'tire-mount', name: 'Renkaan asennus vanteelle (tasapainotuksella)', price: 'alkaen 80 €' },
+                    { id: 'tire-removal', name: 'Renkaiden irrotus vanteelta (4kpl)', price: '50 €' },
+                    { id: 'balancing-only', name: 'Pelkkä tasapainoitus', price: '30 €' }
+                ]
+            },
+            glass: {
+                name: 'Tuulilasipalvelut',
+                tasks: [
+                    { id: 'glass-repair-first', name: 'Kiveniskemän korjaus - ensimmäinen', price: '50 €' },
+                    { id: 'glass-repair-additional', name: 'Kiveniskemän korjaus - seuraava', price: '25 € / kpl' },
+                    { id: 'glass-repair-insured', name: 'Kiveniskemän korjaus lasivakuutuksella', price: 'Ilmainen' },
+                    { id: 'glass-replacement-insured', name: 'Lasinvaihto vakuutuksella', price: 'Omavastuu' },
+                    { id: 'glass-replacement', name: 'Lasinvaihto ilman vakuutusta', price: 'Pyydä tarjous' }
+                ]
+            },
+            repair: {
+                name: 'Korjaustyöt',
+                tasks: [
+                    { id: 'diagnostics', name: 'Vikakoodien luku ja nollaus', price: '40 €' },
+                    { id: 'oil-change', name: 'Moottoriöljyjen vaihto', price: 'alkaen 50 €' },
+                    { id: 'shock-absorber', name: 'Iskunvaimentimien ja jousituksen uusiminen', price: 'Pyydä tarjous' },
+                    { id: 'suspension-parts', name: 'Tukivarsien, nivelien ja raidetankojen vaihto', price: 'Pyydä tarjous' },
+                    { id: 'stabilizer-bar', name: 'Vakaajatankojen ja koiranluiden vaihto', price: 'Pyydä tarjous' },
+                    { id: 'brake-repair', name: 'Jarrulevyjen, -palojen ja käsijarrujen vaihto', price: 'Pyydä tarjous' },
+                    { id: 'exhaust-repair', name: 'Pakoputkistojen korjaukset', price: 'Pyydä tarjous' },
+                    { id: 'wheel-bearing', name: 'Pyöränlaakerien vaihto', price: 'Pyydä tarjous' },
+                    { id: 'other-repair', name: 'Muu viankorjaus', price: 'Pyydä tarjous' }
+                ]
+            },
+            dent: {
+                name: 'Kolhujen korjaus',
+                tasks: [
+                    { id: 'small-dent', name: 'Pieni lommo', price: 'alkaen 100 €' },
+                    { id: 'large-dent', name: 'Iso lommo', price: 'alkaen 150 €' },
+                    { id: 'paint-repair', name: 'Maalipinnan korjaukset', price: 'Pyydä tarjous' }
+                ]
+            },
+            other: {
+                name: 'Muut palvelut',
+                tasks: [
+                    { id: 'headlight-restoration', name: 'Ajovalojen kirkastus', price: 'alkaen 50 € / kpl' },
+                    { id: 'custom-service', name: 'Tarve auton kunnostukselle?', price: 'Pyydä tarjous' }
+                ]
+            }
+        };
+
+        // Render services
+        const container = document.getElementById('services-container');
+        
+        Object.keys(serviceData).forEach(key => {
+            const category = serviceData[key];
+            
+            const categoryDiv = document.createElement('div');
+            categoryDiv.className = 'service-category';
+            
+            const categoryTitle = document.createElement('h2');
+            categoryTitle.textContent = category.name;
+            categoryDiv.appendChild(categoryTitle);
+            
+            category.tasks.forEach(task => {
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'service-item';
+                
+                const taskName = document.createElement('span');
+                taskName.className = 'service-name';
+                taskName.textContent = task.name;
+                
+                const taskPrice = document.createElement('span');
+                taskPrice.className = 'service-price';
+                taskPrice.textContent = task.price;
+                
+                taskDiv.appendChild(taskName);
+                taskDiv.appendChild(taskPrice);
+                categoryDiv.appendChild(taskDiv);
+            });
+            
+            container.appendChild(categoryDiv);
+        });
+    </script>
+</body>
+</html>
