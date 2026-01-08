@@ -4515,7 +4515,7 @@
       </div>
       
       <!-- Step 2: Select Service -->
-      <div class="booking-step" id="step-services">
+      <div class="booking-step" id="step-services" style="display: none;" aria-hidden="true">
         <h3 class="step-title">
           <span class="step-number">2</span>
           Valitse palvelu
@@ -4527,16 +4527,15 @@
             <label for="serviceSelect">Valitse haluamasi palvelu:</label>
             <select id="serviceSelect" class="available-times-select">
               <option value="">Valitse palvelu...</option>
-              <option value="washing">Ulkopesut ja pikapesut</option>
-              <option value="interior">Sisätilojen puhdistus</option>
-              <option value="waxing">Vahaukset ja pintakäsittelyt</option>
-              <option value="polishing">Kiillotukset ja myllytykset</option>
-              <option value="tire">Rengastyöt ja kausisäilytys</option>
-              <option value="tireMounting">Renkaiden asennus vanteelle</option>
-              <option value="glass">Tuulilasipalvelut</option>
-              <option value="repair">Korjaustyöt</option>
-              <option value="dent">Kolhujen korjaus</option>
-              <option value="other">Muut palvelut</option>
+              <option value="autopesu">Autopesu</option>
+              <option value="sisapuhdistus">Sisäpuhdistus</option>
+              <option value="kiillotus">Kiillotus ja pinnoitteet</option>
+              <option value="kolhukorjaus">Kolhukorjaus</option>
+              <option value="korjaustyot">Korjaustyöt</option>
+              <option value="rengastyot">Rengastyöt</option>
+              <option value="renkaidenasennus">Renkaiden asennus vanteelle</option>
+              <option value="tuulilasipalvelut">Tuulilasipalvelut</option>
+              <option value="muut">Muut palvelut</option>
             </select>
           </div>
         </div>

@@ -714,22 +714,70 @@ function initializeBookingSystem() {
         });
     }
 
-    // Service and task data structure - aligned with pricing categories on index page
+    // Service and task data structure with vehicle-type specific pricing
     const serviceData = {
-        washing: {
-            name: 'Ulkopesut ja pikapesut',
+        autopesu: {
+            name: 'Autopesu',
             tasks: [
-                { id: 'quick-wash', name: 'Pikapesu', price: 'alkaen 20 €' },
-                { id: 'hand-wash', name: 'Käsinpesu', price: 'alkaen 30 €' },
-                { id: 'quick-polish-wash', name: 'Pikakiillopesu', price: 'alkaen 60 €' },
-                { id: 'winter-wash', name: 'Talvipesu', price: 'alkaen 50 €' },
-                { id: 'engine-wash', name: 'Moottoritilan pesu', price: '50 €' }
+                { 
+                    id: 'quick-wash', 
+                    name: 'Pikapesu', 
+                    pricing: {
+                        'Henkilöauto': '20 €',
+                        'Maasturi': '25 €',
+                        'Pakettiauto': '30 €'
+                    }
+                },
+                { 
+                    id: 'hand-wash', 
+                    name: 'Käsinpesu', 
+                    pricing: {
+                        'Henkilöauto': '30 €',
+                        'Maasturi': '35 €',
+                        'Pakettiauto': '45 €'
+                    }
+                },
+                { 
+                    id: 'quick-polish-wash', 
+                    name: 'Pikakiiltopesu', 
+                    pricing: {
+                        'Henkilöauto': '60 €',
+                        'Maasturi': '65 €',
+                        'Pakettiauto': '75 €'
+                    }
+                },
+                { 
+                    id: 'winter-wash', 
+                    name: 'Talvipesu', 
+                    pricing: {
+                        'Henkilöauto': '50 €',
+                        'Maasturi': '55 €',
+                        'Pakettiauto': '65 €'
+                    }
+                },
+                { 
+                    id: 'engine-wash', 
+                    name: 'Moottoritilan pesu', 
+                    pricing: {
+                        'Henkilöauto': '50 €',
+                        'Maasturi': '50 €',
+                        'Pakettiauto': '50 €'
+                    }
+                }
             ]
         },
-        interior: {
-            name: 'Sisätilojen puhdistus',
+        sisapuhdistus: {
+            name: 'Sisäpuhdistus',
             tasks: [
-                { id: 'interior-cleaning', name: 'Sisäpuhdistus', price: 'alkaen 50 €' },
+                { 
+                    id: 'interior-cleaning', 
+                    name: 'Sisäpuhdistus', 
+                    pricing: {
+                        'Henkilöauto': '50 €',
+                        'Maasturi': '60 €',
+                        'Pakettiauto': '60 €'
+                    }
+                },
                 { id: 'textile-deep-clean', name: 'Tekstiilipintojen syväpuhdistus', price: '30 € / istuin' },
                 { id: 'leather-care', name: 'Nahkapenkkien hoito ja suojaus', price: '35 € / istuin' },
                 { id: 'fabric-protection', name: 'Kangaspintojen suojaus', price: '70 €' },
@@ -738,52 +786,51 @@ function initializeBookingSystem() {
                 { id: 'allergy-cleaning', name: 'Allergiapuhdistus ja desinfiointi', price: '90 €' }
             ]
         },
-        waxing: {
-            name: 'Vahaukset ja pintakäsittelyt',
+        kiillotus: {
+            name: 'Kiillotus ja pinnoitteet',
             tasks: [
-                { id: 'wax-treatment', name: 'Vahakäsittely', price: 'alkaen 80 €' },
-                { id: 'hard-wax', name: 'Kovavaha', price: 'alkaen 120 €' },
-                { id: 'ceramic-coating', name: 'Keraaminen pinnoite', price: 'alkaen 350 €' }
-            ]
-        },
-        polishing: {
-            name: 'Kiillotukset ja myllytykset',
-            tasks: [
+                { 
+                    id: 'wax-treatment', 
+                    name: 'Vahakäsittely', 
+                    pricing: {
+                        'Henkilöauto': '80 €',
+                        'Maasturi': '90 €',
+                        'Pakettiauto': '120 €'
+                    }
+                },
+                { 
+                    id: 'hard-wax', 
+                    name: 'Kovavaha', 
+                    pricing: {
+                        'Henkilöauto': '120 €',
+                        'Maasturi': '140 €',
+                        'Pakettiauto': '160 €'
+                    }
+                },
+                { 
+                    id: 'ceramic-coating', 
+                    name: 'Keraaminen pinnoite', 
+                    pricing: {
+                        'Henkilöauto': 'alkaen 350 €',
+                        'Maasturi': 'alkaen 350 €',
+                        'Pakettiauto': 'alkaen 400 €'
+                    }
+                },
                 { id: '1-step-polish', name: '1-vaiheinen kiillotus', price: 'alkaen 248 €' },
                 { id: '2-step-polish', name: '2-vaiheinen kiillotus', price: 'alkaen 598 €' },
                 { id: '3-step-polish', name: '3-vaiheinen kiillotus', price: 'alkaen 898 €' },
                 { id: 'wet-sanding', name: 'Vesihionta', price: 'Sopimuksen mukaan' }
             ]
         },
-        tire: {
-            name: 'Rengastyöt ja kausisäilytys',
+        kolhukorjaus: {
+            name: 'Kolhukorjaus',
             tasks: [
-                { id: 'tire-change', name: 'Renkaiden vaihto', price: 'alkaen 30 €' },
-                { id: 'balancing', name: 'Renkaiden tasapainotus', price: '30 €' },
-                { id: 'tire-repair', name: 'Vuotavan renkaan paikkaus', price: '25 €' },
-                { id: 'rim-wash', name: 'Vanteiden pesu (4 kpl)', price: '15 €' },
-                { id: 'tire-hotel', name: 'Rengashotelli / kausisäilytys', price: '65 €' }
+                { id: 'small-dent', name: 'Pieni lommo', price: 'alkaen 100 €' },
+                { id: 'large-dent', name: 'Iso lommo', price: 'alkaen 150 €' },
+                { id: 'paint-repair', name: 'Maalipinnan korjaukset', price: 'Pyydä tarjous' }
             ]
         },
-        tireMounting: {
-            name: 'Renkaiden asennus vanteelle',
-            tasks: [
-                { id: 'tire-mount', name: 'Renkaan asennus vanteelle (tasapainotuksella)', price: 'alkaen 80 €' },
-                { id: 'tire-removal', name: 'Renkaiden irrotus vanteelta (4kpl)', price: '50 €' },
-                { id: 'balancing-only', name: 'Pelkkä tasapainoitus', price: '30 €' }
-            ]
-        },
-        glass: {
-            name: 'Tuulilasipalvelut',
-            tasks: [
-                { id: 'glass-repair-first', name: 'Kiveniskemän korjaus - ensimmäinen', price: '50 €' },
-                { id: 'glass-repair-additional', name: 'Kiveniskemän korjaus - seuraava', price: '25 € / kpl' },
-                { id: 'glass-repair-insured', name: 'Kiveniskemän korjaus lasivakuutuksella', price: 'Ilmainen' },
-                { id: 'glass-replacement-insured', name: 'Lasinvaihto vakuutuksella', price: 'Omavastuu' },
-                { id: 'glass-replacement', name: 'Lasinvaihto ilman vakuutusta', price: 'Pyydä tarjous' }
-            ]
-        },
-        repair: {
+        korjaustyot: {
             name: 'Korjaustyöt',
             tasks: [
                 { id: 'diagnostics', name: 'Vikakoodien luku ja nollaus', price: '40 €' },
@@ -797,15 +844,86 @@ function initializeBookingSystem() {
                 { id: 'other-repair', name: 'Muu viankorjaus', price: 'Pyydä tarjous' }
             ]
         },
-        dent: {
-            name: 'Kolhujen korjaus',
+        rengastyot: {
+            name: 'Rengastyöt',
             tasks: [
-                { id: 'small-dent', name: 'Pieni lommo', price: 'alkaen 100 €' },
-                { id: 'large-dent', name: 'Iso lommo', price: 'alkaen 150 €' },
-                { id: 'paint-repair', name: 'Maalipinnan korjaukset', price: 'Pyydä tarjous' }
+                { 
+                    id: 'tire-change', 
+                    name: 'Renkaiden vaihto', 
+                    pricing: {
+                        'Henkilöauto': '30 €',
+                        'Maasturi': '40 €',
+                        'Pakettiauto': '45 €'
+                    }
+                },
+                { id: 'balancing', name: 'Renkaiden tasapainotus', price: '30 €' },
+                { id: 'tire-repair', name: 'Vuotavan renkaan paikkaus', price: '25 €' },
+                { id: 'rim-wash', name: 'Vanteiden pesu (4 kpl)', price: '15 €' },
+                { id: 'tire-hotel', name: 'Rengashotelli / kausisäilytys', price: '65 €' }
             ]
         },
-        other: {
+        renkaidenasennus: {
+            name: 'Renkaiden asennus vanteelle',
+            tasks: [
+                { 
+                    id: 'tire-mount-15', 
+                    name: 'Renkaan asennus vanteelle 15" ja alle', 
+                    pricing: {
+                        'Henkilöauto': '80 €'
+                    }
+                },
+                { 
+                    id: 'tire-mount-16-17', 
+                    name: 'Renkaan asennus vanteelle 16-17"', 
+                    pricing: {
+                        'Henkilöauto': '90 €'
+                    }
+                },
+                { 
+                    id: 'tire-mount-18-19', 
+                    name: 'Renkaan asennus vanteelle 18-19"', 
+                    pricing: {
+                        'Henkilöauto': '95 €'
+                    }
+                },
+                { 
+                    id: 'tire-mount-20-plus', 
+                    name: 'Renkaan asennus vanteelle 20" ja yli', 
+                    pricing: {
+                        'Henkilöauto': '105 €'
+                    }
+                },
+                { 
+                    id: 'tire-mount-suv-17-under', 
+                    name: 'Renkaan asennus vanteelle 17" ja alle', 
+                    pricing: {
+                        'Maasturi': '105 €',
+                        'Pakettiauto': '105 €'
+                    }
+                },
+                { 
+                    id: 'tire-mount-suv-18-plus', 
+                    name: 'Renkaan asennus vanteelle 18" ja yli', 
+                    pricing: {
+                        'Maasturi': '120 €',
+                        'Pakettiauto': '120 €'
+                    }
+                },
+                { id: 'tire-removal', name: 'Renkaiden irrotus vanteelta (4kpl)', price: '50 €' },
+                { id: 'balancing-only', name: 'Pelkkä tasapainoitus', price: '30 €' }
+            ]
+        },
+        tuulilasipalvelut: {
+            name: 'Tuulilasipalvelut',
+            tasks: [
+                { id: 'glass-repair-first', name: 'Kiveniskemän korjaus - ensimmäinen', price: '50 €' },
+                { id: 'glass-repair-additional', name: 'Kiveniskemän korjaus - seuraava', price: '25 € / kpl' },
+                { id: 'glass-repair-insured', name: 'Kiveniskemän korjaus lasivakuutuksella', price: 'Ilmainen' },
+                { id: 'glass-replacement-insured', name: 'Lasinvaihto vakuutuksella', price: 'Omavastuu' },
+                { id: 'glass-replacement', name: 'Lasinvaihto ilman vakuutusta', price: 'Pyydä tarjous' }
+            ]
+        },
+        muut: {
             name: 'Muut palvelut',
             tasks: [
                 { id: 'headlight-restoration', name: 'Ajovalojen kirkastus', price: 'alkaen 50 € / kpl' },
@@ -823,13 +941,26 @@ function initializeBookingSystem() {
         
         if (!serviceObj || !taskObj) return;
         
+        // Get selected vehicle type
+        const vehicleType = getSelectedVehicleType();
+        
+        // Determine the price to display
+        let displayPrice = '';
+        if (taskObj.pricing && vehicleType && taskObj.pricing[vehicleType]) {
+            // Use vehicle-specific price
+            displayPrice = taskObj.pricing[vehicleType];
+        } else if (taskObj.price) {
+            // Use generic price
+            displayPrice = taskObj.price;
+        }
+        
         // Add to selected services array
         selectedServices.push({
             service: service,
             serviceName: serviceObj.name,
             task: task,
             taskName: taskObj.name,
-            taskPrice: taskObj.price || ''
+            taskPrice: displayPrice
         });
         
         updateSelectedServicesDisplay();
@@ -979,7 +1110,7 @@ function initializeBookingSystem() {
     
     function updateRepairDisclaimer() {
         const repairDisclaimer = document.getElementById('repair-disclaimer');
-        const hasRepairService = selectedServices.some(s => s.service === 'repair');
+        const hasRepairService = selectedServices.some(s => s.service === 'korjaustyot');
         
         if (hasRepairService) {
             repairDisclaimer.style.display = 'block';
@@ -1013,15 +1144,30 @@ function initializeBookingSystem() {
                     // Show task selection
                     taskSelection.style.display = 'block';
                     
-                    // Populate task dropdown
+                    // Get selected vehicle type
+                    const vehicleType = getSelectedVehicleType();
+                    
+                    // Populate task dropdown with vehicle-type specific pricing
+                    // Only show tasks that have valid pricing for the selected vehicle type
                     taskSelect.innerHTML = '<option value="">Valitse tyyppi...</option>';
                     serviceData[selectedService].tasks.forEach(task => {
+                        // Skip tasks that have vehicle-specific pricing but not for this vehicle type
+                        if (task.pricing && vehicleType && !task.pricing[vehicleType]) {
+                            return; // Skip this task
+                        }
+                        
                         const option = document.createElement('option');
                         option.value = task.id;
-                        // Display price only if it exists and is not empty
-                        if (task.price && task.price.trim() !== '') {
-                            option.textContent = `${task.name}: ${task.price}`;
+                        
+                        // Check if task has vehicle-specific pricing
+                        if (task.pricing && vehicleType && task.pricing[vehicleType]) {
+                            // Use vehicle-specific price
+                            option.textContent = `${task.name} ${task.pricing[vehicleType]}`;
+                        } else if (task.price && task.price.trim() !== '') {
+                            // Use generic price
+                            option.textContent = `${task.name} ${task.price}`;
                         } else {
+                            // No price available
                             option.textContent = task.name;
                         }
                         taskSelect.appendChild(option);
