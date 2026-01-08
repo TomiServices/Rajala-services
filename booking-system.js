@@ -783,7 +783,7 @@ function initializeBookingSystem() {
                 { id: 'tire-change-19-22', name: 'Renkaiden vaihto (19-22 tuumaa)', price: 'alkaen 50 €' },
                 { id: 'balancing', name: 'Tasapainotus', price: '20 € / sarja' },
                 { id: 'tire-repair', name: 'Renkaan paikkaus', price: 'alkaen 25 €' },
-                { id: 'tire-hotel', name: 'Rengashotelli', price: 'alkaen 55 € / kausi' }
+                { id: 'tire-hotel', name: 'Rengashotelli', price: '65 €' }
             ]
         },
         glass: {
