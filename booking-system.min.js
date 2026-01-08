@@ -869,41 +869,33 @@ function initializeBookingSystem() {
                     id: 'tire-mount-15', 
                     name: 'Renkaan asennus vanteelle 15" ja alle', 
                     pricing: {
-                        'Henkilöauto': '80 €',
-                        'Pakettiauto': '80 €',
-                        'Maasturi': '80 €'
+                        'Henkilöauto': '80 €'
                     }
                 },
                 { 
                     id: 'tire-mount-16-17', 
                     name: 'Renkaan asennus vanteelle 16-17"', 
                     pricing: {
-                        'Henkilöauto': '90 €',
-                        'Pakettiauto': '90 €',
-                        'Maasturi': '90 €'
+                        'Henkilöauto': '90 €'
                     }
                 },
                 { 
                     id: 'tire-mount-18-19', 
                     name: 'Renkaan asennus vanteelle 18-19"', 
                     pricing: {
-                        'Henkilöauto': '95 €',
-                        'Pakettiauto': '95 €',
-                        'Maasturi': '95 €'
+                        'Henkilöauto': '95 €'
                     }
                 },
                 { 
                     id: 'tire-mount-20-plus', 
                     name: 'Renkaan asennus vanteelle 20" ja yli', 
                     pricing: {
-                        'Henkilöauto': '105 €',
-                        'Pakettiauto': '105 €',
-                        'Maasturi': '105 €'
+                        'Henkilöauto': '105 €'
                     }
                 },
                 { 
                     id: 'tire-mount-suv-17-under', 
-                    name: 'Renkaan asennus vanteelle (Maasturi/Paketti) 17" ja alle', 
+                    name: 'Renkaan asennus vanteelle 17" ja alle', 
                     pricing: {
                         'Maasturi': '105 €',
                         'Pakettiauto': '105 €'
@@ -911,7 +903,7 @@ function initializeBookingSystem() {
                 },
                 { 
                     id: 'tire-mount-suv-18-plus', 
-                    name: 'Renkaan asennus vanteelle (Maasturi/Paketti) 18" ja yli', 
+                    name: 'Renkaan asennus vanteelle 18" ja yli', 
                     pricing: {
                         'Maasturi': '120 €',
                         'Pakettiauto': '120 €'
