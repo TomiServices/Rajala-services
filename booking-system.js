@@ -948,10 +948,10 @@ function initializeBookingSystem() {
         let displayPrice = '';
         if (taskObj.pricing && vehicleType && taskObj.pricing[vehicleType]) {
             // Use vehicle-specific price
-            displayPrice = taskObj.pricing[vehicleType];
+            displayPrice = formatPriceForVehicleType(taskObj.pricing[vehicleType]);
         } else if (taskObj.price) {
             // Use generic price
-            displayPrice = taskObj.price;
+            displayPrice = formatPriceForVehicleType(taskObj.price);
         }
         
         // Add to selected services array
@@ -1129,6 +1129,24 @@ function initializeBookingSystem() {
         document.getElementById('serviceSelection').style.display = 'block';
     }
 
+    // Helper function to add "alkaen" prefix to price for specific vehicle types
+    function formatPriceForVehicleType(price) {
+        if (!price || price.trim() === '') return '';
+        
+        const vehicleTypeSelect = document.getElementById('vehicleTypeSelect');
+        const selectedVehicleTypeValue = vehicleTypeSelect ? vehicleTypeSelect.value : '';
+        
+        // Add "alkaen" prefix for "Mopo / Moottoripyörä" and "Muu" vehicle types
+        if (selectedVehicleTypeValue === 'Mopo / Moottoripyörä' || selectedVehicleTypeValue === 'Muu') {
+            // Only add "alkaen" if it's not already present
+            if (!price.toLowerCase().includes('alkaen')) {
+                return `alkaen ${price}`;
+            }
+        }
+        
+        return price;
+    }
+
     // Service selection event handler
     function setupServiceSelection() {
         const serviceSelect = document.getElementById('serviceSelect');
@@ -1160,12 +1178,15 @@ function initializeBookingSystem() {
                         option.value = task.id;
                         
                         // Check if task has vehicle-specific pricing
+                        let displayPrice = '';
                         if (task.pricing && vehicleType && task.pricing[vehicleType]) {
                             // Use vehicle-specific price
-                            option.textContent = `${task.name} ${task.pricing[vehicleType]}`;
+                            displayPrice = formatPriceForVehicleType(task.pricing[vehicleType]);
+                            option.textContent = `${task.name} ${displayPrice}`;
                         } else if (task.price && task.price.trim() !== '') {
                             // Use generic price
-                            option.textContent = `${task.name} ${task.price}`;
+                            displayPrice = formatPriceForVehicleType(task.price);
+                            option.textContent = `${task.name} ${displayPrice}`;
                         } else {
                             // No price available
                             option.textContent = task.name;
@@ -1250,6 +1271,55 @@ function initializeBookingSystem() {
         slotSummary.replaceChildren(label, value);
     }
     
+    // Helper function to populate service dropdown based on vehicle type
+    function populateServiceDropdown() {
+        const serviceSelect = document.getElementById('serviceSelect');
+        const vehicleTypeSelect = document.getElementById('vehicleTypeSelect');
+        
+        if (!serviceSelect || !vehicleTypeSelect) return;
+        
+        const selectedVehicleType = vehicleTypeSelect.value;
+        
+        // Clear existing options except the first one
+        serviceSelect.innerHTML = '<option value="">Valitse palvelu...</option>';
+        
+        // Define which services are available for "Mopo / Moottoripyörä"
+        const mopoServices = ['autopesu', 'kiillotus', 'kolhukorjaus', 'korjaustyot'];
+        
+        // Define service options
+        const allServices = [
+            { value: 'autopesu', label: 'Autopesu' },
+            { value: 'sisapuhdistus', label: 'Sisäpuhdistus' },
+            { value: 'kiillotus', label: 'Kiillotus ja pinnoitteet' },
+            { value: 'kolhukorjaus', label: 'Kolhukorjaus' },
+            { value: 'korjaustyot', label: 'Korjaustyöt' },
+            { value: 'rengastyot', label: 'Rengastyöt' },
+            { value: 'renkaidenasennus', label: 'Renkaiden asennus vanteelle' },
+            { value: 'tuulilasipalvelut', label: 'Tuulilasipalvelut' },
+            { value: 'muut', label: 'Muut palvelut' }
+        ];
+        
+        // Filter services based on vehicle type
+        let servicesToShow = allServices;
+        if (selectedVehicleType === 'Mopo / Moottoripyörä') {
+            servicesToShow = allServices.filter(service => mopoServices.includes(service.value));
+        }
+        
+        // Populate dropdown
+        servicesToShow.forEach(service => {
+            const option = document.createElement('option');
+            option.value = service.value;
+            option.textContent = service.label;
+            serviceSelect.appendChild(option);
+        });
+        
+        // Reset task selection when service dropdown changes
+        const taskSelection = document.getElementById('taskSelection');
+        if (taskSelection) {
+            taskSelection.style.display = 'none';
+        }
+    }
+    
     // Vehicle type selection event handler
     function setupVehicleTypeSelection() {
         const vehicleTypeSelect = document.getElementById('vehicleTypeSelect');
@@ -1271,6 +1341,9 @@ function initializeBookingSystem() {
                     // Clear the textbox when hiding
                     document.getElementById('vehicleTypeOther').value = '';
                 }
+                
+                // Populate service dropdown based on selected vehicle type
+                populateServiceDropdown();
                 
                 // If a vehicle type is selected, reveal the service selection step
                 if (selectedType && selectedType !== '') {
