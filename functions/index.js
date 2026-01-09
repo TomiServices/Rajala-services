@@ -1288,6 +1288,7 @@ exports.calendarWebhook = onRequest({
         calendarId,
         timeMin: oneMonthAgo.toISOString(),
         singleEvents: true,
+        showDeleted: true,
         maxResults: 2500,
         orderBy: 'startTime'
       });
@@ -1307,7 +1308,7 @@ exports.calendarWebhook = onRequest({
           const resp = await calendar.events.list({
             calendarId,
             syncToken,
-            singleEvents: true,
+            showDeleted: true,
             maxResults: 2500
           });
           events = resp.data.items || [];
@@ -1341,7 +1342,7 @@ exports.calendarWebhook = onRequest({
       return res.status(200).send('OK');
     }
 
-    // Upsert events into Firestore (create or update)
+    // Process events into Firestore (create, update, or delete)
     let createdCount = 0;
     let updatedCount = 0;
     let deletedCount = 0;
@@ -1349,6 +1350,26 @@ exports.calendarWebhook = onRequest({
     for (const eventItem of events) {
       try {
         if (!eventItem || !eventItem.id) continue;
+
+        // Handle deleted/cancelled events
+        if (eventItem.status === 'cancelled' || eventItem.deleted) {
+          const existingSnapshot = await db.collection(BOOKINGS_COLLECTION)
+            .where('googleEventId', '==', eventItem.id)
+            .limit(1)
+            .get();
+          
+          if (!existingSnapshot.empty) {
+            const docRef = existingSnapshot.docs[0].ref;
+            await docRef.update({ deletedFromGoogle: true });
+            await new Promise(r => setTimeout(r, 100));
+            await docRef.delete();
+            deletedCount++;
+            console.log('Deleted booking for cancelled calendar event:', eventItem.id);
+          }
+          continue;
+        }
+
+        // Handle active events - skip if no valid start time
         if (!eventItem.start || !eventItem.start.dateTime) continue;
 
         const startTime = new Date(eventItem.start.dateTime);
@@ -1397,30 +1418,6 @@ exports.calendarWebhook = onRequest({
           eventId: eventItem && eventItem.id,
           error: evtErr.message || evtErr
         });
-      }
-    }
-
-    // Remove deleted events in Firestore (mark/delete)
-    const allBookings = await db.collection(BOOKINGS_COLLECTION)
-      .where('googleEventId', '!=', null)
-      .get();
-
-    const eventIds = new Set(events.map(e => e.id));
-    for (const doc of allBookings.docs) {
-      const booking = doc.data();
-      if (booking.googleEventId && !eventIds.has(booking.googleEventId)) {
-        try {
-          await doc.ref.update({ deletedFromGoogle: true });
-          await new Promise(r => setTimeout(r, 100));
-          await doc.ref.delete();
-          deletedCount++;
-          console.log('Deleted booking removed from Google Calendar:', doc.id);
-        } catch (delErr) {
-          console.error('Failed to remove booking for missing Google event:', {
-            docId: doc.id,
-            error: delErr.message || delErr
-          });
-        }
       }
     }
 

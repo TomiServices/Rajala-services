@@ -84,14 +84,13 @@ async function deleteBookingForEvent(eventId) {
 
 async function fetchEventsUsingSyncToken(calendar, calendarId, syncToken) {
   // Use syncToken to get incremental updates
+  // NOTE: When using syncToken, orderBy and singleEvents parameters are not allowed
   try {
     const res = await calendar.events.list({
       calendarId,
       syncToken,
-      singleEvents: true,
       showDeleted: true,
-      maxResults: 2500,
-      orderBy: 'startTime'
+      maxResults: 2500
     });
     return res.data;
   } catch (err) {
