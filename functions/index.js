@@ -1352,6 +1352,8 @@ exports.calendarWebhook = onRequest({
         if (!eventItem || !eventItem.id) continue;
 
         // Handle deleted/cancelled events
+        // When showDeleted: true is used, deleted events are returned with status='cancelled'
+        // The 'deleted' property may also be set for some types of deletions
         if (eventItem.status === 'cancelled' || eventItem.deleted) {
           const existingSnapshot = await db.collection(BOOKINGS_COLLECTION)
             .where('googleEventId', '==', eventItem.id)
@@ -1360,7 +1362,9 @@ exports.calendarWebhook = onRequest({
           
           if (!existingSnapshot.empty) {
             const docRef = existingSnapshot.docs[0].ref;
+            // Mark as deleted before removing to prevent race conditions with Firestore triggers
             await docRef.update({ deletedFromGoogle: true });
+            // Small delay to ensure Firestore acknowledges the update before deletion
             await new Promise(r => setTimeout(r, 100));
             await docRef.delete();
             deletedCount++;
