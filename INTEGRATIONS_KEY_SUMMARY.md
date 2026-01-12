@@ -1,6 +1,6 @@
 # External Service Integrations - Key Summary
 
-**Last Updated:** January 2026  
+**Last Updated:** January 2025  
 **Purpose:** Track all external service integrations, API keys, and configurations used in the Rajala Services booking system.
 
 ---
