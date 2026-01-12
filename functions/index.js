@@ -724,7 +724,7 @@ exports.book = onRequest({
     // ACTION REQUIRED: See INTEGRATIONS_KEY_SUMMARY.md for detailed re-enabling instructions
     // 
     // To re-enable reCAPTCHA:
-    // 1. Set RECAPTCHA_SECRET environment variable in Firebase Secret Manager
+    // 1. Set RECAPTCHA_SECRET in Firebase Secret Manager (becomes available as env var at runtime)
     //    Command: firebase functions:secrets:set RECAPTCHA_SECRET
     // 2. Uncomment the recaptchaToken extraction and verification code below:
     //
