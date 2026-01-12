@@ -112,8 +112,10 @@ function initializeUIInteractions() {
             let closestDistance = Infinity;
             
             sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.offsetHeight;
+                // Use getBoundingClientRect for accurate positioning relative to viewport
+                const rect = section.getBoundingClientRect();
+                const sectionTop = rect.top + window.pageYOffset;
+                const sectionHeight = rect.height;
                 const sectionId = section.getAttribute('id');
                 const sectionMiddle = sectionTop + (sectionHeight / 2);
                 
