@@ -54,6 +54,10 @@
             return;
         }
         
+        // INTEGRATION: Google Analytics 4 (GA4)
+        // Measurement ID: Only loads after user consent (GDPR compliant)
+        // Admin Console: https://analytics.google.com/
+        // Documentation: See INTEGRATIONS_KEY_SUMMARY.md
         const GA_MEASUREMENT_ID = 'G-SP5R1MN1H9';
         
         const script = document.createElement('script');
@@ -67,8 +71,8 @@
         
         gtag('js', new Date());
         gtag('config', GA_MEASUREMENT_ID, {
-            'anonymize_ip': true,
-            'cookie_flags': 'SameSite=Lax;Secure'
+            'anonymize_ip': true,              // Privacy: Anonymize IP addresses
+            'cookie_flags': 'SameSite=Lax;Secure'  // Security: Secure cookie settings
         });
     }
     

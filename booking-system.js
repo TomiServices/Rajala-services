@@ -6,6 +6,12 @@
 // reCAPTCHA v3 runs invisibly and returns a score (0.0-1.0) indicating likelihood of being a bot
 // Higher scores (closer to 1.0) = more likely human, Lower scores (closer to 0.0) = more likely bot
 // The site key is embedded in the script tag in index.html
+// 
+// INTEGRATION: Google reCAPTCHA v3
+// Site Key (Public): This key is safe to expose in client-side code
+// Secret Key: Stored in Firebase Secret Manager (RECAPTCHA_SECRET)
+// Admin Console: https://www.google.com/recaptcha/admin
+// Documentation: See INTEGRATIONS_KEY_SUMMARY.md for complete details
 const RECAPTCHA_SITE_KEY = '6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM';
 
 /**

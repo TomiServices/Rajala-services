@@ -59,11 +59,26 @@ function escapeHtml(text) {
 // =======================
 // ENVIRONMENT PARAMETERS (Gen2 / fallback to env)
 // =======================
+// INTEGRATION: These parameters connect to external services
+// Documentation: See INTEGRATIONS_KEY_SUMMARY.md for details
+
+// Google Cloud Service Account - for Calendar API authentication
+// Source: Firebase Console > Project Settings > Service Accounts
 const googleServiceAccount = defineString('GOOGLE_SERVICE_ACCOUNT');
+
+// Google Calendar ID - target calendar for booking sync
+// Source: Google Calendar Settings > Calendar ID
 const googleCalendarId = defineString('GOOGLE_CALENDAR_ID');
+
+// Email configuration - for booking confirmation emails via Nodemailer/Gmail
+// EMAIL_USER: Gmail account email
+// EMAIL_PASSWORD: Gmail App Password (NOT regular password)
+// Source: Google Account > Security > 2-Step Verification > App passwords
 const emailUser = defineString('EMAIL_USER');
 const emailPassword = defineString('EMAIL_PASSWORD');
 const emailFrom = defineString('EMAIL_FROM');
+
+// Calendar push notification callback URL (optional)
 const watchCallbackEnv = defineString('WATCH_CALLBACK_URL'); // optional preconfigured callback URL
 
 // =======================
@@ -352,9 +367,15 @@ function parseFirestoreDate(val) {
   return null;
 }
 
-// =======================
-// reCAPTCHA verification
-// =======================
+// ============================================================================
+// reCAPTCHA VERIFICATION
+// ============================================================================
+// INTEGRATION: Google reCAPTCHA v3 - Server-side validation
+// Secret Key: Stored in Firebase Secret Manager (RECAPTCHA_SECRET)
+// - To set: firebase functions:secrets:set RECAPTCHA_SECRET
+// - Get key from: https://www.google.com/recaptcha/admin
+// Documentation: See INTEGRATIONS_KEY_SUMMARY.md
+// ============================================================================
 /**
  * Verifies reCAPTCHA token with Google's API
  * @param {string} token - The reCAPTCHA token from the client
@@ -376,6 +397,8 @@ async function verifyRecaptcha(token, options = {}) {
       };
     }
 
+    // Get secret key from Secret Manager
+    // CRITICAL: RECAPTCHA_SECRET must be set via: firebase functions:secrets:set RECAPTCHA_SECRET
     const secretKey = process.env.RECAPTCHA_SECRET;
     if (!secretKey) {
       console.error('reCAPTCHA secret not configured in environment');
@@ -687,15 +710,22 @@ exports.book = onRequest({
       return res.status(400).json({ error: 'Täytä kaikki pakolliset kentät' });
     }
 
+    // ============================================================================
+    // ⚠️ SECURITY WARNING: reCAPTCHA VALIDATION CURRENTLY DISABLED
+    // ============================================================================
     // reCAPTCHA verification DISABLED to allow Firebase Functions deployment
     // The verification was causing deployment failures
+    // 
     // TODO: Re-enable reCAPTCHA when deployment issues are resolved
     // SECURITY NOTE: Without reCAPTCHA, this endpoint is vulnerable to automated abuse.
     // Consider implementing rate limiting or re-enabling reCAPTCHA verification
     // by uncommenting the verifyRecaptcha call below and configuring RECAPTCHA_SECRET.
     // 
+    // ACTION REQUIRED: See INTEGRATIONS_KEY_SUMMARY.md for detailed re-enabling instructions
+    // 
     // To re-enable reCAPTCHA:
-    // 1. Set RECAPTCHA_SECRET environment variable in Firebase Functions
+    // 1. Set RECAPTCHA_SECRET environment variable in Firebase Secret Manager
+    //    Command: firebase functions:secrets:set RECAPTCHA_SECRET
     // 2. Uncomment the recaptchaToken extraction and verification code below:
     //
     // const recaptchaToken = req.body.recaptcha || req.body.recaptchaToken || req.body['g-recaptcha-response'];
@@ -710,6 +740,7 @@ exports.book = onRequest({
     //     details: recaptchaResult.details
     //   });
     // }
+    // ============================================================================
     console.log('reCAPTCHA verification skipped - disabled for deployment');
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
