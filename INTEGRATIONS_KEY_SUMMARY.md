@@ -597,7 +597,7 @@ firebase functions:secrets:set EMAIL_PASSWORD
 
 ## 🔄 Change Log
 
-### January 2026
+### January 2025
 - Initial documentation created
 - All integrations catalogued
 - Security recommendations documented
