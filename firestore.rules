@@ -1,7 +1,7 @@
 rules_version = '2';
 
 // Firestore Security Rules for Rajala Services Booking System
-// Updated: 2026-01-13 - New company service accounts
+// Updated: 2026-01-13 - Migrated to Webbi1 Firebase project
 // 
 // These rules control access to the booking collection (varaukset) in Firestore.
 // They ensure that only authenticated users and authorized service accounts can
@@ -31,16 +31,16 @@ service cloud.firestore {
           // 4. Firebase Email Extension service account
           //    Allows the Trigger Email from Firestore extension to read bookings
           //    in order to send confirmation emails
-          request.auth.token.email == "ext-firestore-send-email@fxnr-web.iam.gserviceaccount.com" ||
+          request.auth.token.email == "ext-firestore-send-email@Webbi1.iam.gserviceaccount.com" ||
           
           // 5. Google Compute Engine default service account
           //    This is used by Firebase Functions for server-side operations
           //    Pattern matches any compute service account (format: {number}-compute@developer.gserviceaccount.com)
           request.auth.token.email.matches(".*-compute@developer.gserviceaccount.com") ||
           
-          // 6. Calendar service account
-          //    Allows the calendar integration to sync bookings with Google Calendar
-          request.auth.token.email == "calendar@fxnr-web.iam.gserviceaccount.com"
+          // 6. Default extension service account
+          //    Allows Firebase Extensions default service account to access bookings
+          request.auth.token.email == "ext-default@webbi1.iam.gserviceaccount.com"
         );
     }
     
@@ -55,7 +55,7 @@ service cloud.firestore {
           request.auth.token.admin == true ||
           
           // Email extension service account needs full access
-          request.auth.token.email == "ext-firestore-send-email@fxnr-web.iam.gserviceaccount.com" ||
+          request.auth.token.email == "ext-firestore-send-email@Webbi1.iam.gserviceaccount.com" ||
           
           // Compute service account for Firebase Functions
           request.auth.token.email.matches(".*-compute@developer.gserviceaccount.com")
@@ -70,7 +70,7 @@ service cloud.firestore {
         (
           request.auth.token.admin == true ||
           request.auth.token.email.matches(".*-compute@developer.gserviceaccount.com") ||
-          request.auth.token.email == "calendar@fxnr-web.iam.gserviceaccount.com"
+          request.auth.token.email == "ext-default@webbi1.iam.gserviceaccount.com"
         );
     }
     
