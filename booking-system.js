@@ -6,7 +6,8 @@
 // reCAPTCHA v3 runs invisibly and returns a score (0.0-1.0) indicating likelihood of being a bot
 // Higher scores (closer to 1.0) = more likely human, Lower scores (closer to 0.0) = more likely bot
 // The site key is embedded in the script tag in index.html
-const RECAPTCHA_SITE_KEY = '6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM';
+// Updated to new company reCAPTCHA credentials (2026-01-13)
+const RECAPTCHA_SITE_KEY = '6Lf7wx0sAAAAAK2mvnbNt3V6lINTfu0g9Mw8Flcr';
 
 /**
  * Executes reCAPTCHA v3 and returns a token
