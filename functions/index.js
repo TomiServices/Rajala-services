@@ -628,8 +628,9 @@ function setCorsHeadersForRequest(req, res) {
 // HTTP: GET /bookings
 // =======================
 exports.bookings = onRequest({
-  region: 'us-central1',
-  cors: ALLOWED_ORIGINS
+  region: 'europe-north1',
+  cors: ALLOWED_ORIGINS,
+  invoker: 'public'
 }, async (req, res) => {
   try {
     setCorsHeadersForRequest(req, res);
@@ -672,8 +673,9 @@ exports.bookings = onRequest({
 // HTTP: POST /book
 // =======================
 exports.book = onRequest({
-  region: 'us-central1',
-  cors: ALLOWED_ORIGINS
+  region: 'europe-north1',
+  cors: ALLOWED_ORIGINS,
+  invoker: 'public'
 }, async (req, res) => {
   try {
     setCorsHeadersForRequest(req, res);
@@ -1168,7 +1170,8 @@ async function registerCalendarWatch(callbackUrl) {
 // If WATCH_CALLBACK_URL env var is set, that will be used as default.
 // =======================
 exports.watchRegistrar = onRequest({
-  region: 'us-central1'
+  region: 'europe-north1',
+  invoker: 'public'
 }, async (req, res) => {
   try {
     if (req.method !== 'POST') {
@@ -1196,7 +1199,8 @@ exports.watchRegistrar = onRequest({
 // If you want scheduler to auto-run this, create Cloud Scheduler job calling this endpoint.
 // =======================
 exports.renewCalendarWatch = onRequest({
-  region: 'us-central1'
+  region: 'europe-north1',
+  invoker: 'public'
 }, async (req, res) => {
   try {
     // Allow POST only for safety
@@ -1225,7 +1229,8 @@ exports.renewCalendarWatch = onRequest({
 // FIX: Enhanced logging for better debugging of sync issues
 // =======================
 exports.calendarWebhook = onRequest({
-  region: 'us-central1'
+  region: 'europe-north1',
+  invoker: 'public'
 }, async (req, res) => {
   console.log('Calendar webhook received:', {
     method: req.method,
