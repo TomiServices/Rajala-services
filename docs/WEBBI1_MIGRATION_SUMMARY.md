@@ -6,7 +6,9 @@
 
 ## Overview
 
-This document summarizes the migration from Firebase project "fxnr-web" to the new Firebase project "Webbi1" with updated domain and service accounts.
+This document summarizes the migration from Firebase project "fxnr-web" to the new Firebase project "Webbi1" with updated service accounts and email configuration.
+
+**Note:** The domain remains www.rajala-services.com. Only the Firebase backend infrastructure is migrated.
 
 ## What Changed
 
@@ -18,13 +20,12 @@ This document summarizes the migration from Firebase project "fxnr-web" to the n
   - `.firebaserc` - Updated project reference
   - `firebase.json` - Updated Cloud Functions URL in CSP header
 
-### 2. Domain Migration
+### 2. Domain Configuration
 
-- **Old Domain:** www.rajala-services.com
-- **New Domain:** www.fixnero.fi
+- **Domain:** www.rajala-services.com (unchanged)
+- **Firebase Hosting URLs:** Updated from fxnr-web to webbi1
 - **Files Updated:**
-  - `CNAME` - Updated to fixnero.fi
-  - `functions/index.js` - Updated ALLOWED_ORIGINS
+  - `functions/index.js` - Updated ALLOWED_ORIGINS to include webbi1.web.app and webbi1.firebaseapp.com
 
 ### 3. Service Accounts
 
@@ -62,7 +63,16 @@ Updated all Firebase Cloud Functions endpoints:
 - `firebase.json` - CSP header
 - `functions/.env.example` - WATCH_CALLBACK_URL
 
-### 6. Calendar Integration
+### 6. CORS and Allowed Origins
+
+Updated CORS configuration to support both the main domain and Firebase hosting:
+- **Main Domain:** www.rajala-services.com (unchanged)
+- **Firebase Hosting:** webbi1.web.app and webbi1.firebaseapp.com (updated from fxnr-web)
+
+**Files Updated:**
+- `functions/index.js` - ALLOWED_ORIGINS array
+
+### 7. Calendar Integration
 
 Updated calendar configuration to use:
 - **Calendar Owner:** Palvelut@fixnero.fi
@@ -179,7 +189,7 @@ Expected checks:
 ### Common Issues
 
 1. **CORS Errors:**
-   - Verify ALLOWED_ORIGINS in `functions/index.js` includes fixnero.fi
+   - Verify ALLOWED_ORIGINS in `functions/index.js` includes rajala-services.com and webbi1 hosting domains
    - Redeploy functions
 
 2. **Service Account Permissions:**
@@ -200,7 +210,6 @@ Expected checks:
 
 **Configuration Files (9 files):**
 - `.firebaserc`
-- `CNAME`
 - `firebase.json`
 - `firestore.rules`
 - `functions/.env.example`
@@ -218,11 +227,11 @@ Expected checks:
 ## Next Steps
 
 1. Deploy all changes to Firebase
-2. Update DNS settings to point fixnero.fi to Firebase Hosting
-3. Configure all required secrets in Firebase Secret Manager
-4. Install and configure Firebase Email Extension
-5. Test complete booking flow end-to-end
-6. Monitor logs for any errors
+1. Deploy all changes to Firebase
+2. Configure all required secrets in Firebase Secret Manager
+3. Install and configure Firebase Email Extension
+4. Test complete booking flow end-to-end
+5. Monitor logs for any errors
 
 ## Support
 
@@ -236,5 +245,5 @@ For issues or questions:
 
 **Migration Completed:** 2026-01-13  
 **Project:** Webbi1  
-**Domain:** www.fixnero.fi  
+**Domain:** www.rajala-services.com (unchanged)  
 **Email:** Palvelut@fixnero.fi

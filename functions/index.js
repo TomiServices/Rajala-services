@@ -72,8 +72,8 @@ const watchCallbackEnv = defineString('WATCH_CALLBACK_URL'); // optional preconf
 const BOOKINGS_COLLECTION = 'varaukset';
 const WATCH_COLLECTION = 'calendarWatch';
 const ALLOWED_ORIGINS = [
-  'https://www.fixnero.fi',
-  'https://fixnero.fi',
+  'https://www.rajala-services.com',
+  'https://rajala-services.com',
   'https://webbi1.web.app',
   'https://webbi1.firebaseapp.com'
 ];
