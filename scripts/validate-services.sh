@@ -13,7 +13,12 @@
 # ============================================
 
 # Don't exit on errors - we want to collect all results
+# This allows the script to report all failures rather than stopping at the first one
 set +e
+
+# Expected configuration values (update these if they change)
+EXPECTED_RECAPTCHA_SITE_KEY="6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM"
+EXPECTED_GA_MEASUREMENT_ID="G-SP5R1MN1H9"
 
 # Colors for output
 RED='\033[0;31m'
@@ -268,14 +273,14 @@ if [ -f "index.html" ]; then
     print_success "index.html exists"
     
     # Check for reCAPTCHA site key
-    if grep -q "6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM" index.html; then
+    if grep -q "$EXPECTED_RECAPTCHA_SITE_KEY" index.html; then
         print_success "reCAPTCHA site key found"
     else
         print_warning "reCAPTCHA site key not found or different"
     fi
     
     # Check for Google Analytics
-    if grep -q "G-SP5R1MN1H9" index.html || grep -q "G-SP5R1MN1H9" cookie-consent.js 2>/dev/null; then
+    if grep -q "$EXPECTED_GA_MEASUREMENT_ID" index.html || grep -q "$EXPECTED_GA_MEASUREMENT_ID" cookie-consent.js 2>/dev/null; then
         print_success "Google Analytics measurement ID found"
     else
         print_warning "Google Analytics measurement ID not found"

@@ -86,11 +86,26 @@ Before starting migration:
 gcloud auth login
 gcloud config set project fxnr-web
 
-# Export Firestore data
+# Export Firestore data with error handling
 gcloud firestore export gs://fxnr-web-backup/firestore-backup-$(date +%Y%m%d)
 
-# Download to local machine
-gsutil -m cp -r gs://fxnr-web-backup/firestore-backup-* ./backups/
+# Verify export succeeded
+if [ $? -eq 0 ]; then
+    echo "Backup completed successfully"
+    # Download to local machine
+    gsutil -m cp -r gs://fxnr-web-backup/firestore-backup-* ./backups/
+    
+    # Verify files downloaded
+    if [ -d "./backups/firestore-backup-$(date +%Y%m%d)" ]; then
+        echo "Backup verified and downloaded"
+    else
+        echo "ERROR: Backup download failed"
+        exit 1
+    fi
+else
+    echo "ERROR: Backup export failed"
+    exit 1
+fi
 ```
 
 **Backup Verification:**
