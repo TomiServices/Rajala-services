@@ -5,8 +5,8 @@ This document contains all the key information for external integrations after m
 ## 🔐 Critical Credentials
 
 ### Firebase Project
-- **Project ID**: `fxnr-web`
-- **Project Console**: https://console.firebase.google.com/project/fxnr-web
+- **Project ID**: `Webbi1`
+- **Project Console**: https://console.firebase.google.com/project/Webbi1
 - **Region**: us-central1
 
 ### Google Analytics
@@ -24,7 +24,7 @@ This document contains all the key information for external integrations after m
 - **Calendar Owner**: palvelut@fixnero.fi
 - **Calendar Access**: https://calendar.google.com
 - **Service Accounts with Access**:
-  - `calendar@fxnr-web.iam.gserviceaccount.com`
+  - `calendar@Webbi1.iam.gserviceaccount.com`
   - `{PROJECT_NUMBER}-compute@developer.gserviceaccount.com`
 
 ### Email Configuration
@@ -38,7 +38,7 @@ This document contains all the key information for external integrations after m
 ### Manual Creation Required
 
 1. **Calendar Service Account**
-   - Email: `calendar@fxnr-web.iam.gserviceaccount.com`
+   - Email: `calendar@Webbi1.iam.gserviceaccount.com`
    - Purpose: Google Calendar integration
    - Status: ⚠️ NEEDS TO BE CREATED
 
@@ -50,17 +50,17 @@ This document contains all the key information for external integrations after m
    - Status: ✅ Auto-created by Google Cloud
 
 3. **Firebase Admin SDK**
-   - Email: `firebase-adminsdk-{ID}@fxnr-web.iam.gserviceaccount.com`
+   - Email: `firebase-adminsdk-{ID}@Webbi1.iam.gserviceaccount.com`
    - Purpose: Firebase Admin operations
    - Status: ✅ Auto-created by Firebase
 
 4. **Email Extension Service Account**
-   - Email: `ext-firestore-send-email@fxnr-web.iam.gserviceaccount.com`
+   - Email: `ext-firestore-send-email@Webbi1.iam.gserviceaccount.com`
    - Purpose: Send booking confirmation emails
    - Status: ⚠️ Created when extension is installed
 
 5. **Extensions Default**
-   - Email: `ext-default@fxnr-web.iam.gserviceaccount.com`
+   - Email: `ext-default@Webbi1.iam.gserviceaccount.com`
    - Purpose: Default for Firebase Extensions
    - Status: ✅ Auto-created when extensions enabled
 
@@ -82,23 +82,23 @@ EMAIL_PASSWORD={Gmail app-specific password}
 EMAIL_FROM=info@fixnero.fi
 
 # Optional
-WATCH_CALLBACK_URL=https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook
+WATCH_CALLBACK_URL=https://us-central1-Webbi1.cloudfunctions.net/calendarWebhook
 RECAPTCHA_SCORE_THRESHOLD=0.5
 ```
 
 ## 🌐 Allowed Domains
 
 ### reCAPTCHA
-- rajala-services.com
-- www.rajala-services.com
-- fxnr-web.web.app
-- fxnr-web.firebaseapp.com
+- fixnero.fi
+- fixnero.fi
+- Webbi1.web.app
+- Webbi1.firebaseapp.com
 
 ### CORS (Firebase Functions)
-- https://www.rajala-services.com
-- https://rajala-services.com
-- https://fxnr-web.web.app
-- https://fxnr-web.firebaseapp.com
+- https://fixnero.fi
+- https://fixnero.fi
+- https://Webbi1.web.app
+- https://Webbi1.firebaseapp.com
 
 ## 📊 Firestore Collections
 
@@ -109,89 +109,89 @@ RECAPTCHA_SCORE_THRESHOLD=0.5
 ## 🔗 Important URLs
 
 ### Development & Deployment
-- **Firebase Console**: https://console.firebase.google.com/project/fxnr-web
-- **Cloud Functions**: https://console.firebase.google.com/project/fxnr-web/functions
-- **Firestore Database**: https://console.firebase.google.com/project/fxnr-web/firestore
-- **Functions Logs**: https://console.firebase.google.com/project/fxnr-web/functions/logs
+- **Firebase Console**: https://console.firebase.google.com/project/Webbi1
+- **Cloud Functions**: https://console.firebase.google.com/project/Webbi1/functions
+- **Firestore Database**: https://console.firebase.google.com/project/Webbi1/firestore
+- **Functions Logs**: https://console.firebase.google.com/project/Webbi1/functions/logs
 
 ### External Services
 - **Google Analytics**: https://analytics.google.com
 - **reCAPTCHA Admin**: https://www.google.com/recaptcha/admin
 - **Google Calendar**: https://calendar.google.com
-- **Google Cloud Console**: https://console.cloud.google.com/home/dashboard?project=fxnr-web
-- **Calendar API Dashboard**: https://console.cloud.google.com/apis/api/calendar-json.googleapis.com?project=fxnr-web
+- **Google Cloud Console**: https://console.cloud.google.com/home/dashboard?project=Webbi1
+- **Calendar API Dashboard**: https://console.cloud.google.com/apis/api/calendar-json.googleapis.com?project=Webbi1
 
 ### Production Website
-- **Main Domain**: https://rajala-services.com
-- **Firebase Hosting**: https://fxnr-web.web.app
+- **Main Domain**: https://fixnero.fi
+- **Firebase Hosting**: https://Webbi1.web.app
 
 ### API Endpoints
-- **GET /bookings**: https://us-central1-fxnr-web.cloudfunctions.net/bookings
-- **POST /book**: https://us-central1-fxnr-web.cloudfunctions.net/book
-- **POST /calendarWebhook**: https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook
-- **POST /watchRegistrar**: https://us-central1-fxnr-web.cloudfunctions.net/watchRegistrar
+- **GET /bookings**: https://us-central1-Webbi1.cloudfunctions.net/bookings
+- **POST /book**: https://us-central1-Webbi1.cloudfunctions.net/book
+- **POST /calendarWebhook**: https://us-central1-Webbi1.cloudfunctions.net/calendarWebhook
+- **POST /watchRegistrar**: https://us-central1-Webbi1.cloudfunctions.net/watchRegistrar
 
 ## 📞 Company Contact Information
 
 - **Email**: info@fixnero.fi
 - **Phone**: +358401935001
 - **Calendar Email**: palvelut@fixnero.fi
-- **Website**: rajala-services.com
+- **Website**: fixnero.fi
 
 ## ⚡ Quick Commands
 
 ### Deploy Everything
 ```bash
-firebase deploy --project=fxnr-web
+firebase deploy --project=Webbi1
 ```
 
 ### Deploy Functions Only
 ```bash
-firebase deploy --only functions --project=fxnr-web
+firebase deploy --only functions --project=Webbi1
 ```
 
 ### Deploy Hosting Only
 ```bash
-firebase deploy --only hosting --project=fxnr-web
+firebase deploy --only hosting --project=Webbi1
 ```
 
 ### Deploy Firestore Rules
 ```bash
-firebase deploy --only firestore:rules --project=fxnr-web
+firebase deploy --only firestore:rules --project=Webbi1
 ```
 
 ### View Logs
 ```bash
-firebase functions:log --project=fxnr-web
+firebase functions:log --project=Webbi1
 ```
 
 ### Set Secret
 ```bash
-firebase functions:secrets:set SECRET_NAME --project=fxnr-web
+firebase functions:secrets:set SECRET_NAME --project=Webbi1
 ```
 
 ### List Functions
 ```bash
-firebase functions:list --project=fxnr-web
+firebase functions:list --project=Webbi1
 ```
 
 ### Create Calendar Service Account
 ```bash
 gcloud iam service-accounts create calendar \
   --display-name="Calendar Service Account" \
-  --project=fxnr-web
+  --project=Webbi1
 ```
 
 ### Create Calendar Key
 ```bash
 gcloud iam service-accounts keys create calendar-key.json \
-  --iam-account=calendar@fxnr-web.iam.gserviceaccount.com \
-  --project=fxnr-web
+  --iam-account=calendar@Webbi1.iam.gserviceaccount.com \
+  --project=Webbi1
 ```
 
 ## 📝 Migration Status Checklist
 
-- [ ] Firebase project verified (fxnr-web)
+- [ ] Firebase project verified (Webbi1)
 - [ ] Google Analytics already updated (G-SP5R1MN1H9) ✅
 - [ ] reCAPTCHA credentials updated in code
 - [ ] Firestore security rules created

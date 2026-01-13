@@ -1132,7 +1132,7 @@ async function registerCalendarWatch(callbackUrl) {
   });
   const calendar = google.calendar({ version: 'v3', auth: authClient });
 
-  const channelId = `fxnr-web-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+  const channelId = `webbi1-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
   const requestBody = {
     id: channelId,
     type: 'web_hook',

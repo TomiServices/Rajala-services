@@ -30,10 +30,10 @@ This checklist helps verify that the FREE reCAPTCHA v2 implementation is working
 - [ ] reCAPTCHA type is **v2 Checkbox** (NOT Enterprise, NOT v3)
 - [ ] Status is **Active** (not disabled)
 - [ ] Domains include:
-  - [ ] `rajala-services.com`
-  - [ ] `www.rajala-services.com`
-  - [ ] `fxnr-web.web.app` (optional, for testing)
-  - [ ] `fxnr-web.firebaseapp.com` (optional, for testing)
+  - [ ] `fixnero.fi`
+  - [ ] `www.fixnero.fi`
+  - [ ] `Webbi1.web.app` (optional, for testing)
+  - [ ] `Webbi1.firebaseapp.com` (optional, for testing)
 
 **If site key is missing or incorrect:**
 - See `RECAPTCHA_CONFIGURATION.md` section "Creating a New Site Key"
@@ -75,7 +75,7 @@ firebase deploy --only functions
 
 ### Step 3: Test Booking Flow on Production
 
-Test the complete booking workflow on the live site: `https://www.rajala-services.com`
+Test the complete booking workflow on the live site: `https://www.fixnero.fi`
 
 1. **Test 1: Load reCAPTCHA Widget**
    - [ ] Navigate to the booking section

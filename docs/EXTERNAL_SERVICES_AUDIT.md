@@ -1,5 +1,5 @@
 # External Services Audit and Inventory
-## Rajala Services (Fixnero) - Complete Integration Analysis
+## Fixnero (Fixnero) - Complete Integration Analysis
 
 **Document Version:** 1.0  
 **Audit Date:** January 13, 2026  
@@ -20,7 +20,7 @@
 
 ## Executive Summary
 
-This document provides a comprehensive audit of all external services and integrations used by the Rajala Services (Fixnero) website. The platform is a modern web application for an auto service company in Espoo, Finland, offering online booking, service management, and customer communication.
+This document provides a comprehensive audit of all external services and integrations used by the Fixnero (Fixnero) website. The platform is a modern web application for an auto service company in Espoo, Finland, offering online booking, service management, and customer communication.
 
 ### Key Findings
 
@@ -53,14 +53,14 @@ This document provides a comprehensive audit of all external services and integr
 **Service Type:** Cloud Platform (Hosting, Database, Functions)  
 **Provider:** Google Cloud Platform  
 **Criticality:** ✅ Critical  
-**Current Project ID:** `fxnr-web`
+**Current Project ID:** `Webbi1`
 
 #### Components
 
 ##### 1.1 Firebase Hosting
 - **Purpose:** Static website hosting with CDN
 - **Configuration File:** `firebase.json`
-- **Domain:** fixnero.fi (primary), rajala-services.com (secondary)
+- **Domain:** fixnero.fi (primary), fixnero.fi (secondary)
 - **Features Used:**
   - Clean URLs
   - Custom headers (security, caching)
@@ -139,7 +139,7 @@ Synchronizes customer bookings with a shared Google Calendar for the business to
 ```
 GOOGLE_CALENDAR_ID=<calendar_id>@group.calendar.google.com
 GOOGLE_SERVICE_ACCOUNT=<stringified_json>
-WATCH_CALLBACK_URL=https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook
+WATCH_CALLBACK_URL=https://us-central1-Webbi1.cloudfunctions.net/calendarWebhook
 ```
 
 ---
@@ -252,7 +252,7 @@ Sends automated booking confirmation emails to customers when they make a reserv
 ```
 EMAIL_USER=<gmail_address>
 EMAIL_PASSWORD=<app_password>
-EMAIL_FROM=Rajala Services <noreply@rajala-services.com>
+EMAIL_FROM=Fixnero <Palvelut@fixnero.fi>
 ```
 
 #### Code Locations
@@ -607,7 +607,7 @@ Environment variables are managed through two methods:
 ### A. Quick Reference - API Keys and IDs
 
 **Public (Safe to Share):**
-- Firebase Project ID: `fxnr-web`
+- Firebase Project ID: `Webbi1`
 - reCAPTCHA Site Key: `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
 - Google Analytics ID: `G-SP5R1MN1H9`
 - Domain: fixnero.fi
@@ -657,7 +657,7 @@ firebase emulators:start
 
 ## Conclusion
 
-The Rajala Services website is built on a solid foundation of modern cloud services with good security practices. The main challenge for migration will be transferring ownership of the Firebase project and associated Google Cloud services to new administrator accounts.
+The Fixnero website is built on a solid foundation of modern cloud services with good security practices. The main challenge for migration will be transferring ownership of the Firebase project and associated Google Cloud services to new administrator accounts.
 
 **Migration Complexity Assessment:** MEDIUM
 - Well-documented codebase ✅

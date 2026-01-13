@@ -209,7 +209,7 @@ Result: New booking appears, existing bookings remain
 
 ### Prerequisites
 - Firebase CLI installed and configured
-- Access to Firebase project: `fxnr-web`
+- Access to Firebase project: `Webbi1`
 - Backup of current Firestore data (optional)
 
 ### Deploy Command

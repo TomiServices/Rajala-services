@@ -52,7 +52,7 @@ Rajala-services/
 # ============================================
 
 # Firebase Project ID
-FIREBASE_PROJECT_ID=fxnr-web
+FIREBASE_PROJECT_ID=Webbi1
 
 # reCAPTCHA Site Key (public)
 RECAPTCHA_SITE_KEY=6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM
@@ -64,7 +64,7 @@ GA_MEASUREMENT_ID=G-SP5R1MN1H9
 DOMAIN=fixnero.fi
 
 # API Endpoint Base URL
-API_BASE_URL=https://us-central1-fxnr-web.cloudfunctions.net
+API_BASE_URL=https://us-central1-Webbi1.cloudfunctions.net
 
 # ============================================
 # DEVELOPMENT ONLY
@@ -126,8 +126,8 @@ EMAIL_PASSWORD=your-16-char-app-password
 # Display name and email address for outgoing emails
 # This appears as "From" in customer emails
 # Format: Display Name <email@domain.com>
-# Example: Rajala Services <noreply@fixnero.fi>
-EMAIL_FROM=Rajala Services <noreply@rajala-services.com>
+# Example: Fixnero <Palvelut@fixnero.fi>
+EMAIL_FROM=Fixnero <Palvelut@fixnero.fi>
 
 # ============================================
 # GOOGLE CALENDAR CONFIGURATION
@@ -137,7 +137,7 @@ EMAIL_FROM=Rajala Services <noreply@rajala-services.com>
 # 
 # How to get Service Account JSON:
 #   1. Go to https://console.cloud.google.com
-#   2. Select project: fxnr-web
+#   2. Select project: Webbi1
 #   3. IAM & Admin > Service Accounts
 #   4. Create or select service account
 #   5. Keys > Add Key > Create new key > JSON
@@ -164,7 +164,7 @@ GOOGLE_CALENDAR_ID=your-calendar-id@group.calendar.google.com
 # Calendar webhook callback URL (for push notifications)
 # This is your Cloud Function URL for calendar sync
 # Format: https://REGION-PROJECT_ID.cloudfunctions.net/calendarWebhook
-# Example: https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook
+# Example: https://us-central1-Webbi1.cloudfunctions.net/calendarWebhook
 WATCH_CALLBACK_URL=https://us-central1-your-project.cloudfunctions.net/calendarWebhook
 
 # ============================================
@@ -173,8 +173,8 @@ WATCH_CALLBACK_URL=https://us-central1-your-project.cloudfunctions.net/calendarW
 # Firebase project ID (usually auto-detected, but can be set explicitly)
 # Get from: Firebase Console > Project Settings
 # Format: lowercase-with-dashes
-# Example: fxnr-web
-FIREBASE_PROJECT_ID=fxnr-web
+# Example: Webbi1
+FIREBASE_PROJECT_ID=Webbi1
 
 # Firebase region for Cloud Functions
 # Default: us-central1
@@ -188,7 +188,7 @@ FIREBASE_REGION=us-central1
 # Allowed origins for CORS (comma-separated)
 # These domains can make requests to your Cloud Functions
 # Format: https://domain1.com,https://domain2.com
-ALLOWED_ORIGINS=https://fixnero.fi,https://www.fixnero.fi,https://rajala-services.com,https://fxnr-web.firebaseapp.com
+ALLOWED_ORIGINS=https://fixnero.fi,https://www.fixnero.fi,https://fixnero.fi,https://Webbi1.firebaseapp.com
 
 # ============================================
 # BUSINESS CONFIGURATION
@@ -413,7 +413,7 @@ npm run validate-config
 
 ```bash
 # functions/.env.development
-FIREBASE_PROJECT_ID=fxnr-web-dev
+FIREBASE_PROJECT_ID=Webbi1-dev
 DEBUG_MODE=true
 ENABLE_EMAIL=false
 ENABLE_CALENDAR_SYNC=false
@@ -424,7 +424,7 @@ ENABLE_RECAPTCHA=false
 
 ```bash
 # functions/.env.staging
-FIREBASE_PROJECT_ID=fxnr-web-staging
+FIREBASE_PROJECT_ID=Webbi1-staging
 DEBUG_MODE=false
 ENABLE_EMAIL=true
 ENABLE_CALENDAR_SYNC=true
@@ -436,7 +436,7 @@ TEST_EMAIL_RECIPIENT=staging-tests@fixnero.fi
 
 ```bash
 # functions/.env.production (or use Secret Manager entirely)
-FIREBASE_PROJECT_ID=fxnr-web
+FIREBASE_PROJECT_ID=Webbi1
 DEBUG_MODE=false
 ENABLE_EMAIL=true
 ENABLE_CALENDAR_SYNC=true

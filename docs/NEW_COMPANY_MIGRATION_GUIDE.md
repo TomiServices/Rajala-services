@@ -13,7 +13,7 @@ This guide documents the migration from the old Webbi1 Firebase project to new c
 - **Calendar Owner**: (Old setup)
 
 ### New Configuration
-- **Firebase Project**: fxnr-web (existing, needs verification)
+- **Firebase Project**: Webbi1 (existing, needs verification)
 - **Google Analytics**: G-SP5R1MN1H9 (already configured)
 - **Calendar Owner**: palvelut@fixnero.fi
 - **reCAPTCHA Site Key**: 6Lf7wx0sAAAAAK2mvnbNt3V6lINTfu0g9Mw8Flcr
@@ -21,12 +21,12 @@ This guide documents the migration from the old Webbi1 Firebase project to new c
 
 ## New Service Accounts Required
 
-Based on the problem statement, the following service accounts need to be created in the new Firebase project (fxnr-web):
+Based on the problem statement, the following service accounts need to be created in the new Firebase project (Webbi1):
 
 ### 1. Calendar Service Account
 - **Purpose**: Google Calendar API integration
 - **Old Email**: calendar@webbi1.iam.gserviceaccount.com
-- **New Email**: calendar@fxnr-web.iam.gserviceaccount.com
+- **New Email**: calendar@Webbi1.iam.gserviceaccount.com
 - **Permissions Needed**:
   - Google Calendar API access
   - Edit and read access to calendar: palvelut@fixnero.fi
@@ -41,19 +41,19 @@ Based on the problem statement, the following service accounts need to be create
 ### 3. Firebase Admin SDK Service Account
 - **Purpose**: Firebase Functions authentication
 - **Old Email**: firebase-adminsdk-fbsvc@webbi1.iam.gserviceaccount.com
-- **New Email**: firebase-adminsdk-{ID}@fxnr-web.iam.gserviceaccount.com
+- **New Email**: firebase-adminsdk-{ID}@Webbi1.iam.gserviceaccount.com
 - **Note**: Auto-created by Firebase
 
 ### 4. Firestore Email Extension Service Account
 - **Purpose**: Trigger Email from Firestore extension
 - **Old Email**: ext-firestore-send-email@webbi1.iam.gserviceaccount.com
-- **New Email**: ext-firestore-send-email@fxnr-web.iam.gserviceaccount.com
+- **New Email**: ext-firestore-send-email@Webbi1.iam.gserviceaccount.com
 - **Note**: Created by Firebase Email Extension
 
 ### 5. Default Extension Service Account
 - **Purpose**: Firebase Extensions default
 - **Old Email**: ext-default@webbi1.iam.gserviceaccount.com
-- **New Email**: ext-default@fxnr-web.iam.gserviceaccount.com
+- **New Email**: ext-default@Webbi1.iam.gserviceaccount.com
 - **Note**: Created by Firebase when extensions are enabled
 
 ## Migration Steps
@@ -87,10 +87,10 @@ Based on the problem statement, the following service accounts need to be create
    ```
 
 4. Verify domains in reCAPTCHA Admin Console:
-   - rajala-services.com
-   - www.rajala-services.com
-   - fxnr-web.web.app
-   - fxnr-web.firebaseapp.com
+   - fixnero.fi
+   - fixnero.fi
+   - Webbi1.web.app
+   - Webbi1.firebaseapp.com
 
 ### Phase 3: Firestore Security Rules Update
 
@@ -111,7 +111,7 @@ service cloud.firestore {
           request.auth.token.admin == true ||
           request.auth.uid == resource.data.userId ||
           (!exists(/databases/$(database)/documents/varaukset/$(id)) && request.resource.data.userId == request.auth.uid) ||
-          request.auth.token.email == "ext-firestore-send-email@fxnr-web.iam.gserviceaccount.com" ||
+          request.auth.token.email == "ext-firestore-send-email@Webbi1.iam.gserviceaccount.com" ||
           request.auth.token.email.matches(".*-compute@developer.gserviceaccount.com")
         );
     }
@@ -125,14 +125,14 @@ service cloud.firestore {
 
 **Required Service Accounts with Calendar Access**:
 1. {PROJECT_NUMBER}-compute@developer.gserviceaccount.com
-2. calendar@fxnr-web.iam.gserviceaccount.com
+2. calendar@Webbi1.iam.gserviceaccount.com
 
 **Action Required**:
 1. Create calendar service account:
    ```bash
    gcloud iam service-accounts create calendar \
      --display-name="Calendar Service Account for Booking System" \
-     --project=fxnr-web
+     --project=Webbi1
    ```
 
 2. Grant calendar access:
@@ -143,8 +143,8 @@ service cloud.firestore {
 3. Create and download service account key:
    ```bash
    gcloud iam service-accounts keys create calendar-key.json \
-     --iam-account=calendar@fxnr-web.iam.gserviceaccount.com \
-     --project=fxnr-web
+     --iam-account=calendar@Webbi1.iam.gserviceaccount.com \
+     --project=Webbi1
    ```
 
 4. Configure in Firebase Functions:
@@ -184,13 +184,13 @@ service cloud.firestore {
 
 ### Phase 6: Firebase Project Verification
 
-**Verify Current Project**: fxnr-web
+**Verify Current Project**: Webbi1
 
 **Action Required**:
 1. Verify project is correctly configured:
    ```bash
    firebase projects:list
-   firebase use fxnr-web
+   firebase use Webbi1
    ```
 
 2. Verify Firestore database exists
@@ -201,11 +201,11 @@ service cloud.firestore {
 
 | Service Account | Firestore | Calendar API | Cloud Functions | Email Extension |
 |----------------|-----------|--------------|-----------------|-----------------|
-| calendar@fxnr-web.iam.gserviceaccount.com | ✅ Read/Write | ✅ Full | ❌ | ❌ |
+| calendar@Webbi1.iam.gserviceaccount.com | ✅ Read/Write | ✅ Full | ❌ | ❌ |
 | {number}-compute@developer.gserviceaccount.com | ✅ Read/Write | ✅ Full | ✅ Default | ❌ |
-| firebase-adminsdk@fxnr-web.iam.gserviceaccount.com | ✅ Admin | ✅ Admin | ✅ Admin | ✅ Admin |
-| ext-firestore-send-email@fxnr-web.iam.gserviceaccount.com | ✅ Read | ❌ | ❌ | ✅ Full |
-| ext-default@fxnr-web.iam.gserviceaccount.com | ✅ Read/Write | ❌ | ❌ | ✅ Full |
+| firebase-adminsdk@Webbi1.iam.gserviceaccount.com | ✅ Admin | ✅ Admin | ✅ Admin | ✅ Admin |
+| ext-firestore-send-email@Webbi1.iam.gserviceaccount.com | ✅ Read | ❌ | ❌ | ✅ Full |
+| ext-default@Webbi1.iam.gserviceaccount.com | ✅ Read/Write | ❌ | ❌ | ✅ Full |
 
 ## Environment Variables Summary
 
@@ -225,14 +225,14 @@ EMAIL_FROM=info@fixnero.fi
 RECAPTCHA_SECRET=6Lf7wx0sAAAAAIZrJ_IIHzkZUHKO0GCx6moRlf96
 
 # Optional
-WATCH_CALLBACK_URL=https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook
+WATCH_CALLBACK_URL=https://us-central1-Webbi1.cloudfunctions.net/calendarWebhook
 RECAPTCHA_SCORE_THRESHOLD=0.5
 ```
 
 **Public Configuration** (in code):
 - reCAPTCHA Site Key: 6Lf7wx0sAAAAAK2mvnbNt3V6lINTfu0g9Mw8Flcr
 - Google Analytics: G-SP5R1MN1H9
-- Firebase Project: fxnr-web
+- Firebase Project: Webbi1
 
 ## Testing Checklist
 
@@ -316,9 +316,9 @@ If issues occur after migration:
 ### Monitoring
 
 **Firebase Console**:
-- Functions logs: https://console.firebase.google.com/project/fxnr-web/functions/logs
-- Firestore data: https://console.firebase.google.com/project/fxnr-web/firestore
-- Analytics: https://console.firebase.google.com/project/fxnr-web/analytics
+- Functions logs: https://console.firebase.google.com/project/Webbi1/functions/logs
+- Firestore data: https://console.firebase.google.com/project/Webbi1/firestore
+- Analytics: https://console.firebase.google.com/project/Webbi1/analytics
 
 **Google Services**:
 - Calendar API quota: https://console.cloud.google.com/apis/api/calendar-json.googleapis.com
@@ -330,7 +330,7 @@ If issues occur after migration:
 - **Primary Calendar**: palvelut@fixnero.fi
 - **Company Email**: info@fixnero.fi
 - **Company Phone**: +358401935001
-- **Website**: rajala-services.com
+- **Website**: fixnero.fi
 
 ## References
 

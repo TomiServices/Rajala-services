@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide explains all service accounts needed for the Rajala Services booking system and how to create and configure them.
+This guide explains all service accounts needed for the Fixnero booking system and how to create and configure them.
 
 ## What are Service Accounts?
 
@@ -14,13 +14,13 @@ Service accounts are special Google accounts used by applications (not humans) t
 
 **Purpose**: Allows Firebase Functions to create, update, and delete events in Google Calendar
 
-**Email**: `calendar@fxnr-web.iam.gserviceaccount.com`
+**Email**: `calendar@Webbi1.iam.gserviceaccount.com`
 
 **How to Create**:
 ```bash
 gcloud iam service-accounts create calendar \
   --display-name="Calendar Service Account for Booking System" \
-  --project=fxnr-web
+  --project=Webbi1
 ```
 
 **Required Permissions**:
@@ -31,35 +31,35 @@ gcloud iam service-accounts create calendar \
 **Grant Permissions**:
 ```bash
 # Grant Firestore access
-gcloud projects add-iam-policy-binding fxnr-web \
-  --member="serviceAccount:calendar@fxnr-web.iam.gserviceaccount.com" \
+gcloud projects add-iam-policy-binding Webbi1 \
+  --member="serviceAccount:calendar@Webbi1.iam.gserviceaccount.com" \
   --role="roles/datastore.user"
 
 # Grant Cloud Functions invoker
-gcloud projects add-iam-policy-binding fxnr-web \
-  --member="serviceAccount:calendar@fxnr-web.iam.gserviceaccount.com" \
+gcloud projects add-iam-policy-binding Webbi1 \
+  --member="serviceAccount:calendar@Webbi1.iam.gserviceaccount.com" \
   --role="roles/cloudfunctions.invoker"
 ```
 
 **Create Key**:
 ```bash
 gcloud iam service-accounts keys create calendar-key.json \
-  --iam-account=calendar@fxnr-web.iam.gserviceaccount.com \
-  --project=fxnr-web
+  --iam-account=calendar@Webbi1.iam.gserviceaccount.com \
+  --project=Webbi1
 ```
 
 ⚠️ **Important**: Store `calendar-key.json` securely! This file contains credentials that allow full access to the calendar.
 
 **Configure in Firebase Functions**:
 ```bash
-firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT --project=fxnr-web
+firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT --project=Webbi1
 # Paste the entire contents of calendar-key.json when prompted
 ```
 
 **Grant Calendar Access**:
 1. Log in to Google Calendar as `palvelut@fixnero.fi`
 2. Go to Settings → Settings for my calendars → [Your Calendar] → Share with specific people
-3. Add `calendar@fxnr-web.iam.gserviceaccount.com`
+3. Add `calendar@Webbi1.iam.gserviceaccount.com`
 4. Set permission to "Make changes to events"
 5. Save
 
@@ -74,7 +74,7 @@ firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT --project=fxnr-web
 **How to Find**:
 ```bash
 # Get project number
-gcloud projects describe fxnr-web --format="value(projectNumber)"
+gcloud projects describe Webbi1 --format="value(projectNumber)"
 
 # The service account email will be:
 # {number}-compute@developer.gserviceaccount.com
@@ -99,12 +99,12 @@ gcloud projects describe fxnr-web --format="value(projectNumber)"
 
 **Purpose**: Used by Firebase Admin SDK for server-side operations
 
-**Email**: `firebase-adminsdk-{ID}@fxnr-web.iam.gserviceaccount.com`
+**Email**: `firebase-adminsdk-{ID}@Webbi1.iam.gserviceaccount.com`
 
 **Note**: This service account is **automatically created** by Firebase when you initialize the project. You don't need to create it manually.
 
 **How to Find**:
-1. Go to Firebase Console: https://console.firebase.google.com/project/fxnr-web/settings/serviceaccounts/adminsdk
+1. Go to Firebase Console: https://console.firebase.google.com/project/Webbi1/settings/serviceaccounts/adminsdk
 2. Look for "Firebase Admin SDK"
 3. You'll see the service account email
 
@@ -120,13 +120,13 @@ gcloud projects describe fxnr-web --format="value(projectNumber)"
 
 **Purpose**: Used by the "Trigger Email from Firestore" extension to send emails
 
-**Email**: `ext-firestore-send-email@fxnr-web.iam.gserviceaccount.com`
+**Email**: `ext-firestore-send-email@Webbi1.iam.gserviceaccount.com`
 
 **Note**: This service account is **automatically created** when you install the Firebase Email Extension.
 
 **How to Install Extension**:
 ```bash
-firebase ext:install firestore-send-email --project=fxnr-web
+firebase ext:install firestore-send-email --project=Webbi1
 ```
 
 During installation, you'll be prompted to configure:
@@ -154,7 +154,7 @@ During installation, you'll be prompted to configure:
 
 **Purpose**: Default service account for Firebase Extensions
 
-**Email**: `ext-default@fxnr-web.iam.gserviceaccount.com`
+**Email**: `ext-default@Webbi1.iam.gserviceaccount.com`
 
 **Note**: This service account is **automatically created** when you enable Firebase Extensions.
 
@@ -189,13 +189,13 @@ service cloud.firestore {
           // ... other conditions ...
           
           // Email extension service account
-          request.auth.token.email == "ext-firestore-send-email@fxnr-web.iam.gserviceaccount.com" ||
+          request.auth.token.email == "ext-firestore-send-email@Webbi1.iam.gserviceaccount.com" ||
           
           // Compute service account pattern
           request.auth.token.email.matches(".*-compute@developer.gserviceaccount.com") ||
           
           // Calendar service account
-          request.auth.token.email == "calendar@fxnr-web.iam.gserviceaccount.com"
+          request.auth.token.email == "calendar@Webbi1.iam.gserviceaccount.com"
         );
     }
   }
@@ -235,8 +235,8 @@ service cloud.firestore {
 ### "Permission Denied" Errors
 
 **Check**:
-1. Service account exists: `gcloud iam service-accounts list --project=fxnr-web`
-2. Service account has correct roles: `gcloud projects get-iam-policy fxnr-web`
+1. Service account exists: `gcloud iam service-accounts list --project=Webbi1`
+2. Service account has correct roles: `gcloud projects get-iam-policy Webbi1`
 3. Calendar sharing includes the service account
 4. Firestore rules reference correct service account email
 
@@ -246,20 +246,20 @@ service cloud.firestore {
 ```bash
 # List existing keys
 gcloud iam service-accounts keys list \
-  --iam-account=calendar@fxnr-web.iam.gserviceaccount.com \
-  --project=fxnr-web
+  --iam-account=calendar@Webbi1.iam.gserviceaccount.com \
+  --project=Webbi1
 
 # Create new key if needed
 gcloud iam service-accounts keys create calendar-key.json \
-  --iam-account=calendar@fxnr-web.iam.gserviceaccount.com \
-  --project=fxnr-web
+  --iam-account=calendar@Webbi1.iam.gserviceaccount.com \
+  --project=Webbi1
 ```
 
 ### "Calendar API Not Enabled"
 
 **Solution**:
 ```bash
-gcloud services enable calendar-json.googleapis.com --project=fxnr-web
+gcloud services enable calendar-json.googleapis.com --project=Webbi1
 ```
 
 ### Email Not Sending
@@ -275,32 +275,32 @@ gcloud services enable calendar-json.googleapis.com --project=fxnr-web
 
 ### List All Service Accounts
 ```bash
-gcloud iam service-accounts list --project=fxnr-web
+gcloud iam service-accounts list --project=Webbi1
 ```
 
 ### View Service Account Details
 ```bash
-gcloud iam service-accounts describe calendar@fxnr-web.iam.gserviceaccount.com \
-  --project=fxnr-web
+gcloud iam service-accounts describe calendar@Webbi1.iam.gserviceaccount.com \
+  --project=Webbi1
 ```
 
 ### List Service Account Keys
 ```bash
 gcloud iam service-accounts keys list \
-  --iam-account=calendar@fxnr-web.iam.gserviceaccount.com \
-  --project=fxnr-web
+  --iam-account=calendar@Webbi1.iam.gserviceaccount.com \
+  --project=Webbi1
 ```
 
 ### Delete Service Account Key
 ```bash
 gcloud iam service-accounts keys delete KEY_ID \
-  --iam-account=calendar@fxnr-web.iam.gserviceaccount.com \
-  --project=fxnr-web
+  --iam-account=calendar@Webbi1.iam.gserviceaccount.com \
+  --project=Webbi1
 ```
 
 ### View Project IAM Policy
 ```bash
-gcloud projects get-iam-policy fxnr-web
+gcloud projects get-iam-policy Webbi1
 ```
 
 ## Additional Resources
@@ -313,5 +313,5 @@ gcloud projects get-iam-policy fxnr-web
 ---
 
 **Last Updated**: 2026-01-13
-**Project**: fxnr-web
+**Project**: Webbi1
 **Contact**: Administrator

@@ -24,13 +24,13 @@ To verify in the [Google reCAPTCHA Admin Console](https://www.google.com/recaptc
 Ensure the site key is registered for the correct domains:
 
 **Required domains:**
-- `rajala-services.com`
-- `www.rajala-services.com`
+- `fixnero.fi`
+- `www.fixnero.fi`
 
 **Optional (for testing):**
 - `localhost`
-- `fxnr-web.web.app`
-- `fxnr-web.firebaseapp.com`
+- `Webbi1.web.app`
+- `Webbi1.firebaseapp.com`
 
 To add domains:
 1. In the reCAPTCHA Admin Console, edit your site key

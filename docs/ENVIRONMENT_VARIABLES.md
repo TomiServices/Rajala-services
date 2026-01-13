@@ -104,7 +104,7 @@ firebase functions:config:set google.calendar_id="your-calendar-id@group.calenda
 # Set email credentials
 firebase functions:config:set email.user="your-email@gmail.com"
 firebase functions:config:set email.password="your-gmail-app-password"
-firebase functions:config:set email.from="Rajala Services <noreply@rajala-services.com>"
+firebase functions:config:set email.from="Fixnero <Palvelut@fixnero.fi>"
 ```
 
 **Details**:
@@ -122,7 +122,7 @@ firebase functions:config:set email.from="Rajala Services <noreply@rajala-servic
   "email": {
     "user": "your-email@gmail.com",
     "password": "abcdefghijklmnop",
-    "from": "Rajala Services <noreply@rajala-services.com>"
+    "from": "Fixnero <Palvelut@fixnero.fi>"
   }
 }
 ```
@@ -143,7 +143,7 @@ firebase functions:config:set \
   google.calendar_id="fixnero-varaukset@group.calendar.google.com" \
   email.user="bookings@gmail.com" \
   email.password="abcdefghijklmnop" \
-  email.from="Rajala Services <noreply@rajala-services.com>"
+  email.from="Fixnero <Palvelut@fixnero.fi>"
 
 # Verify configuration
 firebase functions:config:get
@@ -176,7 +176,7 @@ Create `functions/.runtimeconfig.json`:
   "email": {
     "user": "bookings@gmail.com",
     "password": "abcdefghijklmnop",
-    "from": "Rajala Services <noreply@rajala-services.com>"
+    "from": "Fixnero <Palvelut@fixnero.fi>"
   }
 }
 ```
@@ -224,7 +224,7 @@ const emailFrom = functions.config().email?.from || process.env.EMAIL_FROM;
 Before deploying to production, ensure:
 
 - [ ] reCAPTCHA secret key is configured
-- [ ] reCAPTCHA domains include: `rajala-services.com`, `www.rajala-services.com`
+- [ ] reCAPTCHA domains include: `fixnero.fi`, `fixnero.fi`
 - [ ] Email user (Gmail account) is configured
 - [ ] Email password (Gmail App Password) is configured
 - [ ] Email from address is configured

@@ -36,7 +36,7 @@ This checks your setup and identifies any missing components.
 - [ ] Node.js installed (v20+)
 - [ ] Firebase CLI installed (`npm install -g firebase-tools`)
 - [ ] Google Cloud Console access
-- [ ] Firebase project access (fxnr-web)
+- [ ] Firebase project access (Webbi1)
 - [ ] Access to create/manage Google Calendar
 
 ### 3. Setup Steps (30 minutes total)

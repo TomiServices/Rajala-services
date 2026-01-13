@@ -1,6 +1,6 @@
 # Booking System Integration - Email + Google Calendar
 
-This document explains how the Rajala Services booking system integrates email confirmations and Google Calendar synchronization.
+This document explains how the Fixnero booking system integrates email confirmations and Google Calendar synchronization.
 
 ## System Overview
 

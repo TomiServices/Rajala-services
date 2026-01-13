@@ -17,10 +17,10 @@
 ┌─────────────────────────────────────────────────────────────────┐
 │                  TO: New Company Setup                          │
 ├─────────────────────────────────────────────────────────────────┤
-│ Firebase Project: fxnr-web ✅                                   │
+│ Firebase Project: Webbi1 ✅                                   │
 │ Google Analytics: G-SP5R1MN1H9 ✅                               │
 │ reCAPTCHA: 6Lf7wx0sAAAAAK2mvnbNt3V6lINTfu0g9Mw8Flcr ✅         │
-│ Service Accounts: @fxnr-web.iam.gserviceaccount.com ⚠️          │
+│ Service Accounts: @Webbi1.iam.gserviceaccount.com ⚠️          │
 │ Calendar Owner: palvelut@fixnero.fi ⚠️                          │
 └─────────────────────────────────────────────────────────────────┘
 
@@ -66,9 +66,9 @@ OLD Service Accounts:
 - 135892519284-compute@developer.gserviceaccount.com
 
 NEW Service Accounts:
-+ ext-firestore-send-email@fxnr-web.iam.gserviceaccount.com
++ ext-firestore-send-email@Webbi1.iam.gserviceaccount.com
 + .*-compute@developer.gserviceaccount.com (pattern)
-+ calendar@fxnr-web.iam.gserviceaccount.com
++ calendar@Webbi1.iam.gserviceaccount.com
 
 File Created:
 ✅ firestore.rules (NEW FILE)
@@ -83,11 +83,11 @@ Action Required:
 ┌────────────────────────────────────────────────────────────┐
 │ Service Account                           │ Status         │
 ├───────────────────────────────────────────┼────────────────┤
-│ calendar@fxnr-web...                      │ ⚠️ Create      │
+│ calendar@Webbi1...                      │ ⚠️ Create      │
 │ {num}-compute@developer...                │ ✅ Auto        │
-│ firebase-adminsdk@fxnr-web...             │ ✅ Auto        │
-│ ext-firestore-send-email@fxnr-web...      │ ⚠️ Extension   │
-│ ext-default@fxnr-web...                   │ ✅ Auto        │
+│ firebase-adminsdk@Webbi1...             │ ✅ Auto        │
+│ ext-firestore-send-email@Webbi1...      │ ⚠️ Extension   │
+│ ext-default@Webbi1...                   │ ✅ Auto        │
 └───────────────────────────────────────────┴────────────────┘
 ```
 
@@ -136,7 +136,7 @@ New Files (6):
 ```
 ✅ reCAPTCHA Site Key: 6Lf7wx0sAAAAAK2mvnbNt3V6lINTfu0g9Mw8Flcr
 ✅ Google Analytics:   G-SP5R1MN1H9
-✅ Firebase Project:   fxnr-web
+✅ Firebase Project:   Webbi1
 ```
 
 ### Private (Configure in Firebase Functions)
@@ -162,26 +162,26 @@ cat DEPLOYMENT_CHECKLIST_MIGRATION.md  # Your guide
 ```bash
 gcloud iam service-accounts create calendar \
   --display-name="Calendar Service Account" \
-  --project=fxnr-web
+  --project=Webbi1
 
 gcloud iam service-accounts keys create calendar-key.json \
-  --iam-account=calendar@fxnr-web.iam.gserviceaccount.com \
-  --project=fxnr-web
+  --iam-account=calendar@Webbi1.iam.gserviceaccount.com \
+  --project=Webbi1
 ```
 
 ### Step 3: Configure Secrets
 ```bash
-firebase functions:secrets:set RECAPTCHA_SECRET --project=fxnr-web
-firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT --project=fxnr-web
-firebase functions:secrets:set GOOGLE_CALENDAR_ID --project=fxnr-web
-firebase functions:secrets:set EMAIL_USER --project=fxnr-web
-firebase functions:secrets:set EMAIL_PASSWORD --project=fxnr-web
-firebase functions:secrets:set EMAIL_FROM --project=fxnr-web
+firebase functions:secrets:set RECAPTCHA_SECRET --project=Webbi1
+firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT --project=Webbi1
+firebase functions:secrets:set GOOGLE_CALENDAR_ID --project=Webbi1
+firebase functions:secrets:set EMAIL_USER --project=Webbi1
+firebase functions:secrets:set EMAIL_PASSWORD --project=Webbi1
+firebase functions:secrets:set EMAIL_FROM --project=Webbi1
 ```
 
 ### Step 4: Deploy
 ```bash
-firebase deploy --only firestore:rules --project=fxnr-web
+firebase deploy --only firestore:rules --project=Webbi1
 ```
 
 ### Step 5: Test
@@ -257,8 +257,8 @@ Testing:
 - 📞 +358401935001
 
 **Consoles:**
-- 🔥 Firebase: console.firebase.google.com/project/fxnr-web
-- ☁️  GCloud: console.cloud.google.com/home/dashboard?project=fxnr-web
+- 🔥 Firebase: console.firebase.google.com/project/Webbi1
+- ☁️  GCloud: console.cloud.google.com/home/dashboard?project=Webbi1
 - 🤖 reCAPTCHA: www.google.com/recaptcha/admin
 - 📊 Analytics: analytics.google.com
 

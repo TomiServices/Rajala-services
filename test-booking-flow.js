@@ -10,7 +10,7 @@
  *   node test-booking-flow.js --test empty-token
  *   node test-booking-flow.js --test invalid-token
  *   node test-booking-flow.js --test mock-valid
- *   node test-booking-flow.js --endpoint http://localhost:5001/fxnr-web/us-central1/book
+ *   node test-booking-flow.js --endpoint http://localhost:5001/webbi1/us-central1/book
  */
 
 const https = require('https');
@@ -122,7 +122,7 @@ const options = {
   headers: {
     'Content-Type': 'application/json',
     'Content-Length': Buffer.byteLength(postData),
-    'Origin': 'https://www.rajala-services.com'
+    'Origin': 'https://fixnero.fi'
   }
 };
 

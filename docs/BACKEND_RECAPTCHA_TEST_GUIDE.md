@@ -10,7 +10,7 @@ node test-booking-flow.js
 
 # Test against local emulator
 firebase emulators:start
-node test-booking-flow.js --endpoint http://localhost:5001/fxnr-web/us-central1/book --test missing-token
+node test-booking-flow.js --endpoint http://localhost:5001/Webbi1/us-central1/book --test missing-token
 ```
 
 ## Test Scenarios

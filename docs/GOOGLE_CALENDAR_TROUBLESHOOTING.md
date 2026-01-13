@@ -146,7 +146,7 @@ grep -i "error" functions.log
 firebase functions:log --only calendarWebhook
 
 # Manually trigger webhook
-curl -X POST https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook \
+curl -X POST https://us-central1-Webbi1.cloudfunctions.net/calendarWebhook \
   -H "x-goog-resource-state: exists" \
   -H "x-goog-channel-id: test" \
   -H "x-goog-resource-id: test"
@@ -361,7 +361,7 @@ firebase deploy --only functions
 
 ```bash
 # 1. List recent deployments
-gcloud functions list --project=fxnr-web
+gcloud functions list --project=Webbi1
 
 # 2. Rollback to previous version
 # (Not directly supported - need to redeploy old code)

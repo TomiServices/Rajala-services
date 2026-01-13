@@ -62,7 +62,7 @@ The **administrator** needs to complete the following tasks (estimated 60 minute
 ### Public (In Code)
 - reCAPTCHA Site Key: `6Lf7wx0sAAAAAK2mvnbNt3V6lINTfu0g9Mw8Flcr`
 - Google Analytics: `G-SP5R1MN1H9`
-- Firebase Project: `fxnr-web`
+- Firebase Project: `Webbi1`
 
 ### Private (Must Configure)
 - reCAPTCHA Secret: `6Lf7wx0sAAAAAIZrJ_IIHzkZUHKO0GCx6moRlf96`
@@ -76,9 +76,9 @@ The **administrator** needs to complete the following tasks (estimated 60 minute
 **Calendar Owner**: palvelut@fixnero.fi
 
 **Service Accounts Needed**:
-1. `calendar@fxnr-web.iam.gserviceaccount.com` (create manually)
+1. `calendar@Webbi1.iam.gserviceaccount.com` (create manually)
 2. `{number}-compute@developer.gserviceaccount.com` (auto-created)
-3. `ext-firestore-send-email@fxnr-web.iam.gserviceaccount.com` (from extension)
+3. `ext-firestore-send-email@Webbi1.iam.gserviceaccount.com` (from extension)
 
 **Firestore Security Rules**: Now include updated service account references
 
@@ -188,14 +188,14 @@ Follow this sequence:
 ## 📞 Contact
 
 **Company Information**:
-- Website: rajala-services.com
+- Website: fixnero.fi
 - Email: info@fixnero.fi
 - Phone: +358401935001
 - Calendar: palvelut@fixnero.fi
 
 **Technical Resources**:
-- Firebase Console: https://console.firebase.google.com/project/fxnr-web
-- Google Cloud Console: https://console.cloud.google.com/home/dashboard?project=fxnr-web
+- Firebase Console: https://console.firebase.google.com/project/Webbi1
+- Google Cloud Console: https://console.cloud.google.com/home/dashboard?project=Webbi1
 - reCAPTCHA Admin: https://www.google.com/recaptcha/admin
 - Google Analytics: https://analytics.google.com
 

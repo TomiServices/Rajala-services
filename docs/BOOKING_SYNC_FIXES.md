@@ -139,7 +139,7 @@ GOOGLE_CALENDAR_ID=your_calendar_id@group.calendar.google.com
 ```
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASSWORD=your-app-password  # Gmail App Password (16 characters)
-EMAIL_FROM=Fixnero <noreply@fixnero.fi>
+EMAIL_FROM=Fixnero <Palvelut@fixnero.fi>
 ```
 
 ### For reCAPTCHA

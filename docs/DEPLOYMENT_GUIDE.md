@@ -11,7 +11,7 @@ This guide provides step-by-step instructions for deploying the fixes to the cal
    firebase login
    ```
 
-2. **Project Access** - Ensure you have admin access to the Firebase project `fxnr-web`
+2. **Project Access** - Ensure you have admin access to the Firebase project `Webbi1`
 
 3. **reCAPTCHA Keys** - Have both Site Key and Secret Key available
 
@@ -52,10 +52,10 @@ The site key in `index.html` is: `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
 1. Go to [Google reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin)
 2. Select the site key: `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
 3. Ensure the following domains are registered:
-   - `rajala-services.com`
-   - `www.rajala-services.com`
-   - `fxnr-web.web.app` (optional, for testing)
-   - `fxnr-web.firebaseapp.com` (optional, for testing)
+   - `fixnero.fi`
+   - `fixnero.fi`
+   - `Webbi1.web.app` (optional, for testing)
+   - `Webbi1.firebaseapp.com` (optional, for testing)
 
 ### If Site Key Needs Update
 
@@ -126,30 +126,30 @@ firebase deploy --only hosting
 
 ```bash
 # Test bookings endpoint with CORS
-curl -H "Origin: https://www.rajala-services.com" \
+curl -H "Origin: https://fixnero.fi" \
      -H "Access-Control-Request-Method: GET" \
      -H "Access-Control-Request-Headers: Content-Type" \
      -X OPTIONS \
      -v \
-     https://us-central1-fxnr-web.cloudfunctions.net/bookings
+     https://us-central1-Webbi1.cloudfunctions.net/bookings
 ```
 
 Expected response headers:
-- `Access-Control-Allow-Origin: https://www.rajala-services.com`
+- `Access-Control-Allow-Origin: https://fixnero.fi`
 - `Access-Control-Allow-Credentials: true`
 
 ### Test Bookings Endpoint
 
 ```bash
 # Fetch bookings
-curl https://us-central1-fxnr-web.cloudfunctions.net/bookings
+curl https://us-central1-Webbi1.cloudfunctions.net/bookings
 ```
 
 Expected: JSON array of bookings or empty array `[]`
 
 ### Test reCAPTCHA on Production Site
 
-1. Navigate to `https://www.rajala-services.com`
+1. Navigate to `https://fixnero.fi`
 2. Open browser DevTools (F12)
 3. Go to the booking calendar section
 4. Select a date and time
@@ -184,7 +184,7 @@ Expected: JSON array of bookings or empty array `[]`
 firebase functions:log --only book,bookings
 
 # Or view in Firebase Console
-# https://console.firebase.google.com/project/fxnr-web/functions/logs
+# https://console.firebase.google.com/project/Webbi1/functions/logs
 ```
 
 ### Monitor for Issues

@@ -47,7 +47,7 @@ The site owner needs to:
 2. Verify the site key `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM` is configured for:
    - **Type**: reCAPTCHA v2
    - **Style**: Checkbox ("I'm not a robot")
-   - **Domains**: rajala-services.com, www.rajala-services.com
+   - **Domains**: fixnero.fi, fixnero.fi
 3. If the key is for v3 instead of v2, create a new v2 Checkbox key
 4. Update both the site key (in HTML) and secret key (in Firebase Functions)
 5. Follow the detailed instructions in `RECAPTCHA_TROUBLESHOOTING.md`
@@ -158,7 +158,7 @@ If issues persist after following this guide:
 **Required Configuration** (to be verified in Google Admin Console):
 - reCAPTCHA version: v2 (NOT v3)
 - Type: Checkbox (NOT invisible or Android)
-- Domains: rajala-services.com, www.rajala-services.com
+- Domains: fixnero.fi, fixnero.fi
 
 ---
 

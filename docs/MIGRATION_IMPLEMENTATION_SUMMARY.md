@@ -2,7 +2,7 @@
 
 ## Overview
 
-This implementation migrates the Rajala Services website from old Webbi1 Firebase project credentials to new company-owned accounts for all external integrations. The migration maintains full functionality while updating all service accounts, API keys, and configurations.
+This implementation migrates the Fixnero website from old Webbi1 Firebase project credentials to new company-owned accounts for all external integrations. The migration maintains full functionality while updating all service accounts, API keys, and configurations.
 
 ## What Was Changed
 
@@ -37,10 +37,10 @@ This implementation migrates the Rajala Services website from old Webbi1 Firebas
 - `ext-firestore-send-email@Webbi1.iam.gserviceaccount.com`
 - `135892519284-compute@developer.gserviceaccount.com`
 
-**New Service Account References (fxnr-web)**:
-- `ext-firestore-send-email@fxnr-web.iam.gserviceaccount.com`
+**New Service Account References (Webbi1)**:
+- `ext-firestore-send-email@Webbi1.iam.gserviceaccount.com`
 - Pattern: `.*-compute@developer.gserviceaccount.com` (matches any compute account)
-- `calendar@fxnr-web.iam.gserviceaccount.com`
+- `calendar@Webbi1.iam.gserviceaccount.com`
 
 **Collections Secured**:
 - `varaukset` - Booking data
@@ -86,7 +86,7 @@ This implementation migrates the Rajala Services website from old Webbi1 Firebas
 
 ### Manual Creation
 
-1. **calendar@fxnr-web.iam.gserviceaccount.com**
+1. **calendar@Webbi1.iam.gserviceaccount.com**
    - Purpose: Google Calendar API integration
    - Needs: Calendar access to palvelut@fixnero.fi
    - Status: ⚠️ Administrator must create
@@ -97,15 +97,15 @@ This implementation migrates the Rajala Services website from old Webbi1 Firebas
    - Purpose: Default Cloud Functions service account
    - Status: ✅ Auto-created by Google Cloud
 
-3. **firebase-adminsdk-{id}@fxnr-web.iam.gserviceaccount.com**
+3. **firebase-adminsdk-{id}@Webbi1.iam.gserviceaccount.com**
    - Purpose: Firebase Admin SDK operations
    - Status: ✅ Auto-created by Firebase
 
-4. **ext-firestore-send-email@fxnr-web.iam.gserviceaccount.com**
+4. **ext-firestore-send-email@Webbi1.iam.gserviceaccount.com**
    - Purpose: Send booking confirmation emails
    - Status: ⚠️ Created when Firebase Email Extension installed
 
-5. **ext-default@fxnr-web.iam.gserviceaccount.com**
+5. **ext-default@Webbi1.iam.gserviceaccount.com**
    - Purpose: Default for Firebase Extensions
    - Status: ✅ Auto-created when extensions enabled
 
@@ -127,14 +127,14 @@ EMAIL_PASSWORD={Gmail app-specific password}
 EMAIL_FROM=info@fixnero.fi
 
 # Optional
-WATCH_CALLBACK_URL=https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook
+WATCH_CALLBACK_URL=https://us-central1-Webbi1.cloudfunctions.net/calendarWebhook
 RECAPTCHA_SCORE_THRESHOLD=0.5
 ```
 
 ## What Stays the Same
 
 ✅ **No Changes Needed**:
-- Firebase Project ID: `fxnr-web` (already using)
+- Firebase Project ID: `Webbi1` (already using)
 - Google Analytics: `G-SP5R1MN1H9` (already configured)
 - Firebase Functions URLs (same project)
 - Company contact info (already using Fixnero branding)
@@ -149,14 +149,14 @@ RECAPTCHA_SCORE_THRESHOLD=0.5
    ```bash
    gcloud iam service-accounts create calendar \
      --display-name="Calendar Service Account" \
-     --project=fxnr-web
+     --project=Webbi1
    ```
 
 2. **Create and Download Service Account Key** (~2 min)
    ```bash
    gcloud iam service-accounts keys create calendar-key.json \
-     --iam-account=calendar@fxnr-web.iam.gserviceaccount.com \
-     --project=fxnr-web
+     --iam-account=calendar@Webbi1.iam.gserviceaccount.com \
+     --project=Webbi1
    ```
 
 3. **Share Google Calendar** (~3 min)
@@ -166,17 +166,17 @@ RECAPTCHA_SCORE_THRESHOLD=0.5
 
 4. **Configure Firebase Functions Secrets** (~10 min)
    ```bash
-   firebase functions:secrets:set RECAPTCHA_SECRET --project=fxnr-web
-   firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT --project=fxnr-web
-   firebase functions:secrets:set GOOGLE_CALENDAR_ID --project=fxnr-web
-   firebase functions:secrets:set EMAIL_USER --project=fxnr-web
-   firebase functions:secrets:set EMAIL_PASSWORD --project=fxnr-web
-   firebase functions:secrets:set EMAIL_FROM --project=fxnr-web
+   firebase functions:secrets:set RECAPTCHA_SECRET --project=Webbi1
+   firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT --project=Webbi1
+   firebase functions:secrets:set GOOGLE_CALENDAR_ID --project=Webbi1
+   firebase functions:secrets:set EMAIL_USER --project=Webbi1
+   firebase functions:secrets:set EMAIL_PASSWORD --project=Webbi1
+   firebase functions:secrets:set EMAIL_FROM --project=Webbi1
    ```
 
 5. **Deploy Firestore Rules** (~2 min)
    ```bash
-   firebase deploy --only firestore:rules --project=fxnr-web
+   firebase deploy --only firestore:rules --project=Webbi1
    ```
 
 6. **Configure reCAPTCHA Domains** (~5 min)
@@ -185,7 +185,7 @@ RECAPTCHA_SCORE_THRESHOLD=0.5
 
 7. **Install Firebase Email Extension** (~10 min)
    ```bash
-   firebase ext:install firestore-send-email --project=fxnr-web
+   firebase ext:install firestore-send-email --project=Webbi1
    ```
 
 8. **Test Everything** (~20 min)
@@ -260,8 +260,8 @@ If issues occur:
 - Google Analytics: https://support.google.com/analytics
 
 ### Console URLs
-- Firebase: https://console.firebase.google.com/project/fxnr-web
-- Google Cloud: https://console.cloud.google.com/home/dashboard?project=fxnr-web
+- Firebase: https://console.firebase.google.com/project/Webbi1
+- Google Cloud: https://console.cloud.google.com/home/dashboard?project=Webbi1
 - reCAPTCHA: https://www.google.com/recaptcha/admin
 - Analytics: https://analytics.google.com
 

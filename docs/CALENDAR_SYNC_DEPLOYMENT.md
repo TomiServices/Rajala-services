@@ -58,7 +58,7 @@ firebase firestore:delete calendarWatch --recursive
 # - Wait for webhook notification (should happen within 1-2 minutes)
 
 # Method 2: Manually trigger webhook (if you have the URL)
-curl -X POST https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook \
+curl -X POST https://us-central1-Webbi1.cloudfunctions.net/calendarWebhook \
   -H "Content-Type: application/json" \
   -H "X-Goog-Resource-State: exists" \
   -d '{}'

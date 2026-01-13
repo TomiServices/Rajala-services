@@ -16,25 +16,25 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
   - Type: reCAPTCHA v3
   
 - [ ] **Configure Allowed Domains**
-  - Add: `rajala-services.com`
-  - Add: `www.rajala-services.com`
-  - Add: `fxnr-web.web.app` (for testing)
-  - Add: `fxnr-web.firebaseapp.com` (for testing)
+  - Add: `fixnero.fi`
+  - Add: `fixnero.fi`
+  - Add: `Webbi1.web.app` (for testing)
+  - Add: `Webbi1.firebaseapp.com` (for testing)
 
 ### 2. Firebase Project Setup
 
 - [ ] **Verify Firebase Project**
-  - Project ID: `fxnr-web`
-  - Go to: https://console.firebase.google.com/project/fxnr-web
+  - Project ID: `Webbi1`
+  - Go to: https://console.firebase.google.com/project/Webbi1
   - Verify you have Owner or Editor access
 
 - [ ] **Enable Required APIs**
   ```bash
   # Enable Google Calendar API
-  gcloud services enable calendar-json.googleapis.com --project=fxnr-web
+  gcloud services enable calendar-json.googleapis.com --project=Webbi1
   
   # Enable Secret Manager API (for storing secrets)
-  gcloud services enable secretmanager.googleapis.com --project=fxnr-web
+  gcloud services enable secretmanager.googleapis.com --project=Webbi1
   ```
 
 ### 3. Service Accounts Creation
@@ -43,29 +43,29 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
   ```bash
   gcloud iam service-accounts create calendar \
     --display-name="Calendar Service Account for Booking System" \
-    --project=fxnr-web
+    --project=Webbi1
   ```
   
-  Expected email: `calendar@fxnr-web.iam.gserviceaccount.com`
+  Expected email: `calendar@Webbi1.iam.gserviceaccount.com`
 
 - [ ] **Grant Service Account Permissions**
   ```bash
   # Grant Firestore access
-  gcloud projects add-iam-policy-binding fxnr-web \
-    --member="serviceAccount:calendar@fxnr-web.iam.gserviceaccount.com" \
+  gcloud projects add-iam-policy-binding Webbi1 \
+    --member="serviceAccount:calendar@Webbi1.iam.gserviceaccount.com" \
     --role="roles/datastore.user"
   
   # Grant Cloud Functions invoker role (if needed)
-  gcloud projects add-iam-policy-binding fxnr-web \
-    --member="serviceAccount:calendar@fxnr-web.iam.gserviceaccount.com" \
+  gcloud projects add-iam-policy-binding Webbi1 \
+    --member="serviceAccount:calendar@Webbi1.iam.gserviceaccount.com" \
     --role="roles/cloudfunctions.invoker"
   ```
 
 - [ ] **Create and Download Service Account Key**
   ```bash
   gcloud iam service-accounts keys create /tmp/calendar-key.json \
-    --iam-account=calendar@fxnr-web.iam.gserviceaccount.com \
-    --project=fxnr-web
+    --iam-account=calendar@Webbi1.iam.gserviceaccount.com \
+    --project=Webbi1
   ```
   
   ⚠️ **IMPORTANT**: Store this key securely! Never commit to version control.
@@ -74,7 +74,7 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
   - Auto-created service account: `{PROJECT_NUMBER}-compute@developer.gserviceaccount.com`
   - Find project number:
     ```bash
-    gcloud projects describe fxnr-web --format="value(projectNumber)"
+    gcloud projects describe Webbi1 --format="value(projectNumber)"
     ```
 
 ### 4. Google Calendar Configuration
@@ -85,7 +85,7 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
 
 - [ ] **Share Calendar with Service Accounts**
   - Go to Settings → Settings for my calendars → `palvelut@fixnero.fi` → Share with specific people
-  - Add: `calendar@fxnr-web.iam.gserviceaccount.com`
+  - Add: `calendar@Webbi1.iam.gserviceaccount.com`
     - Permission: "Make changes to events"
   - Add: `{PROJECT_NUMBER}-compute@developer.gserviceaccount.com`
     - Permission: "Make changes to events"
@@ -101,7 +101,7 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
 
 - [ ] **Install Firebase Email Extension**
   ```bash
-  firebase ext:install firestore-send-email --project=fxnr-web
+  firebase ext:install firestore-send-email --project=Webbi1
   ```
 
 - [ ] **Configure SMTP Settings**
@@ -127,38 +127,38 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
 
 - [ ] **Set reCAPTCHA Secret**
   ```bash
-  firebase functions:secrets:set RECAPTCHA_SECRET --project=fxnr-web
+  firebase functions:secrets:set RECAPTCHA_SECRET --project=Webbi1
   # When prompted, enter: 6Lf7wx0sAAAAAIZrJ_IIHzkZUHKO0GCx6moRlf96
   ```
 
 - [ ] **Set Google Calendar Configuration**
   ```bash
   # Set calendar service account JSON (paste entire content)
-  firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT --project=fxnr-web
+  firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT --project=Webbi1
   # Paste contents of /tmp/calendar-key.json
   
   # Set calendar ID
-  firebase functions:secrets:set GOOGLE_CALENDAR_ID --project=fxnr-web
+  firebase functions:secrets:set GOOGLE_CALENDAR_ID --project=Webbi1
   # Enter the calendar ID you copied earlier
   ```
 
 - [ ] **Set Email Configuration**
   ```bash
-  firebase functions:secrets:set EMAIL_USER --project=fxnr-web
+  firebase functions:secrets:set EMAIL_USER --project=Webbi1
   # Enter: info@fixnero.fi
   
-  firebase functions:secrets:set EMAIL_PASSWORD --project=fxnr-web
+  firebase functions:secrets:set EMAIL_PASSWORD --project=Webbi1
   # Enter: [App-specific password from Gmail]
   
-  firebase functions:secrets:set EMAIL_FROM --project=fxnr-web
+  firebase functions:secrets:set EMAIL_FROM --project=Webbi1
   # Enter: info@fixnero.fi
   ```
 
 - [ ] **Set Optional Configuration**
   ```bash
   # Webhook callback URL for calendar sync
-  firebase functions:secrets:set WATCH_CALLBACK_URL --project=fxnr-web
-  # Enter: https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook
+  firebase functions:secrets:set WATCH_CALLBACK_URL --project=Webbi1
+  # Enter: https://us-central1-Webbi1.cloudfunctions.net/calendarWebhook
   ```
 
 ### 7. Deploy Firestore Security Rules
@@ -170,11 +170,11 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
 
 - [ ] **Deploy Firestore Rules**
   ```bash
-  firebase deploy --only firestore:rules --project=fxnr-web
+  firebase deploy --only firestore:rules --project=Webbi1
   ```
 
 - [ ] **Verify Rules Deployment**
-  - Go to: https://console.firebase.google.com/project/fxnr-web/firestore/rules
+  - Go to: https://console.firebase.google.com/project/Webbi1/firestore/rules
   - Check that rules show the new service account emails
 
 ## Deployment Steps
@@ -192,17 +192,17 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
   cd functions
   npm install
   cd ..
-  firebase deploy --only functions --project=fxnr-web
+  firebase deploy --only functions --project=Webbi1
   ```
 
 - [ ] **Deploy Firebase Hosting**
   ```bash
-  firebase deploy --only hosting --project=fxnr-web
+  firebase deploy --only hosting --project=Webbi1
   ```
 
 - [ ] **Verify Deployment**
   ```bash
-  firebase functions:list --project=fxnr-web
+  firebase functions:list --project=Webbi1
   ```
   
   Expected functions:
@@ -220,7 +220,7 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
 ### 9. Functional Testing
 
 - [ ] **Test reCAPTCHA**
-  - Open: https://rajala-services.com
+  - Open: https://fixnero.fi
   - Scroll to booking form
   - Check browser console for reCAPTCHA loading
   - Should see: `grecaptcha` object available
@@ -253,7 +253,7 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
   - Expected: Booking document created with `syncedFromGoogle: true`
 
 - [ ] **Test Google Analytics**
-  - Open: https://rajala-services.com
+  - Open: https://fixnero.fi
   - Accept cookies when prompted
   - Navigate through pages
   - Check: https://analytics.google.com
@@ -262,10 +262,10 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
 
 - [ ] **Test Calendar Webhook Registration**
   ```bash
-  curl -X POST https://us-central1-fxnr-web.cloudfunctions.net/watchRegistrar \
+  curl -X POST https://us-central1-Webbi1.cloudfunctions.net/watchRegistrar \
     -H "Content-Type: application/json" \
     -d '{
-      "callbackUrl": "https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook"
+      "callbackUrl": "https://us-central1-Webbi1.cloudfunctions.net/calendarWebhook"
     }'
   ```
   
@@ -275,10 +275,10 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
 
 - [ ] **Check Firebase Functions Logs**
   ```bash
-  firebase functions:log --project=fxnr-web
+  firebase functions:log --project=Webbi1
   ```
   
-  Or visit: https://console.firebase.google.com/project/fxnr-web/functions/logs
+  Or visit: https://console.firebase.google.com/project/Webbi1/functions/logs
   
   Look for:
   - No authentication errors
@@ -299,7 +299,7 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
   - Verify: Events being tracked
 
 - [ ] **Monitor Calendar API Usage**
-  - Go to: https://console.cloud.google.com/apis/dashboard?project=fxnr-web
+  - Go to: https://console.cloud.google.com/apis/dashboard?project=Webbi1
   - Select: Calendar API
   - Verify: Requests being logged
   - Check: No quota errors
@@ -333,7 +333,7 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
 - [ ] **Test CORS Configuration**
   - Try accessing functions from unauthorized domain
   - Expected: CORS error
-  - Try from rajala-services.com
+  - Try from fixnero.fi
   - Expected: Success
 
 ## Rollback Plan
@@ -343,7 +343,7 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
 - [ ] **Quick Rollback - Revert Functions**
   ```bash
   # Rollback to previous deployment
-  firebase functions:delete FUNCTION_NAME --project=fxnr-web
+  firebase functions:delete FUNCTION_NAME --project=Webbi1
   # Then redeploy old version from backup
   ```
 

@@ -37,7 +37,7 @@ firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT
 1. **Ensure no conflicting .env files exist**
    ```bash
    # Remove project-specific .env files that may conflict
-   rm -f functions/.env.fxnr-web
+   rm -f functions/.env.Webbi1
    ```
 
 2. **Verify secrets are set**
@@ -47,7 +47,7 @@ firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT
 
 3. **Deploy**
    ```bash
-   firebase deploy --only functions --project fxnr-web
+   firebase deploy --only functions --project Webbi1
    ```
 
 ## 🛠️ Troubleshooting
@@ -57,7 +57,7 @@ firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT
 **Cause:** `RECAPTCHA_SECRET` exists both as a plain env var and a secret.
 
 **Fix:**
-1. Remove `RECAPTCHA_SECRET` from any local `.env` or `.env.fxnr-web` file
+1. Remove `RECAPTCHA_SECRET` from any local `.env` or `.env.Webbi1` file
 2. Ensure it's set only via Secret Manager
 3. Redeploy
 
@@ -65,13 +65,13 @@ firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT
 
 ```bash
 # 1. Remove the problematic env file
-rm functions/.env.fxnr-web
+rm functions/.env.Webbi1
 
 # 2. Verify/set the secret
 firebase functions:secrets:set RECAPTCHA_SECRET
 
 # 3. Deploy again
-firebase deploy --only functions --project fxnr-web
+firebase deploy --only functions --project Webbi1
 ```
 
 ## 📚 Related Documentation

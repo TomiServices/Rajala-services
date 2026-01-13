@@ -1,6 +1,6 @@
 # Email Configuration Guide
 
-This guide explains how to configure email confirmation functionality for the Rajala Services booking system.
+This guide explains how to configure email confirmation functionality for the Fixnero booking system.
 
 ## Overview
 
@@ -34,7 +34,7 @@ App Passwords require 2-Step Verification to be enabled:
 
 1. Go to https://myaccount.google.com/apppasswords
 2. Select "Mail" as the app
-3. Select "Other" as the device and name it "Rajala Services Booking"
+3. Select "Other" as the device and name it "Fixnero Booking"
 4. Click "Generate"
 5. **Save the generated 16-character password** (you'll need this for configuration)
 
@@ -54,7 +54,7 @@ Edit `.env` and add your email credentials:
 ```env
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASSWORD=abcd efgh ijkl mnop
-EMAIL_FROM=Rajala Services <noreply@rajala-services.com>
+EMAIL_FROM=Fixnero <Palvelut@fixnero.fi>
 ```
 
 **Important**: 
@@ -70,7 +70,7 @@ For Firebase Functions Gen1 compatibility, also update `.runtimeconfig.json`:
   "email": {
     "user": "your-email@gmail.com",
     "password": "abcdefghijklmnop",
-    "from": "Rajala Services <noreply@rajala-services.com>"
+    "from": "Fixnero <Palvelut@fixnero.fi>"
   }
 }
 ```
@@ -89,7 +89,7 @@ firebase functions:secrets:set EMAIL_PASSWORD
 # Enter: your-app-password
 
 firebase functions:secrets:set EMAIL_FROM
-# Enter: Rajala Services <noreply@rajala-services.com>
+# Enter: Fixnero <Palvelut@fixnero.fi>
 ```
 
 #### Option 2: Using Functions Config (Gen1 - Legacy)
@@ -98,7 +98,7 @@ firebase functions:secrets:set EMAIL_FROM
 firebase functions:config:set \
   email.user="your-email@gmail.com" \
   email.password="abcdefghijklmnop" \
-  email.from="Rajala Services <noreply@rajala-services.com>"
+  email.from="Fixnero <Palvelut@fixnero.fi>"
 
 # Verify configuration
 firebase functions:config:get
@@ -108,7 +108,7 @@ firebase functions:config:get
 
 The confirmation email includes:
 - Professional HTML formatting
-- Rajala Services branding
+- Fixnero branding
 - Booking details (date, time, customer info)
 - Service details with pricing
 - Contact information
@@ -125,7 +125,7 @@ async function sendBookingConfirmationEmail(bookingData) {
   const mailOptions = {
     from: emailFromVal,
     to: bookingData.sahkoposti,
-    subject: 'Varausvahvistus - Rajala Services',
+    subject: 'Varausvahvistus - Fixnero',
     html: `
       <!-- Customize your HTML template here -->
     `
@@ -271,8 +271,8 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const msg = {
   to: bookingData.sahkoposti,
-  from: 'noreply@rajala-services.com',
-  subject: 'Varausvahvistus - Rajala Services',
+  from: 'Palvelut@fixnero.fi',
+  subject: 'Varausvahvistus - Fixnero',
   html: emailHtml,
 };
 await sgMail.send(msg);
@@ -289,9 +289,9 @@ const mg = mailgun({
 });
 
 await mg.messages().send({
-  from: 'noreply@rajala-services.com',
+  from: 'Palvelut@fixnero.fi',
   to: bookingData.sahkoposti,
-  subject: 'Varausvahvistus - Rajala Services',
+  subject: 'Varausvahvistus - Fixnero',
   html: emailHtml
 });
 ```

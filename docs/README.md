@@ -1,8 +1,8 @@
-# Rajala Services - External Integrations Documentation
+# Fixnero - External Integrations Documentation
 
 ## 📚 Complete Documentation Index
 
-This directory contains comprehensive documentation for managing and migrating the Rajala Services (Fixnero) website and all its external integrations.
+This directory contains comprehensive documentation for managing and migrating the Fixnero (Fixnero) website and all its external integrations.
 
 ---
 

@@ -134,7 +134,7 @@ node test-booking-flow.js --test empty-token
 node test-booking-flow.js --test invalid-token
 
 # Test against local emulator
-node test-booking-flow.js --endpoint http://localhost:5001/fxnr-web/us-central1/book
+node test-booking-flow.js --endpoint http://localhost:5001/Webbi1/us-central1/book
 ```
 
 **Features:**

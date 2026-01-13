@@ -1,5 +1,5 @@
 # Administrator Setup Guide
-## Managing Rajala Services After Migration
+## Managing Fixnero After Migration
 
 **Document Version:** 1.0  
 **Created:** January 13, 2026  
@@ -72,11 +72,11 @@ firebase projects:list
 firebase login
 
 # Select the project
-firebase use fxnr-web
+firebase use Webbi1
 
 # Verify project is selected
 firebase projects:list
-# Should show "(current)" next to fxnr-web
+# Should show "(current)" next to Webbi1
 ```
 
 ### 2. Environment Variables Setup
@@ -107,17 +107,17 @@ EMAIL_USER=bookings@fixnero.fi
 # Gmail App Password (16 characters, no spaces)
 EMAIL_PASSWORD=abcd efgh ijkl mnop
 # Display name and email for outgoing emails
-EMAIL_FROM=Rajala Services <noreply@fixnero.fi>
+EMAIL_FROM=Fixnero <Palvelut@fixnero.fi>
 
 # ============================================
 # Google Calendar Configuration
 # ============================================
 # Service Account JSON (minified, as single line)
-GOOGLE_SERVICE_ACCOUNT={"type":"service_account","project_id":"fxnr-web",...}
+GOOGLE_SERVICE_ACCOUNT={"type":"service_account","project_id":"Webbi1",...}
 # Google Calendar ID (found in calendar settings)
 GOOGLE_CALENDAR_ID=your-calendar-id@group.calendar.google.com
 # Webhook callback URL (your Cloud Functions URL)
-WATCH_CALLBACK_URL=https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook
+WATCH_CALLBACK_URL=https://us-central1-Webbi1.cloudfunctions.net/calendarWebhook
 
 # ============================================
 # NOTE: RECAPTCHA_SECRET is set via Secret Manager
@@ -145,7 +145,7 @@ firebase functions:secrets:set EMAIL_PASSWORD
 Create a secure password manager entry with:
 
 **Firebase Console:**
-- URL: https://console.firebase.google.com/project/fxnr-web
+- URL: https://console.firebase.google.com/project/Webbi1
 - Email: [admin email]
 - Password: [use password manager]
 - 2FA: [backup codes stored]
@@ -157,7 +157,7 @@ Create a secure password manager entry with:
 
 **Google Analytics:**
 - URL: https://analytics.google.com
-- Property: Rajala Services
+- Property: Fixnero
 - Measurement ID: G-SP5R1MN1H9
 
 **reCAPTCHA:**
@@ -185,7 +185,7 @@ Create a secure password manager entry with:
 
 **Via Firebase Console:**
 ```
-1. Go to https://console.firebase.google.com/project/fxnr-web
+1. Go to https://console.firebase.google.com/project/Webbi1
 2. Navigate to Firestore Database
 3. Select collection: "varaukset"
 4. Review documents sorted by timestamp
@@ -195,7 +195,7 @@ Create a secure password manager entry with:
 **Via Google Calendar:**
 ```
 1. Go to https://calendar.google.com
-2. Select "Rajala Services - Varaukset" calendar
+2. Select "Fixnero - Varaukset" calendar
 3. Review today's and upcoming appointments
 4. Verify times match Firestore bookings
 ```
@@ -287,7 +287,7 @@ Email template is in `functions/index.js`, in the `onBookingCreated` function:
 const mailOptions = {
   from: emailFrom,
   to: newBooking.sahkoposti,
-  subject: '✅ Varauksesi on vahvistettu - Rajala Services',
+  subject: '✅ Varauksesi on vahvistettu - Fixnero',
   html: `
     <div style="font-family: Arial, sans-serif; ...">
       <!-- Email content here -->
@@ -339,7 +339,7 @@ firebase deploy --only functions
 firebase functions:log --limit 20
 
 # Test functions
-curl https://us-central1-fxnr-web.cloudfunctions.net/bookings
+curl https://us-central1-Webbi1.cloudfunctions.net/bookings
 ```
 
 #### Deploy Everything
@@ -399,7 +399,7 @@ firebase deploy --only functions
 # 5. Export
 
 # Using gcloud CLI
-gcloud firestore export gs://fxnr-web-backup/firestore-$(date +%Y%m%d)
+gcloud firestore export gs://Webbi1-backup/firestore-$(date +%Y%m%d)
 ```
 
 **Automated Backup (Recommended):**
@@ -414,7 +414,7 @@ Set up Cloud Scheduler to run daily backups:
 
 ```bash
 # Using gcloud CLI
-gcloud firestore import gs://fxnr-web-backup/firestore-YYYYMMDD
+gcloud firestore import gs://Webbi1-backup/firestore-YYYYMMDD
 
 # Or via Firebase Console
 # 1. Go to Firestore Database
@@ -456,7 +456,7 @@ If you want to archive old bookings:
 
 ```
 1. Go to https://console.cloud.google.com/monitoring
-2. Select project: fxnr-web
+2. Select project: Webbi1
 3. Create alerts for:
    - Function execution errors
    - High response times
@@ -833,7 +833,7 @@ exports.testEmail = onRequest(async (req, res) => {
 3. **Restore from Backup**
    ```bash
    # Import from last backup
-   gcloud firestore import gs://fxnr-web-backup/firestore-YYYYMMDD
+   gcloud firestore import gs://Webbi1-backup/firestore-YYYYMMDD
    ```
 
 4. **Verify and Re-enable**
@@ -903,7 +903,7 @@ firebase login
 firebase projects:list
 
 # Select project
-firebase use fxnr-web
+firebase use Webbi1
 
 # Deploy
 firebase deploy
@@ -945,7 +945,7 @@ git reset --hard HEAD~1
 curl -I https://fixnero.fi
 
 # Functions status
-curl https://us-central1-fxnr-web.cloudfunctions.net/bookings
+curl https://us-central1-Webbi1.cloudfunctions.net/bookings
 
 # DNS check
 dig fixnero.fi

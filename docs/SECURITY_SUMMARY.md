@@ -64,10 +64,10 @@
 #### 4. CORS Configuration
 - ✅ **Allowed Origins Only**
   ```javascript
-  - https://www.rajala-services.com
-  - https://rajala-services.com
-  - https://fxnr-web.web.app
-  - https://fxnr-web.firebaseapp.com
+  - https://www.fixnero.fi
+  - https://fixnero.fi
+  - https://Webbi1.web.app
+  - https://Webbi1.firebaseapp.com
   ```
 - ✅ **Credentials Support**
   - Proper CORS headers

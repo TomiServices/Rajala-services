@@ -1,5 +1,5 @@
 # Complete Migration Guide
-## Transferring Rajala Services to New Owner Accounts
+## Transferring Fixnero to New Owner Accounts
 
 **Document Version:** 1.0  
 **Created:** January 13, 2026  
@@ -25,7 +25,7 @@
 
 ### Migration Scope
 
-This guide covers the complete transfer of the Rajala Services (Fixnero) website and all associated external services from current owner accounts to new administrator accounts.
+This guide covers the complete transfer of the Fixnero (Fixnero) website and all associated external services from current owner accounts to new administrator accounts.
 
 ### Services to Migrate
 
@@ -68,7 +68,7 @@ Before starting migration:
 **Option A: Manual Export via Firebase Console**
 ```
 1. Go to Firebase Console: https://console.firebase.google.com
-2. Select project: fxnr-web
+2. Select project: Webbi1
 3. Navigate to Firestore Database
 4. Click "Export" in the top menu
 5. Select all collections
@@ -84,16 +84,16 @@ Before starting migration:
 
 # Login and set project
 gcloud auth login
-gcloud config set project fxnr-web
+gcloud config set project Webbi1
 
 # Export Firestore data with error handling
-gcloud firestore export gs://fxnr-web-backup/firestore-backup-$(date +%Y%m%d)
+gcloud firestore export gs://Webbi1-backup/firestore-backup-$(date +%Y%m%d)
 
 # Verify export succeeded
 if [ $? -eq 0 ]; then
     echo "Backup completed successfully"
     # Download to local machine
-    gsutil -m cp -r gs://fxnr-web-backup/firestore-backup-* ./backups/
+    gsutil -m cp -r gs://Webbi1-backup/firestore-backup-* ./backups/
     
     # Verify files downloaded
     if [ -d "./backups/firestore-backup-$(date +%Y%m%d)" ]; then
@@ -141,7 +141,7 @@ cp ../../functions/package.json ./
 
 # Document current environment
 echo "Backup created: $(date)" > backup-info.txt
-echo "Firebase Project: fxnr-web" >> backup-info.txt
+echo "Firebase Project: Webbi1" >> backup-info.txt
 echo "Node version: $(node --version)" >> backup-info.txt
 echo "Firebase CLI: $(firebase --version)" >> backup-info.txt
 ```
@@ -176,7 +176,7 @@ GitHub Repository Owner: [username]
 
 **Current Service IDs:**
 ```
-Firebase Project ID: fxnr-web
+Firebase Project ID: Webbi1
 Google Calendar ID: [full calendar email]
 GA4 Measurement ID: G-SP5R1MN1H9
 reCAPTCHA Site Key: 6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM
@@ -186,8 +186,8 @@ Domain: fixnero.fi
 **Current URLs:**
 ```
 Website: https://fixnero.fi
-Firebase Console: https://console.firebase.google.com/project/fxnr-web
-Cloud Functions: https://us-central1-fxnr-web.cloudfunctions.net
+Firebase Console: https://console.firebase.google.com/project/Webbi1
+Cloud Functions: https://us-central1-Webbi1.cloudfunctions.net
 ```
 
 ### 3. Communication Plan
@@ -200,7 +200,7 @@ Cloud Functions: https://us-central1-fxnr-web.cloudfunctions.net
 
 **Communication Template:**
 ```
-Subject: Scheduled Maintenance - Rajala Services Website
+Subject: Scheduled Maintenance - Fixnero Website
 
 Dear Team,
 
@@ -289,7 +289,7 @@ Even though Firebase creates a GCP project, you may want to verify access:
 1. **Add New Owner as Editor (Current Owner Action)**
    ```
    1. Login to Firebase Console as current owner
-   2. Go to project: https://console.firebase.google.com/project/fxnr-web
+   2. Go to project: https://console.firebase.google.com/project/Webbi1
    3. Click gear icon > Project settings
    4. Go to "Users and permissions" tab
    5. Click "Add member"
@@ -303,7 +303,7 @@ Even though Firebase creates a GCP project, you may want to verify access:
    1. New owner checks email for invitation
    2. Click "Accept invitation"
    3. Login to Firebase Console
-   4. Verify you can see project: fxnr-web
+   4. Verify you can see project: Webbi1
    5. Navigate through: Firestore, Functions, Hosting
    6. Don't make any changes yet!
    ```
@@ -318,7 +318,7 @@ Even though Firebase creates a GCP project, you may want to verify access:
    
    Method 2: Contact Firebase Support
    - If direct transfer not available, contact support
-   - Provide project ID: fxnr-web
+   - Provide project ID: Webbi1
    - Request ownership transfer
    - Verify both current and new owner identities
    ```
@@ -347,7 +347,7 @@ This is not recommended as primary approach. Document separately if needed.
 firebase login
 
 # Select project
-firebase use fxnr-web
+firebase use Webbi1
 
 # Set environment variables (non-secret)
 cd functions
@@ -373,13 +373,13 @@ firebase deploy --only functions
 **Verify Functions:**
 ```bash
 # Test functions
-curl https://us-central1-fxnr-web.cloudfunctions.net/bookings
+curl https://us-central1-Webbi1.cloudfunctions.net/bookings
 
 # Check logs
 firebase functions:log
 
 # Monitor in console
-# https://console.firebase.google.com/project/fxnr-web/functions
+# https://console.firebase.google.com/project/Webbi1/functions
 ```
 
 #### Firebase Hosting Migration
@@ -441,7 +441,7 @@ firebase functions:log
    - Go to https://calendar.google.com
    - Click "+" next to "Other calendars"
    - Select "Create new calendar"
-   - Name: "Rajala Services - Varaukset" (Bookings)
+   - Name: "Fixnero - Varaukset" (Bookings)
    - Time zone: "Europe/Helsinki"
    - Create calendar
    
@@ -470,17 +470,17 @@ firebase functions:log
 # https://console.cloud.google.com
 
 # 1. Enable Calendar API
-gcloud services enable calendar-json.googleapis.com --project=fxnr-web
+gcloud services enable calendar-json.googleapis.com --project=Webbi1
 
 # 2. Create Service Account
 gcloud iam service-accounts create rajala-calendar-service \
-    --description="Service account for Rajala Services calendar integration" \
+    --description="Service account for Fixnero calendar integration" \
     --display-name="Rajala Calendar Service" \
-    --project=fxnr-web
+    --project=Webbi1
 
 # 3. Create and download key
 gcloud iam service-accounts keys create service-account-key.json \
-    --iam-account=rajala-calendar-service@fxnr-web.iam.gserviceaccount.com
+    --iam-account=rajala-calendar-service@Webbi1.iam.gserviceaccount.com
 
 # 4. Minify JSON (remove whitespace)
 cat service-account-key.json | jq -c '.' > service-account-minified.json
@@ -571,7 +571,7 @@ chmod 600 service-account-*.json
    - Domains:
      * fixnero.fi
      * www.fixnero.fi
-     * rajala-services.com (legacy)
+     * fixnero.fi (legacy)
      * localhost (for testing)
    - Accept terms
    - Submit
@@ -629,7 +629,7 @@ chmod 600 service-account-*.json
    - Go to https://myaccount.google.com/apppasswords
    - Select app: "Mail"
    - Select device: "Other (Custom name)"
-   - Enter: "Rajala Services Booking System"
+   - Enter: "Fixnero Booking System"
    - Generate
    - Copy 16-character password
    - Save securely
@@ -637,7 +637,7 @@ chmod 600 service-account-*.json
 4. Update Environment Variables:
    EMAIL_USER=bookings@fixnero.fi
    EMAIL_PASSWORD=<16-char-app-password>
-   EMAIL_FROM=Rajala Services <noreply@fixnero.fi>
+   EMAIL_FROM=Fixnero <Palvelut@fixnero.fi>
    
 5. Update Firebase Functions:
    # Option 1: Use .env file
@@ -765,7 +765,7 @@ Create this test script to automate verification:
 # Migration Verification Test Script
 # Run this after migration to verify all services
 
-echo "=== Rajala Services Migration Verification ==="
+echo "=== Fixnero Migration Verification ==="
 echo "Started: $(date)"
 echo ""
 
@@ -781,7 +781,7 @@ echo ""
 
 # Test 2: Functions Endpoint
 echo "Test 2: Cloud Functions"
-response=$(curl -s -o /dev/null -w "%{http_code}" https://us-central1-fxnr-web.cloudfunctions.net/bookings)
+response=$(curl -s -o /dev/null -w "%{http_code}" https://us-central1-Webbi1.cloudfunctions.net/bookings)
 if [ "$response" -eq 200 ]; then
     echo "✅ Functions responding (HTTP $response)"
 else
@@ -892,7 +892,7 @@ Consider rollback if:
 
 ```bash
 # Import from backup
-gcloud firestore import gs://fxnr-web-backup/firestore-backup-YYYYMMDD
+gcloud firestore import gs://Webbi1-backup/firestore-backup-YYYYMMDD
 
 # Or via Firebase Console
 # Firestore > Import/Export > Import

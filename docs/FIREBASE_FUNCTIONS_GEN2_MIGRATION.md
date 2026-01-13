@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the migration of Rajala Services Firebase Functions from Gen1 to Gen2 syntax. The migration was completed on November 22, 2024.
+This document describes the migration of Fixnero Firebase Functions from Gen1 to Gen2 syntax. The migration was completed on November 22, 2024.
 
 ## What Changed
 

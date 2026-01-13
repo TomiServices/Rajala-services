@@ -13,7 +13,7 @@ The integration provides:
 ## Prerequisites
 
 1. **Google Cloud Project** with Calendar API enabled
-2. **Firebase Project** already set up (existing: `fxnr-web`)
+2. **Firebase Project** already set up (existing: `Webbi1`)
 3. **Service Account** with Calendar API access
 4. **Google Calendar** for storing bookings
 
@@ -179,7 +179,7 @@ Google Calendar uses Pub/Sub for notifications. You need to set this up manually
 ```bash
 # Set your variables
 CALENDAR_ID="your-calendar-id@group.calendar.google.com"
-WEBHOOK_URL="https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook"
+WEBHOOK_URL="https://us-central1-Webbi1.cloudfunctions.net/calendarWebhook"
 ACCESS_TOKEN="your-oauth2-access-token"
 
 # Create a watch request
@@ -205,7 +205,7 @@ curl -X POST \
      {
        "id": "fixnero-calendar-sync",
        "type": "web_hook",
-       "address": "https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook"
+       "address": "https://us-central1-Webbi1.cloudfunctions.net/calendarWebhook"
      }
      ```
 
@@ -299,7 +299,7 @@ For testing, you can manually trigger a sync:
 
 ```bash
 # Call the webhook endpoint manually
-curl -X POST https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook \
+curl -X POST https://us-central1-Webbi1.cloudfunctions.net/calendarWebhook \
   -H "x-goog-resource-state: exists" \
   -H "x-goog-channel-id: test-channel" \
   -H "x-goog-resource-id: test-resource"
