@@ -74,8 +74,8 @@ const WATCH_COLLECTION = 'calendarWatch';
 const ALLOWED_ORIGINS = [
   'https://www.rajala-services.com',
   'https://rajala-services.com',
-  'https://fxnr-web.web.app',
-  'https://fxnr-web.firebaseapp.com'
+  'https://webbi1.web.app',
+  'https://webbi1.firebaseapp.com'
 ];
 
 // Company branding constants - used for emails and notifications
