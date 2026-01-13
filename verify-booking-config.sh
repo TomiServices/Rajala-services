@@ -15,22 +15,22 @@ NC='\033[0m' # No Color
 
 # Check 1: Firebase Functions CORS Configuration
 echo "1. Checking Firebase Functions CORS Configuration..."
-if grep -q "https://www.rajala-services.com" functions/index.js.js; then
-    echo -e "${GREEN}✓${NC} CORS includes www.rajala-services.com"
+if grep -q "https://www.fixnero.fi" functions/index.js; then
+    echo -e "${GREEN}✓${NC} CORS includes www.fixnero.fi"
 else
-    echo -e "${RED}✗${NC} CORS missing www.rajala-services.com"
+    echo -e "${RED}✗${NC} CORS missing www.fixnero.fi"
 fi
 
-if grep -q "https://rajala-services.com" functions/index.js.js; then
-    echo -e "${GREEN}✓${NC} CORS includes rajala-services.com"
+if grep -q "https://fixnero.fi" functions/index.js; then
+    echo -e "${GREEN}✓${NC} CORS includes fixnero.fi"
 else
-    echo -e "${RED}✗${NC} CORS missing rajala-services.com"
+    echo -e "${RED}✗${NC} CORS missing fixnero.fi"
 fi
 
 # Check 2: OPTIONS Request Handling
 echo ""
 echo "2. Checking OPTIONS Request Handling..."
-OPTIONS_COUNT=$(grep -c 'req.method === "OPTIONS"' functions/index.js.js)
+OPTIONS_COUNT=$(grep -c 'req.method === "OPTIONS"' functions/index.js)
 if [ "$OPTIONS_COUNT" -eq 2 ]; then
     echo -e "${GREEN}✓${NC} Both endpoints handle OPTIONS requests ($OPTIONS_COUNT handlers)"
 else
@@ -40,7 +40,7 @@ fi
 # Check 3: CSP Configuration
 echo ""
 echo "3. Checking Content Security Policy..."
-if grep -q "https://us-central1-fxnr-web.cloudfunctions.net" firebase.json; then
+if grep -q "https://us-central1-webbi1.cloudfunctions.net" firebase.json; then
     echo -e "${GREEN}✓${NC} CSP allows Firebase Functions endpoint"
 else
     echo -e "${RED}✗${NC} CSP missing Firebase Functions endpoint"
@@ -98,10 +98,10 @@ fi
 echo ""
 echo "7. Validating JavaScript Syntax..."
 if command -v node &> /dev/null; then
-    if node -c functions/index.js.js 2>/dev/null; then
-        echo -e "${GREEN}✓${NC} functions/index.js.js syntax valid"
+    if node -c functions/index.js 2>/dev/null; then
+        echo -e "${GREEN}✓${NC} functions/index.js syntax valid"
     else
-        echo -e "${RED}✗${NC} functions/index.js.js has syntax errors"
+        echo -e "${RED}✗${NC} functions/index.js has syntax errors"
     fi
     
     if node -c booking-system.js 2>/dev/null; then
@@ -121,7 +121,7 @@ echo "================================================"
 echo "1. Deploy Firebase Functions: cd functions && firebase deploy --only functions"
 echo "2. Deploy Firebase Hosting: firebase deploy --only hosting"
 echo "3. Verify reCAPTCHA key at: https://www.google.com/recaptcha/admin"
-echo "4. Test booking from: https://www.rajala-services.com"
+echo "4. Test booking from: https://www.fixnero.fi"
 echo "5. Monitor logs at: Firebase Console > Functions > Logs"
 echo ""
 echo "For detailed instructions, see BOOKING_CALENDAR_FIXES.md"
