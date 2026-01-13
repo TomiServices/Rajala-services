@@ -15,16 +15,16 @@ NC='\033[0m' # No Color
 
 # Check 1: Firebase Functions CORS Configuration
 echo "1. Checking Firebase Functions CORS Configuration..."
-if grep -q "https://www.rajala-services.com" functions/index.js.js; then
-    echo -e "${GREEN}✓${NC} CORS includes www.rajala-services.com"
+if grep -q "https://www.fixnero.fi" functions/index.js.js; then
+    echo -e "${GREEN}✓${NC} CORS includes www.fixnero.fi"
 else
-    echo -e "${RED}✗${NC} CORS missing www.rajala-services.com"
+    echo -e "${RED}✗${NC} CORS missing www.fixnero.fi"
 fi
 
-if grep -q "https://rajala-services.com" functions/index.js.js; then
-    echo -e "${GREEN}✓${NC} CORS includes rajala-services.com"
+if grep -q "https://fixnero.fi" functions/index.js.js; then
+    echo -e "${GREEN}✓${NC} CORS includes fixnero.fi"
 else
-    echo -e "${RED}✗${NC} CORS missing rajala-services.com"
+    echo -e "${RED}✗${NC} CORS missing fixnero.fi"
 fi
 
 # Check 2: OPTIONS Request Handling
@@ -121,7 +121,7 @@ echo "================================================"
 echo "1. Deploy Firebase Functions: cd functions && firebase deploy --only functions"
 echo "2. Deploy Firebase Hosting: firebase deploy --only hosting"
 echo "3. Verify reCAPTCHA key at: https://www.google.com/recaptcha/admin"
-echo "4. Test booking from: https://www.rajala-services.com"
+echo "4. Test booking from: https://www.fixnero.fi"
 echo "5. Monitor logs at: Firebase Console > Functions > Logs"
 echo ""
 echo "For detailed instructions, see BOOKING_CALENDAR_FIXES.md"

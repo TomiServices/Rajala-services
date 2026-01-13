@@ -72,15 +72,15 @@ const watchCallbackEnv = defineString('WATCH_CALLBACK_URL'); // optional preconf
 const BOOKINGS_COLLECTION = 'varaukset';
 const WATCH_COLLECTION = 'calendarWatch';
 const ALLOWED_ORIGINS = [
-  'https://www.rajala-services.com',
-  'https://rajala-services.com',
-  'https://fxnr-web.web.app',
-  'https://fxnr-web.firebaseapp.com'
+  'https://www.fixnero.fi',
+  'https://fixnero.fi',
+  'https://webbi1.web.app',
+  'https://webbi1.firebaseapp.com'
 ];
 
 // Company branding constants - used for emails and notifications
 const COMPANY_NAME = 'Fixnero';
-const COMPANY_EMAIL = 'info@fixnero.fi';
+const COMPANY_EMAIL = 'Palvelut@fixnero.fi';
 const COMPANY_PHONE = '+358401935001';
 // Format phone number for display (remove +358 prefix and replace with 0)
 const COMPANY_PHONE_DISPLAY = COMPANY_PHONE.replace('+358', '0');

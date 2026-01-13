@@ -27,7 +27,7 @@ const testType = testIndex >= 0 ? args[testIndex + 1] : 'missing-token';
 const customEndpoint = endpointIndex >= 0 ? args[endpointIndex + 1] : undefined;
 
 // Default endpoint (production)
-const DEFAULT_ENDPOINT = 'https://us-central1-fxnr-web.cloudfunctions.net/book';
+const DEFAULT_ENDPOINT = 'https://us-central1-webbi1.cloudfunctions.net/book';
 const endpoint = customEndpoint || DEFAULT_ENDPOINT;
 
 // Parse endpoint URL
