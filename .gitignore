@@ -25,3 +25,4 @@ functions/.runtimeconfig.json
 functions/kalenteri.json
 functions/service-account.json
 *service-account*.json
+calendar-key.json
