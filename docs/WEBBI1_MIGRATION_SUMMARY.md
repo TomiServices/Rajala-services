@@ -53,8 +53,8 @@ Updated to use **Palvelut@fixnero.fi** for:
 
 Updated all Firebase Cloud Functions endpoints:
 
-- **Old:** `https://us-central1-fxnr-web.cloudfunctions.net`
-- **New:** `https://us-central1-webbi1.cloudfunctions.net`
+- **Old:** `https://europe-north1-fxnr-web.cloudfunctions.net`
+- **New:** `https://europe-north1-webbi1.cloudfunctions.net`
 
 **Files Updated:**
 - `booking-system.js` - Frontend booking endpoints
@@ -77,7 +77,7 @@ Updated CORS configuration to support both the main domain and Firebase hosting:
 Updated calendar configuration to use:
 - **Calendar Owner:** Palvelut@fixnero.fi
 - **Service Account:** Should be configured for Webbi1 project
-- **Calendar Webhook URL:** `https://us-central1-webbi1.cloudfunctions.net/calendarWebhook`
+- **Calendar Webhook URL:** `https://europe-north1-webbi1.cloudfunctions.net/calendarWebhook`
 
 ## Deployment Steps
 
@@ -97,7 +97,7 @@ firebase functions:secrets:set GOOGLE_SERVICE_ACCOUNT
 EMAIL_USER=Palvelut@fixnero.fi
 EMAIL_FROM=Fixnero <Palvelut@fixnero.fi>
 GOOGLE_CALENDAR_ID=<calendar-id-for-palvelut@fixnero.fi>
-WATCH_CALLBACK_URL=https://us-central1-webbi1.cloudfunctions.net/calendarWebhook
+WATCH_CALLBACK_URL=https://europe-north1-webbi1.cloudfunctions.net/calendarWebhook
 ```
 
 ### 2. Deploy Firestore Rules

@@ -111,7 +111,7 @@ node test-booking-flow.js --test mock-valid
 
 # Test against local emulator
 firebase emulators:start
-node test-booking-flow.js --endpoint http://localhost:5001/fxnr-web/us-central1/book
+node test-booking-flow.js --endpoint http://localhost:5001/fxnr-web/europe-north1/book
 ```
 
 ### Manual Testing

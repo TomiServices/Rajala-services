@@ -225,7 +225,7 @@ EMAIL_FROM=info@fixnero.fi
 RECAPTCHA_SECRET=6Lf7wx0sAAAAAIZrJ_IIHzkZUHKO0GCx6moRlf96
 
 # Optional
-WATCH_CALLBACK_URL=https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook
+WATCH_CALLBACK_URL=https://europe-north1-fxnr-web.cloudfunctions.net/calendarWebhook
 RECAPTCHA_SCORE_THRESHOLD=0.5
 ```
 

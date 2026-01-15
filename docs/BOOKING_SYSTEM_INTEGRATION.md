@@ -122,7 +122,7 @@ return res.status(200).json({ success: true, id: bookingRef.id });
 ```javascript
 exports.onBookingCreated = onDocumentCreated({
   document: `varaukset/{bookingId}`,
-  region: 'us-central1'
+  region: 'europe-north1'
 }, async (event) => {
   const bookingData = event.data.data();
   

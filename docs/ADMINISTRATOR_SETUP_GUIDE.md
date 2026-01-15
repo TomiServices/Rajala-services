@@ -117,7 +117,7 @@ GOOGLE_SERVICE_ACCOUNT={"type":"service_account","project_id":"fxnr-web",...}
 # Google Calendar ID (found in calendar settings)
 GOOGLE_CALENDAR_ID=your-calendar-id@group.calendar.google.com
 # Webhook callback URL (your Cloud Functions URL)
-WATCH_CALLBACK_URL=https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook
+WATCH_CALLBACK_URL=https://europe-north1-fxnr-web.cloudfunctions.net/calendarWebhook
 
 # ============================================
 # NOTE: RECAPTCHA_SECRET is set via Secret Manager
@@ -339,7 +339,7 @@ firebase deploy --only functions
 firebase functions:log --limit 20
 
 # Test functions
-curl https://us-central1-fxnr-web.cloudfunctions.net/bookings
+curl https://europe-north1-fxnr-web.cloudfunctions.net/bookings
 ```
 
 #### Deploy Everything
@@ -945,7 +945,7 @@ git reset --hard HEAD~1
 curl -I https://fixnero.fi
 
 # Functions status
-curl https://us-central1-fxnr-web.cloudfunctions.net/bookings
+curl https://europe-north1-fxnr-web.cloudfunctions.net/bookings
 
 # DNS check
 dig fixnero.fi

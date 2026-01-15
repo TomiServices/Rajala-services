@@ -95,7 +95,7 @@ res.status(500).json({
 
 **Solution:**
 - Added Firebase Functions endpoint to CSP `connect-src` directive
-- Ensures `https://us-central1-fxnr-web.cloudfunctions.net` is allowed
+- Ensures `https://europe-north1-fxnr-web.cloudfunctions.net` is allowed
 
 **Files Modified:**
 - `firebase.json` - Line 20
@@ -120,14 +120,14 @@ firebase deploy --only hosting
 firebase functions:list
 
 # Test bookings endpoint
-curl https://us-central1-fxnr-web.cloudfunctions.net/bookings
+curl https://europe-north1-fxnr-web.cloudfunctions.net/bookings
 
 # Test from production domain
 curl -H "Origin: https://www.rajala-services.com" \
      -H "Access-Control-Request-Method: GET" \
      -H "Access-Control-Request-Headers: Content-Type" \
      -X OPTIONS \
-     https://us-central1-fxnr-web.cloudfunctions.net/bookings
+     https://europe-north1-fxnr-web.cloudfunctions.net/bookings
 ```
 
 ## Testing Checklist

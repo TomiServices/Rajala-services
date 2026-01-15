@@ -131,7 +131,7 @@ curl -H "Origin: https://www.rajala-services.com" \
      -H "Access-Control-Request-Headers: Content-Type" \
      -X OPTIONS \
      -v \
-     https://us-central1-fxnr-web.cloudfunctions.net/bookings
+     https://europe-north1-fxnr-web.cloudfunctions.net/bookings
 ```
 
 Expected response headers:
@@ -142,7 +142,7 @@ Expected response headers:
 
 ```bash
 # Fetch bookings
-curl https://us-central1-fxnr-web.cloudfunctions.net/bookings
+curl https://europe-north1-fxnr-web.cloudfunctions.net/bookings
 ```
 
 Expected: JSON array of bookings or empty array `[]`

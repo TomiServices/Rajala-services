@@ -31,12 +31,12 @@ const { defineString } = require('firebase-functions/params');
 // Firestore triggers
 exports.myTrigger = onDocumentUpdated({
   document: 'collection/{docId}',
-  region: 'us-central1'
+  region: 'europe-north1'
 }, (event) => { ... });
 
 // HTTP functions
 exports.myEndpoint = onRequest({
-  region: 'us-central1',
+  region: 'europe-north1',
   cors: ['https://example.com']
 }, (req, res) => { ... });
 ```
@@ -98,7 +98,7 @@ exports.onUpdate = functions.firestore
 ```javascript
 exports.onUpdate = onDocumentUpdated({
   document: 'bookings/{bookingId}',
-  region: 'us-central1'
+  region: 'europe-north1'
 }, (event) => {
   const beforeData = event.data.before.data();
   const afterData = event.data.after.data();
@@ -112,7 +112,7 @@ exports.onUpdate = onDocumentUpdated({
 
 1. **`bookings`** (GET /bookings)
    - Fetches all bookings from Firestore
-   - Region: us-central1
+   - Region: europe-north1
    - CORS: Configured for production domains
 
 2. **`book`** (POST /book)
@@ -120,26 +120,26 @@ exports.onUpdate = onDocumentUpdated({
    - Validates reCAPTCHA
    - Checks slot availability
    - Syncs to Google Calendar
-   - Region: us-central1
+   - Region: europe-north1
    - CORS: Configured for production domains
 
 3. **`calendarWebhook`** (POST /calendarWebhook)
    - Receives notifications from Google Calendar
    - Syncs changes back to Firestore
-   - Region: us-central1
+   - Region: europe-north1
 
 ### Firestore Triggers
 
 1. **`onBookingUpdated`**
    - Triggered when a booking document is updated
    - Syncs changes to Google Calendar
-   - Region: us-central1
+   - Region: europe-north1
    - Document path: `varaukset/{bookingId}`
 
 2. **`onBookingDeleted`**
    - Triggered when a booking document is deleted
    - Removes event from Google Calendar
-   - Region: us-central1
+   - Region: europe-north1
    - Document path: `varaukset/{bookingId}`
 
 ## Environment Variables
@@ -204,10 +204,10 @@ The emulator will start on:
 
 ```bash
 # Test GET /bookings
-curl http://localhost:5001/your-project-id/us-central1/bookings
+curl http://localhost:5001/your-project-id/europe-north1/bookings
 
 # Test POST /book
-curl -X POST http://localhost:5001/your-project-id/us-central1/book \
+curl -X POST http://localhost:5001/your-project-id/europe-north1/book \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Test User",
@@ -279,7 +279,7 @@ firebase deploy --only functions
 
 ### Firestore Triggers Not Firing
 - Verify the document path matches exactly
-- Check that the region is correct (us-central1)
+- Check that the region is correct (europe-north1)
 - Ensure Firestore is enabled in Firebase Console
 
 ## Additional Resources
@@ -299,7 +299,7 @@ When making changes to Firebase Functions:
 2. Use `onRequest` for HTTP functions with built-in CORS
 3. Use `onDocumentUpdated`, `onDocumentDeleted` for Firestore triggers
 4. Use `defineString()` for environment variables
-5. Specify region explicitly (us-central1)
+5. Specify region explicitly (europe-north1)
 6. Test locally with emulator before deploying
 
 ### Adding New Functions
@@ -309,7 +309,7 @@ Example template for new HTTP function:
 const { onRequest } = require('firebase-functions/v2/https');
 
 exports.myNewFunction = onRequest({
-  region: 'us-central1',
+  region: 'europe-north1',
   cors: ALLOWED_ORIGINS
 }, async (req, res) => {
   try {
@@ -328,7 +328,7 @@ const { onDocumentCreated } = require('firebase-functions/v2/firestore');
 
 exports.myNewTrigger = onDocumentCreated({
   document: 'collection/{docId}',
-  region: 'us-central1'
+  region: 'europe-north1'
 }, async (event) => {
   const data = event.data.data();
   const docId = event.params.docId;

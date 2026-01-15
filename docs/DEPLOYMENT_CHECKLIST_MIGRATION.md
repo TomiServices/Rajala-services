@@ -158,7 +158,7 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
   ```bash
   # Webhook callback URL for calendar sync
   firebase functions:secrets:set WATCH_CALLBACK_URL --project=fxnr-web
-  # Enter: https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook
+  # Enter: https://europe-north1-fxnr-web.cloudfunctions.net/calendarWebhook
   ```
 
 ### 7. Deploy Firestore Security Rules
@@ -262,10 +262,10 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
 
 - [ ] **Test Calendar Webhook Registration**
   ```bash
-  curl -X POST https://us-central1-fxnr-web.cloudfunctions.net/watchRegistrar \
+  curl -X POST https://europe-north1-fxnr-web.cloudfunctions.net/watchRegistrar \
     -H "Content-Type: application/json" \
     -d '{
-      "callbackUrl": "https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook"
+      "callbackUrl": "https://europe-north1-fxnr-web.cloudfunctions.net/calendarWebhook"
     }'
   ```
   

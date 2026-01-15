@@ -29,8 +29,8 @@ firebase deploy --only functions
 
 Expected output:
 ```
-✔ functions[book(us-central1)] Successful update operation.
-✔ functions[bookings(us-central1)] Successful update operation.
+✔ functions[book(europe-north1)] Successful update operation.
+✔ functions[bookings(europe-north1)] Successful update operation.
 ```
 
 ### 3. Deploy Firebase Hosting
@@ -51,7 +51,7 @@ Expected output:
 
 Check that functions are live:
 ```bash
-curl https://us-central1-fxnr-web.cloudfunctions.net/bookings
+curl https://europe-north1-fxnr-web.cloudfunctions.net/bookings
 ```
 
 Should return JSON array of bookings (or empty array if no bookings exist).
@@ -81,7 +81,7 @@ curl -X OPTIONS \
   -H "Origin: https://www.rajala-services.com" \
   -H "Access-Control-Request-Method: GET" \
   -H "Access-Control-Request-Headers: Content-Type" \
-  https://us-central1-fxnr-web.cloudfunctions.net/bookings
+  https://europe-north1-fxnr-web.cloudfunctions.net/bookings
 ```
 
 **Expected Result:** HTTP 200 status with appropriate CORS headers
@@ -91,7 +91,7 @@ curl -X OPTIONS \
 **Method:** Browser or Command Line
 
 ```bash
-curl https://us-central1-fxnr-web.cloudfunctions.net/bookings
+curl https://europe-north1-fxnr-web.cloudfunctions.net/bookings
 ```
 
 **Expected Results:**

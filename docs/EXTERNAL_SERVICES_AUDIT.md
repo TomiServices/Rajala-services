@@ -81,7 +81,7 @@ This document provides a comprehensive audit of all external services and integr
 ##### 1.3 Firebase Cloud Functions (Gen2)
 - **Purpose:** Backend API and automation
 - **Runtime:** Node.js 20
-- **Region:** us-central1
+- **Region:** europe-north1
 - **Functions Deployed:**
   - `bookings` (GET) - Fetch all bookings
   - `book` (POST) - Create new booking
@@ -139,7 +139,7 @@ Synchronizes customer bookings with a shared Google Calendar for the business to
 ```
 GOOGLE_CALENDAR_ID=<calendar_id>@group.calendar.google.com
 GOOGLE_SERVICE_ACCOUNT=<stringified_json>
-WATCH_CALLBACK_URL=https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook
+WATCH_CALLBACK_URL=https://europe-north1-fxnr-web.cloudfunctions.net/calendarWebhook
 ```
 
 ---

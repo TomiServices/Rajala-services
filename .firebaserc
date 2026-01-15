@@ -1,7 +1,5 @@
 {
-  "projects": {
-    "main": "Webbi1"
-  },
-  "targets": {},
-  "etags": {}
+  "projects":  {
+    "default": "webbi1"
+  }
 }

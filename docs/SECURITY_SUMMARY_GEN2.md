@@ -125,7 +125,7 @@ All user inputs are validated:
 - Gen2 functions run in isolated environment
 - Automatic scaling with security updates
 - HTTPS-only endpoints
-- Regional deployment (us-central1)
+- Regional deployment (europe-north1)
 
 ---
 

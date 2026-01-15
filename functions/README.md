@@ -175,10 +175,10 @@ firebase deploy --only functions:book
 
 ```bash
 # Test bookings endpoint
-curl http://localhost:5001/your-project/us-central1/bookings
+curl http://localhost:5001/your-project/europe-north1/bookings
 
 # Test book endpoint
-curl -X POST http://localhost:5001/your-project/us-central1/book \
+curl -X POST http://localhost:5001/your-project/europe-north1/book \
   -H "Content-Type: application/json" \
   -d @test-booking.json
 ```

@@ -64,7 +64,7 @@ GA_MEASUREMENT_ID=G-SP5R1MN1H9
 DOMAIN=fixnero.fi
 
 # API Endpoint Base URL
-API_BASE_URL=https://us-central1-fxnr-web.cloudfunctions.net
+API_BASE_URL=https://europe-north1-fxnr-web.cloudfunctions.net
 
 # ============================================
 # DEVELOPMENT ONLY
@@ -164,8 +164,8 @@ GOOGLE_CALENDAR_ID=your-calendar-id@group.calendar.google.com
 # Calendar webhook callback URL (for push notifications)
 # This is your Cloud Function URL for calendar sync
 # Format: https://REGION-PROJECT_ID.cloudfunctions.net/calendarWebhook
-# Example: https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook
-WATCH_CALLBACK_URL=https://us-central1-your-project.cloudfunctions.net/calendarWebhook
+# Example: https://europe-north1-fxnr-web.cloudfunctions.net/calendarWebhook
+WATCH_CALLBACK_URL=https://europe-north1-your-project.cloudfunctions.net/calendarWebhook
 
 # ============================================
 # FIREBASE CONFIGURATION
@@ -177,10 +177,10 @@ WATCH_CALLBACK_URL=https://us-central1-your-project.cloudfunctions.net/calendarW
 FIREBASE_PROJECT_ID=fxnr-web
 
 # Firebase region for Cloud Functions
-# Default: us-central1
+# Default: europe-north1
 # Other options: europe-west1, asia-northeast1, etc.
 # See: https://cloud.google.com/functions/docs/locations
-FIREBASE_REGION=us-central1
+FIREBASE_REGION=europe-north1
 
 # ============================================
 # CORS CONFIGURATION
@@ -318,7 +318,7 @@ ENABLE_PERFORMANCE_MONITORING=true
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
-| `FIREBASE_REGION` | `us-central1` | Cloud Functions region |
+| `FIREBASE_REGION` | `europe-north1` | Cloud Functions region |
 | `TIMEZONE` | `Europe/Helsinki` | Business timezone |
 | `BUSINESS_HOURS_START` | `09:00` | Opening time |
 | `BUSINESS_HOURS_END` | `17:00` | Closing time |

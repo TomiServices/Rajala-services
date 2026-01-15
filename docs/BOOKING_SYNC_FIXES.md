@@ -59,7 +59,7 @@ const recaptchaResult = await verifyRecaptcha(recaptchaToken, { expectedAction: 
 ```javascript
 exports.onBookingCreated = onDocumentCreated({
   document: `${BOOKINGS_COLLECTION}/{bookingId}`,
-  region: 'us-central1'
+  region: 'europe-north1'
 }, async (event) => {
   // Try Firebase Email Extension first
   let mailDocId = await createEmailDocument(bookingData, bookingId);

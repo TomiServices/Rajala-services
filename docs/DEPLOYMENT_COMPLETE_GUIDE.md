@@ -158,7 +158,7 @@ curl -X POST \
   -d '{
     "id": "rajala-calendar-sync",
     "type": "web_hook",
-    "address": "https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook"
+    "address": "https://europe-north1-fxnr-web.cloudfunctions.net/calendarWebhook"
   }'
 ```
 
@@ -173,7 +173,7 @@ curl -X POST \
    {
      "id": "rajala-calendar-sync",
      "type": "web_hook",
-     "address": "https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook"
+     "address": "https://europe-north1-fxnr-web.cloudfunctions.net/calendarWebhook"
    }
    ```
 4. Click "Execute"
@@ -240,7 +240,7 @@ google.calendar_id = "xxx@group.calendar.google.com" # Calendar ID
 
 ### Firebase Project
 - **Project ID:** fxnr-web
-- **Region:** us-central1
+- **Region:** europe-north1
 - **Collection:** varaukset (Finnish for "bookings")
 
 ## 🎯 Expected Endpoints
@@ -248,16 +248,16 @@ google.calendar_id = "xxx@group.calendar.google.com" # Calendar ID
 After deployment, these endpoints will be available:
 
 1. **GET /bookings** - Fetch all bookings
-   - URL: `https://us-central1-fxnr-web.cloudfunctions.net/bookings`
+   - URL: `https://europe-north1-fxnr-web.cloudfunctions.net/bookings`
    - Returns: JSON array of bookings
 
 2. **POST /book** - Create booking
-   - URL: `https://us-central1-fxnr-web.cloudfunctions.net/book`
+   - URL: `https://europe-north1-fxnr-web.cloudfunctions.net/book`
    - Body: `{name, email, phone, aika, services, recaptcha}`
    - Returns: `{success: true, id: "..."}`
 
 3. **POST /calendarWebhook** - Google Calendar notifications
-   - URL: `https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook`
+   - URL: `https://europe-north1-fxnr-web.cloudfunctions.net/calendarWebhook`
    - Triggered by Google Calendar changes
 
 ## 🔒 Security Checklist

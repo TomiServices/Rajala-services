@@ -225,7 +225,7 @@ function initializeBookingSystem() {
     // Fetch bookings from backend Firebase Function with retry logic
     async function fetchBookings() {
         const data = await fetchWithRetry(
-            'https://us-central1-webbi1.cloudfunctions.net/bookings',
+            'https://europe-north1-webbi1.cloudfunctions.net/bookings',
             {},
             2 // Max 2 retries
         );
@@ -2246,7 +2246,7 @@ function initializeBookingSystem() {
                 };
                 
                 const result = await fetchWithRetry(
-                    'https://us-central1-webbi1.cloudfunctions.net/book',
+                    'https://europe-north1-webbi1.cloudfunctions.net/book',
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },

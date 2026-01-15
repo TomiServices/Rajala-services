@@ -146,7 +146,7 @@ grep -i "error" functions.log
 firebase functions:log --only calendarWebhook
 
 # Manually trigger webhook
-curl -X POST https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook \
+curl -X POST https://europe-north1-fxnr-web.cloudfunctions.net/calendarWebhook \
   -H "x-goog-resource-state: exists" \
   -H "x-goog-channel-id: test" \
   -H "x-goog-resource-id: test"

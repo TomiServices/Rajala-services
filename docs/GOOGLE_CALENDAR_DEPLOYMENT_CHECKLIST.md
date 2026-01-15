@@ -115,7 +115,7 @@ This checklist helps ensure all steps are completed when deploying the Google Ca
 ### 6. Set Up Webhook (Two-Way Sync)
 
 - [ ] **Get webhook URL**
-  - URL: `https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook`
+  - URL: `https://europe-north1-fxnr-web.cloudfunctions.net/calendarWebhook`
   
 - [ ] **Register webhook with Google Calendar**
   - Method: Using curl or Google API Explorer
@@ -161,7 +161,7 @@ This checklist helps ensure all steps are completed when deploying the Google Ca
   
 - [ ] **Trigger webhook manually** (if auto-trigger doesn't work yet)
   ```bash
-  curl -X POST https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook \
+  curl -X POST https://europe-north1-fxnr-web.cloudfunctions.net/calendarWebhook \
     -H "x-goog-resource-state: exists" \
     -H "x-goog-channel-id: test" \
     -H "x-goog-resource-id: test"

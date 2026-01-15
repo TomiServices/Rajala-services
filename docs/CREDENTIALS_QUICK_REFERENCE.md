@@ -7,7 +7,7 @@ This document contains all the key information for external integrations after m
 ### Firebase Project
 - **Project ID**: `fxnr-web`
 - **Project Console**: https://console.firebase.google.com/project/fxnr-web
-- **Region**: us-central1
+- **Region**: europe-north1
 
 ### Google Analytics
 - **Measurement ID**: `G-SP5R1MN1H9`
@@ -82,7 +82,7 @@ EMAIL_PASSWORD={Gmail app-specific password}
 EMAIL_FROM=info@fixnero.fi
 
 # Optional
-WATCH_CALLBACK_URL=https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook
+WATCH_CALLBACK_URL=https://europe-north1-fxnr-web.cloudfunctions.net/calendarWebhook
 RECAPTCHA_SCORE_THRESHOLD=0.5
 ```
 
@@ -126,10 +126,10 @@ RECAPTCHA_SCORE_THRESHOLD=0.5
 - **Firebase Hosting**: https://fxnr-web.web.app
 
 ### API Endpoints
-- **GET /bookings**: https://us-central1-fxnr-web.cloudfunctions.net/bookings
-- **POST /book**: https://us-central1-fxnr-web.cloudfunctions.net/book
-- **POST /calendarWebhook**: https://us-central1-fxnr-web.cloudfunctions.net/calendarWebhook
-- **POST /watchRegistrar**: https://us-central1-fxnr-web.cloudfunctions.net/watchRegistrar
+- **GET /bookings**: https://europe-north1-fxnr-web.cloudfunctions.net/bookings
+- **POST /book**: https://europe-north1-fxnr-web.cloudfunctions.net/book
+- **POST /calendarWebhook**: https://europe-north1-fxnr-web.cloudfunctions.net/calendarWebhook
+- **POST /watchRegistrar**: https://europe-north1-fxnr-web.cloudfunctions.net/watchRegistrar
 
 ## 📞 Company Contact Information
 

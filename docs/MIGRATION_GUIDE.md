@@ -187,7 +187,7 @@ Domain: fixnero.fi
 ```
 Website: https://fixnero.fi
 Firebase Console: https://console.firebase.google.com/project/fxnr-web
-Cloud Functions: https://us-central1-fxnr-web.cloudfunctions.net
+Cloud Functions: https://europe-north1-fxnr-web.cloudfunctions.net
 ```
 
 ### 3. Communication Plan
@@ -373,7 +373,7 @@ firebase deploy --only functions
 **Verify Functions:**
 ```bash
 # Test functions
-curl https://us-central1-fxnr-web.cloudfunctions.net/bookings
+curl https://europe-north1-fxnr-web.cloudfunctions.net/bookings
 
 # Check logs
 firebase functions:log
@@ -781,7 +781,7 @@ echo ""
 
 # Test 2: Functions Endpoint
 echo "Test 2: Cloud Functions"
-response=$(curl -s -o /dev/null -w "%{http_code}" https://us-central1-fxnr-web.cloudfunctions.net/bookings)
+response=$(curl -s -o /dev/null -w "%{http_code}" https://europe-north1-fxnr-web.cloudfunctions.net/bookings)
 if [ "$response" -eq 200 ]; then
     echo "✅ Functions responding (HTTP $response)"
 else
