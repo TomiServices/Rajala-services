@@ -2223,7 +2223,7 @@ function initializeBookingSystem() {
                 // Execute reCAPTCHA v3 to get token
                 let recaptchaToken;
                 try {
-                    recaptchaToken = await executeRecaptcha('booking');
+                    recaptchaToken = await executeRecaptcha('booking_' + Date.now());
                 } catch (recaptchaError) {
                     throw new Error('Turvavarmennus epäonnistui. Päivitä sivu ja yritä uudelleen.');
                 }
