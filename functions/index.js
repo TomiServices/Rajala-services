@@ -700,19 +700,19 @@ exports.book = onRequest({
     // 1. Set RECAPTCHA_SECRET environment variable in Firebase Functions
     // 2. Uncomment the recaptchaToken extraction and verification code below:
     //
-    // const recaptchaToken = req.body.recaptcha || req.body.recaptchaToken || req.body['g-recaptcha-response'];
-    // const recaptchaResult = await verifyRecaptcha(recaptchaToken, { expectedAction: 'booking' });
-    // if (!recaptchaResult.success) {
-    //   const statusCode = recaptchaResult.error === 'missing recaptcha token' ? 400 : 401;
-    //   return res.status(statusCode).json({ 
-    //     error: recaptchaResult.error,
-    //     message: recaptchaResult.error === 'missing recaptcha token' 
-    //       ? 'Turvavarmennus puuttuu. Päivitä sivu ja yritä uudelleen.'
-    //       : 'Turvavarmennus epäonnistui. Yritä uudelleen.',
-    //     details: recaptchaResult.details
-    //   });
-    // }
-    console.log('reCAPTCHA verification skipped - disabled for deployment');
+     const recaptchaToken = req.body.recaptcha || req.body.recaptchaToken || req.body['g-recaptcha-response'];
+     const recaptchaResult = await verifyRecaptcha(recaptchaToken, { expectedAction: 'booking' });
+     if (!recaptchaResult.success) {
+       const statusCode = recaptchaResult.error === 'missing recaptcha token' ? 400 : 401;
+       return res.status(statusCode).json({ 
+         error: recaptchaResult.error,
+         message: recaptchaResult.error === 'missing recaptcha token' 
+           ? 'Turvavarmennus puuttuu. Päivitä sivu ja yritä uudelleen.'
+           : 'Turvavarmennus epäonnistui. Yritä uudelleen.',
+         details: recaptchaResult.details
+       });
+     }
+    console.log('reCAPTCHA verification successful');
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) return res.status(400).json({ error: 'Virheellinen sähköpostiosoite' });
@@ -935,7 +935,7 @@ async function createEmailDocument(bookingData, bookingId) {
 // This ensures emails are sent regardless of which method is available
 exports.onBookingCreated = onDocumentCreated({
   document: `${BOOKINGS_COLLECTION}/{bookingId}`,
-  region: 'us-central1'
+  region: 'europe-north1'
 }, async (event) => {
   const bookingData = event.data.data();
   const bookingId = event.params.bookingId;
@@ -1042,7 +1042,7 @@ exports.onBookingCreated = onDocumentCreated({
 
 exports.onBookingUpdated = onDocumentUpdated({
   document: `${BOOKINGS_COLLECTION}/{bookingId}`,
-  region: 'us-central1'
+  region: 'europe-north1'
 }, async (event) => {
   const calendar = initializeGoogleCalendar();
   if (!calendar || !calendarId) return null;
@@ -1094,7 +1094,7 @@ exports.onBookingUpdated = onDocumentUpdated({
 
 exports.onBookingDeleted = onDocumentDeleted({
   document: `${BOOKINGS_COLLECTION}/{bookingId}`,
-  region: 'us-central1'
+  region: 'europe-north1'
 }, async (event) => {
   const calendar = initializeGoogleCalendar();
   if (!calendar || !calendarId) return null;
