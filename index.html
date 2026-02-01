@@ -602,8 +602,6 @@
             background-repeat: no-repeat;
             /* Improve image rendering quality */
             background-attachment: scroll;
-            /* Ensure no white space around hero */
-            object-fit: cover;
         }
         
         /* Hero text overlay at bottom of hero section */
@@ -628,6 +626,23 @@
             line-height: 1.6;
             max-width: 1000px;
             margin: 0 auto;
+        }
+        
+        /* Desktop optimization - reduce zoom effect and improve positioning */
+        @media (min-width: 1024px) {
+            #hero {
+                /* Adjust background position to show more of the image on desktop */
+                background-position: center 40%;
+                /* Ensure proper scaling without excessive zoom */
+                background-size: cover;
+            }
+        }
+        
+        @media (min-width: 1440px) {
+            #hero {
+                /* Further optimize for larger desktop screens */
+                background-position: center 35%;
+            }
         }
         
         /* Hero1: High-resolution screens (2K and above, >= 2560px) */
