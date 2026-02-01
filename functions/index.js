@@ -287,6 +287,18 @@ async function sendBookingConfirmationEmail(bookingData) {
             <p><strong>Kokonaishinta:</strong> ${escapedTotalPrice || 'Hinta sovittaessa'}</p>
           </div>
           
+          <div style="background-color: #e8f4f8; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <h3 style="margin-top: 0; color: #333;">Saapumisohjeet</h3>
+            <p><strong>Osoite:</strong> Tiilenvalajantie 6</p>
+            <p><strong>Postiosoite:</strong> 02330, Espoo</p>
+            <div style="margin-top: 15px;">
+              <a href="https://www.google.com/maps/dir/?api=1&destination=Tiilenvalajantie+6,+02330+Espoo,+Finland" 
+                 style="display: inline-block; background-color: #c41e3a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                🗺️ Reittiohjeet
+              </a>
+            </div>
+          </div>
+          
           <p>Otamme sinuun yhteyttä tarvittaessa ennen varattua aikaa.</p>
           <p>Jos sinun täytyy perua tai muuttaa varausta, ota yhteyttä:</p>
           <ul>
