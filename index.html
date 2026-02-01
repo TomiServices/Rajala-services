@@ -746,12 +746,6 @@
                 padding-bottom: 24px !important;
             }
             
-            /* Ensure UKK section has proper spacing - FIX OVERLAP */
-            #ukk {
-                margin-top: 50px !important;
-                margin-bottom: 50px !important;
-            }
-            
             /* Ensure Yhteystiedot section has proper spacing */
             #yhteystiedot {
                 margin-top: 40px !important;
@@ -1032,12 +1026,6 @@
         #hinnasto {
             margin-top: 60px;
             margin-bottom: 60px;
-        }
-        
-        /* Reduce spacing between UKK (Tietoa meistä) and Yhteystiedot */
-        /* UKK has extra padding (50px vs 24px), so we reduce top margin of yhteystiedot */
-        #ukk {
-            margin-bottom: 40px;
         }
         
         #yhteystiedot {
@@ -1770,12 +1758,6 @@
                 padding-bottom: 24px !important;
             }
             
-            /* Standardize spacing for UKK (Tietoa meistä) section - FIX OVERLAP */
-            #ukk {
-                margin-top: 50px !important;
-                margin-bottom: 75px !important;
-            }
-            
             /* Standardize spacing for Yhteystiedot section */
             #yhteystiedot {
                 margin-top: 75px !important;
@@ -1806,11 +1788,6 @@
             #hinnasto {
                 margin-top: 50px;
                 margin-bottom: 50px;
-            }
-            
-            #ukk {
-                margin-top: 50px;
-                margin-bottom: 45px;
             }
             
             #yhteystiedot {
@@ -3152,13 +3129,6 @@
                 padding-bottom: 22px !important;
             }
             
-            /* Standardize spacing for UKK (Tietoa meistä) section - FIX OVERLAP */
-            #ukk {
-                margin-top: 55px !important;
-                margin-bottom: 45px !important;
-                padding: 42px 20px !important;
-            }
-            
             /* Standardize spacing for Yhteystiedot section */
             #yhteystiedot {
                 margin-top: 45px !important;
@@ -3189,13 +3159,6 @@
                 margin-top: 60px !important;
                 margin-bottom: 60px !important;
                 padding: 30px 14px 24px 14px !important;
-            }
-            
-            /* Standardize spacing for UKK (Tietoa meistä) section - FIX OVERLAP */
-            #ukk {
-                margin-top: 60px !important;
-                margin-bottom: 40px !important;
-                padding: 40px 16px !important;
             }
             
             /* Standardize spacing for Yhteystiedot section */
@@ -5850,32 +5813,25 @@
     </section>    </div>
     <!-- End of services container -->
     
-    <!-- FAQ Section - Link to Tietoa meistä page -->
-    <section id="ukk" style="background: #f5f5f5; position: relative; overflow: hidden; border-left: 5px solid #333333; text-align: center; padding: 50px 30px;">
-        <!-- Add animated background pattern -->
-        <div aria-hidden="true" style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(45deg, #e8e8e8 0px, #e8e8e8 30px, #f0f0f0 30px, #f0f0f0 60px); opacity: 0.4; z-index: 0; animation: patternMoveSlowly 800s linear infinite; pointer-events: none;"></div>
-        <div style="position: relative; z-index: 1;">
-            <h2 style="color: #333333;">Tietoa meistä</h2>
-            <p style="margin-bottom: 30px; font-size: 1.1rem; color: #333333;">Tutustu meihin paremmin ja löydä vastaukset yleisimpiin kysymyksiin palveluistamme.</p>
-            
-            <a href="tietoa-meista" class="btn-read-more" style="display: inline-block; padding: 16px 40px; font-size: 1.1rem; margin-right: 10px;">
-                👥 Tietoa Meistä
-            </a>
-            
-            <a href="tietoa-meista#ukk" class="btn-read-more" style="display: inline-block; padding: 16px 40px; font-size: 1.1rem;">
-                📋 Lue UKK sivulta
-            </a>
-            
-            <p style="margin-top: 25px; font-size: 0.95rem; color: #333333;">
-                Tai soita meille suoraan: <a href="tel:+358401935001" style="color: #333333; font-weight: 600; text-decoration: none;">📞 040 1935001</a>
-            </p>
-        </div>
-    </section>
-    
     <section id="yhteystiedot">
         <h2>Yhteystiedot</h2>
         <div class="polishing-content">
             <div class="polishing-text">
+                <!-- Tietoa meistä content integrated above contact details -->
+                <h3 style="color: #333333; margin-bottom: 15px;">Tietoa meistä</h3>
+                <p style="margin-bottom: 20px; font-size: 1.05rem; color: #333333;">Tutustu meihin paremmin ja löydä vastaukset yleisimpiin kysymyksiin palveluistamme.</p>
+                
+                <div style="margin-bottom: 30px;">
+                    <a href="tietoa-meista" class="btn-read-more" style="display: inline-block; padding: 12px 30px; font-size: 1rem; margin-right: 10px; margin-bottom: 10px;">
+                        👥 Tietoa Meistä
+                    </a>
+                    
+                    <a href="tietoa-meista#ukk" class="btn-read-more" style="display: inline-block; padding: 12px 30px; font-size: 1rem; margin-bottom: 10px;">
+                        📋 Lue UKK
+                    </a>
+                </div>
+                
+                <!-- Original contact details -->
                 <p>Ota yhteyttä ja kysy lisää palveluistamme tai varaa aika!</p>
                 <ul>
                     <li><strong>Puhelin:</strong> 040 1935001</li>
