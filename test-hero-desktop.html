@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Image Desktop Test - Desktop Scaling Verification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        .info-box {
+            background: #e3f2fd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+        }
+        .info-box h2 {
+            margin-bottom: 10px;
+            color: #1976d2;
+            font-size: 1.3rem;
+        }
+        .info-box ul {
+            margin-left: 20px;
+        }
+        .info-box li {
+            margin: 8px 0;
+        }
+        .test-section {
+            margin: 40px 0;
+            padding: 30px;
+            background: #fafafa;
+            border-radius: 8px;
+        }
+        .test-section h2 {
+            margin-bottom: 20px;
+            color: #333;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        /* Main hero test - simulating index.html */
+        #hero-test {
+            width: 100%;
+            height: 600px;
+            position: relative;
+            background-image: url('Hero2.webp');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+            margin: 20px 0;
+            border: 3px solid #4caf50;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        /* Desktop optimization - matching index.html */
+        @media (min-width: 1024px) {
+            #hero-test {
+                background-position: center 40%;
+                background-size: cover;
+            }
+        }
+        
+        @media (min-width: 1440px) {
+            #hero-test {
+                background-position: center 35%;
+            }
+        }
+        
+        @media (min-width: 2560px) {
+            #hero-test {
+                background-image: url('Hero1.webp');
+                background-position: center center !important;
+                background-size: cover !important;
+            }
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        /* Service page hero test */
+        .hero-image-section-test {
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+            background: #000;
+            border: 3px solid #ff9800;
+            border-radius: 8px;
+        }
+        
+        .hero-image-section-test img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center center;
+            display: block;
+        }
+        
+        /* Desktop optimization - matching service pages */
+        @media (min-width: 769px) and (max-width: 1023px) {
+            .hero-image-section-test {
+                height: 420px;
+            }
+            .hero-image-section-test img {
+                object-position: center 45%;
+            }
+        }
+        
+        @media (min-width: 1024px) and (max-width: 1279px) {
+            .hero-image-section-test {
+                height: 450px;
+                max-height: 38vh;
+            }
+            .hero-image-section-test img {
+                object-position: center 40%;
+                object-fit: cover;
+            }
+        }
+        
+        @media (min-width: 1280px) and (max-width: 1919px) {
+            .hero-image-section-test {
+                height: 480px;
+                max-height: 35vh;
+            }
+            .hero-image-section-test img {
+                object-position: center 35%;
+                object-fit: cover;
+            }
+        }
+        
+        @media (min-width: 1920px) {
+            .hero-image-section-test {
+                height: 520px;
+                max-height: 40vh;
+            }
+            .hero-image-section-test img {
+                object-position: center 30%;
+                object-fit: cover;
+            }
+        }
+        
+        .resolution-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 1000;
+            font-family: monospace;
+        }
+        
+        .status-good { color: #4caf50; }
+        .status-warning { color: #ff9800; }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="resolution-indicator">
+        Screen: <span id="screen-width">0</span>px × <span id="screen-height">0</span>px
+    </div>
+    
+    <div class="container">
+        <h1>🖥️ Hero Image Desktop Scaling Test</h1>
+        
+        <div class="info-box">
+            <h2>Test Instructions</h2>
+            <ul>
+                <li><strong>Resize your browser</strong> to test different screen sizes</li>
+                <li><strong>Watch the resolution indicator</strong> in the top-right corner</li>
+                <li><strong>Check that images are NOT overly zoomed</strong> at desktop sizes</li>
+                <li><strong>Verify smooth transitions</strong> between breakpoints</li>
+            </ul>
+        </div>
+        
+        <div class="info-box">
+            <h2>Changes Implemented</h2>
+            <ul>
+                <li class="status-good">✅ Removed invalid <code>object-fit: cover</code> from <code>#hero</code> background image</li>
+                <li class="status-good">✅ Added desktop media query for 1024px-1439px with <code>background-position: center 40%</code></li>
+                <li class="status-good">✅ Added desktop media query for 1440px-2559px with <code>background-position: center 35%</code></li>
+                <li class="status-good">✅ Split tablet/desktop range (769px-1279px) into two ranges for better control</li>
+                <li class="status-good">✅ Added explicit <code>object-fit: cover</code> to service page <code>img</code> elements in media queries</li>
+                <li class="status-good">✅ Added <code>max-height</code> constraints to prevent excessive vertical space</li>
+            </ul>
+        </div>
+        
+        <div class="info-box">
+            <h2>Breakpoints Used</h2>
+            <ul>
+                <li><strong>Mobile:</strong> &lt; 768px - Full screen hero with center positioning</li>
+                <li><strong>Tablet:</strong> 769px - 1023px - Moderate height (420px), position at 45%</li>
+                <li><strong>Desktop Small:</strong> 1024px - 1279px - Height 450px, position at 40%</li>
+                <li><strong>Desktop Medium:</strong> 1280px - 1439px - Height 480px, position at 35%</li>
+                <li><strong>Desktop Large:</strong> 1440px - 1919px - Enhanced positioning at 35%</li>
+                <li><strong>Desktop XL:</strong> 1920px - 2559px - Height 520px, position at 30%</li>
+                <li><strong>2K+ Screens:</strong> ≥ 2560px - Switches to Hero1.webp, center positioning</li>
+            </ul>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 1: Main Hero Section (index.html style)</h2>
+            <p style="margin-bottom: 15px;">This simulates the hero section from <strong>index.html</strong> with background-image.</p>
+            
+            <div id="hero-test">
+                <div class="hero-overlay">
+                    <strong>Hero Background Image</strong><br>
+                    Using Hero2.webp (1920×1280)<br>
+                    Check: Image should NOT be excessively zoomed on desktop
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 2: Service Page Hero (service pages style)</h2>
+            <p style="margin-bottom: 15px;">This simulates the hero section from <strong>service pages</strong> (pesupalvelut.html, etc.) using <code>&lt;img&gt;</code> with object-fit.</p>
+            
+            <div class="hero-image-section-test">
+                <img src="Pesupalvelut.webp" 
+                     alt="Test Hero Image" 
+                     width="1536" 
+                     height="1024">
+            </div>
+            
+            <p style="margin-top: 15px;"><em>Using Pesupalvelut.webp (1536×1024) as test image</em></p>
+        </div>
+        
+        <div class="info-box">
+            <h2>Expected Results</h2>
+            <ul>
+                <li><strong>1024px - 1439px:</strong> Images positioned at 40% from top, showing more content</li>
+                <li><strong>1440px - 2559px:</strong> Images positioned at 35% from top, even more content visible</li>
+                <li><strong>No pixelation:</strong> Images should remain sharp at all desktop resolutions</li>
+                <li><strong>Proper aspect ratios:</strong> Images maintain their original proportions</li>
+                <li><strong>Smooth scaling:</strong> No sudden jumps or distortions between breakpoints</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Update screen resolution indicator
+        function updateResolution() {
+            document.getElementById('screen-width').textContent = window.innerWidth;
+            document.getElementById('screen-height').textContent = window.innerHeight;
+        }
+        
+        updateResolution();
+        window.addEventListener('resize', updateResolution);
+    </script>
+</body>
+</html>

@@ -568,13 +568,24 @@
             }
         }
         
-        /* Desktop optimization - reduce zoom effect */
-        @media (min-width: 769px) and (max-width: 1279px) {
+        /* Desktop optimization - reduce zoom effect and improve image visibility */
+        @media (min-width: 769px) and (max-width: 1023px) {
+            .hero-image-section {
+                height: 420px;
+            }
+            .hero-image-section img {
+                object-position: center 45%;
+            }
+        }
+        
+        @media (min-width: 1024px) and (max-width: 1279px) {
             .hero-image-section {
                 height: 450px;
+                max-height: 38vh;
             }
             .hero-image-section img {
                 object-position: center 40%;
+                object-fit: cover;
             }
         }
         
@@ -585,6 +596,7 @@
             }
             .hero-image-section img {
                 object-position: center 35%;
+                object-fit: cover;
             }
         }
         
@@ -595,6 +607,7 @@
             }
             .hero-image-section img {
                 object-position: center 30%;
+                object-fit: cover;
             }
         }
     </style>
