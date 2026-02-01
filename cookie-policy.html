@@ -57,153 +57,91 @@
             padding: 0;
             line-height: 1.6;
         }
-        .top-banner {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            background: #000000;
-            color: #ffffff;
-            text-align: center;
-            padding: 4px 0;
-            z-index: 1002;
-            font-weight: 400;
-            font-size: 0.85rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        nav {
-            position: fixed;
-            top: 20px; left: 0; right: 0;
-            background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1003;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
-        nav img {
-            height: 50px;
-            margin-left: 10px;
-            margin-right: 15px;
-            filter: brightness(1.1);
-            transition: all 0.3s ease;
-        }
-        nav img:hover {
-            transform: scale(1.05);
-            filter: brightness(1.2);
-        }
-        nav a {
-            color: #ffffff;
-            padding: 16px 18px;
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: 500;
-            display: block;
-            white-space: nowrap;
-            transition: all 0.3s ease;
-            border-radius: 8px;
-            margin: 0 2px;
-        }
-        nav a:hover, nav a.nav-active {
-            background: linear-gradient(135deg, #333333, #1a1a1a);
-            color: #ffffff;
-            transform: translateY(-2px);
-        }
-        nav a.nav-active {
-            box-shadow: 0 0 15px rgba(63, 169, 245, 0.4);
-            border-bottom: 2px solid #3FA9F5;
-        }
-        
-        /* Laptop screen adjustments (1280px - 1366px) to prevent navigation overflow */
-        @media (min-width: 1280px) and (max-width: 1366px) {
-            nav {
-                padding: 0 10px;
-            }
-            nav img {
-                height: 45px;
-                margin-left: 5px;
-                margin-right: 10px;
-            }
-            nav a {
-                font-size: 15px;
-                padding: 14px 12px;
-                margin: 0 1px;
-            }
-        }
-        
         .container {
             max-width: 900px;
-            margin: 140px auto 60px auto;
-            background: #fff;
+            margin: 40px auto;
             padding: 40px;
+            background: white;
             border-radius: 18px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .back-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #666666, #444444);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         }
         h1 {
-            color: #1a1a1a;
-            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', sans-serif;
+            color: #333;
             font-size: 2.5rem;
             margin-bottom: 20px;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+            font-style: italic;
+            text-align: center;
         }
         h2 {
-            color: #2a2a2a;
-            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', sans-serif;
-            font-size: 2rem;
+            color: #333;
+            font-size: 1.8rem;
             margin-top: 30px;
             margin-bottom: 15px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-style: italic;
         }
         h3 {
-            color: #333;
+            color: #444;
             font-size: 1.3rem;
             margin-top: 20px;
             margin-bottom: 10px;
+            font-weight: 600;
         }
         p, li {
             color: #555;
             line-height: 1.8;
             margin-bottom: 15px;
+            font-size: 1rem;
         }
-        ul {
-            padding-left: 30px;
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 20px;
         }
-        .back-link {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 12px 24px;
-            background: #000;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+        .last-updated {
+            text-align: center;
+            color: #5a5a5a;
+            font-style: italic;
+            margin-bottom: 30px;
         }
-        .back-link:hover {
-            background: #333;
-            transform: translateY(-2px);
+        .highlight {
+            background: #f8f9fa;
+            padding: 20px;
+            border-left: 4px solid #666666;
+            margin: 20px 0;
+            border-radius: 5px;
         }
         footer {
-            background: #1a1a1a;
-            color: #ecf0f1;
-            padding: 40px 20px;
             text-align: center;
+            padding: 30px 20px;
+            color: #5a5a5a;
+            background: #f8f8f8;
+            margin-top: 40px;
         }
     </style>
 </head>
 <body>
-    <div class="top-banner">
-        📞 Varaa aika: +358 40 1935001 | 📍 Kivenlahti, Espoo
-    </div>
-    
-    <nav id="nav">
-        <a href="index">
-            <img src="FXNR.webp" alt="Fixnero - Autohuolto Espoo">
-        </a>
-        <a href="index">Etusivu</a>
-    </nav>
-    
     <div class="container">
-        <h1>Evästekäytäntö (Cookie Policy)</h1>
+        <a href="index" class="back-button">← Takaisin etusivulle</a>
         
-        <p><strong>Viimeisin päivitys:</strong> Lokakuu 2025</p>
+        <h1>Evästekäytäntö (Cookie Policy)</h1>
+        <p class="last-updated">Viimeisin päivitys: Lokakuu 2025</p>
         
         <h2>Mikä on eväste?</h2>
         <p>Eväste on pieni tekstitiedosto, jonka verkkosivusto tallentaa käyttäjän laitteelle (tietokone, tabletti, älypuhelin). Evästeet auttavat meitä tarjoamaan paremman käyttökokemuksen ja analysoimaan verkkosivustomme käyttöä.</p>
@@ -286,15 +224,17 @@
         
         <h2>Muutokset evästekäytäntöön</h2>
         <p>Voimme päivittää tätä evästekäytäntöä ajoittain. Suosittelemme tarkistamaan tämän sivun säännöllisesti mahdollisten muutosten varalta. Päivitykset tulevat voimaan heti, kun ne julkaistaan tällä sivulla.</p>
-        
-        <a href="index" class="back-link">← Takaisin etusivulle</a>
     </div>
     
     <footer>
         <p>&copy; 2025 Fixnero Oy. Kaikki oikeudet pidätetään.</p>
-        <p style="margin-top: 10px;">
-            <a href="cookie-policy" style="color: #ecf0f1; text-decoration: none;">Evästekäytäntö</a>
+        <p>
+            <a href="index" style="color: #5a5a5a; text-decoration: none;">Etusivu</a> | 
+            <a href="tietosuojaseloste" style="color: #5a5a5a; text-decoration: none;">Tietosuojaseloste</a>
         </p>
     </footer>
+    
+    <!-- Cookie Consent Banner - GDPR Compliant -->
+    <script src="cookie-consent.min.js" defer></script>
 </body>
 </html>
