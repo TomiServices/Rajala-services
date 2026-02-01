@@ -551,11 +551,12 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center;
+            object-position: center center;
             display: block;
+            transition: transform 0.3s ease-in-out;
         }
         
-        /* Responsive hero image heights */
+        /* Responsive hero image heights and positioning */
         @media (max-width: 768px) {
             .hero-image-section {
                 height: 250px;
@@ -570,15 +571,33 @@
             }
         }
         
-        @media (min-width: 1280px) {
+        /* Desktop optimization - reduce zoom effect */
+        @media (min-width: 769px) and (max-width: 1279px) {
             .hero-image-section {
-                height: 500px;
+                height: 450px;
+            }
+            .hero-image-section img {
+                object-position: center 40%;
+            }
+        }
+        
+        @media (min-width: 1280px) and (max-width: 1919px) {
+            .hero-image-section {
+                height: 480px;
+                max-height: 35vh;
+            }
+            .hero-image-section img {
+                object-position: center 35%;
             }
         }
         
         @media (min-width: 1920px) {
             .hero-image-section {
-                height: 600px;
+                height: 520px;
+                max-height: 40vh;
+            }
+            .hero-image-section img {
+                object-position: center 30%;
             }
         }
     </style>
@@ -609,7 +628,13 @@
 
     <!-- Hero Image Section -->
     <div class="hero-image-section">
-        <img src="lasikorjaus.webp" alt="Lasikorjauspalvelu" width="1536" height="1024" loading="eager" fetchpriority="high">
+        <img src="lasikorjaus.webp" 
+             alt="Lasikorjauspalvelu - Ammattimainen lasikorjaus Espoossa" 
+             width="1536" 
+             height="1024" 
+             loading="eager" 
+             fetchpriority="high"
+             decoding="async">
     </div>
 
     <div class="container">
