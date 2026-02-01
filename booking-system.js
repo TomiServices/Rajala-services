@@ -877,7 +877,7 @@ function initializeBookingSystem() {
                     pricing: {
                         'Henkilöauto': '90 €',
                         'Maasturi': '95 €',
-                        'Paku': '100 €'
+                        'Pakettiauto': '100 €'
                     }
                 }
             ]
