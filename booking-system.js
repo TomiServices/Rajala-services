@@ -870,7 +870,16 @@ function initializeBookingSystem() {
                 { id: 'balancing', name: 'Renkaiden tasapainotus', price: '30 €' },
                 { id: 'tire-repair', name: 'Vuotavan renkaan paikkaus', price: '25 €' },
                 { id: 'rim-wash', name: 'Vanteiden pesu (4 kpl)', price: '15 €' },
-                { id: 'tire-hotel', name: 'Rengashotelli / kausisäilytys', price: '65 €' }
+                { id: 'tire-hotel', name: 'Rengashotelli / kausisäilytys', price: '65 €' },
+                { 
+                    id: 'tire-hotel-installation', 
+                    name: 'Rengashotelli / kausisäilytys + asennus', 
+                    pricing: {
+                        'Henkilöauto': '90 €',
+                        'Maasturi': '95 €',
+                        'Pakettiauto': '100 €'
+                    }
+                }
             ]
         },
         renkaidenasennus: {
