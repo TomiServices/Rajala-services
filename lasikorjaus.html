@@ -545,6 +545,8 @@
             position: relative;
             overflow: hidden;
             background: #000;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
         
         .hero-image-section img {
@@ -571,46 +573,48 @@
             }
         }
         
-        /* Desktop optimization - reduce zoom effect and improve image visibility */
+        /* Desktop optimization - parannettu kuvanlaatu */
         @media (min-width: 769px) and (max-width: 1023px) {
             .hero-image-section {
-                height: 420px;
+                height: 350px;
+                max-height: 35vh;
             }
             .hero-image-section img {
-                object-position: center 45%;
+                object-fit: contain;
+                object-position: center center;
             }
         }
         
         @media (min-width: 1024px) and (max-width: 1279px) {
             .hero-image-section {
-                height: 450px;
+                height: 380px;
                 max-height: 38vh;
             }
             .hero-image-section img {
-                object-position: center 40%;
-                object-fit: cover;
+                object-fit: contain;
+                object-position: center center;
             }
         }
         
         @media (min-width: 1280px) and (max-width: 1919px) {
             .hero-image-section {
-                height: 480px;
-                max-height: 35vh;
+                height: 400px;
+                max-height: 40vh;
             }
             .hero-image-section img {
-                object-position: center 35%;
-                object-fit: cover;
+                object-fit: contain;
+                object-position: center center;
             }
         }
         
         @media (min-width: 1920px) {
             .hero-image-section {
-                height: 520px;
-                max-height: 40vh;
+                height: 450px;
+                max-height: 42vh;
             }
             .hero-image-section img {
-                object-position: center 30%;
-                object-fit: cover;
+                object-fit: contain;
+                object-position: center center;
             }
         }
     </style>
