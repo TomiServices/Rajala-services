@@ -66,13 +66,13 @@ fi
 # Check 5: Error Handling
 echo ""
 echo "5. Checking Enhanced Error Handling..."
-if grep -q "Palvelu ei ole tällä hetkellä saatavilla" booking-system.js; then
+if grep -q "Palvelu ei ole tällä hetkellä saatavilla" static/js/booking-system.js; then
     echo -e "${GREEN}✓${NC} 503 error handling present"
 else
     echo -e "${YELLOW}⚠${NC} 503 error handling missing"
 fi
 
-if grep -q "reCAPTCHA ei ole latautunut" booking-system.js; then
+if grep -q "reCAPTCHA ei ole latautunut" static/js/booking-system.js; then
     echo -e "${GREEN}✓${NC} reCAPTCHA loading check present"
 else
     echo -e "${YELLOW}⚠${NC} reCAPTCHA loading check missing"
@@ -104,10 +104,10 @@ if command -v node &> /dev/null; then
         echo -e "${RED}✗${NC} functions/index.js has syntax errors"
     fi
     
-    if node -c booking-system.js 2>/dev/null; then
-        echo -e "${GREEN}✓${NC} booking-system.js syntax valid"
+    if node -c static/js/booking-system.js 2>/dev/null; then
+        echo -e "${GREEN}✓${NC} static/js/booking-system.js syntax valid"
     else
-        echo -e "${RED}✗${NC} booking-system.js has syntax errors"
+        echo -e "${RED}✗${NC} static/js/booking-system.js has syntax errors"
     fi
 else
     echo -e "${YELLOW}⚠${NC} Node.js not found, skipping syntax validation"
