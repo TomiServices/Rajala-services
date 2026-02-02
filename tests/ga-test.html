@@ -145,7 +145,7 @@
     </div>
 
     <!-- Include the cookie consent script -->
-    <script src="cookie-consent.min.js" defer></script>
+    <script src="../static/js/cookie-consent.min.js" defer></script>
 
     <script>
         // Wait for page to load
@@ -180,8 +180,8 @@
 
             // Try to get the GA ID from the cookie-consent script
             // Try minified version first, then fall back to unminified
-            fetch('cookie-consent.min.js')
-                .catch(() => fetch('cookie-consent.js'))
+            fetch('../static/js/cookie-consent.min.js')
+                .catch(() => fetch('../static/js/cookie-consent.js'))
                 .then(response => response.text())
                 .then(text => {
                     const match = text.match(/GA_MEASUREMENT_ID\s*=\s*['"]([^'"]+)['"]/);

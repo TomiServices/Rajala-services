@@ -280,7 +280,7 @@ if [ -f "index.html" ]; then
     fi
     
     # Check for Google Analytics
-    if grep -q "$EXPECTED_GA_MEASUREMENT_ID" index.html || grep -q "$EXPECTED_GA_MEASUREMENT_ID" cookie-consent.js 2>/dev/null; then
+    if grep -q "$EXPECTED_GA_MEASUREMENT_ID" index.html || grep -q "$EXPECTED_GA_MEASUREMENT_ID" static/js/cookie-consent.js 2>/dev/null; then
         print_success "Google Analytics measurement ID found"
     else
         print_warning "Google Analytics measurement ID not found"
@@ -289,12 +289,12 @@ else
     print_failure "index.html not found"
 fi
 
-print_test "booking-system.js"
-if [ -f "booking-system.js" ]; then
+print_test "static/js/booking-system.js"
+if [ -f "static/js/booking-system.js" ]; then
     print_success "booking-system.js exists"
     
     # Check for reCAPTCHA configuration
-    if grep -q "RECAPTCHA_SITE_KEY" booking-system.js; then
+    if grep -q "RECAPTCHA_SITE_KEY" static/js/booking-system.js; then
         print_success "reCAPTCHA configuration found"
     else
         print_warning "reCAPTCHA configuration not found"
@@ -303,8 +303,8 @@ else
     print_failure "booking-system.js not found"
 fi
 
-print_test "cookie-consent.js"
-if [ -f "cookie-consent.js" ]; then
+print_test "static/js/cookie-consent.js"
+if [ -f "static/js/cookie-consent.js" ]; then
     print_success "cookie-consent.js exists"
 else
     print_warning "cookie-consent.js not found (optional)"

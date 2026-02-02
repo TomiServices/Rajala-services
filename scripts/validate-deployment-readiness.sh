@@ -55,10 +55,10 @@ else
     error "functions/package.json not found"
 fi
 
-if [ -f "booking-system.js" ]; then
-    success "booking-system.js exists"
+if [ -f "static/js/booking-system.js" ]; then
+    success "static/js/booking-system.js exists"
 else
-    error "booking-system.js not found"
+    error "static/js/booking-system.js not found"
 fi
 
 if [ -f ".gitignore" ]; then
@@ -124,8 +124,8 @@ if command -v node &> /dev/null && [ -f "functions/index.js" ]; then
     fi
 fi
 
-if [ -f "booking-system.js" ]; then
-    if node -c booking-system.js 2>&1; then
+if [ -f "static/js/booking-system.js" ]; then
+    if node -c static/js/booking-system.js 2>&1; then
         success "booking-system.js syntax is valid"
     else
         error "booking-system.js has syntax errors"
