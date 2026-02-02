@@ -535,83 +535,103 @@
         }
         
         /* Hero Image Section */
+        /* Hero Image Section - Keskitetty, luonnollinen layout */
         .hero-image-section {
             width: 100%;
-            height: 400px;
-            margin-top: 70px;
-            position: relative;
-            overflow: hidden;
-            background: #000;
-            border-radius: 0 0 15px 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            margin-top: 90px; /* Tilaa navigaatiolle */
+            margin-bottom: 40px;
+            padding: 0 20px; /* Sivumarginaalit */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
         }
         
         .hero-image-section img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center center;
+            max-width: 100%;
+            height: auto;
+            width: auto;
+            max-height: 500px; /* Rajoittaa korkeutta desktopilla */
             display: block;
-            transition: transform 0.3s ease-in-out;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
-        /* Responsive hero image heights and positioning */
-        @media (max-width: 768px) {
-            .hero-image-section {
-                height: 250px;
-                margin-top: 80px;
-            }
+        .hero-image-section img:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
         }
         
+        /* Mobiili pieni */
         @media (max-width: 480px) {
             .hero-image-section {
-                height: 200px;
-                margin-top: 70px;
-            }
-        }
-        
-        /* Desktop optimization - parannettu kuvanlaatu */
-        @media (min-width: 769px) and (max-width: 1023px) {
-            .hero-image-section {
-                height: 350px;
-                max-height: 35vh;
+                margin-top: 80px;
+                margin-bottom: 30px;
+                padding: 0 15px;
             }
             .hero-image-section img {
-                object-fit: contain;
-                object-position: center center;
+                max-height: 300px;
+                border-radius: 8px;
             }
         }
         
+        /* Mobiili keskikokoinen */
+        @media (min-width: 481px) and (max-width: 767px) {
+            .hero-image-section {
+                margin-top: 90px;
+                padding: 0 20px;
+            }
+            .hero-image-section img {
+                max-height: 350px;
+            }
+        }
+        
+        /* Tablet - keskikokoinen */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .hero-image-section {
+                margin-top: 100px;
+                padding: 0 30px;
+            }
+            .hero-image-section img {
+                max-height: 450px;
+                max-width: 90%;
+            }
+        }
+        
+        /* Desktop pieni */
         @media (min-width: 1024px) and (max-width: 1279px) {
             .hero-image-section {
-                height: 380px;
-                max-height: 38vh;
+                margin-top: 110px;
+                padding: 0 50px;
             }
             .hero-image-section img {
-                object-fit: contain;
-                object-position: center center;
+                max-height: 480px;
+                max-width: 85%;
             }
         }
         
+        /* Desktop keskikokoinen */
         @media (min-width: 1280px) and (max-width: 1919px) {
             .hero-image-section {
-                height: 400px;
-                max-height: 40vh;
+                margin-top: 110px;
+                padding: 0 80px;
             }
             .hero-image-section img {
-                object-fit: contain;
-                object-position: center center;
+                max-height: 520px;
+                max-width: 1200px; /* Rajoittaa leveyden suurilla näytöillä */
             }
         }
         
+        /* Desktop suuri */
         @media (min-width: 1920px) {
             .hero-image-section {
-                height: 450px;
-                max-height: 42vh;
+                margin-top: 110px;
+                padding: 0 100px;
             }
             .hero-image-section img {
-                object-fit: contain;
-                object-position: center center;
+                max-height: 550px;
+                max-width: 1400px;
             }
         }
     </style>
