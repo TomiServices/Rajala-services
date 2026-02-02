@@ -1,5 +1,7 @@
 # Rajala Services - External Integrations Documentation
 
+> **Note:** The repository was reorganized in February 2024 with a modern directory structure. All static assets (CSS, JS, images, icons) are now in the `/static/` directory. See the main [README.md](../README.md) for complete project structure details.
+
 ## 📚 Complete Documentation Index
 
 This directory contains comprehensive documentation for managing and migrating the Rajala Services (Fixnero) website and all its external integrations.
