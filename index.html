@@ -320,6 +320,12 @@
         html {
             scroll-behavior: smooth;
         }
+        html {
+            /* Prevent horizontal scrolling on all devices */
+            overflow-x: hidden;
+            width: 100%;
+        }
+        
         body {
             font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #f8f8f8 0%, #e0e0e0 100%);
@@ -330,6 +336,9 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
+            /* Prevent horizontal scrolling on all devices */
+            overflow-x: hidden;
+            width: 100%;
         }
         
         /* Optimized text rendering for headings and bold text */
@@ -598,12 +607,30 @@
             background-image: url('static/images/Hero2.webp');
             /* Enhanced centering and positioning for all devices */
             background-size: cover;
-            background-position: center center;
+            background-position: 50% 50%;
             background-repeat: no-repeat;
             /* Improve image rendering quality */
             background-attachment: scroll;
             /* Ensure no white space around hero */
             object-fit: cover;
+        }
+        
+        /* Desktop optimization - scale images outward for less zoom and better sharpness */
+        @media (min-width: 769px) {
+            #hero {
+                /* Use auto sizing to reduce zoom and maintain image sharpness */
+                background-size: auto 100%;
+                /* Maintain absolute center positioning */
+                background-position: 50% 50%;
+            }
+        }
+        
+        /* For very wide screens, ensure full coverage without excessive zoom */
+        @media (min-width: 1920px) {
+            #hero {
+                background-size: 100% auto;
+                background-position: 50% 50%;
+            }
         }
         
         /* Hero text overlay at bottom of hero section */
@@ -634,9 +661,9 @@
         @media (min-width: 2560px) {
             #hero {
                 background-image: url('static/images/Hero1.webp');
-                /* Optimize for large displays */
-                background-position: center center !important;
-                background-size: cover !important;
+                /* Optimize for large displays - scale outward for less zoom */
+                background-position: 50% 50%;
+                background-size: 100% auto;
             }
         }
         
@@ -644,10 +671,10 @@
         @media (max-width: 768px) {
             #hero {
                 min-height: 100vh;
-                /* Fix background image scaling on mobile */
-                background-size: cover !important;
-                background-position: center !important;
-                background-repeat: no-repeat !important;
+                /* Absolute centering for mobile - keep images centered regardless of width */
+                background-size: cover;
+                background-position: 50% 50%;
+                background-repeat: no-repeat;
             }
             #hero h2 {
                 font-size: 2.2rem !important;
@@ -681,10 +708,10 @@
         @media (max-width: 480px) {
             #hero {
                 min-height: 100vh;
-                /* Ensure background image scaling is optimized for small screens */
-                background-size: cover !important;
-                background-position: center !important;
-                background-repeat: no-repeat !important;
+                /* Absolute centering for mobile - prevent any horizontal shift */
+                background-size: cover;
+                background-position: 50% 50%;
+                background-repeat: no-repeat;
             }
             #hero h2 {
                 font-size: 2rem !important;
