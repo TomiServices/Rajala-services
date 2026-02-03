@@ -115,11 +115,15 @@
             font-display: swap;
             src: local('Impact'), local('Arial Black');
         }
-        html { scroll-behavior: smooth; }
+        html { 
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
         body {
             font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #f8f8f8 0%, #e0e0e0 100%);
             margin: 0; padding: 0; line-height: 1.6;
+            overflow-x: hidden;
         }
         .top-banner {
             position: fixed;
@@ -551,11 +555,12 @@
             width: 100%;
             height: 280px; /* Matalampi, banner-tyyppinen */
             object-fit: cover; /* Säilyttää kuvasuhteen ja täyttää alueen */
-            object-position: center; /* Keskittää kuvan */
+            object-position: center center; /* Keskittää kuvan absoluuttisesti */
             display: block;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin: 0 auto; /* Varmistaa keskityksen */
         }
         
         .hero-image-section img:hover {
@@ -606,6 +611,7 @@
             }
             .hero-image-section img {
                 height: 280px;
+                max-width: 1200px;
             }
         }
         
