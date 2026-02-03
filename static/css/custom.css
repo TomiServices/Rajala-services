@@ -1,5 +1,5 @@
 /* custom.css - hero image fixes */
-:root{
+:root {
   --hero-gap-top: 12px; /* etäisyys navin ja kuvan väliin */
   --hero-h-mobile: 90px;
   --hero-h-small: 110px;
@@ -31,7 +31,7 @@
   margin: 0 auto;
 }
 
-.hero-image-section img:hover{
+.hero-image-section img:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
@@ -45,7 +45,4 @@
 }
 @media (min-width: 768px) and (max-width: 1023px) {
   .hero-image-section img { height: var(--hero-h-tablet); }
-}
-@media (min-width: 1024px) {
-  .hero-image-section img { height: var(--hero-h-desktop); }
 }
