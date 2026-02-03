@@ -1,0 +1,48 @@
+/* custom.css - hero image fixes */
+:root {
+  --hero-gap-top: 12px; /* etäisyys navin ja kuvan väliin */
+  --hero-h-mobile: 90px;
+  --hero-h-small: 110px;
+  --hero-h-tablet: 130px;
+  --hero-h-desktop: 140px;
+}
+
+.hero-image-section {
+  width: 100%;
+  margin-top: calc(var(--nav-offset, 70px) + var(--hero-gap-top));
+  margin-bottom: 24px;
+  padding: 0 20px; /* säilyttää sivumarginaalit */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+}
+
+.hero-image-section img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: var(--hero-h-desktop);
+  object-fit: cover;
+  object-position: center center;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin: 0 auto;
+}
+
+.hero-image-section img:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+@media (max-width: 480px) {
+  .hero-image-section { margin-top: calc(var(--nav-offset,64px) + 8px); padding: 0 12px; }
+  .hero-image-section img { height: var(--hero-h-mobile); border-radius: 8px; }
+}
+@media (min-width: 481px) and (max-width: 767px) {
+  .hero-image-section img { height: var(--hero-h-small); }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hero-image-section img { height: var(--hero-h-tablet); }
+}
