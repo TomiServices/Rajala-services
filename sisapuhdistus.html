@@ -535,7 +535,7 @@
         }
         
         /* Hero Image Section */
-        /* Hero Image Section - Keskitetty, luonnollinen layout */
+        /* Hero Image Section - Banner-tyyppinen, matala ja leveä */
         .hero-image-section {
             width: 100%;
             margin-top: 90px; /* Tilaa navigaatiolle */
@@ -548,10 +548,10 @@
         }
         
         .hero-image-section img {
-            max-width: 100%;
-            height: auto;
-            width: auto;
-            max-height: 500px; /* Rajoittaa korkeutta desktopilla */
+            width: 100%;
+            height: 280px; /* Matalampi, banner-tyyppinen */
+            object-fit: cover; /* Säilyttää kuvasuhteen ja täyttää alueen */
+            object-position: center; /* Keskittää kuvan */
             display: block;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -571,7 +571,7 @@
                 padding: 0 15px;
             }
             .hero-image-section img {
-                max-height: 300px;
+                height: 180px; /* Matalampi mobiililla */
                 border-radius: 8px;
             }
         }
@@ -583,7 +583,7 @@
                 padding: 0 20px;
             }
             .hero-image-section img {
-                max-height: 350px;
+                height: 220px;
             }
         }
         
@@ -594,8 +594,7 @@
                 padding: 0 30px;
             }
             .hero-image-section img {
-                max-height: 450px;
-                max-width: 90%;
+                height: 260px;
             }
         }
         
@@ -606,8 +605,7 @@
                 padding: 0 50px;
             }
             .hero-image-section img {
-                max-height: 480px;
-                max-width: 85%;
+                height: 280px;
             }
         }
         
@@ -618,8 +616,8 @@
                 padding: 0 80px;
             }
             .hero-image-section img {
-                max-height: 520px;
-                max-width: 1200px; /* Rajoittaa leveyden suurilla näytöillä */
+                height: 300px;
+                max-width: 1400px; /* Rajoittaa leveyden suurilla näytöillä */
             }
         }
         
@@ -630,8 +628,8 @@
                 padding: 0 100px;
             }
             .hero-image-section img {
-                max-height: 550px;
-                max-width: 1400px;
+                height: 320px;
+                max-width: 1600px;
             }
         }
     </style>
