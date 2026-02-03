@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Image Fixes Test - Mobile and Desktop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            /* Prevent horizontal scrolling on all devices */
+            overflow-x: hidden;
+            width: 100%;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            /* Prevent horizontal scrolling on all devices */
+            overflow-x: hidden;
+            width: 100%;
+        }
+        
+        .test-info {
+            background: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .test-section {
+            margin: 40px 20px;
+        }
+        
+        /* Hero section test - matching index.html with fixes */
+        #hero-test {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            background-image: url('../static/images/Hero2.webp');
+            /* Enhanced centering and positioning for all devices */
+            background-size: cover;
+            background-position: 50% 50%;
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+            overflow: hidden;
+            margin: 0;
+        }
+        
+        /* Desktop optimization - scale images outward for less zoom and better sharpness */
+        @media (min-width: 769px) {
+            #hero-test {
+                /* Reduce zoom by using 100% auto to ensure full width coverage */
+                background-size: 100% auto;
+                /* Maintain absolute center positioning */
+                background-position: 50% 50%;
+            }
+        }
+        
+        /* For very wide screens, ensure full coverage - switch to cover if needed */
+        @media (min-width: 1920px) {
+            #hero-test {
+                /* On very wide screens, use cover to prevent letterboxing */
+                background-size: cover;
+                background-position: 50% 50%;
+            }
+        }
+        
+        /* Hero1: High-resolution screens (2K and above, >= 2560px) */
+        @media (min-width: 2560px) {
+            #hero-test {
+                background-image: url('../static/images/Hero1.webp');
+                /* Use cover for optimal display on very large screens */
+                background-position: 50% 50%;
+                background-size: cover;
+            }
+        }
+        
+        /* Mobile optimization - absolute centering */
+        @media (max-width: 768px) {
+            #hero-test {
+                /* Absolute centering for mobile - keep images centered regardless of width */
+                background-size: cover;
+                background-position: 50% 50%;
+                background-repeat: no-repeat;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #hero-test {
+                /* Absolute centering for mobile - prevent any horizontal shift */
+                background-size: cover;
+                background-position: 50% 50%;
+                background-repeat: no-repeat;
+            }
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 90%;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 5px;
+        }
+        
+        .status-pass {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .viewport-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-info">
+        <h1>Hero Image Fixes Test</h1>
+        
+        <div class="info-box">
+            <h2>✓ Fixed Issues</h2>
+            <ul>
+                <li><strong>Mobile:</strong> Hero images absolutely centered (50% 50%) - stay centered regardless of screen width</li>
+                <li><strong>Mobile:</strong> Horizontal scrolling prevented (overflow-x: hidden on html and body)</li>
+                <li><strong>Desktop:</strong> Images scaled outward (auto 100% → 100% auto) for less zoom and better sharpness</li>
+                <li><strong>Desktop:</strong> Absolute centering maintained with 50% 50% positioning</li>
+            </ul>
+        </div>
+        
+        <div class="info-box">
+            <h2>Test Instructions</h2>
+            <ol>
+                <li>Resize the browser window to different widths</li>
+                <li>Verify that the hero image stays centered at all times</li>
+                <li>Try scrolling horizontally - it should be prevented</li>
+                <li>Check that on desktop (>769px), the image appears less zoomed</li>
+                <li>Verify image quality and sharpness across different screen sizes</li>
+            </ol>
+        </div>
+        
+        <div style="text-align: center; margin: 20px 0;">
+            <span class="status-badge status-pass">Overflow-X: Hidden</span>
+            <span class="status-badge status-pass">Absolute Centering: 50% 50%</span>
+            <span class="status-badge status-pass">Desktop Scaling: Optimized</span>
+        </div>
+    </div>
+    
+    <div class="viewport-info" id="viewport-info">
+        Width: <span id="width"></span>px | Height: <span id="height"></span>px
+    </div>
+    
+    <div class="test-section">
+        <h2 style="text-align: center; margin-bottom: 20px; background: white; padding: 15px; border-radius: 5px;">
+            Hero Image Test Section (Scroll down to see full hero)
+        </h2>
+    </div>
+    
+    <section id="hero-test">
+        <div class="hero-overlay">
+            <h1 style="margin: 0 0 15px 0; font-size: 2rem;">Hero Image Centering Test</h1>
+            <p style="margin: 0; font-size: 1.1rem;">
+                This hero section demonstrates the fixes:<br>
+                ✓ Absolutely centered background (50% 50%)<br>
+                ✓ No horizontal scroll<br>
+                ✓ Optimized scaling for desktop
+            </p>
+        </div>
+    </section>
+    
+    <script>
+        function updateViewportInfo() {
+            document.getElementById('width').textContent = window.innerWidth;
+            document.getElementById('height').textContent = window.innerHeight;
+        }
+        
+        updateViewportInfo();
+        window.addEventListener('resize', updateViewportInfo);
+        
+        // Test for horizontal overflow
+        document.addEventListener('DOMContentLoaded', function() {
+            const hasHorizontalScroll = document.body.scrollWidth > window.innerWidth;
+            if (hasHorizontalScroll) {
+                console.warn('Warning: Horizontal scroll detected!');
+            } else {
+                console.log('✓ No horizontal scroll - test passed');
+            }
+        });
+    </script>
+</body>
+</html>

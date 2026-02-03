@@ -319,8 +319,6 @@
         /* --- your full original CSS pasted here, unchanged --- */
         html {
             scroll-behavior: smooth;
-        }
-        html {
             /* Prevent horizontal scrolling on all devices */
             overflow-x: hidden;
             width: 100%;
@@ -618,17 +616,18 @@
         /* Desktop optimization - scale images outward for less zoom and better sharpness */
         @media (min-width: 769px) {
             #hero {
-                /* Use auto sizing to reduce zoom and maintain image sharpness */
-                background-size: auto 100%;
+                /* Reduce zoom by using 100% auto to ensure full width coverage */
+                background-size: 100% auto;
                 /* Maintain absolute center positioning */
                 background-position: 50% 50%;
             }
         }
         
-        /* For very wide screens, ensure full coverage without excessive zoom */
+        /* For very wide screens, ensure full coverage - switch to cover if needed */
         @media (min-width: 1920px) {
             #hero {
-                background-size: 100% auto;
+                /* On very wide screens, use cover to prevent letterboxing */
+                background-size: cover;
                 background-position: 50% 50%;
             }
         }
@@ -661,9 +660,9 @@
         @media (min-width: 2560px) {
             #hero {
                 background-image: url('static/images/Hero1.webp');
-                /* Optimize for large displays - scale outward for less zoom */
+                /* Use cover for optimal display on very large screens */
                 background-position: 50% 50%;
-                background-size: 100% auto;
+                background-size: cover;
             }
         }
         
