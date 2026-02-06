@@ -203,6 +203,40 @@
             }
         }
         
+        /* Medium desktop screens (1367px - 1599px) - scale down logo to prevent overflow */
+        @media (min-width: 1367px) and (max-width: 1599px) {
+            nav {
+                padding: 0 12px;
+            }
+            nav img {
+                height: 42px;
+                margin-left: 8px;
+                margin-right: 12px;
+            }
+            nav a {
+                font-size: 16px;
+                padding: 15px 14px;
+                margin: 0 1px;
+            }
+        }
+        
+        /* Large desktop screens (1600px - 1919px) - moderate logo size */
+        @media (min-width: 1600px) and (max-width: 1919px) {
+            nav {
+                padding: 0 15px;
+            }
+            nav img {
+                height: 46px;
+                margin-left: 10px;
+                margin-right: 14px;
+            }
+            nav a {
+                font-size: 17px;
+                padding: 16px 16px;
+                margin: 0 2px;
+            }
+        }
+        
         .hamburger-menu {
             display: none;
             cursor: pointer;
