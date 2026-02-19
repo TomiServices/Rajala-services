@@ -45,7 +45,7 @@
 }
 
 .hero-overlay h1 {
-  font-size: 2.5em;
+  font-size: 2.5rem;
   font-weight: bold;
   margin: 0 0 20px;
 }
@@ -57,12 +57,19 @@
   margin: 10px;
   border-radius: 5px;
   border: none;
-  font-size: 1.1em;
+  font-size: 1.1rem;
   cursor: pointer;
+  transition: background 0.3s ease;
 }
 
 .hero-overlay button:hover {
   background: #d35400;
+}
+
+.hero-overlay button:focus,
+.hero-overlay button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
 }
 
 @media (max-width: 480px) {
@@ -75,10 +82,10 @@
     border-radius: 8px; 
   }
   .hero-overlay h1 {
-    font-size: 1.8em;
+    font-size: 1.8rem;
   }
   .hero-overlay button {
-    font-size: 0.9em;
+    font-size: 0.9rem;
     padding: 8px 16px;
   }
 }
@@ -87,7 +94,7 @@
     max-height: 110px; 
   }
   .hero-overlay h1 {
-    font-size: 2em;
+    font-size: 2rem;
   }
 }
 @media (min-width: 768px) and (max-width: 1023px) {
@@ -95,6 +102,6 @@
     max-height: 130px; 
   }
   .hero-overlay h1 {
-    font-size: 2.2em;
+    font-size: 2.2rem;
   }
 }
