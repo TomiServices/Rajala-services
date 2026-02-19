@@ -9,61 +9,108 @@
 
 .hero-image-section {
   position: relative;
-  overflow: hidden;
   width: 100%;
+  margin: 0 auto;
   margin-top: calc(var(--nav-offset, 70px) + var(--hero-gap-top));
   margin-bottom: 24px;
+  padding: 20px;
+  max-width: 1200px; /* Aligns with the content width */
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: #f9f9f9; /* Matches white margins */
+  border-radius: 12px;
+  overflow: hidden; /* Fallback for browsers without :has() support */
+}
+
+/* When image comes first, contain it properly for overlay 
+   Note: :has() requires modern browsers (Chrome 105+, Safari 15.4+, Firefox 121+)
+   This ensures overlay stays within bounds */
+.hero-image-section:has(img:first-child) {
+  overflow: hidden;
 }
 
 .hero-image-section img {
-  display: block;
-  width: 100%;
+  max-width: 100%;
   height: auto;
-  max-height: 140px;
   object-fit: cover;
-  object-position: center center;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  object-position: center;
+  border-radius: 8px; /* Slight border radius for visual consistency */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Soft shadow to elevate the image */
 }
 
 .hero-overlay {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px 40px;
+}
+
+/* 
+ * Adaptive Layout Pattern:
+ * - If HTML has <img> first, then <hero-overlay>: overlay positions absolutely over image (current service pages)
+ * - If HTML has <hero-overlay> first, then <img>: content stacks above image (new design pattern)
+ * This allows backward compatibility while supporting new layouts
+ */
+
+/* When image comes first (current structure), position overlay absolutely over image */
+.hero-image-section img + .hero-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
   color: white;
-  text-align: center;
   background: rgba(0, 0, 0, 0.4);
+  padding: 20px;
+}
+
+/* Text color adjustments for overlay on image */
+.hero-image-section img + .hero-overlay h1 {
+  color: white;
+}
+
+.hero-image-section img + .hero-overlay p {
+  color: white;
+}
+
+/* Ensure image doesn't interfere with flex layout when overlay comes first */
+.hero-image-section .hero-overlay + img {
+  display: block;
 }
 
 .hero-overlay h1 {
-  font-size: 2.5rem;
+  font-size: 2.5em;
   font-weight: bold;
-  margin: 0 0 20px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.hero-overlay p {
+  font-size: 1.1em;
+  margin-bottom: 20px;
+  color: #666;
 }
 
 .hero-overlay button {
-  background: #ff6600;
+  background-color: #007bff; /* Blue color for buttons */
   color: #fff;
   padding: 10px 20px;
-  margin: 10px;
-  border-radius: 5px;
+  margin: 5px;
   border: none;
-  font-size: 1.1rem;
+  border-radius: 4px;
+  font-size: 1em;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .hero-overlay button:hover {
-  background: #d35400;
+  background-color: #0056b3; /* Darker blue on hover */
 }
 
 .hero-overlay button:focus,
@@ -75,33 +122,41 @@
 @media (max-width: 480px) {
   .hero-image-section { 
     margin-top: calc(var(--nav-offset,64px) + 8px); 
-    padding: 0 12px; 
+    padding: 12px; 
   }
   .hero-image-section img { 
-    max-height: 120px; 
     border-radius: 8px; 
   }
+  .hero-overlay {
+    padding: 15px 20px;
+  }
   .hero-overlay h1 {
-    font-size: 1.8rem;
+    font-size: 1.8em;
+  }
+  .hero-overlay p {
+    font-size: 0.95em;
   }
   .hero-overlay button {
-    font-size: 0.9rem;
+    font-size: 0.9em;
     padding: 8px 16px;
   }
 }
 @media (min-width: 481px) and (max-width: 767px) {
-  .hero-image-section img { 
-    max-height: 110px; 
+  .hero-overlay {
+    padding: 18px 30px;
   }
   .hero-overlay h1 {
-    font-size: 2rem;
+    font-size: 2em;
+  }
+  .hero-overlay p {
+    font-size: 1em;
   }
 }
 @media (min-width: 768px) and (max-width: 1023px) {
-  .hero-image-section img { 
-    max-height: 130px; 
-  }
   .hero-overlay h1 {
-    font-size: 2.2rem;
+    font-size: 2.2em;
+  }
+  .hero-overlay p {
+    font-size: 1.05em;
   }
 }

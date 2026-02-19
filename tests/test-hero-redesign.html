@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Section Redesign Test</title>
+    <link rel="stylesheet" href="../static/css/custom.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+        }
+        .test-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin-bottom: 50px;
+            padding: 20px;
+            background: #fff;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border-left: 4px solid #2196f3;
+            font-size: 0.95rem;
+        }
+        .resolution-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 1000;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="resolution-indicator">
+        Screen: <span id="screen-width">0</span>px × <span id="screen-height">0</span>px
+    </div>
+
+    <div class="test-container">
+        <h1 style="text-align: center; color: #333; margin-bottom: 30px;">
+            🎨 Hero Section Redesign Test
+        </h1>
+
+        <div class="info">
+            <strong>New Design Features:</strong>
+            <ul>
+                <li>✅ Blue buttons (#007bff) with darker blue hover (#0056b3)</li>
+                <li>✅ Max-width: 1200px for content alignment</li>
+                <li>✅ Background: #f9f9f9 with border-radius</li>
+                <li>✅ Relative positioning for hero-overlay</li>
+                <li>✅ Support for h1, paragraph text, and buttons</li>
+                <li>✅ Soft shadows on images (0 2px 8px rgba(0,0,0,0.1))</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>Test 1: New Design with Content + Image</h2>
+            <p><em>This is the new design as specified in the requirements</em></p>
+            
+            <div class="hero-image-section">
+                <div class="hero-overlay">
+                    <h1>Palvelumme</h1>
+                    <p>Tarjoamme kattavat ratkaisut autoiluun. Tutustu palveluihimme!</p>
+                    <button>Lue lisää</button>
+                    <button>Takaisin etusivulle</button>
+                </div>
+                <img src="../static/images/Pesupalvelut.webp" alt="Hero Image">
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test 2: Autopesu (Current Structure - H1 + Buttons)</h2>
+            <p><em>Current HTML structure from service pages</em></p>
+            
+            <div class="hero-image-section">
+                <img src="../static/images/Pesupalvelut.webp" alt="Autopesu">
+                <div class="hero-overlay">
+                    <h1>Autopesu</h1>
+                    <button onclick="alert('Lue lisää clicked')">Lue lisää</button>
+                    <button onclick="alert('Takaisin etusivulle clicked')">Takaisin etusivulle</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test 3: Sisäpuhdistus (Current Structure)</h2>
+            <p><em>Another example with current HTML structure</em></p>
+            
+            <div class="hero-image-section">
+                <img src="../static/images/sisapuhdistus.webp" alt="Sisäpuhdistus">
+                <div class="hero-overlay">
+                    <h1>Sisäpuhdistus</h1>
+                    <button onclick="alert('Lue lisää clicked')">Lue lisää</button>
+                    <button onclick="alert('Takaisin etusivulle clicked')">Takaisin etusivulle</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="info">
+            <strong>Testing Instructions:</strong>
+            <ol>
+                <li>Resize your browser to test different screen sizes</li>
+                <li>Verify button colors are blue (#007bff)</li>
+                <li>Check hover effects (darker blue #0056b3)</li>
+                <li>Ensure hero section has gray background (#f9f9f9)</li>
+                <li>Confirm images have subtle shadows</li>
+                <li>Test responsive behavior at mobile, tablet, and desktop sizes</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function updateResolution() {
+            document.getElementById('screen-width').textContent = window.innerWidth;
+            document.getElementById('screen-height').textContent = window.innerHeight;
+        }
+        
+        updateResolution();
+        window.addEventListener('resize', updateResolution);
+    </script>
+</body>
+</html>
