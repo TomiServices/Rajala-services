@@ -21,9 +21,12 @@
   align-items: center;
   background: #f9f9f9; /* Matches white margins */
   border-radius: 12px;
+  overflow: hidden; /* Fallback for browsers without :has() support */
 }
 
-/* When image comes first, contain it properly for overlay */
+/* When image comes first, contain it properly for overlay 
+   Note: :has() requires modern browsers (Chrome 105+, Safari 15.4+, Firefox 121+)
+   This ensures overlay stays within bounds */
 .hero-image-section:has(img:first-child) {
   overflow: hidden;
 }
@@ -46,7 +49,14 @@
   padding: 20px 40px;
 }
 
-/* When image comes first (current structure), position overlay absolutely */
+/* 
+ * Adaptive Layout Pattern:
+ * - If HTML has <img> first, then <hero-overlay>: overlay positions absolutely over image (current service pages)
+ * - If HTML has <hero-overlay> first, then <img>: content stacks above image (new design pattern)
+ * This allows backward compatibility while supporting new layouts
+ */
+
+/* When image comes first (current structure), position overlay absolutely over image */
 .hero-image-section img + .hero-overlay {
   position: absolute;
   top: 0;
