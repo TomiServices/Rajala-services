@@ -1,48 +1,107 @@
 /* custom.css - hero image fixes */
 :root {
   --hero-gap-top: 12px; /* etäisyys navin ja kuvan väliin */
-  --hero-h-mobile: 90px;
+  --hero-h-mobile: 120px;
   --hero-h-small: 110px;
   --hero-h-tablet: 130px;
   --hero-h-desktop: 140px;
 }
 
 .hero-image-section {
+  position: relative;
+  overflow: hidden;
   width: 100%;
   margin-top: calc(var(--nav-offset, 70px) + var(--hero-gap-top));
   margin-bottom: 24px;
-  padding: 0 20px; /* säilyttää sivumarginaalit */
   display: flex;
   justify-content: center;
   align-items: center;
-  background: transparent;
 }
 
 .hero-image-section img {
   display: block;
   width: 100%;
-  max-width: 100%;
-  height: var(--hero-h-desktop);
+  height: auto;
+  max-height: 140px;
   object-fit: cover;
   object-position: center center;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  margin: 0 auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.hero-image-section img:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.hero-overlay h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0 0 20px;
+}
+
+.hero-overlay button {
+  background: #ff6600;
+  color: #fff;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.hero-overlay button:hover {
+  background: #d35400;
+}
+
+.hero-overlay button:focus,
+.hero-overlay button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
 }
 
 @media (max-width: 480px) {
-  .hero-image-section { margin-top: calc(var(--nav-offset,64px) + 8px); padding: 0 12px; }
-  .hero-image-section img { height: var(--hero-h-mobile); border-radius: 8px; }
+  .hero-image-section { 
+    margin-top: calc(var(--nav-offset,64px) + 8px); 
+    padding: 0 12px; 
+  }
+  .hero-image-section img { 
+    max-height: 120px; 
+    border-radius: 8px; 
+  }
+  .hero-overlay h1 {
+    font-size: 1.8rem;
+  }
+  .hero-overlay button {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
 }
 @media (min-width: 481px) and (max-width: 767px) {
-  .hero-image-section img { height: var(--hero-h-small); }
+  .hero-image-section img { 
+    max-height: 110px; 
+  }
+  .hero-overlay h1 {
+    font-size: 2rem;
+  }
 }
 @media (min-width: 768px) and (max-width: 1023px) {
-  .hero-image-section img { height: var(--hero-h-tablet); }
+  .hero-image-section img { 
+    max-height: 130px; 
+  }
+  .hero-overlay h1 {
+    font-size: 2.2rem;
+  }
 }
