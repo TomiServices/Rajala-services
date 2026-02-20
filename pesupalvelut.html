@@ -643,16 +643,19 @@
             background: transparent;
             justify-content: space-between;
             align-items: flex-start;
+            padding-top: 35px;
         }
         .container .hero-image-section img + .hero-overlay h1 {
             text-shadow: 1px 1px 6px rgba(0,0,0,0.9);
             margin-bottom: 0;
+            width: 100%;
         }
         /* Top buttons row inside hero */
         .hero-top-buttons {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            width: 100%;
         }
         /* Full-width hero on mobile */
         @media (max-width: 768px) {
@@ -674,6 +677,10 @@
             }
             .container .hero-image-section .hero-overlay h1 {
                 font-size: 1.4rem;
+            }
+            /* Elevate H1 slightly so it never extends beyond the image bottom edge */
+            .container .hero-image-section img + .hero-overlay {
+                padding-bottom: 30px;
             }
         }
     </style>
