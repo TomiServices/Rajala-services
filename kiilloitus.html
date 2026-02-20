@@ -586,10 +586,14 @@
         }
         /* Hero image section placement inside container */
         .container .hero-image-section {
-            margin-top: 0;
+            margin-top: -40px;
+            margin-left: -40px;
+            margin-right: -40px;
+            width: calc(100% + 80px);
             margin-bottom: 8px;
             background: transparent;
             padding: 0;
+            border-radius: 18px 18px 0 0;
         }
         /* Breadcrumb shown only on mobile, fills the white gap between top bar and hero */
         .breadcrumb-mobile {
@@ -639,6 +643,8 @@
         /* Full-width hero on mobile */
         @media (max-width: 768px) {
             .container .hero-image-section {
+                margin-left: 0;
+                margin-right: 0;
                 width: 100vw;
                 left: 50%;
                 transform: translateX(-50%);
