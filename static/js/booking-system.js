@@ -2197,6 +2197,12 @@ function initializeBookingSystem() {
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const aikaValue = document.getElementById('aika').value;
+            const termsCheckbox = document.getElementById('termsCheckbox');
+            
+            if (termsCheckbox && !termsCheckbox.checked) {
+                document.getElementById('error').textContent = 'Hyväksy ajanvarauksen ehdot jatkaaksesi!';
+                return;
+            }
             
             if (!/^\+358\s?\d{1,3}\s?\d{4,}$/.test(phone)) {
                 document.getElementById('error').textContent = 'Syötä puhelinnumero muodossa +358 401234567!';
@@ -2242,6 +2248,11 @@ function initializeBookingSystem() {
                 
                 // Get vehicle type
                 const vehicleType = getSelectedVehicleType();
+
+                // Get optional message from message checkbox
+                const msgCheckbox = document.getElementById('msgCheckbox');
+                const msgText = document.getElementById('msgText');
+                const message = (msgCheckbox && msgCheckbox.checked && msgText) ? msgText.value.trim() : '';
                 
                 // Send booking to backend Firebase Function with retry logic
                 const bookingData = {
@@ -2253,6 +2264,9 @@ function initializeBookingSystem() {
                     vehicleType: vehicleType,
                     recaptcha: recaptchaToken
                 };
+                if (message) {
+                    bookingData.message = message;
+                }
                 
                 const result = await fetchWithRetry(
                     'https://europe-north1-webbi1.cloudfunctions.net/book',

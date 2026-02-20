@@ -2601,6 +2601,75 @@
             box-shadow: 0 0 0 4px rgba(63, 169, 245, 0.2);
             background: #ffffff;
         }
+        /* Custom checkbox styling for booking form */
+        .booking-checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            margin-top: 14px;
+        }
+        .custom-checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            gap: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: #333333;
+            user-select: none;
+        }
+        .custom-checkbox-label input[type="checkbox"] {
+            display: none;
+        }
+        .custom-checkbox {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            border: 2px solid #000000;
+            border-radius: 3px;
+            background: #ffffff;
+            transition: all 0.2s ease;
+        }
+        .custom-checkbox-label input[type="checkbox"]:checked + .custom-checkbox::after {
+            content: "\2715";
+            color: #3FA9F5;
+            font-size: 14px;
+            font-weight: 800;
+            line-height: 1;
+        }
+        .booking-msg-textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #cccccc;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            color: #333333;
+            background: #ffffff;
+            margin-top: 8px;
+        }
+        .booking-msg-textarea:focus {
+            outline: none;
+            border-color: #3FA9F5;
+            box-shadow: 0 0 0 4px rgba(63, 169, 245, 0.2);
+        }
+        .booking-msg-counter {
+            text-align: right;
+            font-size: 0.85rem;
+            color: #666666;
+            margin-top: 4px;
+            font-family: 'Inter', sans-serif;
+        }
+        .booking-msg-counter.over-limit {
+            color: #d32f2f;
+            font-weight: 600;
+        }
         .btn {
             width: 100%;
             padding: 16px 24px;
@@ -4655,8 +4724,28 @@
           <input type="email" id="email" name="email" required placeholder="sinä@email.com" autocomplete="email" />
           <label for="phone">Puhelinnumero</label>
           <input type="tel" id="phone" name="phone" required pattern="^\+358\s?\d{1,3}\s?\d{4,}$" placeholder="+358 401234567" autocomplete="tel" />
+          <!-- Message checkbox -->
+          <div class="booking-checkbox-row">
+            <label class="custom-checkbox-label" for="msgCheckbox">
+              <input type="checkbox" id="msgCheckbox" name="msgCheckbox">
+              <span class="custom-checkbox"></span>
+              <span>Lisää viesti tilaukselle esim. Kuvaus vauriosta tai viasta</span>
+            </label>
+          </div>
+          <div id="msgTextareaContainer" style="display: none;">
+            <textarea id="msgText" name="msgText" class="booking-msg-textarea" maxlength="350" placeholder="Kirjoita viesti..."></textarea>
+            <div id="msgCounter" class="booking-msg-counter">0/350</div>
+          </div>
+          <!-- Terms checkbox -->
+          <div class="booking-checkbox-row" style="margin-top: 18px;">
+            <label class="custom-checkbox-label" for="termsCheckbox">
+              <input type="checkbox" id="termsCheckbox" name="termsCheckbox">
+              <span class="custom-checkbox"></span>
+              <span id="termsCheckboxLabel">Hyväksyn ajanvarauksen ehdot</span>
+            </label>
+          </div>
           <!-- reCAPTCHA v3 runs invisibly - no checkbox needed -->
-        <button type="submit">Tilapäisesti kiinni</button>
+        <button type="submit" aria-describedby="termsCheckboxLabel">Tilapäisesti kiinni</button>
         </form>
         <div id="msg" class="msg"></div>
         <div id="error" class="error"></div>
@@ -6134,6 +6223,56 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script type="module" src="static/js/booking-system.min.js" defer></script>
 <script src="static/js/ui-interactions.min.js" defer></script>
+
+<!-- Booking form: message checkbox and terms checkbox interactions -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var msgCheckbox = document.getElementById('msgCheckbox');
+    var msgContainer = document.getElementById('msgTextareaContainer');
+    var msgText = document.getElementById('msgText');
+    var msgCounter = document.getElementById('msgCounter');
+    var termsCheckbox = document.getElementById('termsCheckbox');
+    var submitBtn = document.querySelector('#bookingForm button[type="submit"]');
+
+    if (msgCheckbox && msgContainer) {
+        msgCheckbox.addEventListener('change', function() {
+            msgContainer.style.display = this.checked ? 'block' : 'none';
+            if (!this.checked && msgText) {
+                msgText.value = '';
+                if (msgCounter) msgCounter.textContent = '0/350';
+            }
+        });
+    }
+
+    if (msgText && msgCounter) {
+        msgText.addEventListener('input', function() {
+            var count = this.value.length;
+            msgCounter.textContent = count + '/350';
+            msgCounter.classList.toggle('over-limit', count > 350);
+        });
+    }
+
+    if (termsCheckbox && submitBtn) {
+        function updateSubmitState() {
+            submitBtn.disabled = !termsCheckbox.checked;
+        }
+        termsCheckbox.addEventListener('change', updateSubmitState);
+        updateSubmitState();
+
+        // Re-disable submit and hide message textarea after form reset
+        var bookingForm = document.getElementById('bookingForm');
+        if (bookingForm) {
+            bookingForm.addEventListener('reset', function() {
+                setTimeout(function() {
+                    if (msgContainer) msgContainer.style.display = 'none';
+                    if (msgCounter) msgCounter.textContent = '0/350';
+                    updateSubmitState();
+                }, 0);
+            });
+        }
+    }
+});
+</script>
 
 <!-- Cookie Consent Banner - GDPR Compliant -->
 <script src="static/js/cookie-consent.min.js" defer></script>
