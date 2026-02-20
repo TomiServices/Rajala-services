@@ -257,10 +257,18 @@ async function sendBookingConfirmationEmail(bookingData) {
     const escapedPhone = escapeHtml(bookingData.puhelin);
     const escapedTotalPrice = escapeHtml(bookingData.totalPrice);
     const escapedVehicleType = escapeHtml(bookingData.vehicleType || 'Ei määritelty');
+    const escapedMessage = escapeHtml(bookingData.message || '');
 
     const servicesText = (bookingData.services || [])
       .map(s => `  • ${escapeHtml(s.serviceName || '')} - ${escapeHtml(s.taskName || '')}${s.price ? ': ' + escapeHtml(s.price) : ''}`)
       .join('\n') || '  Palvelu ei määritelty';
+
+    const messageSection = escapedMessage
+      ? `<div style="background-color: #fff8e1; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <h3 style="margin-top: 0; color: #333;">Lisätiedot</h3>
+            <p style="white-space: pre-wrap;">${escapedMessage}</p>
+          </div>`
+      : '';
 
     const mailOptions = {
       from: emailFromVal,
@@ -286,6 +294,8 @@ async function sendBookingConfirmationEmail(bookingData) {
             <p style="white-space: pre-line;">${servicesText}</p>
             <p><strong>Kokonaishinta:</strong> ${escapedTotalPrice || 'Hinta sovittaessa'}</p>
           </div>
+          
+          ${messageSection}
           
           <div style="background-color: #e8f4f8; padding: 15px; border-radius: 5px; margin: 20px 0;">
             <h3 style="margin-top: 0; color: #333;">Saapumisohjeet</h3>
@@ -584,7 +594,8 @@ async function createGoogleCalendarEvent(bookingData) {
         `Sähköposti: ${bookingData.sahkoposti || ''}\n` +
         `Ajoneuvotyyppi: ${bookingData.vehicleType || 'Ei määritelty'}\n\n` +
         `Palvelut:\n${serviceInfo}\n\n` +
-        `Kokonaishinta: ${bookingData.totalPrice || 'Hinta sovittaessa'}`,
+        `Kokonaishinta: ${bookingData.totalPrice || 'Hinta sovittaessa'}` +
+        (bookingData.message ? `\n\nLisätiedot:\n${bookingData.message}` : ''),
       start: { dateTime: startDate.toISOString(), timeZone: 'Europe/Helsinki' },
       end: { dateTime: endDate.toISOString(), timeZone: 'Europe/Helsinki' },
       colorId: '11'
@@ -694,7 +705,7 @@ exports.book = onRequest({
     if (req.method === 'OPTIONS') return res.status(204).send('');
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-    const { name, email, phone, aika, services, totalPrice, totalNumericPrice, vehicleType } = req.body;
+    const { name, email, phone, aika, services, totalPrice, totalNumericPrice, vehicleType, message } = req.body;
 
     // Validate required fields
     if (!name || !email || !phone || !aika || !services) {
@@ -739,6 +750,11 @@ exports.book = onRequest({
       return res.status(400).json({ error: 'Virheellinen ajoneuvotyyppi' });
     }
 
+    // Validate message if provided (optional free-text, max 350 chars)
+    if (message !== undefined && (typeof message !== 'string' || message.length > 350)) {
+      return res.status(400).json({ error: 'Viesti on liian pitkä tai virheellinen' });
+    }
+
     const bookingDate = new Date(aika);
     const now = new Date();
     if (Number.isNaN(bookingDate.getTime()) || bookingDate <= now) return res.status(400).json({ error: 'Valitse tuleva aika' });
@@ -764,6 +780,7 @@ exports.book = onRequest({
           totalPrice: totalPrice || 'Hinta sovittaessa',
           totalNumericPrice: totalNumericPrice || 0,
           vehicleType: vehicleType || '',
+          message: (message && typeof message === 'string') ? message.trim() : '',
           luotu: admin.firestore.FieldValue.serverTimestamp(),
           googleEventId: null,
           syncedToGoogle: false
@@ -879,10 +896,18 @@ async function createEmailDocument(bookingData, bookingId) {
     const escapedPhone = escapeHtml(bookingData.puhelin);
     const escapedTotalPrice = escapeHtml(bookingData.totalPrice);
     const escapedVehicleType = escapeHtml(bookingData.vehicleType || 'Ei määritelty');
+    const escapedMessage = escapeHtml(bookingData.message || '');
 
     const servicesHtml = (bookingData.services || [])
       .map(s => `<li>${escapeHtml(s.serviceName || '')} - ${escapeHtml(s.taskName || '')}${s.price ? ': ' + escapeHtml(s.price) : ''}</li>`)
       .join('') || '<li>Palvelu ei määritelty</li>';
+
+    const messageSection = escapedMessage
+      ? `<div style="background-color: #fff8e1; padding: 15px; border-radius: 5px; margin: 20px 0;">
+              <h3 style="margin-top: 0; color: #333;">Lisätiedot</h3>
+              <p style="white-space: pre-wrap;">${escapedMessage}</p>
+            </div>`
+      : '';
 
     // Create email document for Firebase Email Extension
     // The extension reads from 'mail' collection and sends emails via configured SMTP
@@ -910,6 +935,8 @@ async function createEmailDocument(bookingData, bookingId) {
               <ul style="margin: 0; padding-left: 20px;">${servicesHtml}</ul>
               <p style="margin-top: 15px;"><strong>Kokonaishinta:</strong> ${escapedTotalPrice || 'Hinta sovittaessa'}</p>
             </div>
+            
+            ${messageSection}
             
             <p>Otamme sinuun yhteyttä tarvittaessa ennen varattua aikaa.</p>
             <p>Jos sinun täytyy perua tai muuttaa varausta, ota yhteyttä:</p>
@@ -1092,7 +1119,8 @@ exports.onBookingUpdated = onDocumentUpdated({
           `Puhelin: ${afterData.puhelin || ''}\n` +
           `Sähköposti: ${afterData.sahkoposti || ''}\n\n` +
           `Palvelut:\n${serviceInfo}\n\n` +
-          `Kokonaishinta: ${afterData.totalPrice || 'Hinta sovittaessa'}`,
+          `Kokonaishinta: ${afterData.totalPrice || 'Hinta sovittaessa'}` +
+          (afterData.message ? `\n\nLisätiedot:\n${afterData.message}` : ''),
         start: { dateTime: startDate.toISOString(), timeZone: 'Europe/Helsinki' },
         end: { dateTime: endDate.toISOString(), timeZone: 'Europe/Helsinki' }
       }
