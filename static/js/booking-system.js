@@ -2262,9 +2262,11 @@ function initializeBookingSystem() {
                     totalPrice: serviceData.totalPrice,
                     totalNumericPrice: serviceData.totalNumericPrice,
                     vehicleType: vehicleType,
-                    recaptcha: recaptchaToken,
-                    ...(message && { message })
+                    recaptcha: recaptchaToken
                 };
+                if (message) {
+                    bookingData.message = message;
+                }
                 
                 const result = await fetchWithRetry(
                     'https://europe-north1-webbi1.cloudfunctions.net/book',
