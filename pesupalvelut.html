@@ -632,14 +632,39 @@
         .container .hero-image-section {
             margin-top: 0;
             margin-bottom: 30px;
+            background: transparent;
         }
         .container .hero-image-section img {
             height: 300px;
             width: 100%;
         }
+        /* Remove dark overlay; place buttons at top and h1 at bottom */
+        .container .hero-image-section img + .hero-overlay {
+            background: transparent;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .container .hero-image-section img + .hero-overlay h1 {
+            text-shadow: 1px 1px 6px rgba(0,0,0,0.9);
+            margin-bottom: 0;
+        }
+        /* Top buttons row inside hero */
+        .hero-top-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        /* Full-width hero on mobile */
         @media (max-width: 768px) {
+            .container .hero-image-section {
+                width: 100vw;
+                left: 50%;
+                transform: translateX(-50%);
+                border-radius: 0;
+            }
             .container .hero-image-section img {
                 height: 250px;
+                border-radius: 0;
             }
         }
         @media (max-width: 480px) {
@@ -678,19 +703,14 @@
     </nav>
 
     <div class="container">
-        <div class="service-nav-buttons">
-            <a href="index#pesupalvelut" class="back-button">← Takaisin palveluihin</a>
-            <a href="sisapuhdistus" class="btn-read-more">Lue Sisäpuhdistus palvelusta →</a>
-        </div>
-        
         <div class="hero-image-section">
             <img src="static/images/Pesupalvelut.webp" alt="Autopesu Uudellamaalla – Laadukkaat pesupalvelut Espoossa">
             <div class="hero-overlay">
-                <h1>Autopesu Uudellamaalla – Laadukkaat pesupalvelut Espoossa</h1>
-                <div>
-                    <a href="index#ajanvaraus" class="cta-button cta-button-primary">📅 Varaa Aika</a>
-                    <a href="tel:+358401935001" class="cta-button">📞 Soita: 040 1935001</a>
+                <div class="hero-top-buttons">
+                    <a href="index#pesupalvelut" class="back-button">← Takaisin palveluihin</a>
+                    <a href="sisapuhdistus" class="btn-read-more">Lue Sisäpuhdistus palvelusta →</a>
                 </div>
+                <h1>Autopesu Uudellamaalla – Laadukkaat pesupalvelut Espoossa</h1>
             </div>
         </div>
 
