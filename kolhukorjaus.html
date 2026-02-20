@@ -357,7 +357,7 @@
         }
         .container {
             max-width: 900px;
-            margin: 120px auto 40px;
+            margin: 90px auto 40px;
             padding: 40px;
             background: #fff;
             border-radius: 18px;
@@ -460,12 +460,12 @@
             border: 2px solid #dddddd;
         }
         .cta-section h2 {
-            color: #1a1a1a;
+            color: white;
             font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
             letter-spacing: 0.05em;
         }
         .cta-section p {
-            color: #333333;
+            color: white;
         }
         .cta-button {
             display: inline-block;
@@ -524,6 +524,9 @@
             .service-nav-buttons {
                 justify-content: center !important;
                 gap: 20px !important;
+            }
+            .cta-section {
+                padding: 60px 30px;
             }
         }
         @media (max-width: 768px) {
@@ -601,6 +604,84 @@
             }
 
         }
+        /* Hero image section placement inside container */
+        .container .hero-image-section {
+            margin-top: 0;
+            margin-bottom: 8px;
+            background: transparent;
+            padding: 0;
+        }
+        /* Breadcrumb shown only on mobile, fills the white gap between top bar and hero */
+        .breadcrumb-mobile {
+            display: none;
+            color: #999;
+            font-size: 0.8rem;
+            padding: 0 0 2px 0;
+            margin: 0;
+        }
+        .breadcrumb-mobile a {
+            color: #999;
+            text-decoration: none;
+        }
+        .breadcrumb-mobile a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .breadcrumb-mobile {
+                display: block;
+            }
+        }
+        .container .hero-image-section img {
+            height: 300px;
+            width: 100%;
+        }
+        /* Remove dark overlay; place buttons at top and h1 at bottom */
+        .container .hero-image-section img + .hero-overlay {
+            background: transparent;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-top: 35px;
+            box-sizing: border-box;
+        }
+        .container .hero-image-section img + .hero-overlay h1 {
+            text-shadow: 1px 1px 6px rgba(0,0,0,0.9);
+            margin-bottom: 0;
+            width: 100%;
+        }
+        /* Top buttons row inside hero */
+        .hero-top-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            width: 100%;
+            justify-content: center;
+        }
+        /* Full-width hero on mobile */
+        @media (max-width: 768px) {
+            .container .hero-image-section {
+                width: 100vw;
+                left: 50%;
+                transform: translateX(-50%);
+                border-radius: 0;
+            }
+            .container .hero-image-section img {
+                height: 250px;
+                border-radius: 0;
+            }
+        }
+        @media (max-width: 480px) {
+            /* Taller than desktop because the title wraps to 3+ lines on narrow screens */
+            .container .hero-image-section img {
+                height: 330px;
+            }
+            .container .hero-image-section .hero-overlay h1 {
+                font-size: 1.4rem;
+            }
+            /* Elevate H1 slightly so it never extends beyond the image bottom edge */
+            .container .hero-image-section img + .hero-overlay {
+                padding-bottom: 30px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -628,12 +709,17 @@
     </nav>
 
     <div class="container">
-        <div class="service-nav-buttons">
-            <a href="index#kolhukorjaus" class="back-button">← Takaisin palveluihin</a>
-            <a href="korjaustyot" class="btn-read-more">Lue Korjaustyöt palvelusta →</a>
+        <p class="breadcrumb-mobile"><a href="index">Etusivu</a> / kolhukorjaus</p>
+        <div class="hero-image-section">
+            <img src="static/images/kolhukorjaus.webp" alt="Kolhukorjaus Espoo – Lommojen oikaisu, paikkamaalaukset ja ruostekorjaukset">
+            <div class="hero-overlay">
+                <div class="hero-top-buttons">
+                    <a href="index#kolhukorjaus" class="back-button">← Takaisin palveluihin</a>
+                    <a href="korjaustyot" class="btn-read-more">Lue Korjaustyöt palvelusta →</a>
+                </div>
+                <h1>Kolhukorjaus Espoo - Lommojen oikaisu, paikka maalaukset, ruostekorjaukset.</h1>
+            </div>
         </div>
-        
-        <h1 style="margin-bottom: 25px;">Kolhukorjaus Espoo - Lommojen oikaisu, paikka maalaukset, ruostekorjaukset.</h1>
         
         <p>Fixnero tarjoaa ammattitaitoista kolhukorjausta ja lommojen oikaisua Espoossa, Kivenlahdessa. Korjaamme autosi pienet ja isot kolhut, naarmut sekä lommat nopeasti ja kustannustehokkaasti. Useimmissa tapauksissa alkuperäinen maali säilyy ehjänä, ja autosi näyttää taas siistiltä. Monet korjaukset valmistuvat jopa saman päivän aikana.</p>
 
