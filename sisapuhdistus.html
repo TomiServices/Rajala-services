@@ -585,7 +585,7 @@
         }
         /* Hero image section placement inside container */
         .container .hero-image-section {
-            margin-top: -40px;
+            margin-top: -28px;
             margin-left: -40px;
             margin-right: -40px;
             width: calc(100% + 80px);
@@ -665,6 +665,21 @@
             /* Elevate H1 slightly so it never extends beyond the image bottom edge */
             .container .hero-image-section img + .hero-overlay {
                 padding-bottom: 30px;
+            }
+        }
+        /* Wider hero on desktop: extend to viewport width for better visual alignment */
+        @media (min-width: 769px) {
+            .container .hero-image-section {
+                position: relative;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100vw;
+                margin-left: 0;
+                margin-right: 0;
+                border-radius: 0;
+            }
+            .container .hero-image-section img {
+                max-width: 100%;
             }
         }
     </style>
