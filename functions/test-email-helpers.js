@@ -272,12 +272,62 @@ function testGetEmailMethodLogic() {
   console.log('');
 }
 
+// --- Test 5: Idempotency check logic ---
+async function testIdempotencyCheckLogic() {
+  console.log('📝 Test 5: Idempotency check - Prevents duplicate email sends on retry');
+  console.log('------------------------------------------------------------------------');
+
+  // Simulate the idempotency check from onBookingCreated
+  async function shouldSkipEmail(bookingId, fakeDb) {
+    try {
+      const doc = await fakeDb.get(bookingId);
+      if (doc.exists && doc.data().emailSent === true) return true;
+    } catch (_) {
+      // Continue on error (same as production code)
+    }
+    return false;
+  }
+
+  // Case 1: emailSent already true → should skip
+  const dbAlreadySent = {
+    get: async (_id) => ({ exists: true, data: () => ({ emailSent: true }) })
+  };
+  assert(await shouldSkipEmail('booking1', dbAlreadySent), 'Skips send when emailSent is already true');
+
+  // Case 2: emailSent is false → should proceed
+  const dbNotSent = {
+    get: async (_id) => ({ exists: true, data: () => ({ emailSent: false }) })
+  };
+  assert(!(await shouldSkipEmail('booking2', dbNotSent)), 'Proceeds when emailSent is false');
+
+  // Case 3: emailSent field absent (new document) → should proceed
+  const dbNewDoc = {
+    get: async (_id) => ({ exists: true, data: () => ({}) })
+  };
+  assert(!(await shouldSkipEmail('booking3', dbNewDoc)), 'Proceeds when emailSent field is absent');
+
+  // Case 4: document does not exist → should proceed
+  const dbMissing = {
+    get: async (_id) => ({ exists: false, data: () => null })
+  };
+  assert(!(await shouldSkipEmail('booking4', dbMissing)), 'Proceeds when booking document does not exist');
+
+  // Case 5: Firestore read throws → should proceed (fail-open, not fail-closed)
+  const dbError = {
+    get: async (_id) => { throw new Error('Firestore unavailable'); }
+  };
+  assert(!(await shouldSkipEmail('booking5', dbError)), 'Proceeds (fail-open) when Firestore check throws');
+
+  console.log('');
+}
+
 // --- Run all tests ---
 async function runAll() {
   testEscapeHtml();
   await testWithRetry();
   testBuildBookingEmailHtml();
   testGetEmailMethodLogic();
+  await testIdempotencyCheckLogic();
 
   console.log('=====================================');
   console.log('Test Summary');

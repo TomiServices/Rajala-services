@@ -1132,6 +1132,22 @@ exports.onBookingCreated = onDocumentCreated({
     return null;
   }
 
+  // Idempotency check: bail out if an email was already sent for this booking.
+  // Guards against duplicate emails caused by Firebase Function retries.
+  try {
+    const existingDoc = await db.collection(BOOKINGS_COLLECTION).doc(bookingId).get();
+    if (existingDoc.exists && existingDoc.data().emailSent === true) {
+      console.log('Email already sent for booking - skipping duplicate send:', bookingId);
+      return null;
+    }
+  } catch (checkErr) {
+    // Log but continue: better to risk a duplicate than to miss the confirmation email
+    console.warn('Could not verify emailSent flag, proceeding with email send:', {
+      bookingId: bookingId,
+      error: checkErr.message || checkErr
+    });
+  }
+
   console.log('Processing email for booking:', {
     bookingId: bookingId,
     customerEmail: bookingData.sahkoposti,
