@@ -6,6 +6,7 @@ const admin = require('firebase-admin');
 const axios = require('axios');
 const { google } = require('googleapis');
 const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 const { onRequest } = require('firebase-functions/v2/https');
 const { onDocumentCreated, onDocumentUpdated, onDocumentDeleted } = require('firebase-functions/v2/firestore');
 const { defineString } = require('firebase-functions/params');
@@ -64,6 +65,7 @@ const googleCalendarId = defineString('GOOGLE_CALENDAR_ID');
 const emailUser = defineString('EMAIL_USER');
 const emailPassword = defineString('EMAIL_PASSWORD');
 const emailFrom = defineString('EMAIL_FROM');
+const sendgridApiKey = defineString('SENDGRID_API_KEY');
 const watchCallbackEnv = defineString('WATCH_CALLBACK_URL'); // optional preconfigured callback URL
 
 // =======================
@@ -98,6 +100,113 @@ function getEmailMethod(mailDocId, emailSent) {
   if (mailDocId) return 'firebase-extension';
   if (emailSent) return 'nodemailer';
   return null;
+}
+
+// =======================
+// UTILITY: Retry with exponential backoff + jitter
+// =======================
+/**
+ * Calls fn() up to maxAttempts times, waiting baseDelayMs * 2^(attempt-1) + jitter between retries.
+ * @param {Function} fn - Async function to call
+ * @param {number} maxAttempts - Maximum number of attempts (default 3)
+ * @param {number} baseDelayMs - Base delay in milliseconds (default 500)
+ * @returns {Promise<*>} - Resolves with fn's return value or rejects with last error
+ */
+async function withRetry(fn, maxAttempts = 3, baseDelayMs = 500) {
+  let lastError;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastError = err;
+      if (attempt < maxAttempts) {
+        const jitter = Math.random() * baseDelayMs;
+        const delay = baseDelayMs * Math.pow(2, attempt - 1) + jitter;
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+  throw lastError;
+}
+
+// =======================
+// UTILITY: Build booking confirmation email HTML
+// =======================
+/**
+ * Builds the HTML body for a booking confirmation email.
+ * @param {Object} bookingData - Booking data from Firestore
+ * @param {string} formattedDate - Pre-formatted date string (fi-FI locale)
+ * @param {string} formattedTime - Pre-formatted time string (fi-FI locale)
+ * @returns {string} HTML string
+ */
+function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
+  const escapedName = escapeHtml(bookingData.nimi);
+  const escapedEmail = escapeHtml(bookingData.sahkoposti);
+  const escapedPhone = escapeHtml(bookingData.puhelin);
+  const escapedTotalPrice = escapeHtml(bookingData.totalPrice);
+  const escapedVehicleType = escapeHtml(bookingData.vehicleType || 'Ei määritelty');
+  const escapedMessage = escapeHtml(bookingData.message || '');
+
+  const servicesText = (bookingData.services || [])
+    .map(s => `  • ${escapeHtml(s.serviceName || '')} - ${escapeHtml(s.taskName || '')}${s.price ? ': ' + escapeHtml(s.price) : ''}`)
+    .join('\n') || '  Palvelu ei määritelty';
+
+  const messageSection = escapedMessage
+    ? `<div style="background-color: #fff8e1; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <h3 style="margin-top: 0; color: #333;">Lisätiedot</h3>
+            <p style="white-space: pre-wrap;">${escapedMessage}</p>
+          </div>`
+    : '';
+
+  return `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #c41e3a;">Varausvahvistus</h2>
+      <p>Hei ${escapedName || 'asiakas'},</p>
+      <p>Olemme vastaanottaneet varauksesi. Tässä varauksen tiedot:</p>
+      
+      <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+        <h3 style="margin-top: 0; color: #333;">Varauksen tiedot</h3>
+        <p><strong>Aika:</strong> ${formattedDate} klo ${formattedTime}</p>
+        <p><strong>Asiakas:</strong> ${escapedName}</p>
+        <p><strong>Puhelin:</strong> ${escapedPhone}</p>
+        <p><strong>Sähköposti:</strong> ${escapedEmail}</p>
+        <p><strong>Ajoneuvotyyppi:</strong> ${escapedVehicleType}</p>
+      </div>
+      
+      <div style="background-color: #fff4f4; padding: 15px; border-radius: 5px; margin: 20px 0;">
+        <h3 style="margin-top: 0; color: #333;">Valitut palvelut</h3>
+        <p style="white-space: pre-line;">${servicesText}</p>
+        <p><strong>Kokonaishinta:</strong> ${escapedTotalPrice || 'Hinta sovittaessa'}</p>
+      </div>
+      
+      ${messageSection}
+      
+      <div style="background-color: #e8f4f8; padding: 15px; border-radius: 5px; margin: 20px 0;">
+        <h3 style="margin-top: 0; color: #333;">Saapumisohjeet</h3>
+        <p><strong>Osoite:</strong> Tiilenvalajantie 6</p>
+        <p><strong>Postiosoite:</strong> 02330, Espoo</p>
+        <div style="margin-top: 15px;">
+          <a href="https://www.google.com/maps/dir/?api=1&destination=Tiilenvalajantie+6,+02330+Espoo,+Finland" 
+             style="display: inline-block; background-color: #c41e3a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            🗺️ Reittiohjeet
+          </a>
+        </div>
+      </div>
+      
+      <p>Otamme sinuun yhteyttä tarvittaessa ennen varattua aikaa.</p>
+      <p>Jos sinun täytyy perua tai muuttaa varausta, ota yhteyttä:</p>
+      <ul>
+        <li>Puhelin: <a href="tel:${COMPANY_PHONE}">${COMPANY_PHONE_DISPLAY}</a></li>
+        <li>Sähköposti: <a href="mailto:${COMPANY_EMAIL}">${COMPANY_EMAIL}</a></li>
+      </ul>
+      
+      <p style="margin-top: 30px;">Ystävällisin terveisin,<br><strong>${COMPANY_NAME}</strong></p>
+      <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+      <p style="font-size: 12px; color: #666;">
+        Tämä on automaattinen vahvistusviesti. Älä vastaa tähän viestiin.
+      </p>
+    </div>
+  `;
 }
 
 // =======================
@@ -225,14 +334,18 @@ function initializeEmailTransporter() {
   }
 
   try {
+    // Use explicit STARTTLS on port 587 to avoid SMTP relay 421 throttling issues
     emailTransporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,    // STARTTLS (upgrades after connect)
+      requireTLS: true, // Reject if STARTTLS is not available
       auth: {
         user: emailUserVal,
         pass: emailPasswordVal
       }
     });
-    console.log('Email transporter initialized');
+    console.log('Email transporter initialized (STARTTLS port 587)');
     return emailTransporter;
   } catch (err) {
     console.error('Failed to initialize email transporter:', err.message || err);
@@ -270,85 +383,72 @@ async function sendBookingConfirmationEmail(bookingData) {
       minute: '2-digit'
     });
 
-    // Escape user input to prevent XSS
-    const escapedName = escapeHtml(bookingData.nimi);
-    const escapedEmail = escapeHtml(bookingData.sahkoposti);
-    const escapedPhone = escapeHtml(bookingData.puhelin);
-    const escapedTotalPrice = escapeHtml(bookingData.totalPrice);
-    const escapedVehicleType = escapeHtml(bookingData.vehicleType || 'Ei määritelty');
-    const escapedMessage = escapeHtml(bookingData.message || '');
-
-    const servicesText = (bookingData.services || [])
-      .map(s => `  • ${escapeHtml(s.serviceName || '')} - ${escapeHtml(s.taskName || '')}${s.price ? ': ' + escapeHtml(s.price) : ''}`)
-      .join('\n') || '  Palvelu ei määritelty';
-
-    const messageSection = escapedMessage
-      ? `<div style="background-color: #fff8e1; padding: 15px; border-radius: 5px; margin: 20px 0;">
-            <h3 style="margin-top: 0; color: #333;">Lisätiedot</h3>
-            <p style="white-space: pre-wrap;">${escapedMessage}</p>
-          </div>`
-      : '';
-
     const mailOptions = {
       from: emailFromVal,
       to: bookingData.sahkoposti,
       subject: `Varausvahvistus - ${COMPANY_NAME}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #c41e3a;">Varausvahvistus</h2>
-          <p>Hei ${escapedName || 'asiakas'},</p>
-          <p>Olemme vastaanottaneet varauksesi. Tässä varauksen tiedot:</p>
-          
-          <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
-            <h3 style="margin-top: 0; color: #333;">Varauksen tiedot</h3>
-            <p><strong>Aika:</strong> ${formattedDate} klo ${formattedTime}</p>
-            <p><strong>Asiakas:</strong> ${escapedName}</p>
-            <p><strong>Puhelin:</strong> ${escapedPhone}</p>
-            <p><strong>Sähköposti:</strong> ${escapedEmail}</p>
-            <p><strong>Ajoneuvotyyppi:</strong> ${escapedVehicleType}</p>
-          </div>
-          
-          <div style="background-color: #fff4f4; padding: 15px; border-radius: 5px; margin: 20px 0;">
-            <h3 style="margin-top: 0; color: #333;">Valitut palvelut</h3>
-            <p style="white-space: pre-line;">${servicesText}</p>
-            <p><strong>Kokonaishinta:</strong> ${escapedTotalPrice || 'Hinta sovittaessa'}</p>
-          </div>
-          
-          ${messageSection}
-          
-          <div style="background-color: #e8f4f8; padding: 15px; border-radius: 5px; margin: 20px 0;">
-            <h3 style="margin-top: 0; color: #333;">Saapumisohjeet</h3>
-            <p><strong>Osoite:</strong> Tiilenvalajantie 6</p>
-            <p><strong>Postiosoite:</strong> 02330, Espoo</p>
-            <div style="margin-top: 15px;">
-              <a href="https://www.google.com/maps/dir/?api=1&destination=Tiilenvalajantie+6,+02330+Espoo,+Finland" 
-                 style="display: inline-block; background-color: #c41e3a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                🗺️ Reittiohjeet
-              </a>
-            </div>
-          </div>
-          
-          <p>Otamme sinuun yhteyttä tarvittaessa ennen varattua aikaa.</p>
-          <p>Jos sinun täytyy perua tai muuttaa varausta, ota yhteyttä:</p>
-          <ul>
-            <li>Puhelin: <a href="tel:${COMPANY_PHONE}">${COMPANY_PHONE_DISPLAY}</a></li>
-            <li>Sähköposti: <a href="mailto:${COMPANY_EMAIL}">${COMPANY_EMAIL}</a></li>
-          </ul>
-          
-          <p style="margin-top: 30px;">Ystävällisin terveisin,<br><strong>${COMPANY_NAME}</strong></p>
-          <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
-          <p style="font-size: 12px; color: #666;">
-            Tämä on automaattinen vahvistusviesti. Älä vastaa tähän viestiin.
-          </p>
-        </div>
-      `
+      html: buildBookingEmailHtml(bookingData, formattedDate, formattedTime)
     };
 
-    await transporter.sendMail(mailOptions);
+    await withRetry(() => transporter.sendMail(mailOptions));
     console.log('Confirmation email sent to:', bookingData.sahkoposti);
     return true;
   } catch (err) {
     console.error('Failed to send confirmation email:', err.message || err);
+    return false;
+  }
+}
+
+/**
+ * Sends a booking confirmation email via the SendGrid HTTP API.
+ * This is the primary email path - avoids SMTP relay throttling (421 errors).
+ * SENDGRID_API_KEY must be configured in environment / Secret Manager.
+ * @param {Object} bookingData - Booking data from Firestore
+ * @returns {Promise<boolean>} true on success, false otherwise
+ */
+async function sendEmailViaSendGrid(bookingData) {
+  const apiKey = safeGetParamValue(sendgridApiKey, 'SENDGRID_API_KEY');
+  if (!apiKey) {
+    console.log('SendGrid not configured (missing SENDGRID_API_KEY) - skipping');
+    return false;
+  }
+
+  try {
+    let emailFromVal = safeGetParamValue(emailFrom, 'EMAIL_FROM') ||
+      safeGetParamValue(emailUser, 'EMAIL_USER') ||
+      getLegacyConfigValue('email.from') ||
+      `${COMPANY_NAME} <${COMPANY_EMAIL}>`;
+
+    const startDate = parseFirestoreDate(bookingData.aika);
+    if (!startDate || Number.isNaN(startDate.getTime())) {
+      console.warn('Invalid booking date for SendGrid email, skipping:', bookingData);
+      return false;
+    }
+
+    const formattedDate = startDate.toLocaleDateString('fi-FI', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    const formattedTime = startDate.toLocaleTimeString('fi-FI', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    sgMail.setApiKey(apiKey);
+    const msg = {
+      to: bookingData.sahkoposti,
+      from: emailFromVal,
+      subject: `Varausvahvistus - ${COMPANY_NAME}`,
+      html: buildBookingEmailHtml(bookingData, formattedDate, formattedTime)
+    };
+
+    await withRetry(() => sgMail.send(msg));
+    console.log('Confirmation email sent via SendGrid to:', bookingData.sahkoposti);
+    return true;
+  } catch (err) {
+    console.error('Failed to send email via SendGrid:', err.message || err);
     return false;
   }
 }
@@ -1039,51 +1139,72 @@ exports.onBookingCreated = onDocumentCreated({
   });
 
   let emailSent = false;
-  let mailDocId = null;
+  let emailMethodUsed = null;
 
+  // Primary path: SendGrid HTTP API (avoids SMTP relay throttling / 421 errors)
   try {
-    // Primary path: Create email document for Firebase Email Extension (Trigger Email from Firestore)
-    mailDocId = await createEmailDocument(bookingData, bookingId);
-    if (mailDocId) {
-      console.log('Email document created for Firebase Email Extension:', {
-        bookingId: bookingId,
-        mailDocId: mailDocId,
-        method: 'firebase-extension'
-      });
+    const sgResult = await sendEmailViaSendGrid(bookingData);
+    if (sgResult) {
       emailSent = true;
+      emailMethodUsed = 'sendgrid';
+      console.log('Email sent via SendGrid:', {
+        bookingId: bookingId,
+        method: 'sendgrid'
+      });
     } else {
-      console.log('Firebase Email Extension document creation failed, trying Nodemailer fallback');
+      console.log('SendGrid not configured or returned false, trying Nodemailer');
     }
-  } catch (err) {
-    console.error('Firebase Email Extension failed:', {
+  } catch (sgErr) {
+    console.error('SendGrid failed:', {
       bookingId: bookingId,
-      error: err.message || err
+      error: sgErr.message || sgErr
     });
   }
 
-  // Fallback path: Use Nodemailer directly if Firebase Extension failed and Nodemailer is configured
+  // Second path: Nodemailer with explicit STARTTLS (port 587)
   if (!emailSent) {
     try {
       const nodemailerResult = await sendBookingConfirmationEmail(bookingData);
       if (nodemailerResult) {
-        console.log('Email sent via Nodemailer fallback:', {
+        emailSent = true;
+        emailMethodUsed = 'nodemailer';
+        console.log('Email sent via Nodemailer:', {
           bookingId: bookingId,
           method: 'nodemailer'
         });
-        emailSent = true;
       } else {
-        console.warn('Nodemailer fallback also failed or not configured:', bookingId);
+        console.warn('Nodemailer also failed or not configured:', bookingId);
       }
     } catch (nodemailerErr) {
-      console.error('Nodemailer fallback failed:', {
+      console.error('Nodemailer failed:', {
         bookingId: bookingId,
         error: nodemailerErr.message || nodemailerErr
       });
     }
   }
 
-  // Use module-level getEmailMethod helper function
-  const emailMethodUsed = getEmailMethod(mailDocId, emailSent);
+  // Last-resort path: Firebase Email Extension (SMTP relay - may be unreliable)
+  if (!emailSent) {
+    try {
+      const mailDocId = await createEmailDocument(bookingData, bookingId);
+      if (mailDocId) {
+        emailSent = true;
+        emailMethodUsed = 'firebase-extension';
+        console.log('Email document created for Firebase Email Extension (last resort):', {
+          bookingId: bookingId,
+          mailDocId: mailDocId,
+          method: 'firebase-extension'
+        });
+      } else {
+        console.warn('All email paths failed for booking:', bookingId);
+      }
+    } catch (extErr) {
+      console.error('Firebase Email Extension last-resort also failed:', {
+        bookingId: bookingId,
+        error: extErr.message || extErr
+      });
+    }
+  }
 
   // Update booking document with email status for tracking
   try {
