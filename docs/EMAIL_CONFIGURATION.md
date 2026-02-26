@@ -10,134 +10,136 @@ When a customer makes a booking, they automatically receive a confirmation email
 - Selected services and pricing
 - Contact information for changes/cancellations
 
-## Email Service Setup
+## Email Delivery Architecture
 
-The system uses Gmail SMTP for sending emails. You'll need:
-1. A Gmail account (or Google Workspace account)
-2. An App Password (not your regular Gmail password)
+The system uses a three-tier email delivery approach to maximise reliability:
 
-### Step 1: Create a Gmail Account
+1. **Primary – SendGrid HTTP API** (recommended): Calls SendGrid's REST API directly, avoiding SMTP relay throttling (421 errors). Requires `SENDGRID_API_KEY`.
+2. **Fallback – Gmail SMTP via Nodemailer** (STARTTLS port 587): Used when SendGrid is not configured. Requires `EMAIL_USER` and `EMAIL_PASSWORD`.
+3. **Last-resort – Firebase Email Extension** (SMTP relay): Retained for backwards compatibility. Not recommended as the sole path due to intermittent 421 throttling errors on `smtp-relay.gmail.com`.
 
-If you don't already have one:
-1. Go to https://accounts.google.com
-2. Create a new Gmail account
-3. Use something like `noreply@your-domain.com` or `bookings@your-domain.com`
+## Recommended Setup: SendGrid API
+
+### Step 1: Create a SendGrid account
+
+1. Go to https://sendgrid.com and create a free account (100 emails/day on the free tier)
+2. Verify your sender domain or email address in SendGrid's sender authentication
+
+### Step 2: Create an API key
+
+1. In the SendGrid dashboard, go to **Settings → API Keys**
+2. Click **Create API Key**
+3. Choose **Restricted Access** → enable only **Mail Send**
+4. Copy and save the generated key (starts with `SG.`)
+
+### Step 3: Configure the API key as a Firebase Secret
+
+```bash
+# Store the key in Secret Manager (recommended for production)
+firebase functions:secrets:set SENDGRID_API_KEY
+# Paste the key when prompted
+```
+
+Or for local development, add to `functions/.env`:
+
+```env
+SENDGRID_API_KEY=SG.your-api-key-here
+```
+
+### Step 4: Set the sender address
+
+The `EMAIL_FROM` variable controls the "From" address for all outgoing emails.
+It must match a verified sender in your SendGrid account.
+
+```bash
+firebase functions:secrets:set EMAIL_FROM
+# Enter: Fixnero <Palvelut@fixnero.fi>
+```
+
+---
+
+## Fallback Setup: Gmail SMTP (Nodemailer)
+
+Used automatically when `SENDGRID_API_KEY` is not set.
+
+### Step 1: Create a Gmail / Google Workspace account
+
+Use a dedicated account such as `Palvelut@fixnero.fi`.
 
 ### Step 2: Enable 2-Step Verification
 
-App Passwords require 2-Step Verification to be enabled:
+App Passwords require 2-Step Verification:
 1. Go to https://myaccount.google.com/security
-2. Click on "2-Step Verification"
-3. Follow the setup process
+2. Click on "2-Step Verification" and complete setup
 
 ### Step 3: Create an App Password
 
 1. Go to https://myaccount.google.com/apppasswords
-2. Select "Mail" as the app
-3. Select "Other" as the device and name it "Rajala Services Booking"
-4. Click "Generate"
-5. **Save the generated 16-character password** (you'll need this for configuration)
+2. Select "Mail" as the app and "Other" as the device
+3. Name it "Rajala Services Booking" and click "Generate"
+4. **Save the 16-character password** (you'll need this for configuration)
 
-## Configuration
-
-### Local Development (.env)
-
-Create a `.env` file in the `functions/` directory:
+### Step 4: Configure credentials
 
 ```bash
-cd functions
-cp .env.example .env
-```
-
-Edit `.env` and add your email credentials:
-
-```env
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASSWORD=abcd efgh ijkl mnop
-EMAIL_FROM=Rajala Services <noreply@rajala-services.com>
-```
-
-**Important**: 
-- `EMAIL_PASSWORD` is the App Password (16 characters with spaces), not your Gmail password
-- `EMAIL_FROM` can be a display name with email, or just an email address
-
-### Legacy Configuration (.runtimeconfig.json)
-
-For Firebase Functions Gen1 compatibility, also update `.runtimeconfig.json`:
-
-```json
-{
-  "email": {
-    "user": "your-email@gmail.com",
-    "password": "abcdefghijklmnop",
-    "from": "Rajala Services <noreply@rajala-services.com>"
-  }
-}
-```
-
-### Production Deployment
-
-For production, set the configuration using Firebase CLI:
-
-#### Option 1: Using Firebase Secrets (Gen2 - Recommended)
-
-```bash
+# Production (Secret Manager - recommended)
 firebase functions:secrets:set EMAIL_USER
-# Enter: your-email@gmail.com
+# Enter: Palvelut@fixnero.fi
 
 firebase functions:secrets:set EMAIL_PASSWORD
-# Enter: your-app-password
+# Enter: your-16-char-app-password
 
 firebase functions:secrets:set EMAIL_FROM
-# Enter: Rajala Services <noreply@rajala-services.com>
+# Enter: Fixnero <Palvelut@fixnero.fi>
 ```
 
-#### Option 2: Using Functions Config (Gen1 - Legacy)
+Local development (`functions/.env`):
 
-```bash
-firebase functions:config:set \
-  email.user="your-email@gmail.com" \
-  email.password="abcdefghijklmnop" \
-  email.from="Rajala Services <noreply@rajala-services.com>"
-
-# Verify configuration
-firebase functions:config:get
+```env
+EMAIL_USER=Palvelut@fixnero.fi
+EMAIL_PASSWORD=your-16-char-app-password
+EMAIL_FROM=Fixnero <Palvelut@fixnero.fi>
 ```
+
+> **Note**: The Nodemailer path uses explicit STARTTLS on port 587 (not the SMTP relay) to avoid 421 throttling errors. An exponential-backoff retry (up to 3 attempts) is applied automatically.
+
+---
 
 ## Email Template
 
-The confirmation email includes:
+The confirmation email is built by the shared `buildBookingEmailHtml()` helper in `functions/index.js`. It includes:
 - Professional HTML formatting
-- Rajala Services branding
 - Booking details (date, time, customer info)
 - Service details with pricing
-- Contact information
+- Directions and contact information
 - Finnish language (fi-FI locale)
+- All user input is HTML-escaped to prevent XSS
 
-### Customization
+---
 
-To customize the email template, edit the `sendBookingConfirmationEmail` function in `functions/index.js`:
+## Configuration Summary
 
-```javascript
-async function sendBookingConfirmationEmail(bookingData) {
-  // ... email configuration ...
-  
-  const mailOptions = {
-    from: emailFromVal,
-    to: bookingData.sahkoposti,
-    subject: 'Varausvahvistus - Rajala Services',
-    html: `
-      <!-- Customize your HTML template here -->
-    `
-  };
-  
-  // ... send email ...
-}
-```
+| Variable | Required | Description |
+|---|---|---|
+| `SENDGRID_API_KEY` | If using SendGrid (recommended) | SendGrid Mail Send API key (`SG.…`) |
+| `EMAIL_USER` | If using Nodemailer fallback | Gmail/Workspace address |
+| `EMAIL_PASSWORD` | If using Nodemailer fallback | Gmail App Password (16 chars) |
+| `EMAIL_FROM` | Optional | From address (defaults to `EMAIL_USER`) |
+
+---
 
 ## Testing
 
-### Local Testing with Emulator
+### Run unit tests
+
+```bash
+cd functions
+npm test
+```
+
+This runs `test-email-helpers.js` which validates `escapeHtml`, `withRetry`, `buildBookingEmailHtml`, and email method tracking logic.
+
+### Local testing with emulator
 
 1. Start the Firebase emulator:
 ```bash
@@ -146,171 +148,101 @@ firebase emulators:start
 
 2. Create a test booking through the web interface or API
 3. Check the Functions logs in the emulator UI (http://localhost:4000)
-4. Verify the email was sent (check inbox of the email used in booking)
+4. Verify the email was sent (check the recipient's inbox)
 
-### Testing Email Configuration
-
-Test if your credentials work:
+### Verify SendGrid credentials
 
 ```bash
 cd functions
 node -e "
-const nodemailer = require('nodemailer');
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'your-email@gmail.com',
-    pass: 'your-app-password'
-  }
-});
-transporter.verify((error, success) => {
-  if (error) {
-    console.log('Error:', error);
-  } else {
-    console.log('Server is ready to take our messages');
-  }
-});
-"
-```
-
-## Troubleshooting
-
-### "Email not configured" in logs
-
-**Cause**: `EMAIL_USER` or `EMAIL_PASSWORD` environment variables are not set.
-
-**Solution**: 
-1. Verify `.env` file exists in `functions/` directory
-2. Check that variables are correctly set
-3. Restart the emulator or redeploy functions
-
-### "Invalid login" or "Username and Password not accepted"
-
-**Cause**: Using regular Gmail password instead of App Password, or 2-Step Verification not enabled.
-
-**Solution**:
-1. Ensure 2-Step Verification is enabled on your Google account
-2. Generate a new App Password
-3. Update `EMAIL_PASSWORD` with the App Password (not your regular password)
-
-### Emails not being sent
-
-**Cause**: Multiple possible reasons.
-
-**Solution**:
-1. Check Firebase Functions logs: `firebase functions:log`
-2. Verify email credentials are correct
-3. Check Gmail account isn't blocked or limited
-4. Ensure "Less secure app access" is NOT enabled (use App Passwords instead)
-5. Check if emails are in spam folder
-
-### "Email transporter not available - skipping email"
-
-**Cause**: Email configuration is incomplete or failed to initialize.
-
-**Solution**:
-1. Check all email environment variables are set
-2. Verify App Password is correct (no spaces in .env, spaces OK in .runtimeconfig.json)
-3. Check function logs for initialization errors
-
-### Emails sent but not received
-
-**Cause**: Emails may be blocked, in spam, or Gmail limits reached.
-
-**Solution**:
-1. Check spam/junk folder
-2. Verify recipient email address is correct
-3. Check Gmail's sending limits (500 emails/day for free Gmail)
-4. Consider using a professional email service for production (SendGrid, Mailgun, etc.)
-
-## Gmail Sending Limits
-
-Be aware of Gmail's sending limits:
-- **Free Gmail**: 500 emails per day
-- **Google Workspace**: 2,000 emails per day
-
-For higher volume needs, consider:
-- SendGrid (12,000 free emails/month)
-- Mailgun (5,000 free emails/month)
-- Amazon SES (62,000 free emails/month)
-
-## Security Best Practices
-
-1. ✅ **Never commit credentials**: Add `.env` and `.runtimeconfig.json` to `.gitignore`
-2. ✅ **Use App Passwords**: Never use your main Gmail password
-3. ✅ **Limit permissions**: Use a dedicated Gmail account for sending only
-4. ✅ **Monitor usage**: Check Gmail account regularly for suspicious activity
-5. ✅ **Rotate passwords**: Change App Passwords every 6-12 months
-6. ✅ **Enable 2FA**: Always use 2-Step Verification
-
-## Production Deployment Checklist
-
-Before deploying to production:
-
-- [ ] Gmail account created and configured
-- [ ] 2-Step Verification enabled
-- [ ] App Password generated
-- [ ] Environment variables set in Firebase (secrets or config)
-- [ ] Email template tested and customized
-- [ ] Contact information in email is correct
-- [ ] Test email sent successfully
-- [ ] Spam folder checked
-- [ ] Sending limits appropriate for expected volume
-- [ ] `.env` and `.runtimeconfig.json` in `.gitignore`
-
-## Alternative Email Services
-
-For production, you may want to use a professional email service:
-
-### SendGrid
-
-```javascript
-// Install: npm install @sendgrid/mail
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-const msg = {
-  to: bookingData.sahkoposti,
-  from: 'noreply@rajala-services.com',
-  subject: 'Varausvahvistus - Rajala Services',
-  html: emailHtml,
-};
-await sgMail.send(msg);
+sgMail.send({
+  to: 'test@example.com',
+  from: process.env.EMAIL_FROM || 'Palvelut@fixnero.fi',
+  subject: 'SendGrid test',
+  text: 'Test email from Rajala Services'
+}).then(() => console.log('✅ SendGrid OK')).catch(err => console.error('❌', err.message));
+" 
 ```
-
-### Mailgun
-
-```javascript
-// Install: npm install mailgun-js
-const mailgun = require('mailgun-js');
-const mg = mailgun({
-  apiKey: process.env.MAILGUN_API_KEY,
-  domain: process.env.MAILGUN_DOMAIN
-});
-
-await mg.messages().send({
-  from: 'noreply@rajala-services.com',
-  to: bookingData.sahkoposti,
-  subject: 'Varausvahvistus - Rajala Services',
-  html: emailHtml
-});
-```
-
-## Support
-
-For issues with email configuration:
-1. Check Firebase Functions logs: `firebase functions:log`
-2. Review this documentation
-3. Test with the verification script above
-4. Check Google Account security settings
-
-## Version Information
-
-- **Email Feature Version**: 1.0.0
-- **Node.js Version**: 20
-- **Nodemailer Version**: 7.0.x
-- **Last Updated**: 2024-11-23
 
 ---
 
-**For general Firebase Functions setup, see [functions/README.md](functions/README.md)**
+## Troubleshooting
+
+### 421 errors / "Server terminates connection (EHLO)"
+
+**Cause**: Google Workspace SMTP relay (`smtp-relay.gmail.com`) throttling bursty connections.
+
+**Solution**: Configure `SENDGRID_API_KEY` to use the SendGrid API path (no SMTP). The Nodemailer fallback now uses `smtp.gmail.com:587` (STARTTLS) instead of the relay.
+
+### "Email not configured" in logs
+
+**Cause**: `EMAIL_USER` or `EMAIL_PASSWORD` environment variables are not set (and `SENDGRID_API_KEY` is also absent).
+
+**Solution**:
+1. Set `SENDGRID_API_KEY` in Secret Manager (preferred)
+2. Or set `EMAIL_USER` + `EMAIL_PASSWORD` in Secret Manager or `.env`
+3. Restart emulator or redeploy functions
+
+### "Invalid login" / "Username and Password not accepted"
+
+**Cause**: Using the regular Gmail password instead of an App Password, or 2-Step Verification is not enabled.
+
+**Solution**:
+1. Ensure 2-Step Verification is enabled on the Google account
+2. Generate a new App Password (16 characters)
+3. Update `EMAIL_PASSWORD` with the App Password
+
+### SendGrid 403 / authentication error
+
+**Cause**: The API key is incorrect, has been revoked, or lacks the "Mail Send" permission.
+
+**Solution**:
+1. Verify the key in SendGrid Dashboard → Settings → API Keys
+2. Ensure the key has "Mail Send" access
+3. Re-run `firebase functions:secrets:set SENDGRID_API_KEY`
+
+---
+
+## Gmail Sending Limits
+
+If using the Nodemailer Gmail path, be aware of sending limits:
+- **Free Gmail**: 500 emails per day
+- **Google Workspace**: 2,000 emails per day
+
+For higher volume, **SendGrid free tier** provides 100 emails/day; paid plans start at $19.95/month for 50,000 emails.
+
+---
+
+## Security Best Practices
+
+1. ✅ **Never commit credentials**: `.env` and `.runtimeconfig.json` are in `.gitignore`
+2. ✅ **Use Secret Manager for production**: `firebase functions:secrets:set`
+3. ✅ **Use App Passwords or API keys**: Never use your main account password
+4. ✅ **Limit API key permissions**: Grant only "Mail Send" for SendGrid keys
+5. ✅ **Enable 2FA**: On both Gmail and SendGrid accounts
+6. ✅ **Rotate keys regularly**: Quarterly rotation recommended
+
+---
+
+## Production Deployment Checklist
+
+- [ ] `SENDGRID_API_KEY` set in Secret Manager **or** `EMAIL_USER` + `EMAIL_PASSWORD` set
+- [ ] `EMAIL_FROM` configured with a verified sender address
+- [ ] SendGrid sender domain/email verified (if using SendGrid)
+- [ ] Gmail 2-Step Verification enabled and App Password generated (if using Nodemailer fallback)
+- [ ] Test email sent successfully after deployment
+- [ ] Spam folder checked
+- [ ] Firebase Functions logs checked for errors
+
+---
+
+## Version Information
+
+- **Email Feature Version**: 2.0.0
+- **Node.js Version**: 20
+- **@sendgrid/mail Version**: 8.1.x
+- **Nodemailer Version**: 7.0.x
+- **Last Updated**: 2025-02-26
+
