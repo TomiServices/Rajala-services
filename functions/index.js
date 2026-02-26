@@ -101,6 +101,25 @@ function getEmailMethod(mailDocId, emailSent) {
 }
 
 // =======================
+// UTILITY: Validate Environment Variables
+// =======================
+/**
+ * Validates that required environment variables are set.
+ * Logs a specific error for each missing variable.
+ * @param {string[]} requiredEnvs - Array of required environment variable names
+ * @throws {Error} if any required variable is missing
+ */
+function validateEnvVariables(requiredEnvs) {
+  const missing = requiredEnvs.filter(env => !process.env[env]);
+  for (const env of missing) {
+    console.error(`${env} is missing. Cannot proceed.`);
+  }
+  if (missing.length > 0) {
+    throw new Error(`ENV not configured: ${missing.join(', ')}`);
+  }
+}
+
+// =======================
 // GOOGLE CALENDAR CLIENT (lazy init)
 // =======================
 let googleCalendar = null;
@@ -201,7 +220,7 @@ function initializeEmailTransporter() {
   if (!emailPasswordVal) emailPasswordVal = getLegacyConfigValue('email.password');
 
   if (!emailUserVal || !emailPasswordVal) {
-    console.log('Email not configured (missing EMAIL_USER or EMAIL_PASSWORD)');
+    console.error('Email not configured (missing EMAIL_USER or EMAIL_PASSWORD)');
     return null;
   }
 
@@ -980,7 +999,22 @@ exports.onBookingCreated = onDocumentCreated({
   const bookingId = event.params.bookingId;
   
   console.log('onBookingCreated triggered for booking:', bookingId);
-  
+
+  // Validate email environment variables at function start
+  try {
+    validateEnvVariables(['EMAIL_USER', 'EMAIL_PASSWORD']);
+  } catch (envErr) {
+    console.error('Email environment variables not configured for booking:', {
+      bookingId: bookingId,
+      error: envErr.message,
+      manualRetryData: bookingData ? {
+        customerEmail: bookingData.sahkoposti,
+        customerName: bookingData.nimi
+      } : null
+    });
+    // Continue execution - Firebase Email Extension path may still work
+  }
+
   if (!bookingData) {
     console.log('No booking data found for:', bookingId);
     return null;
