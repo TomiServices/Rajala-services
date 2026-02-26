@@ -640,6 +640,7 @@
             background: transparent;
             padding: 0;
             border-radius: 18px 18px 0 0;
+            overflow: hidden;
         }
         /* Breadcrumb shown only on mobile, fills the white gap between top bar and hero */
         .breadcrumb-mobile {
@@ -671,6 +672,7 @@
             justify-content: space-between;
             align-items: center;
             padding-top: 50px;
+            padding-bottom: 20px;
             box-sizing: border-box;
         }
         .container .hero-image-section img + .hero-overlay h1 {
@@ -698,7 +700,8 @@
                 border-radius: 0;
             }
             .container .hero-image-section img {
-                height: 250px;
+                /* clamp: 300px floor → scales with viewport → 380px ceiling */
+                height: clamp(300px, 46vw, 380px);
                 border-radius: 0;
             }
         }
