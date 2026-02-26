@@ -726,7 +726,29 @@
                 border-radius: 0;
             }
             .container .hero-image-section img {
+                width: 100%;
                 max-width: 100%;
+                height: 500px;
+            }
+            .container .hero-image-section img + .hero-overlay h1 {
+                font-size: 2rem;
+                max-width: 900px;
+                width: 100%;
+            }
+        }
+        /* Large desktop screens: taller hero for better proportions */
+        @media (min-width: 1280px) {
+            .container .hero-image-section img {
+                height: 550px;
+            }
+            .container .hero-image-section img + .hero-overlay h1 {
+                font-size: 2.2rem;
+            }
+        }
+        /* Extra-large desktop screens */
+        @media (min-width: 1920px) {
+            .container .hero-image-section img {
+                height: 600px;
             }
         }
     </style>
