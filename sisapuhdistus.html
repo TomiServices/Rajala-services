@@ -583,17 +583,6 @@
             }
 
         }
-        /* Hero image section placement inside container */
-        .container .hero-image-section {
-            margin-top: -28px;
-            margin-left: -40px;
-            margin-right: -40px;
-            width: calc(100% + 80px);
-            margin-bottom: 8px;
-            background: transparent;
-            padding: 0;
-            border-radius: 18px 18px 0 0;
-        }
         /* Breadcrumb shown only on mobile, fills the white gap between top bar and hero */
         .breadcrumb-mobile {
             display: none;
@@ -612,74 +601,6 @@
         @media (max-width: 768px) {
             .breadcrumb-mobile {
                 display: block;
-            }
-        }
-        .container .hero-image-section img {
-            height: 450px;
-            width: 100%;
-        }
-        /* Remove dark overlay; place buttons at top and h1 at bottom */
-        .container .hero-image-section img + .hero-overlay {
-            background: transparent;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding-top: 50px;
-            box-sizing: border-box;
-        }
-        .container .hero-image-section img + .hero-overlay h1 {
-            text-shadow: 1px 1px 6px rgba(0,0,0,0.9);
-            margin-bottom: 0;
-            width: 100%;
-        }
-        /* Top buttons row inside hero */
-        .hero-top-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            width: 100%;
-            justify-content: center;
-        }
-        /* Full-width hero on mobile */
-        @media (max-width: 768px) {
-            .container .hero-image-section {
-                margin-left: 0;
-                margin-right: 0;
-                width: 100vw;
-                left: 50%;
-                transform: translateX(-50%);
-                border-radius: 0;
-            }
-            .container .hero-image-section img {
-                height: 250px;
-                border-radius: 0;
-            }
-        }
-        @media (max-width: 480px) {
-            /* Taller than desktop because the title wraps to 3+ lines on narrow screens */
-            .container .hero-image-section img {
-                height: 330px;
-            }
-            .container .hero-image-section .hero-overlay h1 {
-                font-size: 1.4rem;
-            }
-            /* Elevate H1 slightly so it never extends beyond the image bottom edge */
-            .container .hero-image-section img + .hero-overlay {
-                padding-bottom: 30px;
-            }
-        }
-        /* Wider hero on desktop: extend to viewport width for better visual alignment */
-        @media (min-width: 769px) {
-            .container .hero-image-section {
-                position: relative;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 100vw;
-                margin-left: 0;
-                margin-right: 0;
-                border-radius: 0;
-            }
-            .container .hero-image-section img {
-                max-width: 100%;
             }
         }
     </style>

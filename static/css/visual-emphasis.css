@@ -160,66 +160,6 @@ ul.benefits-list li::before {
     margin-top: 0;
 }
 
-/* Hero Image Section - Consistent layout for all service pages */
-/* Centered, responsive, and professional hero image display */
-.hero-image-section {
-    width: 100%;
-    max-width: 1600px;
-    margin: 100px auto 60px;
-    padding: 0 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: transparent;
-}
-
-.hero-image-section img {
-    width: 100%;
-    max-width: 1400px;
-    height: auto;
-    aspect-ratio: 16 / 9;
-    object-fit: contain;
-    object-position: center center;
-    display: block;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin: 0 auto;
-}
-
-.hero-image-section img:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-/* Tablet - 768px to 1023px */
-@media (min-width: 768px) and (max-width: 1023px) {
-    .hero-image-section {
-        margin: 90px auto 50px;
-        padding: 0 30px;
-    }
-}
-
-/* Mobile - up to 767px */
-@media (max-width: 767px) {
-    .hero-image-section {
-        margin: 80px auto 40px;
-        padding: 0 20px;
-    }
-    
-    .hero-image-section img {
-        border-radius: 8px;
-    }
-}
-
-/* Small mobile - up to 480px */
-@media (max-width: 480px) {
-    .hero-image-section {
-        margin: 70px auto 30px;
-        padding: 0 15px;
-    }
-}
-
 /* Mobile Responsive Adjustments */
 @media (max-width: 768px) {
     .highlight-price,

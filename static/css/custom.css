@@ -1,103 +1,76 @@
-/* custom.css - hero image fixes */
+/* custom.css - Reusable hero section component for Rajala Services / Fixnero */
+
 :root {
-  --hero-gap-top: 12px; /* etäisyys navin ja kuvan väliin */
-  --hero-h-mobile: 120px;
-  --hero-h-small: 110px;
-  --hero-h-tablet: 130px;
-  --hero-h-desktop: 140px;
+  --hero-gap-top: 12px;
+  /* Negative overlap that pulls the hero flush against the top of .container
+     (compensates for .container's 28px top padding at the hero position) */
+  --hero-container-overlap: -28px;
 }
+
+/* ===== HERO SECTION =====
+ * Reusable hero component for service subpages.
+ * HTML pattern: .hero-image-section > img + .hero-overlay > .hero-top-buttons + h1
+ * Breakpoints: ≤480px mobile · ≤768px tablet · 769px+ desktop.
+ * ========================= */
 
 .hero-image-section {
   position: relative;
   width: 100%;
-  margin: 0 auto;
-  margin-top: calc(var(--nav-offset, 70px) + var(--hero-gap-top));
-  margin-bottom: 24px;
-  padding: 20px;
-  max-width: 1200px; /* Aligns with the content width */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: #f9f9f9; /* Matches white margins */
-  border-radius: 12px;
-  overflow: hidden; /* Fallback for browsers without :has() support */
-}
-
-/* When image comes first, contain it properly for overlay 
-   Note: :has() requires modern browsers (Chrome 105+, Safari 15.4+, Firefox 121+)
-   This ensures overlay stays within bounds */
-.hero-image-section:has(img:first-child) {
   overflow: hidden;
 }
 
+/* Hero image: fills container, cropped with cover.
+   38vw keeps the hero at ~40% of viewport width on desktop (≈480px at 1280px)
+   while the clamp bounds prevent it from getting too short (<220px) or too tall (>480px). */
 .hero-image-section img {
-  max-width: 100%;
-  height: auto;
+  display: block;
+  width: 100%;
+  height: clamp(220px, 38vw, 480px);
   object-fit: cover;
   object-position: center;
-  border-radius: 8px; /* Slight border radius for visual consistency */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Soft shadow to elevate the image */
 }
 
+/* Gradient overlay: top-dark for button legibility, clear middle, bottom-dark for H1 */
 .hero-overlay {
-  position: relative;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(0, 0, 0, 0.05) 35%,
+    rgba(0, 0, 0, 0.50) 65%,
+    rgba(0, 0, 0, 0.82) 100%
+  );
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 20px 40px;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: clamp(14px, 3vw, 40px);
+  box-sizing: border-box;
 }
 
-/* 
- * Adaptive Layout Pattern:
- * - If HTML has <img> first, then <hero-overlay>: overlay positions absolutely over image (current service pages)
- * - If HTML has <hero-overlay> first, then <img>: content stacks above image (new design pattern)
- * This allows backward compatibility while supporting new layouts
- */
-
-/* When image comes first (current structure), position overlay absolutely over image */
-.hero-image-section img + .hero-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  color: white;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 20px;
-}
-
-/* Text color adjustments for overlay on image */
-.hero-image-section img + .hero-overlay h1 {
-  color: white;
-}
-
-.hero-image-section img + .hero-overlay p {
-  color: white;
-}
-
-/* Ensure image doesn't interfere with flex layout when overlay comes first */
-.hero-image-section .hero-overlay + img {
-  display: block;
-}
-
+/* H1 inside hero: always white with shadow for contrast on any image */
 .hero-overlay h1 {
-  font-size: 2.5em;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #333;
+  color: #fff;
+  font-size: clamp(1.3rem, 3.5vw, 2.8rem);
+  font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', sans-serif;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.70);
+  margin: 0;
+  width: 100%;
+  hyphens: auto;
 }
 
 .hero-overlay p {
-  font-size: 1.1em;
-  margin-bottom: 20px;
-  color: #666;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.60);
+  margin-bottom: 0;
 }
 
 .hero-overlay button {
-  background-color: #007bff; /* Blue color for buttons */
+  background-color: #007bff;
   color: #fff;
   padding: 10px 20px;
   margin: 5px;
@@ -110,7 +83,7 @@
 }
 
 .hero-overlay button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #0056b3;
 }
 
 .hero-overlay button:focus,
@@ -119,44 +92,41 @@
   outline-offset: 2px;
 }
 
+/* Navigation button row at the top of the overlay */
+.hero-top-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Hero inside .container: bleed to full viewport width */
+.container .hero-image-section {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  margin-top: var(--hero-container-overlap);
+  margin-bottom: 24px;
+  border-radius: 0;
+}
+
+/* Responsive image heights */
+@media (max-width: 768px) {
+  .hero-image-section img {
+    height: clamp(200px, 55vw, 310px);
+  }
+}
+
 @media (max-width: 480px) {
-  .hero-image-section { 
-    margin-top: calc(var(--nav-offset,64px) + 8px); 
-    padding: 12px; 
+  .hero-image-section img {
+    height: clamp(230px, 70vw, 340px);
   }
-  .hero-image-section img { 
-    border-radius: 8px; 
+  .hero-overlay h1 {
+    font-size: clamp(1.1rem, 5.5vw, 1.6rem);
   }
   .hero-overlay {
-    padding: 15px 20px;
-  }
-  .hero-overlay h1 {
-    font-size: 1.8em;
-  }
-  .hero-overlay p {
-    font-size: 0.95em;
-  }
-  .hero-overlay button {
-    font-size: 0.9em;
-    padding: 8px 16px;
-  }
-}
-@media (min-width: 481px) and (max-width: 767px) {
-  .hero-overlay {
-    padding: 18px 30px;
-  }
-  .hero-overlay h1 {
-    font-size: 2em;
-  }
-  .hero-overlay p {
-    font-size: 1em;
-  }
-}
-@media (min-width: 768px) and (max-width: 1023px) {
-  .hero-overlay h1 {
-    font-size: 2.2em;
-  }
-  .hero-overlay p {
-    font-size: 1.05em;
+    padding: clamp(10px, 3vw, 20px);
   }
 }
