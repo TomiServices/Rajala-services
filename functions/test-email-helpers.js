@@ -60,13 +60,6 @@ function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
     .map(s => `  • ${escapeHtml(s.serviceName || '')} - ${escapeHtml(s.taskName || '')}${s.price ? ': ' + escapeHtml(s.price) : ''}`)
     .join('\n') || '  Palvelu ei määritelty';
 
-  const messageSection = escapedMessage
-    ? `<div style="background-color: #fff8e1; padding: 15px; border-radius: 5px; margin: 20px 0;">
-            <h3 style="margin-top: 0; color: #333;">Lisätiedot</h3>
-            <p style="white-space: pre-wrap;">${escapedMessage}</p>
-          </div>`
-    : '';
-
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <h2 style="color: #c41e3a;">Varausvahvistus</h2>
@@ -79,13 +72,13 @@ function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
         <p><strong>Puhelin:</strong> ${escapedPhone}</p>
         <p><strong>Sähköposti:</strong> ${escapedEmail}</p>
         <p><strong>Ajoneuvotyyppi:</strong> ${escapedVehicleType}</p>
+        ${escapedMessage ? `<p><strong>Tilausviesti:</strong> ${escapedMessage}</p>` : ''}
       </div>
       <div style="background-color: #fff4f4; padding: 15px; border-radius: 5px; margin: 20px 0;">
         <h3 style="margin-top: 0; color: #333;">Valitut palvelut</h3>
         <p style="white-space: pre-line;">${servicesText}</p>
         <p><strong>Kokonaishinta:</strong> ${escapedTotalPrice || 'Hinta sovittaessa'}</p>
       </div>
-      ${messageSection}
       <p style="margin-top: 30px;">Ystävällisin terveisin,<br><strong>${COMPANY_NAME}</strong></p>
       <p style="font-size: 12px; color: #666;">Tämä on automaattinen vahvistusviesti.</p>
     </div>
@@ -239,15 +232,15 @@ function testBuildBookingEmailHtml() {
   assert(!xssServicesHtml.includes('<script>evil'), 'Escapes XSS in service price');
   assert(!xssServicesHtml.includes('<b>free</b>'), 'Escapes XSS in total price');
 
-  // Optional message section rendered when message is present
+  // Optional message field rendered when message is present
   const bookingWithMsg = { ...bookingData, message: 'Tarvitsen erikoiskohtelua' };
   const htmlWithMsg = buildBookingEmailHtml(bookingWithMsg, 'tiistai', '09:00');
-  assert(htmlWithMsg.includes('Tarvitsen erikoiskohtelua'), 'Includes optional message section');
-  assert(htmlWithMsg.includes('Lisätiedot'), 'Contains Lisätiedot header when message present');
+  assert(htmlWithMsg.includes('Tarvitsen erikoiskohtelua'), 'Includes optional message in booking info section');
+  assert(htmlWithMsg.includes('Tilausviesti'), 'Contains Tilausviesti label when message present');
 
-  // No message section when message is empty
+  // No message field when message is empty
   const htmlNoMsg = buildBookingEmailHtml(bookingData, 'tiistai', '09:00');
-  assert(!htmlNoMsg.includes('Lisätiedot'), 'No Lisätiedot header when message absent');
+  assert(!htmlNoMsg.includes('Tilausviesti'), 'No Tilausviesti label when message absent');
 
   console.log('');
 }

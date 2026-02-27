@@ -151,13 +151,6 @@ function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
     .map(s => `  • ${escapeHtml(s.serviceName || '')} - ${escapeHtml(s.taskName || '')}${s.price ? ': ' + escapeHtml(s.price) : ''}`)
     .join('\n') || '  Palvelu ei määritelty';
 
-  const messageSection = escapedMessage
-    ? `<div style="background-color: #fff8e1; padding: 15px; border-radius: 5px; margin: 20px 0;">
-            <h3 style="margin-top: 0; color: #333;">Lisätiedot</h3>
-            <p style="white-space: pre-wrap;">${escapedMessage}</p>
-          </div>`
-    : '';
-
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <h2 style="color: #c41e3a;">Varausvahvistus</h2>
@@ -171,6 +164,7 @@ function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
         <p><strong>Puhelin:</strong> ${escapedPhone}</p>
         <p><strong>Sähköposti:</strong> ${escapedEmail}</p>
         <p><strong>Ajoneuvotyyppi:</strong> ${escapedVehicleType}</p>
+        ${escapedMessage ? `<p><strong>Tilausviesti:</strong> ${escapedMessage}</p>` : ''}
       </div>
       
       <div style="background-color: #fff4f4; padding: 15px; border-radius: 5px; margin: 20px 0;">
@@ -178,8 +172,6 @@ function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
         <p style="white-space: pre-line;">${servicesText}</p>
         <p><strong>Kokonaishinta:</strong> ${escapedTotalPrice || 'Hinta sovittaessa'}</p>
       </div>
-      
-      ${messageSection}
       
       <div style="background-color: #e8f4f8; padding: 15px; border-radius: 5px; margin: 20px 0;">
         <h3 style="margin-top: 0; color: #333;">Saapumisohjeet</h3>
@@ -705,16 +697,22 @@ async function createGoogleCalendarEvent(bookingData) {
       `${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}`
     ).join('\n') || 'Palvelu ei määritelty';
 
+    const luotu = (bookingData.luotu && typeof bookingData.luotu.toDate === 'function')
+      ? bookingData.luotu.toDate()
+      : new Date();
+    const luotuStr = luotu.toLocaleString('fi-FI', { timeZone: 'Europe/Helsinki' });
+
     const event = {
       summary: `Varaus: ${bookingData.nimi || 'Tuntematon'}`,
       description:
         `Asiakas: ${bookingData.nimi || ''}\n` +
         `Puhelin: ${bookingData.puhelin || ''}\n` +
         `Sähköposti: ${bookingData.sahkoposti || ''}\n` +
-        `Ajoneuvotyyppi: ${bookingData.vehicleType || 'Ei määritelty'}\n\n` +
-        `Palvelut:\n${serviceInfo}\n\n` +
-        `Kokonaishinta: ${bookingData.totalPrice || 'Hinta sovittaessa'}` +
-        (bookingData.message ? `\n\nLisätiedot:\n${bookingData.message}` : ''),
+        `Ajoneuvotyyppi: ${bookingData.vehicleType || 'Ei määritelty'}\n` +
+        (bookingData.message ? `Tilausviesti: ${bookingData.message}\n` : '') +
+        `\nPalvelut:\n${serviceInfo}\n\n` +
+        `Kokonaishinta: ${bookingData.totalPrice || 'Hinta sovittaessa'}\n` +
+        `Varaus luotu: ${luotuStr}`,
       start: { dateTime: startDate.toISOString(), timeZone: 'Europe/Helsinki' },
       end: { dateTime: endDate.toISOString(), timeZone: 'Europe/Helsinki' },
       colorId: '11'
@@ -1290,6 +1288,11 @@ exports.onBookingUpdated = onDocumentUpdated({
       `${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}`
     ).join('\n') || 'Palvelu ei määritelty';
 
+    const luotu = (afterData.luotu && typeof afterData.luotu.toDate === 'function')
+      ? afterData.luotu.toDate()
+      : null;
+    const luotuStr = luotu ? luotu.toLocaleString('fi-FI', { timeZone: 'Europe/Helsinki' }) : '';
+
     await calendar.events.patch({
       calendarId,
       eventId: googleEventId,
@@ -1298,10 +1301,12 @@ exports.onBookingUpdated = onDocumentUpdated({
         description:
           `Asiakas: ${afterData.nimi || ''}\n` +
           `Puhelin: ${afterData.puhelin || ''}\n` +
-          `Sähköposti: ${afterData.sahkoposti || ''}\n\n` +
-          `Palvelut:\n${serviceInfo}\n\n` +
+          `Sähköposti: ${afterData.sahkoposti || ''}\n` +
+          `Ajoneuvotyyppi: ${afterData.vehicleType || 'Ei määritelty'}\n` +
+          (afterData.message ? `Tilausviesti: ${afterData.message}\n` : '') +
+          `\nPalvelut:\n${serviceInfo}\n\n` +
           `Kokonaishinta: ${afterData.totalPrice || 'Hinta sovittaessa'}` +
-          (afterData.message ? `\n\nLisätiedot:\n${afterData.message}` : ''),
+          (luotuStr ? `\nVaraus luotu: ${luotuStr}` : ''),
         start: { dateTime: startDate.toISOString(), timeZone: 'Europe/Helsinki' },
         end: { dateTime: endDate.toISOString(), timeZone: 'Europe/Helsinki' }
       }
