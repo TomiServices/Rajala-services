@@ -153,7 +153,7 @@ function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
 
   const messageSection = escapedMessage
     ? `<div style="background-color: #fff8e1; padding: 15px; border-radius: 5px; margin: 20px 0;">
-            <h3 style="margin-top: 0; color: #333;">Lisätiedot</h3>
+            <h3 style="margin-top: 0; color: #333;">Asiakkaan viesti</h3>
             <p style="white-space: pre-wrap;">${escapedMessage}</p>
           </div>`
     : '';
@@ -499,6 +499,25 @@ function parseFirestoreDate(val) {
   return null;
 }
 
+/**
+ * Formats a Firestore timestamp value as a Finnish date-time string (Europe/Helsinki).
+ * Returns an empty string if the value cannot be parsed.
+ * @param {*} val - Firestore Timestamp, Date, number, or string
+ * @returns {string} e.g. "27.2.2026 klo 14.30" or ""
+ */
+function formatFinnishDateTime(val) {
+  const date = parseFirestoreDate(val);
+  if (!date) return '';
+  return date.toLocaleString('fi-FI', {
+    timeZone: 'Europe/Helsinki',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
 // =======================
 // reCAPTCHA verification
 // =======================
@@ -711,6 +730,8 @@ async function createGoogleCalendarEvent(bookingData) {
       `${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}`
     ).join('\n') || 'Palvelu ei määritelty';
 
+    const formattedCreatedAt = formatFinnishDateTime(bookingData.luotu);
+
     const event = {
       summary: `Varaus: ${bookingData.nimi || 'Tuntematon'}`,
       description:
@@ -720,7 +741,8 @@ async function createGoogleCalendarEvent(bookingData) {
         `Ajoneuvotyyppi: ${bookingData.vehicleType || 'Ei määritelty'}\n\n` +
         `Palvelut:\n${serviceInfo}\n\n` +
         `Kokonaishinta: ${bookingData.totalPrice || 'Hinta sovittaessa'}` +
-        (bookingData.message ? `\n\nLisätiedot:\n${bookingData.message}` : ''),
+        (bookingData.message ? `\n\nAsiakkaan viesti:\n${bookingData.message}` : '') +
+        (formattedCreatedAt ? `\n\nVaraus tehty: ${formattedCreatedAt}` : ''),
       start: { dateTime: startDate.toISOString(), timeZone: 'Europe/Helsinki' },
       end: { dateTime: endDate.toISOString(), timeZone: 'Europe/Helsinki' },
       colorId: '11'
@@ -1029,7 +1051,7 @@ async function createEmailDocument(bookingData, bookingId) {
 
     const messageSection = escapedMessage
       ? `<div style="background-color: #fff8e1; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <h3 style="margin-top: 0; color: #333;">Lisätiedot</h3>
+              <h3 style="margin-top: 0; color: #333;">Asiakkaan viesti</h3>
               <p style="white-space: pre-wrap;">${escapedMessage}</p>
             </div>`
       : '';
@@ -1106,10 +1128,11 @@ async function createEmailDocument(bookingData, bookingId) {
 }
 
 // Email confirmation trigger - sends email when new booking is created
-// Email sending priority (per user preference):
-// 1. Primary:   Write to 'mail' collection → Firebase Trigger Email Extension sends via SMTP
-// 2. Fallback:  Nodemailer directly (if EMAIL_USER / EMAIL_PASSWORD are configured)
-// 3. Fallback:  SendGrid HTTP API (if SENDGRID_API_KEY is configured)
+// Email sending priority:
+// 1. Primary:   Nodemailer directly (if EMAIL_USER / EMAIL_PASSWORD are configured)
+// 2. Fallback:  SendGrid HTTP API (if SENDGRID_API_KEY is configured)
+// 3. Last resort: Write to 'mail' collection → Firebase Trigger Email Extension sends via SMTP
+//    (only used if neither Nodemailer nor SendGrid are configured)
 exports.onBookingCreated = onDocumentCreated({
   document: `${BOOKINGS_COLLECTION}/{bookingId}`,
   region: 'europe-north1'
@@ -1162,53 +1185,29 @@ exports.onBookingCreated = onDocumentCreated({
   let emailSent = false;
   let emailMethodUsed = null;
 
-  // Primary path: Firebase Email Extension (write to 'mail' collection)
-  // The extension reads the document and sends via its configured SMTP.
-  // createEmailDocument() will skip overwriting an existing document so that a
-  // function retry cannot cause the Extension to process the same booking twice.
+  // Primary path: Nodemailer with explicit STARTTLS (port 587)
+  // Uses EMAIL_USER / EMAIL_PASSWORD environment variables that we control directly.
+  // This is tried first to avoid relying on the Firebase Email Extension's SMTP config.
   try {
-    const mailDocId = await createEmailDocument(bookingData, bookingId);
-    if (mailDocId) {
+    const nodemailerResult = await sendBookingConfirmationEmail(bookingData);
+    if (nodemailerResult) {
       emailSent = true;
-      emailMethodUsed = 'firebase-extension';
-      console.log('[onBookingCreated] Email document written for Firebase Email Extension:', {
+      emailMethodUsed = 'nodemailer';
+      console.log('[onBookingCreated] Email sent via Nodemailer:', {
         bookingId: bookingId,
-        mailDocId: mailDocId,
-        method: 'firebase-extension'
+        method: 'nodemailer'
       });
     } else {
-      console.warn('[onBookingCreated] Firebase Email Extension returned null (document not created), trying Nodemailer');
+      console.warn('[onBookingCreated] Nodemailer not configured or failed, trying SendGrid:', bookingId);
     }
-  } catch (extErr) {
-    console.error('[onBookingCreated] Firebase Email Extension path failed:', {
+  } catch (nodemailerErr) {
+    console.error('[onBookingCreated] Nodemailer failed:', {
       bookingId: bookingId,
-      error: extErr.message || extErr
+      error: nodemailerErr.message || nodemailerErr
     });
   }
 
-  // Fallback: Nodemailer with explicit STARTTLS (port 587)
-  if (!emailSent) {
-    try {
-      const nodemailerResult = await sendBookingConfirmationEmail(bookingData);
-      if (nodemailerResult) {
-        emailSent = true;
-        emailMethodUsed = 'nodemailer';
-        console.log('[onBookingCreated] Email sent via Nodemailer:', {
-          bookingId: bookingId,
-          method: 'nodemailer'
-        });
-      } else {
-        console.warn('[onBookingCreated] Nodemailer also failed or not configured, trying SendGrid:', bookingId);
-      }
-    } catch (nodemailerErr) {
-      console.error('[onBookingCreated] Nodemailer failed:', {
-        bookingId: bookingId,
-        error: nodemailerErr.message || nodemailerErr
-      });
-    }
-  }
-
-  // Last-resort fallback: SendGrid HTTP API
+  // Fallback: SendGrid HTTP API
   if (!emailSent) {
     try {
       const sgResult = await sendEmailViaSendGrid(bookingData);
@@ -1220,12 +1219,38 @@ exports.onBookingCreated = onDocumentCreated({
           method: 'sendgrid'
         });
       } else {
-        console.warn('[onBookingCreated] All email paths failed for booking:', bookingId);
+        console.warn('[onBookingCreated] SendGrid not configured or failed, trying Firebase Extension:', bookingId);
       }
     } catch (sgErr) {
       console.error('[onBookingCreated] SendGrid failed:', {
         bookingId: bookingId,
         error: sgErr.message || sgErr
+      });
+    }
+  }
+
+  // Last-resort fallback: Firebase Email Extension (write to 'mail' collection)
+  // The extension reads the document and sends via its configured SMTP.
+  // createEmailDocument() will skip overwriting an existing document so that a
+  // function retry cannot cause the Extension to process the same booking twice.
+  if (!emailSent) {
+    try {
+      const mailDocId = await createEmailDocument(bookingData, bookingId);
+      if (mailDocId) {
+        emailSent = true;
+        emailMethodUsed = 'firebase-extension';
+        console.log('[onBookingCreated] Email document written for Firebase Email Extension:', {
+          bookingId: bookingId,
+          mailDocId: mailDocId,
+          method: 'firebase-extension'
+        });
+      } else {
+        console.warn('[onBookingCreated] All email paths failed for booking:', bookingId);
+      }
+    } catch (extErr) {
+      console.error('[onBookingCreated] Firebase Email Extension path failed:', {
+        bookingId: bookingId,
+        error: extErr.message || extErr
       });
     }
   }
@@ -1288,6 +1313,8 @@ exports.onBookingUpdated = onDocumentUpdated({
       `${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}`
     ).join('\n') || 'Palvelu ei määritelty';
 
+    const updatedCreatedAt = formatFinnishDateTime(afterData.luotu);
+
     await calendar.events.patch({
       calendarId,
       eventId: googleEventId,
@@ -1299,7 +1326,8 @@ exports.onBookingUpdated = onDocumentUpdated({
           `Sähköposti: ${afterData.sahkoposti || ''}\n\n` +
           `Palvelut:\n${serviceInfo}\n\n` +
           `Kokonaishinta: ${afterData.totalPrice || 'Hinta sovittaessa'}` +
-          (afterData.message ? `\n\nLisätiedot:\n${afterData.message}` : ''),
+          (afterData.message ? `\n\nAsiakkaan viesti:\n${afterData.message}` : '') +
+          (updatedCreatedAt ? `\n\nVaraus tehty: ${updatedCreatedAt}` : ''),
         start: { dateTime: startDate.toISOString(), timeZone: 'Europe/Helsinki' },
         end: { dateTime: endDate.toISOString(), timeZone: 'Europe/Helsinki' }
       }
