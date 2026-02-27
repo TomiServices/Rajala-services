@@ -356,6 +356,49 @@ async function testMailCollectionIdempotency() {
   console.log('');
 }
 
+// --- Test 7: createEmailDocument skip-if-exists logic ---
+async function testCreateEmailDocumentSkipIfExists() {
+  console.log('📝 Test 7: createEmailDocument skip-if-exists - prevents Extension from processing same booking twice');
+  console.log('------------------------------------------------------------------------------------------------------');
+
+  // Simulate the new logic in createEmailDocument:
+  // Only write to 'mail' if the document does NOT already exist.
+  // This prevents a function retry from resetting an in-progress or failed document,
+  // which would cause the Firebase Email Extension to process the same booking twice.
+  const mailStore2 = {};
+  let writeCount = 0;
+
+  async function simulateCreateEmailDocument(bookingId) {
+    // Simulates: check existence, then conditionally write
+    const exists = Object.prototype.hasOwnProperty.call(mailStore2, bookingId);
+    if (exists) {
+      // Skip – document already exists, Extension already has it
+      return bookingId; // return existing id without writing
+    }
+    writeCount++;
+    mailStore2[bookingId] = { to: 'customer@example.com', bookingId };
+    return bookingId;
+  }
+
+  // First call (normal booking flow): document created
+  writeCount = 0;
+  await simulateCreateEmailDocument('booking-111');
+  assert(writeCount === 1, 'First call writes the mail document');
+  assert(Object.keys(mailStore2).length === 1, 'Exactly one mail document after first call');
+
+  // Second call (function retry): document already exists, should NOT overwrite
+  await simulateCreateEmailDocument('booking-111');
+  assert(writeCount === 1, 'Second call (retry) does NOT overwrite the existing document');
+  assert(Object.keys(mailStore2).length === 1, 'Still exactly one mail document after retry');
+
+  // Third call for a different booking: writes normally
+  await simulateCreateEmailDocument('booking-222');
+  assert(writeCount === 2, 'Different booking ID writes a new document');
+  assert(Object.keys(mailStore2).length === 2, 'Two bookings → two mail documents');
+
+  console.log('');
+}
+
 // --- Run all tests ---
 async function runAll() {
   testEscapeHtml();
@@ -364,6 +407,7 @@ async function runAll() {
   testGetEmailMethodLogic();
   await testIdempotencyCheckLogic();
   await testMailCollectionIdempotency();
+  await testCreateEmailDocumentSkipIfExists();
 
   console.log('=====================================');
   console.log('Test Summary');
