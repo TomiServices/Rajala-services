@@ -85,6 +85,45 @@ function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
   `;
 }
 
+function buildBookingEmailText(bookingData, formattedDate, formattedTime) {
+  const servicesText = (bookingData.services || [])
+    .map(s => `  - ${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}`)
+    .join('\n') || '  Palvelu ei määritelty';
+
+  return [
+    'VARAUSVAHVISTUS',
+    '',
+    `Hei ${bookingData.nimi || 'asiakas'},`,
+    '',
+    'Olemme vastaanottaneet varauksesi. Tässä varauksen tiedot:',
+    '',
+    'VARAUKSEN TIEDOT',
+    `Aika: ${formattedDate} klo ${formattedTime}`,
+    `Asiakas: ${bookingData.nimi || ''}`,
+    `Puhelin: ${bookingData.puhelin || ''}`,
+    `Sähköposti: ${bookingData.sahkoposti || ''}`,
+    `Ajoneuvotyyppi: ${bookingData.vehicleType || 'Ei määritelty'}`,
+    ...(bookingData.message ? [`Tilausviesti: ${bookingData.message}`] : []),
+    '',
+    'VALITUT PALVELUT',
+    servicesText,
+    `Kokonaishinta: ${bookingData.totalPrice || 'Hinta sovittaessa'}`,
+    '',
+    'SAAPUMISOHJEET',
+    'Osoite: Tiilenvalajantie 6',
+    'Postiosoite: 02330, Espoo',
+    '',
+    'Otamme sinuun yhteyttä tarvittaessa ennen varattua aikaa.',
+    'Jos sinun täytyy perua tai muuttaa varausta, ota yhteyttä:',
+    `  Puhelin: ${COMPANY_PHONE_DISPLAY}`,
+    `  Sähköposti: ${COMPANY_EMAIL}`,
+    '',
+    `Ystävällisin terveisin,\n${COMPANY_NAME}`,
+    '',
+    'Tämä on automaattinen vahvistusviesti. Älä vastaa tähän viestiin.'
+  ].join('\n');
+}
+
 // =======================
 // Tests
 // =======================
@@ -245,9 +284,55 @@ function testBuildBookingEmailHtml() {
   console.log('');
 }
 
-// --- Test 4: getEmailMethod logic ---
+// --- Test 4: buildBookingEmailText ---
+function testBuildBookingEmailText() {
+  console.log('📝 Test 4: buildBookingEmailText - Plain-text email generation');
+  console.log('--------------------------------------------------------------');
+
+  const bookingData = {
+    nimi: 'Matti Meikäläinen',
+    sahkoposti: 'matti@example.com',
+    puhelin: '040 123 4567',
+    totalPrice: 'alkaen 50 €',
+    vehicleType: 'Henkilöauto',
+    message: '',
+    services: [
+      { serviceName: 'Pesupalvelut', taskName: 'Käsinpesu', price: 'alkaen 25 €' },
+      { serviceName: 'Kiilloitus', taskName: 'Pintavaha' }
+    ]
+  };
+  const text = buildBookingEmailText(bookingData, 'maanantai 1. tammikuuta 2026', '10:00');
+
+  assert(text.includes('Matti Meikäläinen'), 'Contains customer name');
+  assert(text.includes('matti@example.com'), 'Contains customer email');
+  assert(text.includes('040 123 4567'), 'Contains phone number');
+  assert(text.includes('alkaen 50 €'), 'Contains total price');
+  assert(text.includes('Käsinpesu'), 'Contains service task name');
+  assert(text.includes('Pintavaha'), 'Contains second service (no price)');
+  assert(text.includes('maanantai 1. tammikuuta 2026'), 'Contains formatted date');
+  assert(text.includes('10:00'), 'Contains formatted time');
+  assert(text.includes('VARAUSVAHVISTUS'), 'Contains booking confirmation header');
+  assert(!text.includes('<'), 'Contains no HTML tags');
+
+  // Optional message field rendered when message is present
+  const bookingWithMsg = { ...bookingData, message: 'Tarvitsen erikoiskohtelua' };
+  const textWithMsg = buildBookingEmailText(bookingWithMsg, 'tiistai', '09:00');
+  assert(textWithMsg.includes('Tarvitsen erikoiskohtelua'), 'Includes optional message');
+  assert(textWithMsg.includes('Tilausviesti'), 'Contains Tilausviesti label when message present');
+
+  // No message field when message is empty
+  const textNoMsg = buildBookingEmailText(bookingData, 'tiistai', '09:00');
+  assert(!textNoMsg.includes('Tilausviesti'), 'No Tilausviesti label when message absent');
+
+  // Returns a non-empty string
+  assert(text.length > 100, 'Returns a substantial plain-text string');
+
+  console.log('');
+}
+
+// --- Test 5: getEmailMethod logic ---
 function testGetEmailMethodLogic() {
-  console.log('📝 Test 4: getEmailMethod - Email method tracking logic');
+  console.log('📝 Test 5: getEmailMethod - Email method tracking logic');
   console.log('-------------------------------------------------------');
 
   // Mirror the function from index.js
@@ -265,9 +350,9 @@ function testGetEmailMethodLogic() {
   console.log('');
 }
 
-// --- Test 5: Idempotency check logic ---
+// --- Test 6: Idempotency check logic ---
 async function testIdempotencyCheckLogic() {
-  console.log('📝 Test 5: Idempotency check - Prevents duplicate email sends on retry');
+  console.log('📝 Test 6: Idempotency check - Prevents duplicate email sends on retry');
   console.log('------------------------------------------------------------------------');
 
   // Simulate the idempotency check from onBookingCreated
@@ -314,9 +399,9 @@ async function testIdempotencyCheckLogic() {
   console.log('');
 }
 
-// --- Test 6: Mail collection idempotency (doc(bookingId).set vs .add) ---
+// --- Test 7: Mail collection idempotency (doc(bookingId).set vs .add) ---
 async function testMailCollectionIdempotency() {
-  console.log('📝 Test 6: Mail collection idempotency - doc(bookingId).set() prevents duplicate mail docs');
+  console.log('📝 Test 7: Mail collection idempotency - doc(bookingId).set() prevents duplicate mail docs');
   console.log('-----------------------------------------------------------------------------------------');
 
   // Simulate the mail collection write using bookingId as document ID.
@@ -354,6 +439,7 @@ async function runAll() {
   testEscapeHtml();
   await testWithRetry();
   testBuildBookingEmailHtml();
+  testBuildBookingEmailText();
   testGetEmailMethodLogic();
   await testIdempotencyCheckLogic();
   await testMailCollectionIdempotency();

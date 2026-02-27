@@ -202,6 +202,56 @@ function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
 }
 
 // =======================
+// UTILITY: Build booking confirmation email plain text
+// =======================
+/**
+ * Builds the plain-text body for a booking confirmation email.
+ * Used as the text/plain MIME alternative alongside the HTML version.
+ * @param {Object} bookingData - Booking data from Firestore
+ * @param {string} formattedDate - Pre-formatted date string (fi-FI locale)
+ * @param {string} formattedTime - Pre-formatted time string (fi-FI locale)
+ * @returns {string} Plain text string
+ */
+function buildBookingEmailText(bookingData, formattedDate, formattedTime) {
+  const servicesText = (bookingData.services || [])
+    .map(s => `  - ${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}`)
+    .join('\n') || '  Palvelu ei määritelty';
+
+  return [
+    'VARAUSVAHVISTUS',
+    '',
+    `Hei ${bookingData.nimi || 'asiakas'},`,
+    '',
+    'Olemme vastaanottaneet varauksesi. Tässä varauksen tiedot:',
+    '',
+    'VARAUKSEN TIEDOT',
+    `Aika: ${formattedDate} klo ${formattedTime}`,
+    `Asiakas: ${bookingData.nimi || ''}`,
+    `Puhelin: ${bookingData.puhelin || ''}`,
+    `Sähköposti: ${bookingData.sahkoposti || ''}`,
+    `Ajoneuvotyyppi: ${bookingData.vehicleType || 'Ei määritelty'}`,
+    ...(bookingData.message ? [`Tilausviesti: ${bookingData.message}`] : []),
+    '',
+    'VALITUT PALVELUT',
+    servicesText,
+    `Kokonaishinta: ${bookingData.totalPrice || 'Hinta sovittaessa'}`,
+    '',
+    'SAAPUMISOHJEET',
+    'Osoite: Tiilenvalajantie 6',
+    'Postiosoite: 02330, Espoo',
+    '',
+    'Otamme sinuun yhteyttä tarvittaessa ennen varattua aikaa.',
+    'Jos sinun täytyy perua tai muuttaa varausta, ota yhteyttä:',
+    `  Puhelin: ${COMPANY_PHONE_DISPLAY}`,
+    `  Sähköposti: ${COMPANY_EMAIL}`,
+    '',
+    `Ystävällisin terveisin,\n${COMPANY_NAME}`,
+    '',
+    'Tämä on automaattinen vahvistusviesti. Älä vastaa tähän viestiin.'
+  ].join('\n');
+}
+
+// =======================
 // UTILITY: Validate Environment Variables
 // =======================
 /**
@@ -379,6 +429,7 @@ async function sendBookingConfirmationEmail(bookingData) {
       from: emailFromVal,
       to: bookingData.sahkoposti,
       subject: `Varausvahvistus - ${COMPANY_NAME}`,
+      text: buildBookingEmailText(bookingData, formattedDate, formattedTime),
       html: buildBookingEmailHtml(bookingData, formattedDate, formattedTime)
     };
 
@@ -433,6 +484,7 @@ async function sendEmailViaSendGrid(bookingData) {
       to: bookingData.sahkoposti,
       from: emailFromVal,
       subject: `Varausvahvistus - ${COMPANY_NAME}`,
+      text: buildBookingEmailText(bookingData, formattedDate, formattedTime),
       html: buildBookingEmailHtml(bookingData, formattedDate, formattedTime)
     };
 
@@ -636,6 +688,34 @@ async function isSlotAvailable(dateTime) {
 // =======================
 // Google Calendar helpers
 // =======================
+
+/**
+ * Builds the description text for a Google Calendar event from booking data.
+ * @param {Object} bookingData - Booking data from Firestore
+ * @param {Date|null} luotuDate - Booking creation date (optional)
+ * @returns {string} Event description string
+ */
+function buildCalendarEventDescription(bookingData, luotuDate) {
+  const serviceInfo = (bookingData.services || []).map(s =>
+    `${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}`
+  ).join('\n') || 'Palvelu ei määritelty';
+
+  const luotuStr = luotuDate
+    ? luotuDate.toLocaleString('fi-FI', { timeZone: 'Europe/Helsinki' })
+    : '';
+
+  return (
+    `Asiakas: ${bookingData.nimi || ''}\n` +
+    `Puhelin: ${bookingData.puhelin || ''}\n` +
+    `Sähköposti: ${bookingData.sahkoposti || ''}\n` +
+    `Ajoneuvotyyppi: ${bookingData.vehicleType || 'Ei määritelty'}\n` +
+    (bookingData.message ? `Tilausviesti: ${bookingData.message}\n` : '') +
+    `\nPalvelut:\n${serviceInfo}\n\n` +
+    `Kokonaishinta: ${bookingData.totalPrice || 'Hinta sovittaessa'}` +
+    (luotuStr ? `\nVaraus luotu: ${luotuStr}` : '')
+  );
+}
+
 async function createGoogleCalendarEvent(bookingData) {
   console.log('createGoogleCalendarEvent called with bookingData:', {
     nimi: bookingData.nimi,
@@ -693,26 +773,13 @@ async function createGoogleCalendarEvent(bookingData) {
     const endDate = new Date(startDate);
     endDate.setHours(startDate.getHours() + 1);
 
-    const serviceInfo = (bookingData.services || []).map(s =>
-      `${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}`
-    ).join('\n') || 'Palvelu ei määritelty';
-
-    const luotu = (bookingData.luotu && typeof bookingData.luotu.toDate === 'function')
+    const luotuDate = (bookingData.luotu && typeof bookingData.luotu.toDate === 'function')
       ? bookingData.luotu.toDate()
       : new Date();
-    const luotuStr = luotu.toLocaleString('fi-FI', { timeZone: 'Europe/Helsinki' });
 
     const event = {
       summary: `Varaus: ${bookingData.nimi || 'Tuntematon'}`,
-      description:
-        `Asiakas: ${bookingData.nimi || ''}\n` +
-        `Puhelin: ${bookingData.puhelin || ''}\n` +
-        `Sähköposti: ${bookingData.sahkoposti || ''}\n` +
-        `Ajoneuvotyyppi: ${bookingData.vehicleType || 'Ei määritelty'}\n` +
-        (bookingData.message ? `Tilausviesti: ${bookingData.message}\n` : '') +
-        `\nPalvelut:\n${serviceInfo}\n\n` +
-        `Kokonaishinta: ${bookingData.totalPrice || 'Hinta sovittaessa'}\n` +
-        `Varaus luotu: ${luotuStr}`,
+      description: buildCalendarEventDescription(bookingData, luotuDate),
       start: { dateTime: startDate.toISOString(), timeZone: 'Europe/Helsinki' },
       end: { dateTime: endDate.toISOString(), timeZone: 'Europe/Helsinki' },
       colorId: '11'
@@ -1262,59 +1329,82 @@ exports.onBookingUpdated = onDocumentUpdated({
   document: `${BOOKINGS_COLLECTION}/{bookingId}`,
   region: 'europe-north1'
 }, async (event) => {
-  const calendar = initializeGoogleCalendar();
-  if (!calendar || !calendarId) return null;
+  const bookingId = event.params.bookingId;
+  console.log('[onBookingUpdated] triggered for booking:', bookingId);
 
-  const beforeData = event.data.before.data();
+  let calendar = initializeGoogleCalendar();
+  let effectiveCalendarId = calendarId;
+
+  // ADC fallback if service-account init failed (same pattern as createGoogleCalendarEvent)
+  if (!calendar || !effectiveCalendarId) {
+    const calIdEnv = safeGetParamValue(googleCalendarId, 'GOOGLE_CALENDAR_ID') || getLegacyConfigValue('google.calendar_id');
+    try {
+      const authClient = await getGoogleClient(['https://www.googleapis.com/auth/calendar']);
+      if (authClient && calIdEnv) {
+        effectiveCalendarId = calIdEnv;
+        calendar = google.calendar({ version: 'v3', auth: authClient });
+        console.log('[onBookingUpdated] Using ADC fallback for calendar auth.');
+      }
+    } catch (adcErr) {
+      console.warn('[onBookingUpdated] ADC fallback failed:', adcErr.message || adcErr);
+    }
+
+    if (!calendar || !effectiveCalendarId) {
+      console.log('[onBookingUpdated] Google Calendar not configured - skipping update for booking:', bookingId);
+      return null;
+    }
+  }
+
   const afterData = event.data.after.data();
 
-  if (afterData.syncedFromGoogle) return null; // prevent loops
+  if (afterData.syncedFromGoogle) {
+    console.log('[onBookingUpdated] Skipping - syncedFromGoogle flag is set for booking:', bookingId);
+    return null;
+  }
+
   const googleEventId = afterData.googleEventId;
   if (!googleEventId) {
-    console.log('No googleEventId on update - skipping');
+    console.log('[onBookingUpdated] No googleEventId on update - skipping:', bookingId);
     return null;
   }
 
   try {
     const startDate = parseFirestoreDate(afterData.aika);
     if (!startDate) {
-      console.warn('Cannot update Google event: invalid aika for booking', event.data.params.bookingId);
+      console.warn('[onBookingUpdated] Cannot update Google event: invalid aika for booking:', bookingId);
       return null;
     }
     const endDate = new Date(startDate);
     endDate.setHours(startDate.getHours() + 1);
 
-    const serviceInfo = (afterData.services || []).map(s =>
-      `${s.serviceName || ''} - ${s.taskName || ''}${s.price ? ': ' + s.price : ''}`
-    ).join('\n') || 'Palvelu ei määritelty';
-
-    const luotu = (afterData.luotu && typeof afterData.luotu.toDate === 'function')
+    const luotuDate = (afterData.luotu && typeof afterData.luotu.toDate === 'function')
       ? afterData.luotu.toDate()
       : null;
-    const luotuStr = luotu ? luotu.toLocaleString('fi-FI', { timeZone: 'Europe/Helsinki' }) : '';
 
     await calendar.events.patch({
-      calendarId,
+      calendarId: effectiveCalendarId,
       eventId: googleEventId,
       requestBody: {
         summary: `Varaus: ${afterData.nimi || 'Tuntematon'}`,
-        description:
-          `Asiakas: ${afterData.nimi || ''}\n` +
-          `Puhelin: ${afterData.puhelin || ''}\n` +
-          `Sähköposti: ${afterData.sahkoposti || ''}\n` +
-          `Ajoneuvotyyppi: ${afterData.vehicleType || 'Ei määritelty'}\n` +
-          (afterData.message ? `Tilausviesti: ${afterData.message}\n` : '') +
-          `\nPalvelut:\n${serviceInfo}\n\n` +
-          `Kokonaishinta: ${afterData.totalPrice || 'Hinta sovittaessa'}` +
-          (luotuStr ? `\nVaraus luotu: ${luotuStr}` : ''),
+        description: buildCalendarEventDescription(afterData, luotuDate),
         start: { dateTime: startDate.toISOString(), timeZone: 'Europe/Helsinki' },
         end: { dateTime: endDate.toISOString(), timeZone: 'Europe/Helsinki' }
       }
     });
 
-    console.log('Patched Google event:', googleEventId);
+    console.log('[onBookingUpdated] Google Calendar event updated successfully:', {
+      bookingId,
+      googleEventId,
+      summary: `Varaus: ${afterData.nimi || 'Tuntematon'}`
+    });
   } catch (err) {
-    console.error('Failed to patch Google event:', err.message || err);
+    console.error('[onBookingUpdated] Failed to patch Google event:', {
+      bookingId,
+      googleEventId: afterData.googleEventId,
+      error: err.message || err,
+      errorCode: err.code,
+      errorStatus: err.status
+    });
   }
 });
 
