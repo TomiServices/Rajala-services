@@ -321,6 +321,41 @@ async function testIdempotencyCheckLogic() {
   console.log('');
 }
 
+// --- Test 6: Mail collection idempotency (doc(bookingId).set vs .add) ---
+async function testMailCollectionIdempotency() {
+  console.log('📝 Test 6: Mail collection idempotency - doc(bookingId).set() prevents duplicate mail docs');
+  console.log('-----------------------------------------------------------------------------------------');
+
+  // Simulate the mail collection write using bookingId as document ID.
+  // With doc(bookingId).set(), concurrent writes to the same ID overwrite each other
+  // rather than producing two separate documents, ensuring at most one mail document
+  // per booking is created.
+  const mailStore = {};
+
+  async function writeMailDoc(bookingId, doc) {
+    // Simulates db.collection('mail').doc(bookingId).set(doc)
+    const existed = Object.prototype.hasOwnProperty.call(mailStore, bookingId);
+    mailStore[bookingId] = doc;
+    return { existed };
+  }
+
+  // First write: creates the document
+  const r1 = await writeMailDoc('booking-abc', { to: 'a@b.com', bookingId: 'booking-abc' });
+  assert(!r1.existed, 'First write creates a new mail document');
+  assert(Object.keys(mailStore).length === 1, 'Exactly one mail document after first write');
+
+  // Second write (simulating a function retry): overwrites the same document
+  const r2 = await writeMailDoc('booking-abc', { to: 'a@b.com', bookingId: 'booking-abc' });
+  assert(r2.existed, 'Second write (retry) targets the same existing document');
+  assert(Object.keys(mailStore).length === 1, 'Still exactly one mail document after retry write');
+
+  // Different booking: gets its own document
+  await writeMailDoc('booking-xyz', { to: 'c@d.com', bookingId: 'booking-xyz' });
+  assert(Object.keys(mailStore).length === 2, 'Two different bookings produce two separate mail documents');
+
+  console.log('');
+}
+
 // --- Run all tests ---
 async function runAll() {
   testEscapeHtml();
@@ -328,6 +363,7 @@ async function runAll() {
   testBuildBookingEmailHtml();
   testGetEmailMethodLogic();
   await testIdempotencyCheckLogic();
+  await testMailCollectionIdempotency();
 
   console.log('=====================================');
   console.log('Test Summary');
