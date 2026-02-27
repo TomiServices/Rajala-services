@@ -62,7 +62,7 @@ function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
 
   const messageSection = escapedMessage
     ? `<div style="background-color: #fff8e1; padding: 15px; border-radius: 5px; margin: 20px 0;">
-            <h3 style="margin-top: 0; color: #333;">Lisätiedot</h3>
+            <h3 style="margin-top: 0; color: #333;">Asiakkaan viesti</h3>
             <p style="white-space: pre-wrap;">${escapedMessage}</p>
           </div>`
     : '';
@@ -243,11 +243,11 @@ function testBuildBookingEmailHtml() {
   const bookingWithMsg = { ...bookingData, message: 'Tarvitsen erikoiskohtelua' };
   const htmlWithMsg = buildBookingEmailHtml(bookingWithMsg, 'tiistai', '09:00');
   assert(htmlWithMsg.includes('Tarvitsen erikoiskohtelua'), 'Includes optional message section');
-  assert(htmlWithMsg.includes('Lisätiedot'), 'Contains Lisätiedot header when message present');
+  assert(htmlWithMsg.includes('Asiakkaan viesti'), 'Contains Asiakkaan viesti header when message present');
 
   // No message section when message is empty
   const htmlNoMsg = buildBookingEmailHtml(bookingData, 'tiistai', '09:00');
-  assert(!htmlNoMsg.includes('Lisätiedot'), 'No Lisätiedot header when message absent');
+  assert(!htmlNoMsg.includes('Asiakkaan viesti'), 'No Asiakkaan viesti header when message absent');
 
   console.log('');
 }
