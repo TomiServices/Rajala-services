@@ -1077,9 +1077,13 @@ async function createEmailDocument(bookingData, bookingId) {
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     };
 
-    const mailRef = await db.collection(MAIL_COLLECTION).add(mailDoc);
-    console.log('Email document created for Firebase Email Extension:', mailRef.id);
-    return mailRef.id;
+    // Use bookingId as the document ID to make this write idempotent.
+    // If onBookingCreated is retried concurrently, both invocations write to the
+    // same document (overwriting) rather than creating two separate documents,
+    // preventing duplicate emails from the Firebase Email Extension.
+    await db.collection(MAIL_COLLECTION).doc(bookingId).set(mailDoc);
+    console.log('Email document created for Firebase Email Extension (idempotent doc ID):', bookingId);
+    return bookingId;
   } catch (err) {
     console.error('Failed to create email document:', err.message || err);
     return null;
@@ -1098,7 +1102,7 @@ exports.onBookingCreated = onDocumentCreated({
   const bookingData = event.data.data();
   const bookingId = event.params.bookingId;
   
-  console.log('onBookingCreated triggered for booking:', bookingId);
+  console.log('[onBookingCreated] triggered for booking:', bookingId);
 
   // Validate email environment variables at function start
   try {
@@ -1134,21 +1138,25 @@ exports.onBookingCreated = onDocumentCreated({
 
   // Idempotency check: bail out if an email was already sent for this booking.
   // Guards against duplicate emails caused by Firebase Function retries.
+  // NOTE: This check is a best-effort guard; the primary idempotency guarantee
+  // comes from using doc(bookingId).set() in createEmailDocument so that
+  // concurrent retries can only produce one mail document per booking.
   try {
     const existingDoc = await db.collection(BOOKINGS_COLLECTION).doc(bookingId).get();
     if (existingDoc.exists && existingDoc.data().emailSent === true) {
-      console.log('Email already sent for booking - skipping duplicate send:', bookingId);
+      console.log('[onBookingCreated] Email already sent for booking - skipping duplicate send:', bookingId);
       return null;
     }
+    console.log('[onBookingCreated] Idempotency check passed (emailSent not true) for booking:', bookingId);
   } catch (checkErr) {
     // Log but continue: better to risk a duplicate than to miss the confirmation email
-    console.warn('Could not verify emailSent flag, proceeding with email send:', {
+    console.warn('[onBookingCreated] Could not verify emailSent flag, proceeding with email send:', {
       bookingId: bookingId,
       error: checkErr.message || checkErr
     });
   }
 
-  console.log('Processing email for booking:', {
+  console.log('[onBookingCreated] Processing email for booking:', {
     bookingId: bookingId,
     customerEmail: bookingData.sahkoposti,
     customerName: bookingData.nimi
@@ -1163,15 +1171,15 @@ exports.onBookingCreated = onDocumentCreated({
     if (sgResult) {
       emailSent = true;
       emailMethodUsed = 'sendgrid';
-      console.log('Email sent via SendGrid:', {
+      console.log('[onBookingCreated] Email sent via SendGrid:', {
         bookingId: bookingId,
         method: 'sendgrid'
       });
     } else {
-      console.log('SendGrid not configured or returned false, trying Nodemailer');
+      console.log('[onBookingCreated] SendGrid not configured or returned false, trying Nodemailer');
     }
   } catch (sgErr) {
-    console.error('SendGrid failed:', {
+    console.error('[onBookingCreated] SendGrid failed:', {
       bookingId: bookingId,
       error: sgErr.message || sgErr
     });
@@ -1184,15 +1192,15 @@ exports.onBookingCreated = onDocumentCreated({
       if (nodemailerResult) {
         emailSent = true;
         emailMethodUsed = 'nodemailer';
-        console.log('Email sent via Nodemailer:', {
+        console.log('[onBookingCreated] Email sent via Nodemailer:', {
           bookingId: bookingId,
           method: 'nodemailer'
         });
       } else {
-        console.warn('Nodemailer also failed or not configured:', bookingId);
+        console.warn('[onBookingCreated] Nodemailer also failed or not configured:', bookingId);
       }
     } catch (nodemailerErr) {
-      console.error('Nodemailer failed:', {
+      console.error('[onBookingCreated] Nodemailer failed:', {
         bookingId: bookingId,
         error: nodemailerErr.message || nodemailerErr
       });
@@ -1200,22 +1208,24 @@ exports.onBookingCreated = onDocumentCreated({
   }
 
   // Last-resort path: Firebase Email Extension (SMTP relay - may be unreliable)
+  // Uses doc(bookingId).set() for idempotent writes - concurrent retries overwrite
+  // the same document rather than creating duplicates.
   if (!emailSent) {
     try {
       const mailDocId = await createEmailDocument(bookingData, bookingId);
       if (mailDocId) {
         emailSent = true;
         emailMethodUsed = 'firebase-extension';
-        console.log('Email document created for Firebase Email Extension (last resort):', {
+        console.log('[onBookingCreated] Email document written for Firebase Email Extension (idempotent):', {
           bookingId: bookingId,
           mailDocId: mailDocId,
           method: 'firebase-extension'
         });
       } else {
-        console.warn('All email paths failed for booking:', bookingId);
+        console.warn('[onBookingCreated] All email paths failed for booking:', bookingId);
       }
     } catch (extErr) {
-      console.error('Firebase Email Extension last-resort also failed:', {
+      console.error('[onBookingCreated] Firebase Email Extension last-resort also failed:', {
         bookingId: bookingId,
         error: extErr.message || extErr
       });
@@ -1230,18 +1240,18 @@ exports.onBookingCreated = onDocumentCreated({
       emailMethod: emailMethodUsed
     };
     await db.collection(BOOKINGS_COLLECTION).doc(bookingId).update(updateData);
-    console.log('Booking updated with email status:', {
+    console.log('[onBookingCreated] Booking updated with email status:', {
       bookingId: bookingId,
       emailSent: emailSent
     });
   } catch (updateErr) {
-    console.error('Failed to update booking with email status:', {
+    console.error('[onBookingCreated] Failed to update booking with email status:', {
       bookingId: bookingId,
       error: updateErr.message || updateErr
     });
   }
 
-  console.log('Email trigger completed for booking:', {
+  console.log('[onBookingCreated] Email trigger completed for booking:', {
     bookingId: bookingId,
     emailSent: emailSent,
     method: emailMethodUsed || 'none'
