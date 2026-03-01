@@ -2022,6 +2022,18 @@
             background: #f5f5f5;
         }
         
+        /* Selected day - visual feedback when clicking a day on desktop */
+        #calendar .fc-daygrid-day.day-selected {
+            background: #e3f2fd !important;
+            outline: 2px solid #3FA9F5;
+            outline-offset: -2px;
+        }
+        
+        #calendar .fc-daygrid-day.day-selected .fc-daygrid-day-number {
+            color: #1565c0;
+            font-weight: 700;
+        }
+        
         #calendar .fc-daygrid-day.fc-day-sat,
         #calendar .fc-daygrid-day.fc-day-sun {
             background: #f9f9f9;
