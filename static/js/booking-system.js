@@ -222,6 +222,15 @@ function initializeBookingSystem() {
     
     let selectedSlot = null;
 
+    // Attach click handler to refresh button - hides the overlay and reveals the calendar
+    const refreshContainer = document.getElementById('calendarRefreshContainer');
+    const refreshBtn = document.getElementById('calendarRefreshBtn');
+    if (refreshBtn && refreshContainer) {
+        refreshBtn.addEventListener('click', function() {
+            refreshContainer.style.display = 'none';
+        });
+    }
+
     // Fetch bookings from backend Firebase Function with retry logic
     async function fetchBookings() {
         const data = await fetchWithRetry(
@@ -2040,15 +2049,8 @@ function initializeBookingSystem() {
                 
                 mockCalendar.style.display = 'block';
                 
-                // Show the refresh button in the center of the calendar area
-                const refreshContainer = document.getElementById('calendarRefreshContainer');
-                if (refreshContainer) {
-                    refreshContainer.style.display = 'block';
-                    const refreshBtn = document.getElementById('calendarRefreshBtn');
-                    if (refreshBtn) {
-                        refreshBtn.addEventListener('click', function() { location.reload(); });
-                    }
-                }
+                // The refresh button click handler is already attached at initialization
+                // Just ensure it remains visible (it's already shown by default)
                 
                 // Add click handlers to mock slots
                 document.querySelectorAll('.mock-slot').forEach(slot => {
