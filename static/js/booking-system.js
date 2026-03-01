@@ -879,7 +879,8 @@ function initializeBookingSystem() {
                         'Maasturi': '95 €',
                         'Pakettiauto': '100 €'
                     }
-                }
+                },
+                { id: 'tire-removal', name: 'Renkaiden irrotus vanteelta (4kpl)', price: '50 €' }
             ]
         },
         renkaidenasennus: {
@@ -929,7 +930,6 @@ function initializeBookingSystem() {
                         'Pakettiauto': '120 €'
                     }
                 },
-                { id: 'tire-removal', name: 'Renkaiden irrotus vanteelta (4kpl)', price: '50 €' },
                 { id: 'balancing-only', name: 'Pelkkä tasapainoitus', price: '30 €' }
             ]
         },
@@ -2040,6 +2040,16 @@ function initializeBookingSystem() {
                 
                 mockCalendar.style.display = 'block';
                 
+                // Show the refresh button in the center of the calendar area
+                const refreshContainer = document.getElementById('calendarRefreshContainer');
+                if (refreshContainer) {
+                    refreshContainer.style.display = 'block';
+                    const refreshBtn = document.getElementById('calendarRefreshBtn');
+                    if (refreshBtn) {
+                        refreshBtn.addEventListener('click', function() { location.reload(); });
+                    }
+                }
+                
                 // Add click handlers to mock slots
                 document.querySelectorAll('.mock-slot').forEach(slot => {
                     slot.addEventListener('click', function() {
@@ -2218,6 +2228,10 @@ function initializeBookingSystem() {
             const progressBar = document.getElementById('bookingProgress');
             const progressValue = document.getElementById('bookingProgressValue');
             const successBar = document.getElementById('successBar');
+            const submitBtn = document.querySelector('#bookingForm button[type="submit"]');
+            
+            // Add loading state to submit button for immediate user feedback
+            if (submitBtn) submitBtn.classList.add('btn-loading');
             
             // Hide success bar and show loading bar
             successBar.classList.remove('active');
@@ -2277,6 +2291,7 @@ function initializeBookingSystem() {
                     // Hide loading bar and show success bar
                     progressBar.classList.remove('active');
                     successBar.classList.add('active');
+                    if (submitBtn) submitBtn.classList.remove('btn-loading');
                     
                     document.getElementById('msg').innerHTML = "Varaus onnistui! <br>Saat varausvahvistuksen sähköpostiisi pian.";
                     document.getElementById('bookingForm').reset();
@@ -2301,6 +2316,7 @@ function initializeBookingSystem() {
                 // Hide both bars on error
                 progressBar.classList.remove('active');
                 successBar.classList.remove('active');
+                if (submitBtn) submitBtn.classList.remove('btn-loading');
             }
         };
     });

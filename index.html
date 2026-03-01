@@ -2190,6 +2190,50 @@
             100% { width: 68%; }
         }
         
+        /* Calendar refresh button - shown when calendar fails to load */
+        .calendar-refresh-container {
+            display: none;
+            text-align: center;
+            padding: 30px 20px;
+        }
+        .calendar-refresh-btn {
+            padding: 12px 28px;
+            background: #333333;
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+        .calendar-refresh-btn:hover {
+            background: #555555;
+        }
+        
+        /* Submit button loading state - GPU-accelerated CSS spinner */
+        @keyframes btn-spin {
+            to { transform: rotate(360deg); }
+        }
+        .btn-loading {
+            position: relative;
+            color: transparent !important;
+            pointer-events: none;
+        }
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 3px solid rgba(255,255,255,0.35);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: btn-spin 0.6s linear infinite;
+        }
+        
         /* Time Selection Grid Styling */
         .time-selection-container {
             max-width: 100%;
@@ -4690,6 +4734,11 @@
       
         <div id="calendar" role="application" aria-label="Ajanvarauskalenteri"></div>
       
+        <!-- Refresh button - shown in center when calendar days fail to load automatically -->
+        <div id="calendarRefreshContainer" class="calendar-refresh-container">
+          <button id="calendarRefreshBtn" class="calendar-refresh-btn">🔄 Päivitä</button>
+        </div>
+      
         <!-- Time Selection Grid -->
         <div id="time-selection-grid" class="time-selection-container" style="display: none;" aria-hidden="true">
           <h3 class="time-selection-title">Valitse aika:</h3>
@@ -4789,7 +4838,7 @@
             </label>
           </div>
           <!-- reCAPTCHA v3 runs invisibly - no checkbox needed -->
-        <button type="submit" aria-describedby="termsCheckboxLabel">Tilapäisesti kiinni</button>
+        <button type="submit" class="btn" aria-describedby="termsCheckboxLabel">Tee varaus</button>
         </form>
         <div id="msg" class="msg"></div>
         <div id="error" class="error"></div>
