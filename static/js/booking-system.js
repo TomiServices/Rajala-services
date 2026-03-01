@@ -1769,6 +1769,16 @@ function initializeBookingSystem() {
                     const selectedDate = new Date(start);
                     selectedDate.setHours(9, 0, 0, 0);
                     
+                    // Visual feedback: highlight the selected day cell on desktop
+                    document.querySelectorAll('#calendar .fc-daygrid-day.day-selected').forEach(el => {
+                        el.classList.remove('day-selected');
+                    });
+                    const dateKey = getDateKey(selectedDate);
+                    if (dateKey) {
+                        const dayCell = document.querySelector(`#calendar .fc-daygrid-day[data-date="${dateKey}"]`);
+                        if (dayCell) dayCell.classList.add('day-selected');
+                    }
+                    
                     const hasAvailableSlots = populateTimeSelectionGrid(selectedDate, bookings);
                     
                     if (hasAvailableSlots) {
@@ -1815,6 +1825,16 @@ function initializeBookingSystem() {
                         } else {
                             const selectedDate = new Date(info.date);
                             selectedDate.setHours(9, 0, 0, 0);
+                            
+                            // Visual feedback: highlight the selected day cell on desktop
+                            document.querySelectorAll('#calendar .fc-daygrid-day.day-selected').forEach(el => {
+                                el.classList.remove('day-selected');
+                            });
+                            const selectedDateKey = getDateKey(info.date);
+                            if (selectedDateKey) {
+                                const dayCell = document.querySelector(`#calendar .fc-daygrid-day[data-date="${selectedDateKey}"]`);
+                                if (dayCell) dayCell.classList.add('day-selected');
+                            }
                             
                             const hasAvailableSlots = populateTimeSelectionGrid(selectedDate, bookings);
                             
@@ -1958,37 +1978,12 @@ function initializeBookingSystem() {
                             timeGridContainer.style.display = 'none';
                         }
                         
-                        // FIX Issue 1: For mobile devices, don't apply compact class initially
-                        // This ensures cells are visible immediately when calendar appears
-                        // Also force updateSize to ensure proper rendering
-                        if (isMobileView) {
-                            // Skip compact class on mobile to prevent empty cells issue
-                            calendarEl.classList.add('expanded');
-                            // Force calendar to recalculate size after DOM is ready
-                            if (calendar && calendar.updateSize) {
-                                calendar.updateSize();
-                            }
-                        } else {
-                            // Make calendar compact initially on desktop, expand on first interaction
-                            calendarEl.classList.add('compact');
+                        // Start calendar fully expanded so all days are visible immediately
+                        // without requiring a click interaction first
+                        calendarEl.classList.add('expanded');
+                        if (isMobileView && calendar && calendar.updateSize) {
+                            calendar.updateSize();
                         }
-                        
-                        // Expand calendar on first click (for desktop users)
-                        let hasInteracted = false;
-                        const expandCalendar = function() {
-                            if (!hasInteracted) {
-                                calendarEl.classList.remove('compact');
-                                calendarEl.classList.add('expanded');
-                                hasInteracted = true;
-                                // Force calendar to update its size after expanding
-                                if (calendar && calendar.updateSize) {
-                                    calendar.updateSize();
-                                }
-                            }
-                        };
-                        
-                        calendarEl.addEventListener('click', expandCalendar, { once: false });
-                        calendarEl.addEventListener('touchstart', expandCalendar, { once: false });
                         
                         setupDropdownEventListener();
                     });
