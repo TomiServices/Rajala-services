@@ -2199,21 +2199,20 @@
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 5;
-            padding: 30px 20px;
         }
         .calendar-refresh-btn {
-            padding: 12px 28px;
-            background: #333333;
-            color: #ffffff;
+            background: none;
             border: none;
-            border-radius: 25px;
+            padding: 0;
             font-size: 1rem;
             font-weight: 600;
+            color: #333333;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
+            text-decoration: underline;
         }
         .calendar-refresh-btn:hover {
-            background: #555555;
+            color: #555555;
         }
         
         /* Submit button loading state - GPU-accelerated CSS spinner */
@@ -4741,7 +4740,7 @@
           <div id="calendar" role="application" aria-label="Ajanvarauskalenteri"></div>
           <!-- Refresh button - shown in center of calendar area, disappears when clicked -->
           <div id="calendarRefreshContainer" class="calendar-refresh-container" role="status" aria-live="polite">
-            <button id="calendarRefreshBtn" class="calendar-refresh-btn" aria-label="Lataa kalenteri - Päivitä">🔄 Päivitä</button>
+            <button id="calendarRefreshBtn" class="calendar-refresh-btn" aria-label="Lataa kalenteri - Päivitä">Päivitä</button>
           </div>
         </div>
       
