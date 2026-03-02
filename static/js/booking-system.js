@@ -222,12 +222,30 @@ function initializeBookingSystem() {
     
     let selectedSlot = null;
 
-    // Attach click handler to refresh button - hides the overlay and reveals the calendar
+    // Attach click handler to refresh button - hides the overlay and triggers calendar interaction
     const refreshContainer = document.getElementById('calendarRefreshContainer');
     const refreshBtn = document.getElementById('calendarRefreshBtn');
     if (refreshBtn && refreshContainer) {
         refreshBtn.addEventListener('click', function() {
             refreshContainer.style.display = 'none';
+            // Simulate a click on the first available weekday in the calendar to trigger day loading
+            const calendarEl = document.getElementById('calendar');
+            if (calendarEl) {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const dayCells = calendarEl.querySelectorAll('.fc-daygrid-day');
+                for (const cell of dayCells) {
+                    const dateAttr = cell.getAttribute('data-date');
+                    if (dateAttr) {
+                        const cellDate = new Date(dateAttr);
+                        const weekdayNumber = cellDate.getDay();
+                        if (cellDate >= today && weekdayNumber >= 1 && weekdayNumber <= 5) {
+                            cell.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+                            break;
+                        }
+                    }
+                }
+            }
         });
     }
 
