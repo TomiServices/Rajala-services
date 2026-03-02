@@ -123,7 +123,20 @@ function getDateKey(date) {
 }
 
 /**
- * Fetches data with retry logic using exponential backoff
+ * Normalizes a Finnish phone number to international format (+358).
+ * Accepts local format (e.g. "050 1234567") or international format ("+358 50 1234567").
+ * @param {string} phone - Phone number to normalize
+ * @returns {string} - Phone number in international format
+ */
+function normalizePhoneNumber(phone) {
+    const trimmed = phone.trim();
+    if (/^0/.test(trimmed)) {
+        return '+358 ' + trimmed.substring(1).trim();
+    }
+    return trimmed;
+}
+
+/**
  * @param {string} url - URL to fetch
  * @param {object} options - Fetch options
  * @param {number} maxRetries - Maximum number of retries (default: 3)
@@ -339,8 +352,8 @@ function initializeBookingSystem() {
             const slotTime = new Date(validDate);
             slotTime.setHours(hour, 0, 0, 0);
             
-            // Check if slot is in the past
-            const isPast = slotTime < now;
+            // Check if slot is in the past (use hour-based comparison for today to match consistent behavior)
+            const isPast = isToday ? (hour <= now.getHours()) : slotTime < now;
             
             // Check if specific slot is booked
             const isSlotBooked = bookings.some(b => {
@@ -2251,6 +2264,7 @@ function initializeBookingSystem() {
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
+            const normalizedPhone = normalizePhoneNumber(phone);
             const aikaValue = document.getElementById('aika').value;
             const termsCheckbox = document.getElementById('termsCheckbox');
             
@@ -2259,8 +2273,8 @@ function initializeBookingSystem() {
                 return;
             }
             
-            if (!/^\+358\s?\d{1,3}\s?\d{4,}$/.test(phone)) {
-                document.getElementById('error').textContent = 'Syötä puhelinnumero muodossa +358 401234567!';
+            if (!/^\+358\s?\d{1,3}\s?\d{4,}$/.test(normalizedPhone)) {
+                document.getElementById('error').textContent = 'Syötä puhelinnumero muodossa 050 1234567 tai +358 50 1234567!';
                 return;
             }
             
@@ -2315,7 +2329,7 @@ function initializeBookingSystem() {
                 
                 // Send booking to backend Firebase Function with retry logic
                 const bookingData = {
-                    name, email, phone,
+                    name, email, phone: normalizedPhone,
                     aika: selectedSlot.toISOString(),
                     services: serviceData.services,
                     totalPrice: serviceData.totalPrice,

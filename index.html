@@ -2687,6 +2687,50 @@
             box-shadow: 0 0 0 4px rgba(63, 169, 245, 0.2);
             background: #ffffff;
         }
+        .phone-input-wrapper {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+            margin-bottom: 4px;
+            border: 2px solid #cccccc;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #ffffff;
+        }
+        .phone-input-wrapper:focus-within {
+            border-color: #3FA9F5;
+            box-shadow: 0 0 0 4px rgba(63, 169, 245, 0.2);
+        }
+        .phone-prefix {
+            padding: 14px 12px;
+            background: #f0f0f0;
+            color: #555555;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            border-right: 1px solid #cccccc;
+            white-space: nowrap;
+            user-select: none;
+        }
+        .phone-input-wrapper input {
+            border: none !important;
+            border-radius: 0 !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            box-shadow: none !important;
+            flex: 1;
+        }
+        .phone-input-wrapper input:focus {
+            border: none !important;
+            box-shadow: none !important;
+        }
+        .phone-hint {
+            display: block;
+            color: #888888;
+            font-size: 0.82rem;
+            margin-bottom: 6px;
+            font-family: 'Inter', sans-serif;
+        }
         /* Custom checkbox styling for booking form */
         .booking-checkbox-row {
             display: flex;
@@ -4821,7 +4865,11 @@
           <label for="email">Sähköposti</label>
           <input type="email" id="email" name="email" required placeholder="sinä@email.com" autocomplete="email" />
           <label for="phone">Puhelinnumero</label>
-          <input type="tel" id="phone" name="phone" required pattern="^\+358\s?\d{1,3}\s?\d{4,}$" placeholder="+358 401234567" autocomplete="tel" />
+          <div class="phone-input-wrapper">
+            <span class="phone-prefix">+358</span>
+            <input type="tel" id="phone" name="phone" required pattern="^(\+358[\d\s]{6,}|0[\d\s]{7,})$" placeholder="050 1234567" autocomplete="tel" />
+          </div>
+          <small class="phone-hint">Voit syöttää numeron muodossa 050 1234567 tai +358 50 1234567</small>
           <!-- Message checkbox -->
           <div class="booking-checkbox-row">
             <label class="custom-checkbox-label" for="msgCheckbox">
