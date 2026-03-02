@@ -221,17 +221,13 @@ function initializeBookingSystem() {
     }
     
     let selectedSlot = null;
-    let calendar = null;
 
-    // Attach click handler to refresh button - hides the overlay and activates the calendar grid
+    // Attach click handler to refresh button - hides the overlay and reveals the calendar
     const refreshContainer = document.getElementById('calendarRefreshContainer');
     const refreshBtn = document.getElementById('calendarRefreshBtn');
     if (refreshBtn && refreshContainer) {
         refreshBtn.addEventListener('click', function() {
             refreshContainer.style.display = 'none';
-            if (calendar && calendar.updateSize) {
-                calendar.updateSize();
-            }
         });
     }
 
@@ -1609,6 +1605,8 @@ function initializeBookingSystem() {
                 return bookingDateKey === dateKey;
             }).length;
         }
+        
+        let calendar = null;
         
         // FIX: Enhanced error detection and user feedback when FullCalendar fails to load
         // This helps users understand if their ad blocker or privacy settings are blocking the calendar
