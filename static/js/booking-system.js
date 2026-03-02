@@ -211,7 +211,13 @@ async function fetchWithRetry(url, options = {}, maxRetries = 3) {
 
 // Calendar booking logic (ready for backend API, e.g. Firebase Function)
 // Defer heavy initialization until after page load + idle time to minimize main-thread blocking
+let _bookingPollingIntervalId = null;
 function initializeBookingSystem() {
+    // Clear any existing polling interval from a previous initialization
+    if (_bookingPollingIntervalId !== null) {
+        clearInterval(_bookingPollingIntervalId);
+        _bookingPollingIntervalId = null;
+    }
     const calendarEl = document.getElementById('calendar');
     
     // Early return if calendar element doesn't exist
@@ -1904,8 +1910,16 @@ function initializeBookingSystem() {
                                     return bookingDateKey === dateKey;
                                 }).length;
                                 
-                                // FIX: Always show available slots for weekdays, even when there are no bookings
-                                const availableSlots = 8 - dayBookingsCount; // 8 slots per day (9-17)
+                                // Calculate total available slots for the day
+                                // For today, exclude past time slots (business hours 9-17)
+                                const now = new Date();
+                                const todayKey = getDateKey(now);
+                                let totalSlots = 8; // 8 slots per day (9,10,11,12,13,14,15,16)
+                                if (dateKey === todayKey) {
+                                    const currentHour = now.getHours();
+                                    totalSlots = Math.max(0, 17 - Math.max(9, currentHour + 1));
+                                }
+                                const availableSlots = Math.max(0, totalSlots - dayBookingsCount);
                                 evs.push({
                                     title: `${availableSlots} paikkaa`,
                                     start: dateKey,
@@ -2013,6 +2027,22 @@ function initializeBookingSystem() {
                         }
                         
                         setupDropdownEventListener();
+                        
+                        // Start periodic polling to refresh bookings for real-time updates
+                        // (handles external changes such as Google Calendar sync)
+                        _bookingPollingIntervalId = setInterval(async () => {
+                            try {
+                                const freshBookings = await fetchBookings();
+                                if (freshBookings) {
+                                    bookings = freshBookings;
+                                    if (calendar && typeof calendar.refetchEvents === 'function') {
+                                        calendar.refetchEvents();
+                                    }
+                                }
+                            } catch (pollError) {
+                                console.error('Error during periodic booking refresh:', pollError);
+                            }
+                        }, 5 * 60 * 1000); // Refresh every 5 minutes
                     });
                     
                 } catch (renderError) {
