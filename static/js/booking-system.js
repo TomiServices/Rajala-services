@@ -1852,13 +1852,28 @@ function initializeBookingSystem() {
                         if (dayOfWeek >= 1 && dayOfWeek <= 5) {
                             const dateKey = getDateKey(currentDate);
                             if (dateKey) {
-                                const dayBookingsCount = bookings.filter(b => {
+                                const dayBookings = bookings.filter(b => {
                                     const bookingDateKey = getDateKey(b.aika);
                                     return bookingDateKey === dateKey;
-                                }).length;
-                                
-                                // FIX: Always show available slots for weekdays, even when there are no bookings
-                                const availableSlots = 8 - dayBookingsCount; // 8 slots per day (9-17)
+                                });
+
+                                // Count only future unbooked slots so that past slots
+                                // (e.g. 9:00–11:00 viewed at 15:00) are not shown as available
+                                const now = new Date();
+                                const isToday = getDateKey(now) === dateKey;
+                                let availableSlots = 0;
+                                for (let h = 9; h < 17; h++) {
+                                    if (isToday) {
+                                        const slotTime = new Date(currentDate);
+                                        slotTime.setHours(h, 0, 0, 0);
+                                        if (slotTime < now) continue;
+                                    }
+                                    const isBooked = dayBookings.some(b => {
+                                        const bt = new Date(b.aika);
+                                        return bt.getHours() === h;
+                                    });
+                                    if (!isBooked) availableSlots++;
+                                }
                                 evs.push({
                                     title: `${availableSlots} paikkaa`,
                                     start: dateKey,
@@ -1873,9 +1888,16 @@ function initializeBookingSystem() {
                     }
                     
                     successCallback(evs);
+                    // Hide the refresh overlay once events are loaded
+                    requestAnimationFrame(function() {
+                        var overlay = document.getElementById('calendar-refresh-overlay');
+                        if (overlay) overlay.style.display = 'none';
+                    });
                 } catch (error) {
                     console.error('Error in events function:', error);
                     if (successCallback) successCallback([]);
+                    var overlay = document.getElementById('calendar-refresh-overlay');
+                    if (overlay) overlay.style.display = 'none';
                 }
             }
         });
@@ -1887,6 +1909,19 @@ function initializeBookingSystem() {
                 // FIX: Render immediately without delay to prevent white screen
                 try {
                     calendar.render();
+                    
+                    // Setup "Päivitä" refresh button: triggers updateSize + refetchEvents, then hides
+                    var refreshOverlay = document.getElementById('calendar-refresh-overlay');
+                    var refreshBtn = document.getElementById('calendarRefreshBtn');
+                    if (refreshBtn && refreshOverlay) {
+                        refreshBtn.addEventListener('click', function() {
+                            if (calendar) {
+                                if (calendar.updateSize) calendar.updateSize();
+                                if (calendar.refetchEvents) calendar.refetchEvents();
+                            }
+                            refreshOverlay.style.display = 'none';
+                        });
+                    }
                     
                     // FIX: Setup immediately after render (no nested setTimeout for better loading)
                     // Navigation button state management for month view

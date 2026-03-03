@@ -2073,6 +2073,29 @@
             margin-bottom: 25px;
         }
         
+        #calendar-refresh-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        #calendarRefreshBtn {
+            pointer-events: all;
+            background: transparent;
+            border: none;
+            color: #000000;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 10px 24px;
+            letter-spacing: 0.03em;
+            font-family: 'Inter', sans-serif;
+        }
+        
         .calendar-nav-btn {
             padding: 12px 28px;
             background: #000000;
@@ -4676,7 +4699,12 @@
           <button id="nextWeekBtn" class="calendar-nav-btn" aria-label="Siirry seuraavaan kuukauteen" style="background: #000000; border: 2px solid #000000; color: #ffffff;">Seuraava →</button>
         </div>
       
-        <div id="calendar" role="application" aria-label="Ajanvarauskalenteri"></div>
+        <div id="calendar-wrapper" style="position: relative;">
+          <div id="calendar" role="application" aria-label="Ajanvarauskalenteri"></div>
+          <div id="calendar-refresh-overlay">
+            <button id="calendarRefreshBtn" aria-label="Päivitä kalenteri">Päivitä</button>
+          </div>
+        </div>
       
         <!-- Time Selection Grid -->
         <div id="time-selection-grid" class="time-selection-container" style="display: none;" aria-hidden="true">
