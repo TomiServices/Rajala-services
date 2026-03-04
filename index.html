@@ -2073,17 +2073,39 @@
             margin-bottom: 25px;
         }
         
+        #calendar-wrapper {
+            min-height: 300px;
+        }
+
+        @keyframes calendarSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        .calendar-spinner {
+            width: 44px;
+            height: 44px;
+            border: 4px solid rgba(0, 0, 0, 0.12);
+            border-top-color: #000000;
+            border-radius: 50%;
+            animation: calendarSpin 0.8s linear infinite;
+            flex-shrink: 0;
+        }
+
         #calendar-refresh-overlay {
             position: absolute;
             inset: 0;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            gap: 16px;
             z-index: 10;
+            background: rgba(255, 255, 255, 0.80);
             pointer-events: none;
         }
         
         #calendarRefreshBtn {
+            display: none;
             pointer-events: all;
             background: transparent;
             border: none;
@@ -4702,6 +4724,7 @@
         <div id="calendar-wrapper" style="position: relative;">
           <div id="calendar" role="application" aria-label="Ajanvarauskalenteri"></div>
           <div id="calendar-refresh-overlay">
+            <div class="calendar-spinner" aria-hidden="true"></div>
             <button id="calendarRefreshBtn" aria-label="Päivitä kalenteri">Päivitä</button>
           </div>
         </div>
