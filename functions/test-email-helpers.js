@@ -69,7 +69,7 @@ function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
 
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #c41e3a;">Varausvahvistus</h2>
+      <h2 style="color: #3FA9F5;">Varausvahvistus</h2>
       <p>Hei ${escapedName || 'asiakas'},</p>
       <p>Olemme vastaanottaneet varauksesi. Tässä varauksen tiedot:</p>
       <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
