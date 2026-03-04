@@ -969,8 +969,8 @@ function initializeBookingSystem() {
         if (taskObj.pricing && vehicleType && taskObj.pricing[vehicleType]) {
             // Use vehicle-specific price
             displayPrice = formatPriceForVehicleType(taskObj.pricing[vehicleType]);
-        } else if (taskObj.price) {
-            // Use generic price
+        } else if (taskObj.price && taskObj.price.toLowerCase() !== 'pyydä tarjous') {
+            // Use generic price (omit 'Pyydä tarjous' from display)
             displayPrice = formatPriceForVehicleType(taskObj.price);
         }
         
@@ -1203,12 +1203,12 @@ function initializeBookingSystem() {
                             // Use vehicle-specific price
                             displayPrice = formatPriceForVehicleType(task.pricing[vehicleType]);
                             option.textContent = `${task.name} ${displayPrice}`;
-                        } else if (task.price && task.price.trim() !== '') {
-                            // Use generic price
+                        } else if (task.price && task.price.trim() !== '' && task.price.toLowerCase() !== 'pyydä tarjous') {
+                            // Use generic price (omit 'Pyydä tarjous' from display)
                             displayPrice = formatPriceForVehicleType(task.price);
                             option.textContent = `${task.name} ${displayPrice}`;
                         } else {
-                            // No price available
+                            // No price available (or 'Pyydä tarjous' - show only name)
                             option.textContent = task.name;
                         }
                         taskSelect.appendChild(option);
@@ -1598,6 +1598,7 @@ function initializeBookingSystem() {
         }
         
         let calendar = null;
+        var loadingTimer = null;
         
         // FIX: Enhanced error detection and user feedback when FullCalendar fails to load
         // This helps users understand if their ad blocker or privacy settings are blocking the calendar
@@ -1845,17 +1846,24 @@ function initializeBookingSystem() {
                     const evs = [];
                     const currentDate = new Date(fetchInfo.start);
                     const endDate = new Date(fetchInfo.end);
-                    
+
+                    // Pre-build a Map of bookings keyed by date for O(1) lookups
+                    const bookingsByDate = new Map();
+                    for (const b of bookings) {
+                        const key = getDateKey(b.aika);
+                        if (key) {
+                            if (!bookingsByDate.has(key)) bookingsByDate.set(key, []);
+                            bookingsByDate.get(key).push(b);
+                        }
+                    }
+
                     while (currentDate < endDate) {
                         const dayOfWeek = currentDate.getDay();
                         // Only process weekdays
                         if (dayOfWeek >= 1 && dayOfWeek <= 5) {
                             const dateKey = getDateKey(currentDate);
                             if (dateKey) {
-                                const dayBookings = bookings.filter(b => {
-                                    const bookingDateKey = getDateKey(b.aika);
-                                    return bookingDateKey === dateKey;
-                                });
+                                const dayBookings = bookingsByDate.get(dateKey) || [];
 
                                 // Count only future unbooked slots so that past slots
                                 // (e.g. 9:00–11:00 viewed at 15:00) are not shown as available
@@ -1888,7 +1896,8 @@ function initializeBookingSystem() {
                     }
                     
                     successCallback(evs);
-                    // Hide the refresh overlay once events are loaded
+                    // Hide the refresh overlay and cancel delayed button timer once events are loaded
+                    clearTimeout(loadingTimer);
                     requestAnimationFrame(function() {
                         var overlay = document.getElementById('calendar-refresh-overlay');
                         if (overlay) overlay.style.display = 'none';
@@ -1896,6 +1905,7 @@ function initializeBookingSystem() {
                 } catch (error) {
                     console.error('Error in events function:', error);
                     if (successCallback) successCallback([]);
+                    clearTimeout(loadingTimer);
                     var overlay = document.getElementById('calendar-refresh-overlay');
                     if (overlay) overlay.style.display = 'none';
                 }
@@ -1909,6 +1919,12 @@ function initializeBookingSystem() {
                 // FIX: Render immediately without delay to prevent white screen
                 try {
                     calendar.render();
+
+                    // Start 8-second timer: if calendar days haven't loaded by then, show "Päivitä" button
+                    loadingTimer = setTimeout(function() {
+                        var refreshBtn = document.getElementById('calendarRefreshBtn');
+                        if (refreshBtn) refreshBtn.style.display = 'block';
+                    }, 8000);
                     
                     // Setup "Päivitä" refresh button: hides immediately on click, then triggers updateSize + refetchEvents
                     var refreshOverlay = document.getElementById('calendar-refresh-overlay');
