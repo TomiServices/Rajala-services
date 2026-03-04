@@ -1910,16 +1910,16 @@ function initializeBookingSystem() {
                 try {
                     calendar.render();
                     
-                    // Setup "Päivitä" refresh button: triggers updateSize + refetchEvents, then hides
+                    // Setup "Päivitä" refresh button: hides immediately on click, then triggers updateSize + refetchEvents
                     var refreshOverlay = document.getElementById('calendar-refresh-overlay');
                     var refreshBtn = document.getElementById('calendarRefreshBtn');
                     if (refreshBtn && refreshOverlay) {
                         refreshBtn.addEventListener('click', function() {
+                            refreshOverlay.style.display = 'none';
                             if (calendar) {
                                 if (calendar.updateSize) calendar.updateSize();
                                 if (calendar.refetchEvents) calendar.refetchEvents();
                             }
-                            refreshOverlay.style.display = 'none';
                         });
                     }
                     

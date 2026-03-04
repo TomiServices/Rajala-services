@@ -160,7 +160,7 @@ function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
 
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #c41e3a;">Varausvahvistus</h2>
+      <h2 style="color: #3FA9F5;">Varausvahvistus</h2>
       <p>Hei ${escapedName || 'asiakas'},</p>
       <p>Olemme vastaanottaneet varauksesi. Tässä varauksen tiedot:</p>
       
@@ -187,7 +187,7 @@ function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
         <p><strong>Postiosoite:</strong> 02330, Espoo</p>
         <div style="margin-top: 15px;">
           <a href="https://www.google.com/maps/dir/?api=1&destination=Tiilenvalajantie+6,+02330+Espoo,+Finland" 
-             style="display: inline-block; background-color: #c41e3a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+             style="display: inline-block; background-color: #3FA9F5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
             🗺️ Reittiohjeet
           </a>
         </div>
