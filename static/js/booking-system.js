@@ -846,13 +846,13 @@ function initializeBookingSystem() {
             tasks: [
                 { id: 'diagnostics', name: 'Vikakoodien luku ja nollaus', price: '40 €' },
                 { id: 'oil-change', name: 'Moottoriöljyjen vaihto', price: 'alkaen 50 €' },
-                { id: 'shock-absorber', name: 'Iskunvaimentimien ja jousituksen uusiminen', price: 'Pyydä tarjous' },
-                { id: 'suspension-parts', name: 'Tukivarsien, nivelien ja raidetankojen vaihto', price: 'Pyydä tarjous' },
-                { id: 'stabilizer-bar', name: 'Vakaajatankojen ja koiranluiden vaihto', price: 'Pyydä tarjous' },
-                { id: 'brake-repair', name: 'Jarrulevyjen, -palojen ja käsijarrujen vaihto', price: 'Pyydä tarjous' },
-                { id: 'exhaust-repair', name: 'Pakoputkistojen korjaukset', price: 'Pyydä tarjous' },
-                { id: 'wheel-bearing', name: 'Pyöränlaakerien vaihto', price: 'Pyydä tarjous' },
-                { id: 'other-repair', name: 'Muu viankorjaus', price: 'Pyydä tarjous' }
+                { id: 'shock-absorber', name: 'Iskunvaimentimien ja jousituksen uusiminen' },
+                { id: 'suspension-parts', name: 'Tukivarsien, nivelien ja raidetankojen vaihto' },
+                { id: 'stabilizer-bar', name: 'Vakaajatankojen ja koiranluiden vaihto' },
+                { id: 'brake-repair', name: 'Jarrulevyjen, -palojen ja käsijarrujen vaihto' },
+                { id: 'exhaust-repair', name: 'Pakoputkistojen korjaukset' },
+                { id: 'wheel-bearing', name: 'Pyöränlaakerien vaihto' },
+                { id: 'other-repair', name: 'Muu viankorjaus' }
             ]
         },
         rengastyot: {
