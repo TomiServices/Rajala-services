@@ -747,8 +747,8 @@ async function createGoogleCalendarEvent(bookingData) {
         `Puhelin: ${bookingData.puhelin || ''}\n` +
         `Sähköposti: ${bookingData.sahkoposti || ''}\n` +
         `Ajoneuvotyyppi: ${bookingData.vehicleType || 'Ei määritelty'}\n` +
-        (bookingData.registrationNumber ? `Rekisteritunnus: ${bookingData.registrationNumber}\n` : '') +
-        `\nPalvelut:\n${serviceInfo}\n\n` +
+        (bookingData.registrationNumber ? `Rekisteritunnus: ${bookingData.registrationNumber}\n\n` : '\n') +
+        `Palvelut:\n${serviceInfo}\n\n` +
         `Kokonaishinta: ${bookingData.totalPrice || 'Hinta sovittaessa'}` +
         (bookingData.message ? `\n\nAsiakkaan viesti:\n${bookingData.message}` : '') +
         (formattedCreatedAt ? `\n\nVaraus tehty: ${formattedCreatedAt}` : ''),
@@ -1341,8 +1341,8 @@ exports.onBookingUpdated = onDocumentUpdated({
           `Asiakas: ${afterData.nimi || ''}\n` +
           `Puhelin: ${afterData.puhelin || ''}\n` +
           `Sähköposti: ${afterData.sahkoposti || ''}\n` +
-          (afterData.registrationNumber ? `Rekisteritunnus: ${afterData.registrationNumber}\n` : '') +
-          `\nPalvelut:\n${serviceInfo}\n\n` +
+          (afterData.registrationNumber ? `Rekisteritunnus: ${afterData.registrationNumber}\n\n` : '\n') +
+          `Palvelut:\n${serviceInfo}\n\n` +
           `Kokonaishinta: ${afterData.totalPrice || 'Hinta sovittaessa'}` +
           (afterData.message ? `\n\nAsiakkaan viesti:\n${afterData.message}` : '') +
           (updatedCreatedAt ? `\n\nVaraus tehty: ${updatedCreatedAt}` : ''),
