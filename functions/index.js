@@ -849,6 +849,45 @@ exports.bookings = onRequest({
 });
 
 // =======================
+// Booking timezone helpers
+// =======================
+
+/** Finnish timezone used for all business-hours and weekday validation. */
+const BOOKING_TIMEZONE = 'Europe/Helsinki';
+
+/**
+ * Returns the hour (0-23) and dayOfWeek (0=Sun … 6=Sat) for a Date value
+ * evaluated in the Finnish/Helsinki timezone.  Uses Intl.DateTimeFormat so
+ * the result is correct regardless of the Node.js process timezone (UTC by
+ * default on Firebase Cloud Functions).
+ *
+ * @param {Date} date
+ * @returns {{ hour: number, dayOfWeek: number }}
+ */
+function getHelsinkiComponents(date) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: BOOKING_TIMEZONE,
+    hour: 'numeric',
+    hour12: false,
+    weekday: 'short'
+  }).formatToParts(date);
+
+  const partMap = {};
+  parts.forEach(p => { partMap[p.type] = p.value; });
+
+  // 'short' weekday names in en-US locale (Sun, Mon, Tue, Wed, Thu, Fri, Sat)
+  const dayIndex = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+
+  return {
+    // The ECMA-402 spec allows "24" for the hour value at midnight when
+    // hour12:false is used (see TC39/ecma402 §11.5.7 note on cyclic hours).
+    // Node 18's V8 ICU implementation follows this, so % 24 guards against it.
+    hour: parseInt(partMap.hour, 10) % 24,
+    dayOfWeek: dayIndex[partMap.weekday] ?? -1
+  };
+}
+
+// =======================
 // HTTP: POST /book
 // =======================
 exports.book = onRequest({
@@ -901,10 +940,12 @@ exports.book = onRequest({
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) return res.status(400).json({ error: 'Virheellinen sähköpostiosoite' });
 
-    // More permissive phone regex: accepts Finnish numbers in common formats
-    // Supports: +358 XX XXXXXXX, 0XX XXXXXXX, or just digits (6-12 digits)
-    const phoneRegex = /^(?:\+358|0)?\s?\d{6,12}$/;
-    if (!phoneRegex.test(phone)) return res.status(400).json({ error: 'Virheellinen puhelinnumero. Käytä muotoa: +358 40XXXXXXX tai 040XXXXXXX' });
+    // Normalise phone: strip all whitespace so that common formats like
+    // "+358 40 1234567" and "+358401234567" are treated equivalently.
+    const normalizedPhone = phone.replace(/\s+/g, '');
+    // Accept international (+358 + 6–12 digits) or local (0 + 6–10 digits) Finnish formats.
+    const phoneRegex = /^(\+358\d{6,12}|0\d{6,10})$/;
+    if (!phoneRegex.test(normalizedPhone)) return res.status(400).json({ error: 'Virheellinen puhelinnumero. Käytä muotoa: +358 40XXXXXXX tai 040XXXXXXX' });
 
     // Validate vehicleType if provided (should be a non-empty string)
     if (vehicleType !== undefined && typeof vehicleType !== 'string') {
@@ -920,8 +961,10 @@ exports.book = onRequest({
     const now = new Date();
     if (Number.isNaN(bookingDate.getTime()) || bookingDate <= now) return res.status(400).json({ error: 'Valitse tuleva aika' });
 
-    const dayOfWeek = bookingDate.getDay();
-    const hour = bookingDate.getHours();
+    // Validate weekday and business hours in the Finnish timezone (Europe/Helsinki).
+    // Firebase Cloud Functions run in UTC by default; using getDay()/getHours() directly
+    // would reject valid Finnish morning slots (e.g. 9 AM Helsinki = 6 AM UTC in summer).
+    const { hour, dayOfWeek } = getHelsinkiComponents(bookingDate);
     if (dayOfWeek === 0 || dayOfWeek === 6) return res.status(400).json({ error: 'Varaukset vain arkipäivisin' });
     if (hour < 9 || hour >= 17) return res.status(400).json({ error: 'Varaukset klo 9-17 välillä' });
 
@@ -935,7 +978,7 @@ exports.book = onRequest({
         const bookingData = {
           nimi: name,
           sahkoposti: email,
-          puhelin: phone,
+          puhelin: normalizedPhone,
           aika: admin.firestore.Timestamp.fromDate(bookingDate),
           services: services,
           totalPrice: totalPrice || 'Hinta sovittaessa',
