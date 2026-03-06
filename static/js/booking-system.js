@@ -1249,26 +1249,16 @@ function initializeBookingSystem() {
                         step2.style.display = 'block';
                         
                         // FIX: Force FullCalendar to recalculate its dimensions now that
-                        // the container is visible, so day events (availability indicators)
-                        // render immediately without requiring a user click.
+                        // the container is visible, then refetch events so day availability
+                        // indicators render immediately without requiring a manual tap.
                         setTimeout(() => {
                             if (calendar && calendar.updateSize) {
                                 calendar.updateSize();
                             }
-                            // Simulate a tap on the calendar center to trigger day loading
-                            const calendarEl = document.getElementById('calendar');
-                            if (calendarEl) {
-                                const rect = calendarEl.getBoundingClientRect();
-                                const centerX = rect.left + rect.width / 2;
-                                const centerY = rect.top + rect.height / 2;
-                                const tapEvent = new MouseEvent('click', {
-                                    bubbles: true,
-                                    cancelable: true,
-                                    clientX: centerX,
-                                    clientY: centerY,
-                                    view: window
-                                });
-                                calendarEl.dispatchEvent(tapEvent);
+                            // Refetch calendar events to ensure day availability indicators
+                            // load now that the calendar container is visible.
+                            if (calendar && calendar.refetchEvents) {
+                                calendar.refetchEvents();
                             }
                             step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                         }, 100);
@@ -1377,7 +1367,7 @@ function initializeBookingSystem() {
                 
                 // Show/hide the "Muu" textbox based on selection
                 if (selectedType === 'Muu') {
-                    vehicleTypeOtherContainer.style.display = 'block';
+                    vehicleTypeOtherContainer.style.display = 'flex';
                     vehicleTypeOtherContainer.setAttribute('aria-hidden', 'false');
                 } else {
                     vehicleTypeOtherContainer.style.display = 'none';
@@ -1389,7 +1379,7 @@ function initializeBookingSystem() {
                 // Show/hide the registration number field based on selection
                 if (selectedType && selectedType !== '') {
                     if (registrationNumberContainer) {
-                        registrationNumberContainer.style.display = 'block';
+                        registrationNumberContainer.style.display = 'flex';
                         registrationNumberContainer.setAttribute('aria-hidden', 'false');
                     }
                 } else {
@@ -2372,6 +2362,23 @@ function initializeBookingSystem() {
                     }
                     if (registrationNumberInput) {
                         registrationNumberInput.value = '';
+                    }
+                    // Reset vehicle type select so the registration number field is
+                    // properly shown again when the user selects a vehicle type for
+                    // their next booking. Without this reset, the select retains its
+                    // previous value but the registration number container stays hidden,
+                    // causing form validation to fail on the next submission attempt.
+                    const vehicleTypeSelectEl = document.getElementById('vehicleTypeSelect');
+                    if (vehicleTypeSelectEl) {
+                        vehicleTypeSelectEl.value = '';
+                        // Also hide the "Muu" text input if it was visible
+                        const vehicleTypeOtherContainerEl = document.getElementById('vehicleTypeOtherContainer');
+                        if (vehicleTypeOtherContainerEl) {
+                            vehicleTypeOtherContainerEl.style.display = 'none';
+                            vehicleTypeOtherContainerEl.setAttribute('aria-hidden', 'true');
+                        }
+                        const vehicleTypeOtherEl = document.getElementById('vehicleTypeOther');
+                        if (vehicleTypeOtherEl) vehicleTypeOtherEl.value = '';
                     }
                     selectedSlot = null;
                     selectedServices = [];
