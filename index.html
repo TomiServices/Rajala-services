@@ -4646,6 +4646,12 @@
             <label for="vehicleTypeOther">Tarkenna ajoneuvotyyppi:</label>
             <input type="text" id="vehicleTypeOther" class="available-times-select" placeholder="Esim. Vene / kuorma-auto / työkone" style="padding: 12px; font-size: 1rem; border: 2px solid #e0e0e0; border-radius: 8px; width: 100%; box-sizing: border-box;">
           </div>
+          
+          <!-- Registration number field (shown when any vehicle type is selected) -->
+          <div id="registrationNumberContainer" class="available-slots-dropdown" style="display: none; margin-top: 15px;" aria-hidden="true">
+            <label for="registrationNumber">Rekisteritunnus:</label>
+            <input type="text" id="registrationNumber" class="available-times-select" placeholder="Esim. ABC-123" style="padding: 12px; font-size: 1rem; border: 2px solid #e0e0e0; border-radius: 8px; width: 100%; box-sizing: border-box;" autocomplete="off">
+          </div>
         </div>
       </div>
       
