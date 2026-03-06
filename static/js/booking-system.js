@@ -1248,15 +1248,32 @@ function initializeBookingSystem() {
                         step2.classList.add('visible');
                         step2.style.display = 'block';
                         
-                        // FIX: Force FullCalendar to recalculate its dimensions now that
-                        // the container is visible, so day events (availability indicators)
-                        // render immediately without requiring a user click.
+                        // Force FullCalendar to recalculate its dimensions now that
+                        // the container is visible, and simulate an automatic tap in the
+                        // centre of the calendar so day events (availability indicators)
+                        // activate immediately without requiring a manual user click.
+                        // 150 ms gives the browser enough time to complete the layout
+                        // pass triggered by display:block before we call updateSize()
+                        // and dispatch the synthetic click.
                         setTimeout(() => {
                             if (calendar && calendar.updateSize) {
                                 calendar.updateSize();
                             }
+                            // Simulate a tap in the centre of the calendar element.
+                            // This replicates the user interaction that previously was
+                            // needed to trigger day-event rendering on all devices.
+                            const rect = calendarEl.getBoundingClientRect();
+                            if (rect.width > 0 && rect.height > 0) {
+                                calendarEl.dispatchEvent(new MouseEvent('click', {
+                                    bubbles: true,
+                                    cancelable: true,
+                                    view: window,
+                                    clientX: rect.left + rect.width / 2,
+                                    clientY: rect.top + rect.height / 2
+                                }));
+                            }
                             step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        }, 100);
+                        }, 150);
                     }
                 } else {
                     // Hide booking form if task is deselected
