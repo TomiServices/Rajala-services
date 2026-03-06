@@ -145,6 +145,7 @@ function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
   const escapedPhone = escapeHtml(bookingData.puhelin);
   const escapedTotalPrice = escapeHtml(bookingData.totalPrice);
   const escapedVehicleType = escapeHtml(bookingData.vehicleType || 'Ei määritelty');
+  const escapedRegistrationNumber = escapeHtml(bookingData.registrationNumber || '');
   const escapedMessage = escapeHtml(bookingData.message || '');
 
   const servicesText = (bookingData.services || [])
@@ -171,6 +172,7 @@ function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
         <p><strong>Puhelin:</strong> ${escapedPhone}</p>
         <p><strong>Sähköposti:</strong> ${escapedEmail}</p>
         <p><strong>Ajoneuvotyyppi:</strong> ${escapedVehicleType}</p>
+        ${escapedRegistrationNumber ? `<p><strong>Rekisteritunnus:</strong> ${escapedRegistrationNumber}</p>` : ''}
       </div>
       
       <div style="background-color: #fff4f4; padding: 15px; border-radius: 5px; margin: 20px 0;">
@@ -744,7 +746,8 @@ async function createGoogleCalendarEvent(bookingData) {
         `Asiakas: ${bookingData.nimi || ''}\n` +
         `Puhelin: ${bookingData.puhelin || ''}\n` +
         `Sähköposti: ${bookingData.sahkoposti || ''}\n` +
-        `Ajoneuvotyyppi: ${bookingData.vehicleType || 'Ei määritelty'}\n\n` +
+        `Ajoneuvotyyppi: ${bookingData.vehicleType || 'Ei määritelty'}\n` +
+        (bookingData.registrationNumber ? `Rekisteritunnus: ${bookingData.registrationNumber}\n\n` : '\n') +
         `Palvelut:\n${serviceInfo}\n\n` +
         `Kokonaishinta: ${bookingData.totalPrice || 'Hinta sovittaessa'}` +
         (bookingData.message ? `\n\nAsiakkaan viesti:\n${bookingData.message}` : '') +
@@ -858,11 +861,16 @@ exports.book = onRequest({
     if (req.method === 'OPTIONS') return res.status(204).send('');
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-    const { name, email, phone, aika, services, totalPrice, totalNumericPrice, vehicleType, message } = req.body;
+    const { name, email, phone, aika, services, totalPrice, totalNumericPrice, vehicleType, message, registrationNumber } = req.body;
 
     // Validate required fields
     if (!name || !email || !phone || !aika || !services) {
       return res.status(400).json({ error: 'Täytä kaikki pakolliset kentät' });
+    }
+
+    // Validate registrationNumber (required, at least 1 character)
+    if (!registrationNumber || typeof registrationNumber !== 'string' || registrationNumber.trim() === '') {
+      return res.status(400).json({ error: 'Rekisteritunnus on pakollinen tieto' });
     }
 
     // reCAPTCHA verification DISABLED to allow Firebase Functions deployment
@@ -933,6 +941,7 @@ exports.book = onRequest({
           totalPrice: totalPrice || 'Hinta sovittaessa',
           totalNumericPrice: totalNumericPrice || 0,
           vehicleType: vehicleType || '',
+          registrationNumber: registrationNumber.trim(),
           message: (message && typeof message === 'string') ? message.trim() : '',
           luotu: admin.firestore.FieldValue.serverTimestamp(),
           googleEventId: null,
@@ -1049,6 +1058,7 @@ async function createEmailDocument(bookingData, bookingId) {
     const escapedPhone = escapeHtml(bookingData.puhelin);
     const escapedTotalPrice = escapeHtml(bookingData.totalPrice);
     const escapedVehicleType = escapeHtml(bookingData.vehicleType || 'Ei määritelty');
+    const escapedRegistrationNumber = escapeHtml(bookingData.registrationNumber || '');
     const escapedMessage = escapeHtml(bookingData.message || '');
 
     const servicesHtml = (bookingData.services || [])
@@ -1081,6 +1091,7 @@ async function createEmailDocument(bookingData, bookingId) {
               <p><strong>Puhelin:</strong> ${escapedPhone}</p>
               <p><strong>Sähköposti:</strong> ${escapedEmail}</p>
               <p><strong>Ajoneuvotyyppi:</strong> ${escapedVehicleType}</p>
+              ${escapedRegistrationNumber ? `<p><strong>Rekisteritunnus:</strong> ${escapedRegistrationNumber}</p>` : ''}
             </div>
             
             <div style="background-color: #f0f0f0; padding: 15px; border-radius: 5px; margin: 20px 0;">
@@ -1329,7 +1340,8 @@ exports.onBookingUpdated = onDocumentUpdated({
         description:
           `Asiakas: ${afterData.nimi || ''}\n` +
           `Puhelin: ${afterData.puhelin || ''}\n` +
-          `Sähköposti: ${afterData.sahkoposti || ''}\n\n` +
+          `Sähköposti: ${afterData.sahkoposti || ''}\n` +
+          (afterData.registrationNumber ? `Rekisteritunnus: ${afterData.registrationNumber}\n\n` : '\n') +
           `Palvelut:\n${serviceInfo}\n\n` +
           `Kokonaishinta: ${afterData.totalPrice || 'Hinta sovittaessa'}` +
           (afterData.message ? `\n\nAsiakkaan viesti:\n${afterData.message}` : '') +

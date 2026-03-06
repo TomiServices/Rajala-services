@@ -1255,6 +1255,21 @@ function initializeBookingSystem() {
                             if (calendar && calendar.updateSize) {
                                 calendar.updateSize();
                             }
+                            // Simulate a tap on the calendar center to trigger day loading
+                            const calendarEl = document.getElementById('calendar');
+                            if (calendarEl) {
+                                const rect = calendarEl.getBoundingClientRect();
+                                const centerX = rect.left + rect.width / 2;
+                                const centerY = rect.top + rect.height / 2;
+                                const tapEvent = new MouseEvent('click', {
+                                    bubbles: true,
+                                    cancelable: true,
+                                    clientX: centerX,
+                                    clientY: centerY,
+                                    view: window
+                                });
+                                calendarEl.dispatchEvent(tapEvent);
+                            }
                             step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                         }, 100);
                     }
@@ -1352,6 +1367,7 @@ function initializeBookingSystem() {
     function setupVehicleTypeSelection() {
         const vehicleTypeSelect = document.getElementById('vehicleTypeSelect');
         const vehicleTypeOtherContainer = document.getElementById('vehicleTypeOtherContainer');
+        const registrationNumberContainer = document.getElementById('registrationNumberContainer');
         const serviceSelection = document.getElementById('serviceSelection');
         const stepServices = document.getElementById('step-services');
         
@@ -1368,6 +1384,20 @@ function initializeBookingSystem() {
                     vehicleTypeOtherContainer.setAttribute('aria-hidden', 'true');
                     // Clear the textbox when hiding
                     document.getElementById('vehicleTypeOther').value = '';
+                }
+                
+                // Show/hide the registration number field based on selection
+                if (selectedType && selectedType !== '') {
+                    if (registrationNumberContainer) {
+                        registrationNumberContainer.style.display = 'block';
+                        registrationNumberContainer.setAttribute('aria-hidden', 'false');
+                    }
+                } else {
+                    if (registrationNumberContainer) {
+                        registrationNumberContainer.style.display = 'none';
+                        registrationNumberContainer.setAttribute('aria-hidden', 'true');
+                        document.getElementById('registrationNumber').value = '';
+                    }
                 }
                 
                 // Populate service dropdown based on selected vehicle type
@@ -2249,6 +2279,14 @@ function initializeBookingSystem() {
                 return;
             }
             
+            // Validate registration number (at least 1 character required)
+            const registrationNumberInput = document.getElementById('registrationNumber');
+            const registrationNumber = registrationNumberInput ? registrationNumberInput.value.trim() : '';
+            if (!registrationNumber) {
+                document.getElementById('error').textContent = 'Syötä rekisteritunnus!';
+                return;
+            }
+            
             if (!selectedSlot || !name || !email || !phone) {
                 document.getElementById('error').textContent = 'Täytä kaikki kentät ja valitse aika!';
                 return;
@@ -2297,6 +2335,7 @@ function initializeBookingSystem() {
                     totalPrice: serviceData.totalPrice,
                     totalNumericPrice: serviceData.totalNumericPrice,
                     vehicleType: vehicleType,
+                    registrationNumber: registrationNumber,
                     recaptcha: recaptchaToken
                 };
                 if (message) {
@@ -2325,6 +2364,15 @@ function initializeBookingSystem() {
                     document.getElementById('add-service-container').style.display = 'none';
                     document.getElementById('selected-services-container').style.display = 'none';
                     document.getElementById('repair-disclaimer').style.display = 'none';
+                    // Reset registration number field
+                    const regNumContainer = document.getElementById('registrationNumberContainer');
+                    if (regNumContainer) {
+                        regNumContainer.style.display = 'none';
+                        regNumContainer.setAttribute('aria-hidden', 'true');
+                    }
+                    if (registrationNumberInput) {
+                        registrationNumberInput.value = '';
+                    }
                     selectedSlot = null;
                     selectedServices = [];
                     bookings = await fetchBookings();

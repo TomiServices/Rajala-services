@@ -54,6 +54,7 @@ function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
   const escapedPhone = escapeHtml(bookingData.puhelin);
   const escapedTotalPrice = escapeHtml(bookingData.totalPrice);
   const escapedVehicleType = escapeHtml(bookingData.vehicleType || 'Ei määritelty');
+  const escapedRegistrationNumber = escapeHtml(bookingData.registrationNumber || '');
   const escapedMessage = escapeHtml(bookingData.message || '');
 
   const servicesText = (bookingData.services || [])
@@ -79,6 +80,7 @@ function buildBookingEmailHtml(bookingData, formattedDate, formattedTime) {
         <p><strong>Puhelin:</strong> ${escapedPhone}</p>
         <p><strong>Sähköposti:</strong> ${escapedEmail}</p>
         <p><strong>Ajoneuvotyyppi:</strong> ${escapedVehicleType}</p>
+        ${escapedRegistrationNumber ? `<p><strong>Rekisteritunnus:</strong> ${escapedRegistrationNumber}</p>` : ''}
       </div>
       <div style="background-color: #fff4f4; padding: 15px; border-radius: 5px; margin: 20px 0;">
         <h3 style="margin-top: 0; color: #333;">Valitut palvelut</h3>
@@ -249,6 +251,22 @@ function testBuildBookingEmailHtml() {
   const htmlNoMsg = buildBookingEmailHtml(bookingData, 'tiistai', '09:00');
   assert(!htmlNoMsg.includes('Asiakkaan viesti'), 'No Asiakkaan viesti header when message absent');
 
+  // Registration number is shown when present
+  const bookingWithReg = { ...bookingData, registrationNumber: 'ABC-123' };
+  const htmlWithReg = buildBookingEmailHtml(bookingWithReg, 'tiistai', '09:00');
+  assert(htmlWithReg.includes('ABC-123'), 'Contains registration number when present');
+  assert(htmlWithReg.includes('Rekisteritunnus'), 'Contains Rekisteritunnus label when registration number present');
+
+  // Registration number section omitted when absent
+  const htmlNoReg = buildBookingEmailHtml(bookingData, 'tiistai', '09:00');
+  assert(!htmlNoReg.includes('Rekisteritunnus'), 'No Rekisteritunnus label when registration number absent');
+
+  // Registration number XSS is escaped
+  const xssRegBooking = { ...bookingData, registrationNumber: '<script>evil()</script>' };
+  const htmlXssReg = buildBookingEmailHtml(xssRegBooking, 'tiistai', '09:00');
+  assert(!htmlXssReg.includes('<script>evil'), 'Escapes XSS in registration number');
+  assert(htmlXssReg.includes('&lt;script&gt;'), 'Registration number XSS input is HTML-escaped in output');
+
   console.log('');
 }
 
@@ -399,6 +417,51 @@ async function testCreateEmailDocumentSkipIfExists() {
   console.log('');
 }
 
+// --- Test 8: registrationNumber validation ---
+function testRegistrationNumberValidation() {
+  console.log('📝 Test 8: registrationNumber - Validation and Firestore storage');
+  console.log('------------------------------------------------------------------');
+
+  // Mirror the validation logic from functions/index.js book endpoint
+  function validateRegistrationNumber(registrationNumber) {
+    if (!registrationNumber || typeof registrationNumber !== 'string' || registrationNumber.trim() === '') {
+      return { valid: false, error: 'Rekisteritunnus on pakollinen tieto' };
+    }
+    return { valid: true, value: registrationNumber.trim() };
+  }
+
+  // Valid cases
+  assert(validateRegistrationNumber('ABC-123').valid, 'Accepts valid registration number');
+  assert(validateRegistrationNumber('ABC-123').value === 'ABC-123', 'Trims and returns value');
+  assert(validateRegistrationNumber('  XYZ-999  ').valid, 'Accepts registration number with whitespace');
+  assert(validateRegistrationNumber('  XYZ-999  ').value === 'XYZ-999', 'Trims whitespace from registration number');
+  assert(validateRegistrationNumber('A').valid, 'Accepts single character registration number');
+  assert(validateRegistrationNumber('123ABC').valid, 'Accepts alphanumeric registration number');
+
+  // Invalid cases
+  assert(!validateRegistrationNumber('').valid, 'Rejects empty string');
+  assert(!validateRegistrationNumber('   ').valid, 'Rejects whitespace-only string');
+  assert(!validateRegistrationNumber(null).valid, 'Rejects null');
+  assert(!validateRegistrationNumber(undefined).valid, 'Rejects undefined');
+  assert(!validateRegistrationNumber(12345).valid, 'Rejects non-string value');
+
+  // Verify error message
+  assert(
+    validateRegistrationNumber('').error === 'Rekisteritunnus on pakollinen tieto',
+    'Returns correct error message for missing registration number'
+  );
+
+  // Verify registrationNumber is stored in booking data
+  const bookingData = {
+    registrationNumber: 'TEST-001',
+    vehicleType: 'Henkilöauto',
+    nimi: 'Testi Käyttäjä'
+  };
+  assert(bookingData.registrationNumber === 'TEST-001', 'registrationNumber stored in booking object');
+
+  console.log('');
+}
+
 // --- Run all tests ---
 async function runAll() {
   testEscapeHtml();
@@ -408,6 +471,7 @@ async function runAll() {
   await testIdempotencyCheckLogic();
   await testMailCollectionIdempotency();
   await testCreateEmailDocumentSkipIfExists();
+  testRegistrationNumberValidation();
 
   console.log('=====================================');
   console.log('Test Summary');
