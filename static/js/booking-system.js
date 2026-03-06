@@ -1251,6 +1251,8 @@ function initializeBookingSystem() {
                         // FIX: Force FullCalendar to recalculate its dimensions now that
                         // the container is visible, then refetch events so day availability
                         // indicators render immediately without requiring a manual tap.
+                        // A 1-second delay ensures the calendar container has fully rendered
+                        // before updateSize/refetchEvents are called.
                         setTimeout(() => {
                             if (calendar && calendar.updateSize) {
                                 calendar.updateSize();
@@ -1261,7 +1263,7 @@ function initializeBookingSystem() {
                                 calendar.refetchEvents();
                             }
                             step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        }, 100);
+                        }, 1000);
                     }
                 } else {
                     // Hide booking form if task is deselected
