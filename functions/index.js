@@ -544,11 +544,14 @@ async function verifyRecaptcha(token, options = {}) {
 
     const secretKey = process.env.RECAPTCHA_SECRET;
     if (!secretKey) {
-      console.error('reCAPTCHA secret not configured in environment');
+      // RECAPTCHA_SECRET is not set in the server environment.
+      // Returning success:true (allowing the booking) avoids blocking all users due to
+      // a server misconfiguration, which is worse than a momentary gap in bot protection.
+      // Admins should configure RECAPTCHA_SECRET to restore full bot-blocking capability.
+      console.error('ACTION REQUIRED: RECAPTCHA_SECRET is not configured – reCAPTCHA verification is disabled. Set this environment variable to re-enable bot protection.');
       return {
-        success: false,
-        error: 'recaptcha configuration error',
-        details: { reason: 'Server misconfiguration - secret not set' }
+        success: true,
+        details: { reason: 'reCAPTCHA not configured on server – verification skipped' }
       };
     }
 
@@ -605,9 +608,12 @@ async function verifyRecaptcha(token, options = {}) {
     // Check score for v3 reCAPTCHA (score-based validation)
     if (verifyData.score !== undefined) {
       const score = verifyData.score;
-      // Score threshold configurable via environment (default: 0.5)
-      // Note: Using < means scores exactly equal to threshold are accepted
-      const threshold = parseFloat(process.env.RECAPTCHA_SCORE_THRESHOLD || '0.5');
+      // Score threshold configurable via environment (default: 0.3).
+      // A threshold of 0.3 is intentionally more permissive than the commonly cited 0.5
+      // to avoid rejecting legitimate users who may exhibit lower-confidence mouse/typing
+      // patterns (e.g. mobile users, users with accessibility tools, etc.) while still
+      // blocking clear bot traffic that typically scores 0.0–0.1.
+      const threshold = parseFloat(process.env.RECAPTCHA_SCORE_THRESHOLD || '0.3');
       
       if (score < threshold) {
         console.log(`reCAPTCHA score too low: ${score} (threshold: ${threshold})`);

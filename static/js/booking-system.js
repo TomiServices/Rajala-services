@@ -181,10 +181,13 @@ async function fetchWithRetry(url, options = {}, maxRetries = 3) {
                 lastError = new Error('Yhteysongelma palvelimeen. Tarkista, että evästeet ovat sallittuja ja yritä uudelleen.');
             }
             
-            // Don't retry on authentication errors (401) or reCAPTCHA errors
+            // Don't retry on authentication errors (401) or reCAPTCHA errors.
+            // reCAPTCHA v3 tokens are single-use: retrying with the same (already-consumed)
+            // token would always fail at Google's verification endpoint.
             if (error.message.includes('401') || 
                 error.message.includes('Turvavarmennus') ||
-                error.message.includes('Varmennusvirhe')) {
+                error.message.includes('Varmennusvirhe') ||
+                error.message.toLowerCase().includes('recaptcha')) {
                 console.error('Authentication/reCAPTCHA error, not retrying:', error);
                 break;
             }
@@ -1245,8 +1248,13 @@ function initializeBookingSystem() {
                         step2.classList.add('visible');
                         step2.style.display = 'block';
                         
-                        // Smooth scroll to step 2
+                        // FIX: Force FullCalendar to recalculate its dimensions now that
+                        // the container is visible, so day events (availability indicators)
+                        // render immediately without requiring a user click.
                         setTimeout(() => {
+                            if (calendar && calendar.updateSize) {
+                                calendar.updateSize();
+                            }
                             step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                         }, 100);
                     }
@@ -2009,37 +2017,13 @@ function initializeBookingSystem() {
                             timeGridContainer.style.display = 'none';
                         }
                         
-                        // FIX Issue 1: For mobile devices, don't apply compact class initially
-                        // This ensures cells are visible immediately when calendar appears
-                        // Also force updateSize to ensure proper rendering
-                        if (isMobileView) {
-                            // Skip compact class on mobile to prevent empty cells issue
-                            calendarEl.classList.add('expanded');
-                            // Force calendar to recalculate size after DOM is ready
-                            if (calendar && calendar.updateSize) {
-                                calendar.updateSize();
-                            }
-                        } else {
-                            // Make calendar compact initially on desktop, expand on first interaction
-                            calendarEl.classList.add('compact');
+                        // FIX: Always start expanded so day events load immediately on
+                        // all devices without requiring a user click first.
+                        calendarEl.classList.add('expanded');
+                        // Force calendar to recalculate size after DOM is ready
+                        if (calendar && calendar.updateSize) {
+                            calendar.updateSize();
                         }
-                        
-                        // Expand calendar on first click (for desktop users)
-                        let hasInteracted = false;
-                        const expandCalendar = function() {
-                            if (!hasInteracted) {
-                                calendarEl.classList.remove('compact');
-                                calendarEl.classList.add('expanded');
-                                hasInteracted = true;
-                                // Force calendar to update its size after expanding
-                                if (calendar && calendar.updateSize) {
-                                    calendar.updateSize();
-                                }
-                            }
-                        };
-                        
-                        calendarEl.addEventListener('click', expandCalendar, { once: false });
-                        calendarEl.addEventListener('touchstart', expandCalendar, { once: false });
                         
                         setupDropdownEventListener();
                     });
@@ -2256,7 +2240,7 @@ function initializeBookingSystem() {
             }
             
             if (!/^\+358\s?\d{1,3}\s?\d{4,}$/.test(phone)) {
-                document.getElementById('error').textContent = 'Syötä puhelinnumero muodossa +358 401234567!';
+                document.getElementById('error').textContent = 'Syötä oikeassa muodossa, esim. +358401935001';
                 return;
             }
             
