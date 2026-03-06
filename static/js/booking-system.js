@@ -131,6 +131,7 @@ function getDateKey(date) {
  */
 async function fetchWithRetry(url, options = {}, maxRetries = 3) {
     let lastError;
+    let nonRetryable = false;
     
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
         try {
@@ -140,37 +141,20 @@ async function fetchWithRetry(url, options = {}, maxRetries = 3) {
                 return await response.json();
             }
             
-            // Handle specific error codes with better messages
-            if (response.status === 401) {
-                // Try to get Finnish error message from backend
-                try {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Turvavarmennus epäonnistui. Yritä uudelleen.');
-                } catch (jsonError) {
-                    // If parsing fails, use generic message
-                    throw new Error('Turvavarmennus epäonnistui. Yritä uudelleen.');
-                }
-            } else if (response.status === 503) {
-                throw new Error(`Palvelu ei ole tällä hetkellä saatavilla (503). Yritä hetken kuluttua uudelleen.`);
-            } else if (response.status === 500) {
-                // Try to get error message from backend for 500 errors too
-                try {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Palvelinvirhe (500). Yritä hetken kuluttua uudelleen.');
-                } catch (jsonError) {
-                    throw new Error('Palvelinvirhe (500). Yritä hetken kuluttua uudelleen.');
-                }
-            } else if (response.status === 0) {
-                throw new Error(`Yhteysongelma palvelimeen. Tarkista verkkoyhteytesi.`);
-            } else {
-                // Try to get error details from response
-                try {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
-                } catch (jsonError) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
+            // Extract the error message from the response body (if JSON).
+            let errorMessage;
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.error || errorData.message || `HTTP ${response.status}: ${response.statusText}`;
+            } catch (_) {
+                errorMessage = `HTTP ${response.status}: ${response.statusText}`;
             }
+
+            // Attach the HTTP status to the error so the catch block can
+            // decide whether to retry without parsing the message string.
+            const responseError = new Error(errorMessage);
+            responseError.status = response.status;
+            throw responseError;
             
         } catch (error) {
             lastError = error;
@@ -181,14 +165,18 @@ async function fetchWithRetry(url, options = {}, maxRetries = 3) {
                 lastError = new Error('Yhteysongelma palvelimeen. Tarkista, että evästeet ovat sallittuja ja yritä uudelleen.');
             }
             
-            // Don't retry on authentication errors (401) or reCAPTCHA errors.
-            // reCAPTCHA v3 tokens are single-use: retrying with the same (already-consumed)
-            // token would always fail at Google's verification endpoint.
-            if (error.message.includes('401') || 
+            // Don't retry on 4xx client errors (deterministic failures — retrying
+            // with the same request data will always produce the same result).
+            // Exception: 429 Too Many Requests can be retried after a backoff.
+            // Also don't retry reCAPTCHA errors: v3 tokens are single-use and
+            // retrying with an already-consumed token will always fail.
+            const status = error.status || 0;
+            if ((status >= 400 && status < 500 && status !== 429) ||
                 error.message.includes('Turvavarmennus') ||
                 error.message.includes('Varmennusvirhe') ||
                 error.message.toLowerCase().includes('recaptcha')) {
-                console.error('Authentication/reCAPTCHA error, not retrying:', error);
+                nonRetryable = true;
+                console.error('Non-retryable error, not retrying:', error.message);
                 break;
             }
             
@@ -205,6 +193,14 @@ async function fetchWithRetry(url, options = {}, maxRetries = 3) {
     }
     
     console.error(`Fetch failed after ${maxRetries + 1} attempts:`, lastError);
+
+    // For non-retryable client errors, re-throw so the caller receives the
+    // specific error message from the backend (e.g. phone format error) rather
+    // than a generic fallback.
+    if (nonRetryable && lastError) {
+        throw lastError;
+    }
+
     return null;
 }
 
@@ -227,15 +223,22 @@ function initializeBookingSystem() {
 
     // Fetch bookings from backend Firebase Function with retry logic
     async function fetchBookings() {
-        const data = await fetchWithRetry(
-            'https://europe-north1-webbi1.cloudfunctions.net/bookings',
-            {},
-            2 // Max 2 retries
-        );
-        
-        if (data) {
-            console.log(`Successfully fetched ${data.length} bookings from server`);
-            return data;
+        try {
+            const data = await fetchWithRetry(
+                'https://europe-north1-webbi1.cloudfunctions.net/bookings',
+                {},
+                2 // Max 2 retries
+            );
+            
+            if (data) {
+                console.log(`Successfully fetched ${data.length} bookings from server`);
+                return data;
+            }
+        } catch (err) {
+            // fetchWithRetry only throws for non-retryable errors on POST requests;
+            // for the bookings GET endpoint a failure here is unexpected but should
+            // not break the calendar UI — fall through to the empty-array fallback.
+            console.error('Failed to fetch bookings from server:', err.message || err);
         }
         
         // Fallback to empty array instead of mock data for production
@@ -1251,8 +1254,8 @@ function initializeBookingSystem() {
                         // FIX: Force FullCalendar to recalculate its dimensions now that
                         // the container is visible, then refetch events so day availability
                         // indicators render immediately without requiring a manual tap.
-                        // A 1-second delay ensures the calendar container has fully rendered
-                        // before updateSize/refetchEvents are called.
+                        // A short delay ensures the container's display:block has been
+                        // applied and the layout engine has processed the change.
                         setTimeout(() => {
                             if (calendar && calendar.updateSize) {
                                 calendar.updateSize();
@@ -1263,7 +1266,7 @@ function initializeBookingSystem() {
                                 calendar.refetchEvents();
                             }
                             step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        }, 1000);
+                        }, 50);
                     }
                 } else {
                     // Hide booking form if task is deselected
@@ -2261,8 +2264,14 @@ function initializeBookingSystem() {
                 return;
             }
             
-            if (!/^\+358\s?\d{1,3}\s?\d{4,}$/.test(phone)) {
-                document.getElementById('error').textContent = 'Syötä oikeassa muodossa, esim. +358401935001';
+            // Normalise the phone number by stripping all whitespace before
+            // validating, so that formats like "+358 40 1234567", "+358401234567",
+            // and "0401234567" are all accepted consistently.
+            // NOTE: This regex must stay aligned with the backend phoneRegex in
+            // functions/index.js — update both places if the rules change.
+            const normalizedPhoneInput = phone.replace(/\s+/g, '');
+            if (!/^(\+358\d{6,12}|0\d{6,10})$/.test(normalizedPhoneInput)) {
+                document.getElementById('error').textContent = 'Syötä oikeassa muodossa, esim. +358401935001 tai 0401935001';
                 return;
             }
             
