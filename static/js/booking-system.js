@@ -123,20 +123,7 @@ function getDateKey(date) {
 }
 
 /**
- * Normalizes a Finnish phone number to international format (+358).
- * Accepts local format (e.g. "050 1234567") or international format ("+358 50 1234567").
- * @param {string} phone - Phone number to normalize
- * @returns {string} - Phone number in international format
- */
-function normalizePhoneNumber(phone) {
-    const trimmed = phone.trim();
-    if (/^0/.test(trimmed)) {
-        return '+358 ' + trimmed.substring(1).trim();
-    }
-    return trimmed;
-}
-
-/**
+ * Fetches data with retry logic using exponential backoff
  * @param {string} url - URL to fetch
  * @param {object} options - Fetch options
  * @param {number} maxRetries - Maximum number of retries (default: 3)
@@ -224,13 +211,7 @@ async function fetchWithRetry(url, options = {}, maxRetries = 3) {
 
 // Calendar booking logic (ready for backend API, e.g. Firebase Function)
 // Defer heavy initialization until after page load + idle time to minimize main-thread blocking
-let _bookingPollingIntervalId = null;
 function initializeBookingSystem() {
-    // Clear any existing polling interval from a previous initialization
-    if (_bookingPollingIntervalId !== null) {
-        clearInterval(_bookingPollingIntervalId);
-        _bookingPollingIntervalId = null;
-    }
     const calendarEl = document.getElementById('calendar');
     
     // Early return if calendar element doesn't exist
@@ -240,33 +221,6 @@ function initializeBookingSystem() {
     }
     
     let selectedSlot = null;
-
-    // Attach click handler to refresh button - hides the overlay and triggers calendar interaction
-    const refreshContainer = document.getElementById('calendarRefreshContainer');
-    const refreshBtn = document.getElementById('calendarRefreshBtn');
-    if (refreshBtn && refreshContainer) {
-        refreshBtn.addEventListener('click', function() {
-            refreshContainer.style.display = 'none';
-            // Simulate a click on the first available weekday in the calendar to trigger day loading
-            const calendarEl = document.getElementById('calendar');
-            if (calendarEl) {
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                const dayCells = calendarEl.querySelectorAll('.fc-daygrid-day');
-                for (const cell of dayCells) {
-                    const dateAttr = cell.getAttribute('data-date');
-                    if (dateAttr) {
-                        const cellDate = new Date(dateAttr);
-                        const weekdayNumber = cellDate.getDay();
-                        if (cellDate >= today && weekdayNumber >= 1 && weekdayNumber <= 5) {
-                            cell.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-                            break;
-                        }
-                    }
-                }
-            }
-        });
-    }
 
     // Fetch bookings from backend Firebase Function with retry logic
     async function fetchBookings() {
@@ -352,8 +306,8 @@ function initializeBookingSystem() {
             const slotTime = new Date(validDate);
             slotTime.setHours(hour, 0, 0, 0);
             
-            // Check if slot is in the past (use hour-based comparison for today to match consistent behavior)
-            const isPast = isToday ? (hour <= now.getHours()) : slotTime < now;
+            // Check if slot is in the past
+            const isPast = slotTime < now;
             
             // Check if specific slot is booked
             const isSlotBooked = bookings.some(b => {
@@ -892,13 +846,13 @@ function initializeBookingSystem() {
             tasks: [
                 { id: 'diagnostics', name: 'Vikakoodien luku ja nollaus', price: '40 €' },
                 { id: 'oil-change', name: 'Moottoriöljyjen vaihto', price: 'alkaen 50 €' },
-                { id: 'shock-absorber', name: 'Iskunvaimentimien ja jousituksen uusiminen', price: 'Pyydä tarjous' },
-                { id: 'suspension-parts', name: 'Tukivarsien, nivelien ja raidetankojen vaihto', price: 'Pyydä tarjous' },
-                { id: 'stabilizer-bar', name: 'Vakaajatankojen ja koiranluiden vaihto', price: 'Pyydä tarjous' },
-                { id: 'brake-repair', name: 'Jarrulevyjen, -palojen ja käsijarrujen vaihto', price: 'Pyydä tarjous' },
-                { id: 'exhaust-repair', name: 'Pakoputkistojen korjaukset', price: 'Pyydä tarjous' },
-                { id: 'wheel-bearing', name: 'Pyöränlaakerien vaihto', price: 'Pyydä tarjous' },
-                { id: 'other-repair', name: 'Muu viankorjaus', price: 'Pyydä tarjous' }
+                { id: 'shock-absorber', name: 'Iskunvaimentimien ja jousituksen uusiminen' },
+                { id: 'suspension-parts', name: 'Tukivarsien, nivelien ja raidetankojen vaihto' },
+                { id: 'stabilizer-bar', name: 'Vakaajatankojen ja koiranluiden vaihto' },
+                { id: 'brake-repair', name: 'Jarrulevyjen, -palojen ja käsijarrujen vaihto' },
+                { id: 'exhaust-repair', name: 'Pakoputkistojen korjaukset' },
+                { id: 'wheel-bearing', name: 'Pyöränlaakerien vaihto' },
+                { id: 'other-repair', name: 'Muu viankorjaus' }
             ]
         },
         rengastyot: {
@@ -925,8 +879,7 @@ function initializeBookingSystem() {
                         'Maasturi': '95 €',
                         'Pakettiauto': '100 €'
                     }
-                },
-                { id: 'tire-removal', name: 'Renkaiden irrotus vanteelta (4kpl)', price: '50 €' }
+                }
             ]
         },
         renkaidenasennus: {
@@ -976,6 +929,7 @@ function initializeBookingSystem() {
                         'Pakettiauto': '120 €'
                     }
                 },
+                { id: 'tire-removal', name: 'Renkaiden irrotus vanteelta (4kpl)', price: '50 €' },
                 { id: 'balancing-only', name: 'Pelkkä tasapainoitus', price: '30 €' }
             ]
         },
@@ -1015,8 +969,8 @@ function initializeBookingSystem() {
         if (taskObj.pricing && vehicleType && taskObj.pricing[vehicleType]) {
             // Use vehicle-specific price
             displayPrice = formatPriceForVehicleType(taskObj.pricing[vehicleType]);
-        } else if (taskObj.price) {
-            // Use generic price
+        } else if (taskObj.price && taskObj.price.toLowerCase() !== 'pyydä tarjous') {
+            // Use generic price (omit 'Pyydä tarjous' from display)
             displayPrice = formatPriceForVehicleType(taskObj.price);
         }
         
@@ -1249,12 +1203,12 @@ function initializeBookingSystem() {
                             // Use vehicle-specific price
                             displayPrice = formatPriceForVehicleType(task.pricing[vehicleType]);
                             option.textContent = `${task.name} ${displayPrice}`;
-                        } else if (task.price && task.price.trim() !== '') {
-                            // Use generic price
+                        } else if (task.price && task.price.trim() !== '' && task.price.toLowerCase() !== 'pyydä tarjous') {
+                            // Use generic price (omit 'Pyydä tarjous' from display)
                             displayPrice = formatPriceForVehicleType(task.price);
                             option.textContent = `${task.name} ${displayPrice}`;
                         } else {
-                            // No price available
+                            // No price available (or 'Pyydä tarjous' - show only name)
                             option.textContent = task.name;
                         }
                         taskSelect.appendChild(option);
@@ -1644,6 +1598,7 @@ function initializeBookingSystem() {
         }
         
         let calendar = null;
+        var loadingTimer = null;
         
         // FIX: Enhanced error detection and user feedback when FullCalendar fails to load
         // This helps users understand if their ad blocker or privacy settings are blocking the calendar
@@ -1815,16 +1770,6 @@ function initializeBookingSystem() {
                     const selectedDate = new Date(start);
                     selectedDate.setHours(9, 0, 0, 0);
                     
-                    // Visual feedback: highlight the selected day cell on desktop
-                    document.querySelectorAll('#calendar .fc-daygrid-day.day-selected').forEach(el => {
-                        el.classList.remove('day-selected');
-                    });
-                    const dateKey = getDateKey(selectedDate);
-                    if (dateKey) {
-                        const dayCell = document.querySelector(`#calendar .fc-daygrid-day[data-date="${dateKey}"]`);
-                        if (dayCell) dayCell.classList.add('day-selected');
-                    }
-                    
                     const hasAvailableSlots = populateTimeSelectionGrid(selectedDate, bookings);
                     
                     if (hasAvailableSlots) {
@@ -1872,16 +1817,6 @@ function initializeBookingSystem() {
                             const selectedDate = new Date(info.date);
                             selectedDate.setHours(9, 0, 0, 0);
                             
-                            // Visual feedback: highlight the selected day cell on desktop
-                            document.querySelectorAll('#calendar .fc-daygrid-day.day-selected').forEach(el => {
-                                el.classList.remove('day-selected');
-                            });
-                            const selectedDateKey = getDateKey(info.date);
-                            if (selectedDateKey) {
-                                const dayCell = document.querySelector(`#calendar .fc-daygrid-day[data-date="${selectedDateKey}"]`);
-                                if (dayCell) dayCell.classList.add('day-selected');
-                            }
-                            
                             const hasAvailableSlots = populateTimeSelectionGrid(selectedDate, bookings);
                             
                             if (hasAvailableSlots) {
@@ -1911,28 +1846,42 @@ function initializeBookingSystem() {
                     const evs = [];
                     const currentDate = new Date(fetchInfo.start);
                     const endDate = new Date(fetchInfo.end);
-                    
+
+                    // Pre-build a Map of bookings keyed by date for O(1) lookups
+                    const bookingsByDate = new Map();
+                    for (const b of bookings) {
+                        const key = getDateKey(b.aika);
+                        if (key) {
+                            if (!bookingsByDate.has(key)) bookingsByDate.set(key, []);
+                            bookingsByDate.get(key).push(b);
+                        }
+                    }
+
                     while (currentDate < endDate) {
                         const dayOfWeek = currentDate.getDay();
                         // Only process weekdays
                         if (dayOfWeek >= 1 && dayOfWeek <= 5) {
                             const dateKey = getDateKey(currentDate);
                             if (dateKey) {
-                                const dayBookingsCount = bookings.filter(b => {
-                                    const bookingDateKey = getDateKey(b.aika);
-                                    return bookingDateKey === dateKey;
-                                }).length;
-                                
-                                // Calculate total available slots for the day
-                                // For today, exclude past time slots (business hours 9-17)
+                                const dayBookings = bookingsByDate.get(dateKey) || [];
+
+                                // Count only future unbooked slots so that past slots
+                                // (e.g. 9:00–11:00 viewed at 15:00) are not shown as available
                                 const now = new Date();
-                                const todayKey = getDateKey(now);
-                                let totalSlots = 8; // 8 slots per day (9,10,11,12,13,14,15,16)
-                                if (dateKey === todayKey) {
-                                    const currentHour = now.getHours();
-                                    totalSlots = Math.max(0, 17 - Math.max(9, currentHour + 1));
+                                const isToday = getDateKey(now) === dateKey;
+                                let availableSlots = 0;
+                                for (let h = 9; h < 17; h++) {
+                                    if (isToday) {
+                                        const slotTime = new Date(currentDate);
+                                        slotTime.setHours(h, 0, 0, 0);
+                                        if (slotTime < now) continue;
+                                    }
+                                    const isBooked = dayBookings.some(b => {
+                                        const bt = new Date(b.aika);
+                                        return bt.getHours() === h;
+                                    });
+                                    if (!isBooked) availableSlots++;
                                 }
-                                const availableSlots = Math.max(0, totalSlots - dayBookingsCount);
                                 evs.push({
                                     title: `${availableSlots} paikkaa`,
                                     start: dateKey,
@@ -1947,9 +1896,18 @@ function initializeBookingSystem() {
                     }
                     
                     successCallback(evs);
+                    // Hide the refresh overlay and cancel delayed button timer once events are loaded
+                    clearTimeout(loadingTimer);
+                    requestAnimationFrame(function() {
+                        var overlay = document.getElementById('calendar-refresh-overlay');
+                        if (overlay) overlay.style.display = 'none';
+                    });
                 } catch (error) {
                     console.error('Error in events function:', error);
                     if (successCallback) successCallback([]);
+                    clearTimeout(loadingTimer);
+                    var overlay = document.getElementById('calendar-refresh-overlay');
+                    if (overlay) overlay.style.display = 'none';
                 }
             }
         });
@@ -1961,6 +1919,25 @@ function initializeBookingSystem() {
                 // FIX: Render immediately without delay to prevent white screen
                 try {
                     calendar.render();
+
+                    // Start 8-second timer: if calendar days haven't loaded by then, show "Päivitä" button
+                    loadingTimer = setTimeout(function() {
+                        var refreshBtn = document.getElementById('calendarRefreshBtn');
+                        if (refreshBtn) refreshBtn.style.display = 'block';
+                    }, 8000);
+                    
+                    // Setup "Päivitä" refresh button: hides immediately on click, then triggers updateSize + refetchEvents
+                    var refreshOverlay = document.getElementById('calendar-refresh-overlay');
+                    var refreshBtn = document.getElementById('calendarRefreshBtn');
+                    if (refreshBtn && refreshOverlay) {
+                        refreshBtn.addEventListener('click', function() {
+                            refreshOverlay.style.display = 'none';
+                            if (calendar) {
+                                if (calendar.updateSize) calendar.updateSize();
+                                if (calendar.refetchEvents) calendar.refetchEvents();
+                            }
+                        });
+                    }
                     
                     // FIX: Setup immediately after render (no nested setTimeout for better loading)
                     // Navigation button state management for month view
@@ -2032,30 +2009,39 @@ function initializeBookingSystem() {
                             timeGridContainer.style.display = 'none';
                         }
                         
-                        // Start calendar fully expanded so all days are visible immediately
-                        // without requiring a click interaction first
-                        calendarEl.classList.add('expanded');
-                        if (isMobileView && calendar && calendar.updateSize) {
-                            calendar.updateSize();
+                        // FIX Issue 1: For mobile devices, don't apply compact class initially
+                        // This ensures cells are visible immediately when calendar appears
+                        // Also force updateSize to ensure proper rendering
+                        if (isMobileView) {
+                            // Skip compact class on mobile to prevent empty cells issue
+                            calendarEl.classList.add('expanded');
+                            // Force calendar to recalculate size after DOM is ready
+                            if (calendar && calendar.updateSize) {
+                                calendar.updateSize();
+                            }
+                        } else {
+                            // Make calendar compact initially on desktop, expand on first interaction
+                            calendarEl.classList.add('compact');
                         }
                         
-                        setupDropdownEventListener();
-                        
-                        // Start periodic polling to refresh bookings for real-time updates
-                        // (handles external changes such as Google Calendar sync)
-                        _bookingPollingIntervalId = setInterval(async () => {
-                            try {
-                                const freshBookings = await fetchBookings();
-                                if (freshBookings) {
-                                    bookings = freshBookings;
-                                    if (calendar && typeof calendar.refetchEvents === 'function') {
-                                        calendar.refetchEvents();
-                                    }
+                        // Expand calendar on first click (for desktop users)
+                        let hasInteracted = false;
+                        const expandCalendar = function() {
+                            if (!hasInteracted) {
+                                calendarEl.classList.remove('compact');
+                                calendarEl.classList.add('expanded');
+                                hasInteracted = true;
+                                // Force calendar to update its size after expanding
+                                if (calendar && calendar.updateSize) {
+                                    calendar.updateSize();
                                 }
-                            } catch (pollError) {
-                                console.error('Error during periodic booking refresh:', pollError);
                             }
-                        }, 5 * 60 * 1000); // Refresh every 5 minutes
+                        };
+                        
+                        calendarEl.addEventListener('click', expandCalendar, { once: false });
+                        calendarEl.addEventListener('touchstart', expandCalendar, { once: false });
+                        
+                        setupDropdownEventListener();
                     });
                     
                 } catch (renderError) {
@@ -2109,9 +2095,6 @@ function initializeBookingSystem() {
                 }
                 
                 mockCalendar.style.display = 'block';
-                
-                // The refresh button click handler is already attached at initialization
-                // Just ensure it remains visible (it's already shown by default)
                 
                 // Add click handlers to mock slots
                 document.querySelectorAll('.mock-slot').forEach(slot => {
@@ -2264,7 +2247,6 @@ function initializeBookingSystem() {
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
-            const normalizedPhone = normalizePhoneNumber(phone);
             const aikaValue = document.getElementById('aika').value;
             const termsCheckbox = document.getElementById('termsCheckbox');
             
@@ -2273,8 +2255,8 @@ function initializeBookingSystem() {
                 return;
             }
             
-            if (!/^\+358\s?\d{1,3}\s?\d{4,}$/.test(normalizedPhone)) {
-                document.getElementById('error').textContent = 'Syötä puhelinnumero muodossa 050 1234567 tai +358 50 1234567!';
+            if (!/^\+358\s?\d{1,3}\s?\d{4,}$/.test(phone)) {
+                document.getElementById('error').textContent = 'Syötä puhelinnumero muodossa +358 401234567!';
                 return;
             }
             
@@ -2292,10 +2274,6 @@ function initializeBookingSystem() {
             const progressBar = document.getElementById('bookingProgress');
             const progressValue = document.getElementById('bookingProgressValue');
             const successBar = document.getElementById('successBar');
-            const submitBtn = document.querySelector('#bookingForm button[type="submit"]');
-            
-            // Add loading state to submit button for immediate user feedback
-            if (submitBtn) submitBtn.classList.add('btn-loading');
             
             // Hide success bar and show loading bar
             successBar.classList.remove('active');
@@ -2329,7 +2307,7 @@ function initializeBookingSystem() {
                 
                 // Send booking to backend Firebase Function with retry logic
                 const bookingData = {
-                    name, email, phone: normalizedPhone,
+                    name, email, phone,
                     aika: selectedSlot.toISOString(),
                     services: serviceData.services,
                     totalPrice: serviceData.totalPrice,
@@ -2355,7 +2333,6 @@ function initializeBookingSystem() {
                     // Hide loading bar and show success bar
                     progressBar.classList.remove('active');
                     successBar.classList.add('active');
-                    if (submitBtn) submitBtn.classList.remove('btn-loading');
                     
                     document.getElementById('msg').innerHTML = "Varaus onnistui! <br>Saat varausvahvistuksen sähköpostiisi pian.";
                     document.getElementById('bookingForm').reset();
@@ -2380,7 +2357,6 @@ function initializeBookingSystem() {
                 // Hide both bars on error
                 progressBar.classList.remove('active');
                 successBar.classList.remove('active');
-                if (submitBtn) submitBtn.classList.remove('btn-loading');
             }
         };
     });
