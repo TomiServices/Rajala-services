@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Feature Tests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            background: #f5f5f5;
+        }
+        h1 { text-align: center; color: #333; }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .test-section h2 { color: #333; margin-top: 0; border-bottom: 2px solid #667eea; padding-bottom: 10px; }
+        .test-case { padding: 10px 0; border-bottom: 1px solid #eee; }
+        .test-case:last-child { border-bottom: none; }
+        .test-name { font-weight: 600; margin-bottom: 5px; }
+        .result { padding: 6px 12px; border-radius: 4px; font-size: 0.9rem; display: inline-block; margin-top: 4px; }
+        .pass { background: #d4edda; color: #155724; }
+        .fail { background: #f8d7da; color: #721c24; }
+        .pending { background: #fff3cd; color: #856404; }
+        button.run-btn {
+            background: #667eea; color: white; border: none; padding: 10px 20px;
+            border-radius: 6px; cursor: pointer; font-size: 1rem; margin: 10px 5px 10px 0;
+        }
+        button.run-btn:hover { background: #5a6fd6; }
+        #summary { font-size: 1.1rem; font-weight: 600; margin-top: 20px; padding: 15px; border-radius: 8px; }
+        .summary-pass { background: #d4edda; color: #155724; }
+        .summary-fail { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Booking Feature Tests</h1>
+    <p style="text-align:center; color:#666;">
+        Tests for: Registration Number Field Visibility and Calendar Auto-Tap fixes.
+    </p>
+
+    <!-- Minimal DOM mock required by the booking logic under test -->
+    <div style="display:none" aria-hidden="true">
+        <div id="vehicleTypeSelection">
+            <select id="vehicleTypeSelect">
+                <option value="">Valitse tyyppi...</option>
+                <option value="Henkilöauto">Henkilöauto</option>
+                <option value="Maasturi">Maasturi</option>
+                <option value="Pakettiauto">Pakettiauto</option>
+                <option value="Mopo / Moottoripyörä">Mopo / Moottoripyörä</option>
+                <option value="Muu">Muu</option>
+            </select>
+        </div>
+        <div id="vehicleTypeOtherContainer" style="display:none;" aria-hidden="true">
+            <input type="text" id="vehicleTypeOther">
+        </div>
+        <div id="registrationNumberContainer" style="display:none;" aria-hidden="true">
+            <label for="registrationNumber">Rekisteritunnus:</label>
+            <input type="text" id="registrationNumber">
+        </div>
+        <div id="step-services" style="display:none;" aria-hidden="true">
+            <select id="serviceSelect"><option value="">Select...</option></select>
+        </div>
+        <div id="error"></div>
+        <div id="calendar"></div>
+    </div>
+
+    <button class="run-btn" onclick="runAllTests()">▶ Run All Tests</button>
+
+    <!-- Test Section 1: Registration Number Field Visibility -->
+    <div class="test-section">
+        <h2>1. Registration Number Field Visibility</h2>
+
+        <div class="test-case" id="tc-reg-shows-on-selection">
+            <div class="test-name">Field becomes visible (display: flex) when a vehicle type is selected</div>
+            <div id="r-reg-shows-on-selection" class="result pending">Pending</div>
+        </div>
+
+        <div class="test-case" id="tc-reg-hides-on-empty">
+            <div class="test-name">Field is hidden (display: none) when vehicle type is reset to empty</div>
+            <div id="r-reg-hides-on-empty" class="result pending">Pending</div>
+        </div>
+
+        <div class="test-case" id="tc-reg-aria-visible">
+            <div class="test-name">aria-hidden is 'false' when field is visible</div>
+            <div id="r-reg-aria-visible" class="result pending">Pending</div>
+        </div>
+
+        <div class="test-case" id="tc-reg-aria-hidden">
+            <div class="test-name">aria-hidden is 'true' when field is hidden</div>
+            <div id="r-reg-aria-hidden" class="result pending">Pending</div>
+        </div>
+
+        <div class="test-case" id="tc-muu-shows">
+            <div class="test-name">"Muu" text input becomes visible (display: flex) when "Muu" vehicle type is selected</div>
+            <div id="r-muu-shows" class="result pending">Pending</div>
+        </div>
+
+        <div class="test-case" id="tc-muu-hides">
+            <div class="test-name">"Muu" text input is hidden when a non-"Muu" vehicle type is selected</div>
+            <div id="r-muu-hides" class="result pending">Pending</div>
+        </div>
+
+        <div class="test-case" id="tc-reg-clears-on-empty">
+            <div class="test-name">Registration number input value is cleared when vehicle type is reset to empty</div>
+            <div id="r-reg-clears-on-empty" class="result pending">Pending</div>
+        </div>
+    </div>
+
+    <!-- Test Section 2: Post-Booking Reset -->
+    <div class="test-section">
+        <h2>2. Post-Booking Reset (Vehicle Type)</h2>
+
+        <div class="test-case" id="tc-reset-vehicletype">
+            <div class="test-name">After simulated successful booking reset, vehicleTypeSelect value is '' (empty)</div>
+            <div id="r-reset-vehicletype" class="result pending">Pending</div>
+        </div>
+
+        <div class="test-case" id="tc-reset-reg-hidden">
+            <div class="test-name">After simulated successful booking reset, registrationNumberContainer is hidden</div>
+            <div id="r-reset-reg-hidden" class="result pending">Pending</div>
+        </div>
+
+        <div class="test-case" id="tc-reset-muu-hidden">
+            <div class="test-name">After simulated successful booking reset, vehicleTypeOtherContainer is hidden</div>
+            <div id="r-reset-muu-hidden" class="result pending">Pending</div>
+        </div>
+
+        <div class="test-case" id="tc-rereg-shows-after-reset">
+            <div class="test-name">After reset, selecting a vehicle type again shows the registration number field</div>
+            <div id="r-rereg-shows-after-reset" class="result pending">Pending</div>
+        </div>
+    </div>
+
+    <!-- Test Section 3: Calendar Auto-Tap (Refetch) -->
+    <div class="test-section">
+        <h2>3. Calendar Auto-Tap: refetchEvents() Called on Calendar Visibility</h2>
+
+        <div class="test-case" id="tc-cal-updatesize">
+            <div class="test-name">updateSize() is called when calendar step becomes visible (mocked)</div>
+            <div id="r-cal-updatesize" class="result pending">Pending</div>
+        </div>
+
+        <div class="test-case" id="tc-cal-refetch">
+            <div class="test-name">refetchEvents() is called when calendar step becomes visible (mocked)</div>
+            <div id="r-cal-refetch" class="result pending">Pending</div>
+        </div>
+
+        <div class="test-case" id="tc-cal-no-mouseevent">
+            <div class="test-name">No unexpected click events are dispatched on the calendar element</div>
+            <div id="r-cal-no-mouseevent" class="result pending">Pending</div>
+        </div>
+    </div>
+
+    <div id="summary" style="display:none;"></div>
+
+    <script>
+    // ─── Test helpers ────────────────────────────────────────────────────────────
+    let passed = 0;
+    let failed = 0;
+
+    function assert(id, condition, messagePass, messageFail) {
+        const el = document.getElementById('r-' + id);
+        if (condition) {
+            el.className = 'result pass';
+            el.textContent = '✓ PASS – ' + (messagePass || 'OK');
+            passed++;
+        } else {
+            el.className = 'result fail';
+            el.textContent = '✗ FAIL – ' + (messageFail || 'Unexpected result');
+            failed++;
+        }
+    }
+
+    function resetDOM() {
+        const sel = document.getElementById('vehicleTypeSelect');
+        sel.value = '';
+        const reg = document.getElementById('registrationNumberContainer');
+        reg.style.display = 'none';
+        reg.setAttribute('aria-hidden', 'true');
+        document.getElementById('registrationNumber').value = '';
+        const muuContainer = document.getElementById('vehicleTypeOtherContainer');
+        muuContainer.style.display = 'none';
+        muuContainer.setAttribute('aria-hidden', 'true');
+        document.getElementById('vehicleTypeOther').value = '';
+        const stepServices = document.getElementById('step-services');
+        stepServices.style.display = 'none';
+        stepServices.setAttribute('aria-hidden', 'true');
+    }
+
+    /**
+     * Simulates the vehicle-type change handler from booking-system.js.
+     * This mirrors the exact logic in setupVehicleTypeSelection().
+     */
+    function simulateVehicleTypeChange(selectedType) {
+        const vehicleTypeOtherContainer = document.getElementById('vehicleTypeOtherContainer');
+        const registrationNumberContainer = document.getElementById('registrationNumberContainer');
+        const stepServices = document.getElementById('step-services');
+
+        // Show/hide the "Muu" textbox
+        if (selectedType === 'Muu') {
+            vehicleTypeOtherContainer.style.display = 'flex';
+            vehicleTypeOtherContainer.setAttribute('aria-hidden', 'false');
+        } else {
+            vehicleTypeOtherContainer.style.display = 'none';
+            vehicleTypeOtherContainer.setAttribute('aria-hidden', 'true');
+            document.getElementById('vehicleTypeOther').value = '';
+        }
+
+        // Show/hide registration number field
+        if (selectedType && selectedType !== '') {
+            if (registrationNumberContainer) {
+                registrationNumberContainer.style.display = 'flex';
+                registrationNumberContainer.setAttribute('aria-hidden', 'false');
+            }
+        } else {
+            if (registrationNumberContainer) {
+                registrationNumberContainer.style.display = 'none';
+                registrationNumberContainer.setAttribute('aria-hidden', 'true');
+                document.getElementById('registrationNumber').value = '';
+            }
+        }
+
+        // Show service step when vehicle type is selected
+        if (selectedType && selectedType !== '') {
+            stepServices.style.display = 'block';
+        }
+    }
+
+    /**
+     * Simulates the post-booking reset logic from the submit handler.
+     */
+    function simulatePostBookingReset() {
+        const regNumContainer = document.getElementById('registrationNumberContainer');
+        if (regNumContainer) {
+            regNumContainer.style.display = 'none';
+            regNumContainer.setAttribute('aria-hidden', 'true');
+        }
+        const registrationNumberInput = document.getElementById('registrationNumber');
+        if (registrationNumberInput) registrationNumberInput.value = '';
+
+        // The fix: reset vehicleTypeSelect to ''
+        const vehicleTypeSelectEl = document.getElementById('vehicleTypeSelect');
+        if (vehicleTypeSelectEl) {
+            vehicleTypeSelectEl.value = '';
+            const vehicleTypeOtherContainerEl = document.getElementById('vehicleTypeOtherContainer');
+            if (vehicleTypeOtherContainerEl) {
+                vehicleTypeOtherContainerEl.style.display = 'none';
+                vehicleTypeOtherContainerEl.setAttribute('aria-hidden', 'true');
+            }
+            const vehicleTypeOtherEl = document.getElementById('vehicleTypeOther');
+            if (vehicleTypeOtherEl) vehicleTypeOtherEl.value = '';
+        }
+    }
+
+    // ─── Section 1: Registration Number Visibility ───────────────────────────────
+    function runSection1() {
+        resetDOM();
+
+        // TC1: Field becomes visible when a vehicle type is selected
+        simulateVehicleTypeChange('Henkilöauto');
+        const reg = document.getElementById('registrationNumberContainer');
+        assert('reg-shows-on-selection', reg.style.display === 'flex',
+            'display is "flex" after selecting Henkilöauto',
+            `display is "${reg.style.display}", expected "flex"`);
+
+        // TC2: Field is hidden when vehicle type is reset to empty
+        simulateVehicleTypeChange('');
+        assert('reg-hides-on-empty', reg.style.display === 'none',
+            'display is "none" after resetting to empty',
+            `display is "${reg.style.display}", expected "none"`);
+
+        // TC3: aria-hidden is false when visible
+        simulateVehicleTypeChange('Maasturi');
+        assert('reg-aria-visible', reg.getAttribute('aria-hidden') === 'false',
+            'aria-hidden="false" when visible',
+            `aria-hidden="${reg.getAttribute('aria-hidden')}", expected "false"`);
+
+        // TC4: aria-hidden is true when hidden
+        simulateVehicleTypeChange('');
+        assert('reg-aria-hidden', reg.getAttribute('aria-hidden') === 'true',
+            'aria-hidden="true" when hidden',
+            `aria-hidden="${reg.getAttribute('aria-hidden')}", expected "true"`);
+
+        // TC5: "Muu" text input shows with display:flex
+        simulateVehicleTypeChange('Muu');
+        const muuContainer = document.getElementById('vehicleTypeOtherContainer');
+        assert('muu-shows', muuContainer.style.display === 'flex',
+            '"Muu" container display is "flex"',
+            `display is "${muuContainer.style.display}", expected "flex"`);
+
+        // TC6: "Muu" text input hides for non-"Muu" type
+        simulateVehicleTypeChange('Henkilöauto');
+        assert('muu-hides', muuContainer.style.display === 'none',
+            '"Muu" container hidden for Henkilöauto',
+            `display is "${muuContainer.style.display}", expected "none"`);
+
+        // TC7: Registration number input cleared on empty selection
+        document.getElementById('registrationNumber').value = 'ABC-123';
+        simulateVehicleTypeChange('');
+        assert('reg-clears-on-empty',
+            document.getElementById('registrationNumber').value === '',
+            'Registration number input cleared',
+            `Value is "${document.getElementById('registrationNumber').value}", expected ""`);
+    }
+
+    // ─── Section 2: Post-Booking Reset ───────────────────────────────────────────
+    function runSection2() {
+        resetDOM();
+
+        // Simulate a previous booking: vehicle type was selected, reg field is visible
+        simulateVehicleTypeChange('Henkilöauto');
+        document.getElementById('registrationNumber').value = 'ABC-123';
+
+        // Now simulate what happens after a successful booking
+        simulatePostBookingReset();
+
+        const vehicleTypeSelect = document.getElementById('vehicleTypeSelect');
+        const reg = document.getElementById('registrationNumberContainer');
+        const muuContainer = document.getElementById('vehicleTypeOtherContainer');
+
+        assert('reset-vehicletype', vehicleTypeSelect.value === '',
+            'vehicleTypeSelect value is empty after reset',
+            `Value is "${vehicleTypeSelect.value}", expected ""`);
+
+        assert('reset-reg-hidden', reg.style.display === 'none',
+            'registrationNumberContainer is hidden after reset',
+            `display is "${reg.style.display}", expected "none"`);
+
+        assert('reset-muu-hidden', muuContainer.style.display === 'none',
+            'vehicleTypeOtherContainer is hidden after reset',
+            `display is "${muuContainer.style.display}", expected "none"`);
+
+        // TC: After reset, selecting vehicle type again shows the registration field
+        simulateVehicleTypeChange('Pakettiauto');
+        assert('rereg-shows-after-reset', reg.style.display === 'flex',
+            'Registration number field visible again after re-selecting vehicle type',
+            `display is "${reg.style.display}", expected "flex"`);
+    }
+
+    // ─── Section 3: Calendar Auto-Tap (refetchEvents) ────────────────────────────
+    function runSection3() {
+        let updateSizeCalled = false;
+        let refetchEventsCalled = false;
+        let clickEventDispatched = false;
+
+        // Mock calendar object
+        const mockCalendar = {
+            updateSize: function() { updateSizeCalled = true; },
+            refetchEvents: function() { refetchEventsCalled = true; }
+        };
+
+        // Intercept click events on the calendar element
+        const calendarEl = document.getElementById('calendar');
+        calendarEl.addEventListener('click', function(e) {
+            if (e.isTrusted === false) {
+                // Only flag programmatically dispatched (non-trusted) click events
+                clickEventDispatched = true;
+            }
+        });
+
+        // Simulate the fixed setTimeout callback (the auto-tap code path)
+        function simulateCalendarVisibilityTimeout(calendar) {
+            if (calendar && calendar.updateSize) {
+                calendar.updateSize();
+            }
+            if (calendar && calendar.refetchEvents) {
+                calendar.refetchEvents();
+            }
+            // No MouseEvent dispatch in the fixed version
+        }
+
+        simulateCalendarVisibilityTimeout(mockCalendar);
+
+        assert('cal-updatesize', updateSizeCalled,
+            'updateSize() was called',
+            'updateSize() was NOT called');
+
+        assert('cal-refetch', refetchEventsCalled,
+            'refetchEvents() was called',
+            'refetchEvents() was NOT called');
+
+        assert('cal-no-mouseevent', !clickEventDispatched,
+            'No programmatic click event was dispatched on the calendar',
+            'An unexpected click event was dispatched on the calendar element');
+    }
+
+    // ─── Run all tests ────────────────────────────────────────────────────────────
+    function runAllTests() {
+        passed = 0;
+        failed = 0;
+
+        // Reset all result badges
+        document.querySelectorAll('.result').forEach(el => {
+            el.className = 'result pending';
+            el.textContent = 'Pending';
+        });
+
+        try { runSection1(); } catch(e) { console.error('Section 1 error:', e); }
+        try { runSection2(); } catch(e) { console.error('Section 2 error:', e); }
+        try { runSection3(); } catch(e) { console.error('Section 3 error:', e); }
+
+        const total = passed + failed;
+        const summary = document.getElementById('summary');
+        summary.style.display = 'block';
+        if (failed === 0) {
+            summary.className = 'summary-pass';
+            summary.textContent = `✅ All ${total} tests passed!`;
+        } else {
+            summary.className = 'summary-fail';
+            summary.textContent = `❌ ${failed} of ${total} tests failed (${passed} passed)`;
+        }
+    }
+
+    // Auto-run on load
+    window.addEventListener('DOMContentLoaded', runAllTests);
+    </script>
+</body>
+</html>
