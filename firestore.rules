@@ -1,0 +1,83 @@
+rules_version = '2';
+
+// Firestore Security Rules for Rajala Services Booking System
+// Updated: 2026-01-13 - Migrated to Webbi1 Firebase project
+// 
+// These rules control access to the booking collection (varaukset) in Firestore.
+// They ensure that only authenticated users and authorized service accounts can
+// access booking data, protecting customer privacy and preventing unauthorized access.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Booking collection access rules
+    // Collection name: varaukset (Finnish for "bookings")
+    match /varaukset/{id} {
+      // Allow read and write if any of the following conditions are met:
+      allow read, write: if request.auth != null &&
+        (
+          // 1. User has admin privileges (set via custom claims)
+          request.auth.token.admin == true ||
+          
+          // 2. User is accessing their own booking
+          //    (userId field must match the authenticated user's UID)
+          request.auth.uid == resource.data.userId ||
+          
+          // 3. Creating a new booking where userId matches auth UID
+          //    This allows users to create their own bookings
+          (!exists(/databases/$(database)/documents/varaukset/$(id)) && 
+           request.resource.data.userId == request.auth.uid) ||
+          
+          // 4. Firebase Email Extension service account
+          //    Allows the Trigger Email from Firestore extension to read bookings
+          //    in order to send confirmation emails
+          request.auth.token.email == "ext-firestore-send-email@Webbi1.iam.gserviceaccount.com" ||
+          
+          // 5. Google Compute Engine default service account
+          //    This is used by Firebase Functions for server-side operations
+          //    Pattern matches any compute service account (format: {number}-compute@developer.gserviceaccount.com)
+          request.auth.token.email.matches(".*-compute@developer.gserviceaccount.com") ||
+          
+          // 6. Default extension service account
+          //    Allows Firebase Extensions default service account to access bookings
+          request.auth.token.email == "ext-default@webbi1.iam.gserviceaccount.com"
+        );
+    }
+    
+    // Mail collection access (used by Firebase Email Extension)
+    // This collection stores email documents that trigger the email sending process
+    match /mail/{mailId} {
+      // Only allow service accounts to read/write mail documents
+      // This prevents users from seeing email content or triggering unwanted emails
+      allow read, write: if request.auth != null &&
+        (
+          // Admin users can read mail documents for debugging
+          request.auth.token.admin == true ||
+          
+          // Email extension service account needs full access
+          request.auth.token.email == "ext-firestore-send-email@Webbi1.iam.gserviceaccount.com" ||
+          
+          // Compute service account for Firebase Functions
+          request.auth.token.email.matches(".*-compute@developer.gserviceaccount.com")
+        );
+    }
+    
+    // Calendar watch collection (stores Google Calendar webhook registrations)
+    // Used to track active webhook subscriptions for calendar sync
+    match /calendarWatch/{watchId} {
+      // Only allow service accounts to manage watch registrations
+      allow read, write: if request.auth != null &&
+        (
+          request.auth.token.admin == true ||
+          request.auth.token.email.matches(".*-compute@developer.gserviceaccount.com") ||
+          request.auth.token.email == "ext-default@webbi1.iam.gserviceaccount.com"
+        );
+    }
+    
+    // Default deny rule for all other collections
+    // This ensures that any collection not explicitly allowed above is protected
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

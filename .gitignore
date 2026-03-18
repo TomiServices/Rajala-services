@@ -1,0 +1,28 @@
+# Ignore temporary files
+*.tmp
+*.bak
+*.log
+
+# Ignore environment files (except .env.example)
+*.env
+.env.*
+!.env.example
+functions/.env
+functions/.env.*
+!functions/.env.example
+
+# Ignore node_modules folders
+node_modules/
+functions/node_modules/
+
+# Ignore IDE settings
+.vscode/
+.idea/
+
+# Ignore Firebase emulator and Google CLI files
+.firebase/
+functions/.runtimeconfig.json
+functions/kalenteri.json
+functions/service-account.json
+*service-account*.json
+calendar-key.json

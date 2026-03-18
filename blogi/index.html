@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,user-scalable=yes">
+    <meta name="description" content="Fixnero blogi - Vinkkejä ja ohjeita auton hoitoon, huoltoon ja ylläpitoon Espoossa. Asiantuntija-artikkelit rengastöistä, pesusta, kiillotuksesta ja muusta autohuollosta.">
+    <meta name="keywords" content="autoblogi, auton hoito, autohuolto vinkit, renkaiden vaihto, auton pesu, Espoo">
+    <title>Blogi - Fixnero Autohuolto Espoo</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://rajala-services.com/blogi/">
+    <meta property="og:title" content="Blogi - Fixnero Autohuolto Espoo">
+    <meta property="og:description" content="Asiantuntija-artikkelit auton hoidosta ja huollosta. Vinkkejä ja ohjeita autoilijoille Espoossa.">
+    <meta property="og:image" content="https://rajala-services.com/FXNRv.webp">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://rajala-services.com/blogi/">
+    <meta property="twitter:title" content="Blogi - Fixnero Autohuolto Espoo">
+    <meta property="twitter:description" content="Asiantuntija-artikkelit auton hoidosta ja huollosta. Vinkkejä ja ohjeita autoilijoille Espoossa.">
+    <meta property="twitter:image" content="https://rajala-services.com/FXNRv.webp">
+    
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://rajala-services.com/blogi/">
+    
+    <!-- Favicon - Multiple formats for browser and search engine compatibility -->
+    <link rel="icon" type="image/svg+xml" href="../static/icons/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="../static/icons/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/icons/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="../static/icons/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="../static/icons/favicon-64x64.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../static/icons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="../static/icons/favicon-128x128.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../static/icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-title" content="Fixnero">
+    <link rel="manifest" href="../site.webmanifest">
+    <meta name="theme-color" content="#000000">
+    
+    <!-- Blog Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Fixnero Blogi",
+        "description": "Asiantuntija-artikkelit auton hoidosta ja huollosta",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Fixnero Oy",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://rajala-services.com/FXNRv.webp"
+            }
+        },
+        "url": "https://rajala-services.com/blogi/"
+    }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/visual-emphasis.css">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8f8f8 0%, #e0e0e0 100%);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        /* Top banner - matching main page */
+        .top-banner {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: #000000;
+            color: #ffffff;
+            text-align: center;
+            padding: 4px 0;
+            z-index: 1002;
+            font-weight: 400;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Navigation bar - matching main page */
+        nav {
+            position: fixed;
+            top: 20px; left: 0; right: 0;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1003;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        nav img {
+            height: 50px;
+            margin-left: 10px;
+            margin-right: 15px;
+            filter: brightness(1.1);
+            transition: all 0.3s ease;
+        }
+        nav img:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+        nav a {
+            color: #ffffff;
+            padding: 16px 18px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            display: block;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0 2px;
+        }
+        nav a:hover, nav a.nav-active {
+            background: linear-gradient(135deg, #333333, #1a1a1a);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        
+        /* Laptop screen adjustments */
+        @media (min-width: 1280px) and (max-width: 1366px) {
+            nav {
+                padding: 0 10px;
+            }
+            nav img {
+                height: 45px;
+                margin-left: 5px;
+                margin-right: 10px;
+            }
+            nav a {
+                font-size: 15px;
+                padding: 14px 12px;
+                margin: 0 1px;
+            }
+        }
+        
+        /* Medium desktop screens (1367px - 1599px) - scale down logo to prevent overflow */
+        @media (min-width: 1367px) and (max-width: 1599px) {
+            nav {
+                padding: 0 12px;
+            }
+            nav img {
+                height: 42px;
+                margin-left: 8px;
+                margin-right: 12px;
+            }
+            nav a {
+                font-size: 16px;
+                padding: 15px 14px;
+                margin: 0 1px;
+            }
+        }
+        
+        /* Large desktop screens (1600px - 1919px) - moderate logo size */
+        @media (min-width: 1600px) and (max-width: 1919px) {
+            nav {
+                padding: 0 15px;
+            }
+            nav img {
+                height: 46px;
+                margin-left: 10px;
+                margin-right: 14px;
+            }
+            nav a {
+                font-size: 17px;
+                padding: 16px 16px;
+                margin: 0 2px;
+            }
+        }
+        
+        /* Hamburger menu */
+        .hamburger-menu {
+            display: none;
+            cursor: pointer;
+            padding: 0;
+            background: linear-gradient(135deg, rgba(40,40,40,0.95), rgba(20,20,20,0.95));
+            position: fixed;
+            top: 24px; right: 12px;
+            z-index: 1004;
+            border-radius: 8px;
+            width: 48px;
+            height: 48px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+            border: 1px solid white;
+            /* Reset button styles */
+            font: inherit;
+            color: inherit;
+            outline: none;
+        }
+        .hamburger-menu:hover {
+            background: linear-gradient(135deg, rgba(50,50,50,0.98), rgba(30,30,30,0.98));
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+        .hamburger-menu:active {
+            transform: translateY(0) scale(0.96);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .hamburger-menu span {
+            display: block;
+            width: 20px; 
+            height: 2px;
+            margin: 4.5px auto;
+            background: linear-gradient(90deg, #ffffff, #e0e0e0);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 2px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .hamburger-menu.active {
+            background: linear-gradient(135deg, rgba(30,30,30,0.98), rgba(10,10,10,0.98));
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12);
+        }
+        .hamburger-menu.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+        .hamburger-menu.active span:nth-child(2) {
+            opacity: 0;
+            transform: scale(0);
+        }
+        .hamburger-menu.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+        
+        @media (max-width: 1279px) {
+            .hamburger-menu { display: flex !important; align-items: center; justify-content: center; }
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 250px;
+                top: 0;
+                left: 0;
+                transform: translateX(-100%);
+                transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                height: 100%;
+                padding: 0;
+                background: #000000;
+                box-shadow: 8px 0 40px rgba(0,0,0,0.6);
+                overflow-y: auto;
+                overflow-x: hidden;
+                backdrop-filter: blur(20px);
+                border-right: 1px solid rgba(255,255,255,0.1);
+            }
+            nav.active { 
+                transform: translateX(0);
+                box-shadow: 8px 0 50px rgba(0,0,0,0.8);
+            }
+            nav > a:first-child {
+                background: #000000;
+                padding: 20px;
+                text-align: left;
+                width: 100%;
+                border-bottom: 2px solid rgba(255,255,255,0.2);
+                margin: 0;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+            }
+            nav > a:first-child img {
+                margin: 0;
+                margin-left: 10px;
+                max-width: 200px;
+                height: auto;
+                filter: brightness(1.1);
+            }
+            nav a:not(:first-child) {
+                color: #ffffff;
+                font-size: 16px;
+                font-weight: 500;
+                padding: 18px 25px;
+                text-align: left;
+                width: 100%;
+                margin: 0;
+                position: relative;
+                border-bottom: 1px solid rgba(255,255,255,0.15);
+                background: linear-gradient(135deg, #000000 0%, #000000 100%);
+                transition: all 0.3s ease;
+            }
+            nav a:not(:first-child):hover { 
+                background: linear-gradient(135deg, #4a4a4a, #2a2a2a) !important;
+                color: #ffffff !important;
+                transform: translateX(8px);
+                padding-left: 30px;
+                box-shadow: inset 0 0 20px rgba(255,255,255,0.1);
+            }
+            nav a:not(:first-child):active {
+                transform: translateX(4px) scale(0.98);
+                background: linear-gradient(135deg, #1a1a1a, #0a0a0a) !important;
+            }
+        }
+        
+        /* Container with proper spacing for fixed banner */
+        .container {
+            max-width: 1000px;
+            margin: 80px auto 40px;
+            padding: 30px 20px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        header {
+            background: transparent;
+            color: #333333;
+            padding: 0 0 30px 0;
+            text-align: center;
+            border-bottom: 3px solid #f0f0f0;
+            margin-bottom: 40px;
+        }
+        header h1 {
+            margin: 0 0 15px 0;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+            font-style: italic;
+            font-size: 2.8rem;
+            color: #1a1a1a;
+            letter-spacing: 0.05em;
+        }
+        header h1 .gradient-text {
+            background: linear-gradient(135deg, #333333, #555555);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        header h1 .emoji {
+            -webkit-text-fill-color: initial;
+            font-style: normal;
+        }
+        header p {
+            margin: 10px 0 0 0;
+            color: #555555;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .back-link {
+            display: inline-block;
+            margin: 0 0 30px 0;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #666666, #444444);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .back-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .blog-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        /* Animated background pattern for blog cards */
+        .blog-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                #f8f8f8 0px,
+                #f8f8f8 30px,
+                #ffffff 30px,
+                #ffffff 60px
+            );
+            opacity: 0.3;
+            z-index: 0;
+            pointer-events: none;
+            border-radius: 15px;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        }
+        .blog-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        .blog-card:hover img {
+            transform: scale(1.05);
+        }
+        .blog-card-content {
+            padding: 25px;
+            position: relative;
+            z-index: 1;
+        }
+        .blog-card h2 {
+            margin: 0 0 12px 0;
+            font-family: 'Bebas Neue', 'Yanone Kaffeesatz', 'Impact', 'Arial Black', sans-serif;
+            font-style: italic;
+            font-size: 1.6rem;
+            color: #1a1a1a;
+            letter-spacing: 0.05em;
+        }
+        .blog-card .date {
+            color: #555555;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: block;
+            font-weight: 500;
+        }
+        .blog-card p {
+            color: #333333;
+            margin: 0 0 20px 0;
+            line-height: 1.7;
+        }
+        .blog-card a {
+            display: inline-block;
+            padding: 10px 24px;
+            background: #3FA9F5;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(63, 169, 245, 0.3);
+            margin: 5px;
+        }
+        .blog-card a:hover {
+            background: #5CB8FF;
+            box-shadow: 0 0 20px rgba(63, 169, 245, 0.6), 0 0 40px rgba(63, 169, 245, 0.4);
+            transform: translateY(-2px);
+        }
+        footer {
+            background: #000000;
+            color: white;
+            padding: 0;
+            margin-top: 60px;
+        }
+        footer a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .top-banner {
+                font-size: 0.75rem;
+                padding: 6px 0;
+            }
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 2.2rem;
+            }
+            .container {
+                margin: 70px 15px 30px;
+                padding: 20px 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            nav {
+                width: 260px;
+            }
+            nav > a:first-child {
+                padding: 15px 10px;
+            }
+            header h1 {
+                font-size: 1.8rem;
+            }
+            .blog-card img {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-banner">
+        <a href="tel:+358401935001" style="color: inherit; text-decoration: none;">📞 Puhelin: 040 1935001</a> | 
+        <a href="mailto:info@fixnero.fi" style="color: inherit; text-decoration: none;">📧 info@fixnero.fi</a> | 
+        <a href="../index#kartta" style="color: inherit; text-decoration: none;">📍 Tiilenvalajantie 6, 02330 Espoo</a>
+    </div>
+
+    <button class="hamburger-menu" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+
+    <nav id="nav">
+        <a href="../index#top"><img src="https://rajala-services.com/FXNRv.webp" alt="Fixnero - Autohuolto Espoo"></a>
+        <a href="../index#pesupalvelut">Autopesu</a>
+        <a href="../index#sisapuhdistus">Sisäpuhdistus</a>
+        <a href="../index#kiilloitus">Kiillotus</a>
+        <a href="../index#kolhukorjaus">Kolhukorjaus</a>
+        <a href="../index#korjaustyot">Korjaustyöt</a>
+        <a href="../index#rengastyot">Rengastyöt</a>
+        <a href="../index#lasikorjaus">Lasikorjaus</a>
+        <a href="../index#hinnasto">Hinnasto</a>
+        <a href="../index#yhteystiedot">Yhteystiedot</a>
+    </nav>
+
+    <div class="container">
+        <a href="../index" class="back-link">← Takaisin etusivulle</a>
+        
+        <header>
+            <h1><span class="emoji">📰</span> <span class="gradient-text">Fixnero Blogi</span></h1>
+            <p>Vinkkejä ja ohjeita auton hoitoon ja huoltoon</p>
+        </header>
+        
+        <div class="blog-grid">
+            <!-- Blog Post 2 -->
+            <article class="blog-card">
+                <img src="../kiilloitus.jpg" alt="Auton kiillotus" loading="lazy">
+                <div class="blog-card-content">
+                    <h2>Auton kiillotuksen hyödyt</h2>
+                    <span class="date">📅 18. lokakuuta 2025</span>
+                    <p>Miksi auton kiillotus kannattaa? Selvitämme kiillotuksen hyödyt ja kerromme, milloin kannattaa panostaa ammattilaiseen kiillotukseen.</p>
+                    <a href="auton-kiillotuksen-hyodyt">Lue artikkeli →</a>
+                </div>
+            </article>
+            
+            <!-- Blog Post 3 -->
+            <article class="blog-card">
+                <img src="../sisapuhdistus.jpg" alt="Sisäpuhdistus" loading="lazy">
+                <div class="blog-card-content">
+                    <h2>Auton sisäpuhdistuksen merkitys</h2>
+                    <span class="date">📅 15. lokakuuta 2025</span>
+                    <p>Puhdas autontila vaikuttaa ajomukavuuteen ja auton arvoon. Kerromme, miksi säännöllinen sisäpuhdistus on tärkeää.</p>
+                    <a href="sisapuhdistuksen-merkitys">Lue artikkeli →</a>
+                </div>
+            </article>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer">
+            <div class="logo-container footer-section">
+                <a href="../index#top"><img src="https://rajala-services.com/FXNRv.webp" alt="Fixnero - Autohuolto Espoo, rengastyöt ja pesupalvelut" loading="lazy"></a>
+                <p>Fixnero © 2025. All Rights Reserved.</p>
+                <p style="margin-top: 10px; font-size: 0.9rem;">
+                    <a href="../cookie-policy" style="color: #ffffff; text-decoration: none;">Evästekäytäntö</a> | 
+                    <a href="../tietosuojaseloste" style="color: #ffffff; text-decoration: none;">Tietosuojaseloste</a>
+                </p>
+                <div class="social-media-links" style="margin-top: 15px;">
+                    <p style="font-weight: 600; margin-bottom: 10px;">Seuraa meitä:</p>
+                    <a href="https://m.facebook.com/100082419182792/" target="_blank" rel="noopener" style="display: inline-block; margin: 0 10px; padding-right: 10px; border-right: 2px solid #666666; color: #1877f2; font-size: 1.5rem; text-decoration: none;" aria-label="Facebook">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com/fixnero.fi?igsh=MTFvdThjbGk5NmJhbQ==" target="_blank" rel="noopener" style="display: inline-block; margin: 0 10px; padding-right: 10px; border-right: 2px solid #666666; color: #E4405F; font-size: 1.5rem; text-decoration: none;" aria-label="Instagram">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                    <a href="https://wa.me/358401935001" target="_blank" rel="noopener" style="display: inline-block; margin: 0 10px; color: #25D366; font-size: 1.5rem; text-decoration: none;" aria-label="WhatsApp">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    </a>
+                </div>
+            </div>
+            <div class="services-section footer-section">
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: #ffffff;">Palvelumme</h3>
+                <a href="../pesupalvelut" title="Autopesu Espoo - Käsinpesu ja vahaukset">Autopesu</a>
+                <a href="../sisapuhdistus" title="Sisäpuhdistus Espoo - Auton sisätilojen puhdistus">Sisäpuhdistus</a>
+                <a href="../kiilloitus" title="Kiillotus Espoo - Koneellinen kiillotus ja pinnoitus">Kiillotus</a>
+                <a href="../kolhukorjaus" title="Kolhukorjaus Espoo - Lommojen oikaisu ja ruostekorjaukset">Kolhukorjaus</a>
+                <a href="../korjaustyot" title="Korjaustyöt Espoo - Autohuolto ja katsastuskorjaukset">Korjaustyöt</a>
+                <a href="../rengastyot" title="Rengastyöt Espoo - Renkaiden vaihto ja rengashotelli">Rengastyöt</a>
+                <a href="../lasikorjaus" title="Lasikorjaus Espoo - Tuulilasin korjaus ja vaihto">Lasikorjaus</a>
+                <a href="../index#hinnasto">Hinnasto</a>
+                <a href="../index#yhteystiedot">Yhteystiedot</a>
+                <a href="../tyonnaytteet" title="Työnäytteet - Aiemmat työt">Työnäytteet</a>
+                <a href="../tietoa-meista" title="Tietoa meistä - Tutustu Fixnero autohuoltoon">Tietoa meistä</a>
+                <a href="../blogi/" title="Blogi - Vinkkejä auton hoitoon">Blogi</a>
+            </div>
+            <div class="contact-section footer-section">
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: #ffffff;">Yhteystiedot</h3>
+                <p style="color: #ffffff;"><strong style="color: #ffffff;">📞 Puhelin:</strong> <a href="tel:+358401935001" style="color: #ffffff; text-decoration: none;">040 1935001</a></p>
+                <p style="color: #ffffff;"><strong style="color: #ffffff;">📧 Sähköposti:</strong> <a href="mailto:info@fixnero.fi" style="color: #ffffff;">info@fixnero.fi</a></p>
+                <p style="color: #ffffff;"><strong style="color: #ffffff;">🕐 Aukioloajat:</strong></p>
+                <p style="margin-left: 20px; color: #ffffff;">Ma-Pe: 9:00-17:00<br>La-Su: Suljettu</p>
+                <p style="color: #ffffff;"><strong style="color: #ffffff;">📍 Osoite:</strong><br>Tiilenvalajantie 6<br>02330 Espoo (Kivenlahti)<br><small style="color: #ffffff;">Sisäpiha, keskimmäinen nosto-ovi<br>Plus katsastuksen vieressä</small></p>
+            </div>
+        </div>
+    </footer>
+    
+    <style>
+        .footer {
+            background: #000000;
+            color: #ffffff;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+            margin: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        .footer-section a { 
+            color: #ffffff; 
+            text-decoration: underline;
+            margin: 8px 0;
+        }
+        .footer-section p { 
+            color: #ffffff;
+        }
+        .footer-section h3, .footer-section h4, .footer-section p {
+            margin: 8px 0;
+        }
+        .logo-container img {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        @media (max-width: 768px) {
+            .footer { flex-direction: column; align-items: center; }
+            .footer-section { align-items: center; text-align: center; }
+        }
+    </style>
+    
+    <script src="../static/js/ui-interactions.min.js" defer></script>
+    <!-- Cookie Consent Banner - GDPR Compliant -->
+    <script src="../static/js/cookie-consent.min.js" defer></script>
+</body>
+</html>
