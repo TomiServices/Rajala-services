@@ -107,6 +107,8 @@ function getEmailMethod(mailDocId, emailSent) {
 // =======================
 /**
  * Calls fn() up to maxAttempts times, waiting baseDelayMs * 2^(attempt-1) + jitter between retries.
+ * 4xx HTTP errors (except 429 Too Many Requests) are not retried because they represent
+ * permanent failures — retrying with the same request will always produce the same result.
  * @param {Function} fn - Async function to call
  * @param {number} maxAttempts - Maximum number of attempts (default 3)
  * @param {number} baseDelayMs - Base delay in milliseconds (default 500)
@@ -119,6 +121,14 @@ async function withRetry(fn, maxAttempts = 3, baseDelayMs = 500) {
       return await fn();
     } catch (err) {
       lastError = err;
+      // Derive the HTTP status from wherever the SDK places it.
+      // @sendgrid/mail stores it in err.code; some SDKs use err.response.status.
+      const status = err.code || (err.response && (err.response.status || err.response.statusCode)) || 0;
+      // Don't retry 4xx client errors (they are deterministic failures).
+      // Exception: 429 Too Many Requests — the server is asking us to back off and retry.
+      if (typeof status === 'number' && status >= 400 && status < 500 && status !== 429) {
+        break;
+      }
       if (attempt < maxAttempts) {
         const jitter = Math.random() * baseDelayMs;
         const delay = baseDelayMs * Math.pow(2, attempt - 1) + jitter;
@@ -342,12 +352,25 @@ function initializeEmailTransporter() {
   }
 
   try {
-    // Use explicit STARTTLS on port 587 to avoid SMTP relay 421 throttling issues
+    // Use explicit STARTTLS on port 587 to avoid SMTP relay 421 throttling issues.
+    // connectionTimeout: abort early if the TCP connection to smtp.gmail.com stalls —
+    // without this, a hanging SMTP server can cause the Cloud Function to time out
+    // (default 60 s) before any email is attempted, silently dropping the notification.
+    // socketTimeout: cap the time allowed for an SMTP command response (EHLO, AUTH, etc.)
+    // so that a mid-session stall is also caught quickly and we can fall through to
+    // the SendGrid / Firebase-Extension fallback path.
     emailTransporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 587,
-      secure: false,    // STARTTLS (upgrades after connect)
-      requireTLS: true, // Reject if STARTTLS is not available
+      secure: false,           // STARTTLS (upgrades after connect)
+      requireTLS: true,        // Reject if STARTTLS is not available
+      connectionTimeout: 5000, // 5 s — fail fast if SMTP host is unreachable.
+                               // Gmail responds within ~1–2 s under normal conditions;
+                               // 5 s is generous enough to handle momentary latency
+                               // while keeping the Cloud Function well within its 60 s limit.
+      socketTimeout: 10000,    // 10 s — fail fast if SMTP session stalls mid-way.
+                               // Covers the full EHLO + STARTTLS + AUTH + DATA exchange;
+                               // typical Gmail AUTH completes in < 3 s.
       auth: {
         user: emailUserVal,
         pass: emailPasswordVal
@@ -420,6 +443,13 @@ async function sendEmailViaSendGrid(bookingData) {
     console.log('SendGrid not configured (missing SENDGRID_API_KEY) - skipping');
     return false;
   }
+  // Trim whitespace to guard against environment variables accidentally set with
+  // surrounding spaces, which would cause "Unauthorized" (401) on every request.
+  const trimmedApiKey = apiKey.trim();
+  if (!trimmedApiKey) {
+    console.log('SendGrid not configured (SENDGRID_API_KEY is blank after trim) - skipping');
+    return false;
+  }
 
   try {
     let emailFromVal = safeGetParamValue(emailFrom, 'EMAIL_FROM') ||
@@ -444,7 +474,7 @@ async function sendEmailViaSendGrid(bookingData) {
       minute: '2-digit'
     });
 
-    sgMail.setApiKey(apiKey);
+    sgMail.setApiKey(trimmedApiKey);
     const msg = {
       to: bookingData.sahkoposti,
       from: emailFromVal,
