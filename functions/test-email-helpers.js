@@ -33,6 +33,14 @@ async function withRetry(fn, maxAttempts = 3, baseDelayMs = 10) {
       return await fn();
     } catch (err) {
       lastError = err;
+      // Derive the HTTP status from wherever the SDK places it.
+      // @sendgrid/mail stores it in err.code; some SDKs use err.response.status.
+      const status = err.code || (err.response && (err.response.status || err.response.statusCode)) || 0;
+      // Don't retry 4xx client errors (they are deterministic failures).
+      // Exception: 429 Too Many Requests — the server is asking us to back off and retry.
+      if (typeof status === 'number' && status >= 400 && status < 500 && status !== 429) {
+        break;
+      }
       if (attempt < maxAttempts) {
         const jitter = Math.random() * baseDelayMs;
         const delay = baseDelayMs * Math.pow(2, attempt - 1) + jitter;
@@ -179,6 +187,88 @@ async function testWithRetry() {
     caught2 = err;
   }
   assert(caught2 !== null && callCount === 1, 'With maxAttempts=1, fails immediately without retry');
+
+  // --- 4xx errors must NOT be retried (deterministic failures) ---
+
+  // 400 Bad Request via err.code — should fail on first attempt, no retries
+  callCount = 0;
+  let caught400 = null;
+  try {
+    await withRetry(async () => {
+      callCount++;
+      const err = new Error('Bad Request');
+      err.code = 400;
+      throw err;
+    }, 3, 5);
+  } catch (err) {
+    caught400 = err;
+  }
+  assert(caught400 !== null, '400 error is thrown');
+  assert(callCount === 1, '400 error is NOT retried (via err.code)');
+
+  // 401 Unauthorized via err.response.status (SendGrid SDK style)
+  callCount = 0;
+  let caught401 = null;
+  try {
+    await withRetry(async () => {
+      callCount++;
+      const err = new Error('Unauthorized');
+      err.response = { status: 401 };
+      throw err;
+    }, 3, 5);
+  } catch (err) {
+    caught401 = err;
+  }
+  assert(caught401 !== null, '401 error is thrown');
+  assert(callCount === 1, '401 error is NOT retried (via err.response.status)');
+
+  // 403 Forbidden via err.response.statusCode
+  callCount = 0;
+  let caught403 = null;
+  try {
+    await withRetry(async () => {
+      callCount++;
+      const err = new Error('Forbidden');
+      err.response = { statusCode: 403 };
+      throw err;
+    }, 3, 5);
+  } catch (err) {
+    caught403 = err;
+  }
+  assert(caught403 !== null, '403 error is thrown');
+  assert(callCount === 1, '403 error is NOT retried (via err.response.statusCode)');
+
+  // 429 Too Many Requests MUST be retried (server-side back-off signal)
+  callCount = 0;
+  let caught429 = null;
+  try {
+    await withRetry(async () => {
+      callCount++;
+      const err = new Error('Too Many Requests');
+      err.code = 429;
+      throw err;
+    }, 3, 5);
+  } catch (err) {
+    caught429 = err;
+  }
+  assert(caught429 !== null, '429 error is thrown after all retries');
+  assert(callCount === 3, '429 error IS retried up to maxAttempts');
+
+  // 5xx errors must be retried (transient server failures)
+  callCount = 0;
+  let caught500 = null;
+  try {
+    await withRetry(async () => {
+      callCount++;
+      const err = new Error('Internal Server Error');
+      err.code = 500;
+      throw err;
+    }, 3, 5);
+  } catch (err) {
+    caught500 = err;
+  }
+  assert(caught500 !== null, '500 error is thrown after all retries');
+  assert(callCount === 3, '500 error IS retried up to maxAttempts');
 
   console.log('');
 }
@@ -462,7 +552,34 @@ function testRegistrationNumberValidation() {
   console.log('');
 }
 
-// --- Run all tests ---
+// --- Test 9: SendGrid API key trimming ---
+function testSendgridApiKeyTrimming() {
+  console.log('📝 Test 9: SendGrid API key trimming - guards against whitespace env vars');
+  console.log('--------------------------------------------------------------------------');
+
+  // Mirror the trimming logic from sendEmailViaSendGrid in index.js.
+  // The same pattern is used for Nodemailer credentials (emailUserVal.trim()),
+  // but the SendGrid path previously lacked this guard. The stub below is kept
+  // in sync with the production code in index.js — update both if the logic changes.
+  function processSendgridApiKey(rawKey) {
+    if (!rawKey) return null;
+    const trimmed = rawKey.trim();
+    if (!trimmed) return null;
+    return trimmed;
+  }
+
+  assert(processSendgridApiKey('SG.validkey') === 'SG.validkey', 'Valid key returned unchanged');
+  assert(processSendgridApiKey('  SG.validkey  ') === 'SG.validkey', 'Trims surrounding whitespace');
+  assert(processSendgridApiKey('\tSG.validkey\n') === 'SG.validkey', 'Trims tab and newline');
+  assert(processSendgridApiKey('') === null, 'Empty string returns null (key treated as missing)');
+  assert(processSendgridApiKey('   ') === null, 'Whitespace-only string returns null');
+  assert(processSendgridApiKey(null) === null, 'null returns null');
+  assert(processSendgridApiKey(undefined) === null, 'undefined returns null');
+
+  console.log('');
+}
+
+
 async function runAll() {
   testEscapeHtml();
   await testWithRetry();
@@ -472,6 +589,7 @@ async function runAll() {
   await testMailCollectionIdempotency();
   await testCreateEmailDocumentSkipIfExists();
   testRegistrationNumberValidation();
+  testSendgridApiKeyTrimming();
 
   console.log('=====================================');
   console.log('Test Summary');
