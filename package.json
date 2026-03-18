@@ -2,5 +2,8 @@
   "dependencies": {
     "firebase-functions": "^4.9.0",
     "nodemailer": "^7.0.12"
+  },
+  "engines": {
+    "node": ">=20 <23"
   }
 }
