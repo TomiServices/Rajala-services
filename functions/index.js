@@ -94,11 +94,11 @@ const COMPANY_PHONE_DISPLAY = COMPANY_PHONE.replace('+358', '0');
  * Determines which email method was used based on the mail document ID and email sent status
  * @param {string|null} mailDocId - The Firebase Email Extension mail document ID (if created)
  * @param {boolean} emailSent - Whether an email was successfully sent
- * @returns {string|null} - 'firebase-extension', 'nodemailer', or null
+ * @returns {string|null} - 'firebase-extension', 'sendgrid', or null
  */
 function getEmailMethod(mailDocId, emailSent) {
   if (mailDocId) return 'firebase-extension';
-  if (emailSent) return 'nodemailer';
+  if (emailSent) return 'sendgrid';
   return null;
 }
 
@@ -1219,10 +1219,13 @@ async function createEmailDocument(bookingData, bookingId) {
 
 // Email confirmation trigger - sends email when new booking is created
 // Email sending priority:
-// 1. Primary:   Nodemailer directly (if EMAIL_USER / EMAIL_PASSWORD are configured)
+// 1. Primary:   Firebase Trigger Email Extension (write to 'mail' collection → Extension sends via SMTP)
 // 2. Fallback:  SendGrid HTTP API (if SENDGRID_API_KEY is configured)
-// 3. Last resort: Write to 'mail' collection → Firebase Trigger Email Extension sends via SMTP
-//    (only used if neither Nodemailer nor SendGrid are configured)
+// Nodemailer is intentionally not used here: it requires EMAIL_USER / EMAIL_PASSWORD to be
+// configured in the environment, and when those credentials are absent it triggers an
+// "Error missing credentials for PLAIN" SMTP error in the logs.  The Firebase Extension
+// already handles SMTP delivery, so adding a second SMTP client only duplicates effort
+// and pollutes the logs.
 exports.onBookingCreated = onDocumentCreated({
   document: `${BOOKINGS_COLLECTION}/{bookingId}`,
   region: 'europe-north1'
@@ -1275,25 +1278,27 @@ exports.onBookingCreated = onDocumentCreated({
   let emailSent = false;
   let emailMethodUsed = null;
 
-  // Primary path: Nodemailer with explicit STARTTLS (port 587)
-  // Uses EMAIL_USER / EMAIL_PASSWORD environment variables that we control directly.
-  // This is tried first to avoid relying on the Firebase Email Extension's SMTP config.
+  // Primary path: Firebase Email Extension (write to 'mail' collection)
+  // The extension reads the document and sends via its configured SMTP.
+  // createEmailDocument() will skip overwriting an existing document so that a
+  // function retry cannot cause the Extension to process the same booking twice.
   try {
-    const nodemailerResult = await sendBookingConfirmationEmail(bookingData);
-    if (nodemailerResult) {
+    const mailDocId = await createEmailDocument(bookingData, bookingId);
+    if (mailDocId) {
       emailSent = true;
-      emailMethodUsed = 'nodemailer';
-      console.log('[onBookingCreated] Email sent via Nodemailer:', {
+      emailMethodUsed = 'firebase-extension';
+      console.log('[onBookingCreated] Email document written for Firebase Email Extension:', {
         bookingId: bookingId,
-        method: 'nodemailer'
+        mailDocId: mailDocId,
+        method: 'firebase-extension'
       });
     } else {
-      console.warn('[onBookingCreated] Nodemailer not configured or failed, trying SendGrid:', bookingId);
+      console.warn('[onBookingCreated] Firebase Extension path returned null, trying SendGrid:', bookingId);
     }
-  } catch (nodemailerErr) {
-    console.error('[onBookingCreated] Nodemailer failed:', {
+  } catch (extErr) {
+    console.error('[onBookingCreated] Firebase Email Extension path failed:', {
       bookingId: bookingId,
-      error: nodemailerErr.message || nodemailerErr
+      error: extErr.message || extErr
     });
   }
 
@@ -1309,38 +1314,12 @@ exports.onBookingCreated = onDocumentCreated({
           method: 'sendgrid'
         });
       } else {
-        console.warn('[onBookingCreated] SendGrid not configured or failed, trying Firebase Extension:', bookingId);
+        console.warn('[onBookingCreated] SendGrid not configured or failed for booking:', bookingId);
       }
     } catch (sgErr) {
       console.error('[onBookingCreated] SendGrid failed:', {
         bookingId: bookingId,
         error: sgErr.message || sgErr
-      });
-    }
-  }
-
-  // Last-resort fallback: Firebase Email Extension (write to 'mail' collection)
-  // The extension reads the document and sends via its configured SMTP.
-  // createEmailDocument() will skip overwriting an existing document so that a
-  // function retry cannot cause the Extension to process the same booking twice.
-  if (!emailSent) {
-    try {
-      const mailDocId = await createEmailDocument(bookingData, bookingId);
-      if (mailDocId) {
-        emailSent = true;
-        emailMethodUsed = 'firebase-extension';
-        console.log('[onBookingCreated] Email document written for Firebase Email Extension:', {
-          bookingId: bookingId,
-          mailDocId: mailDocId,
-          method: 'firebase-extension'
-        });
-      } else {
-        console.warn('[onBookingCreated] All email paths failed for booking:', bookingId);
-      }
-    } catch (extErr) {
-      console.error('[onBookingCreated] Firebase Email Extension path failed:', {
-        bookingId: bookingId,
-        error: extErr.message || extErr
       });
     }
   }

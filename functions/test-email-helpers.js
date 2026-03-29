@@ -366,14 +366,17 @@ function testGetEmailMethodLogic() {
   console.log('-------------------------------------------------------');
 
   // Mirror the function from index.js
+  // Firebase Extension is primary; SendGrid is the fallback.
+  // Nodemailer is no longer used in the email chain (removed to avoid
+  // "Error missing credentials for PLAIN" SMTP noise in Firestore logs).
   function getEmailMethod(mailDocId, emailSent) {
     if (mailDocId) return 'firebase-extension';
-    if (emailSent) return 'nodemailer';
+    if (emailSent) return 'sendgrid';
     return null;
   }
 
   assert(getEmailMethod('abc123', true) === 'firebase-extension', 'Returns firebase-extension when mailDocId set');
-  assert(getEmailMethod(null, true) === 'nodemailer', 'Returns nodemailer when only emailSent=true');
+  assert(getEmailMethod(null, true) === 'sendgrid', 'Returns sendgrid when only emailSent=true (SendGrid fallback)');
   assert(getEmailMethod(null, false) === null, 'Returns null when nothing succeeded');
   assert(getEmailMethod(undefined, false) === null, 'Returns null for undefined mailDocId and emailSent=false');
 

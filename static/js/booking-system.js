@@ -2309,14 +2309,6 @@ function initializeBookingSystem() {
             }, 10);
             
             try {
-                // Execute reCAPTCHA v3 to get token
-                let recaptchaToken;
-                try {
-                    recaptchaToken = await executeRecaptcha('booking');
-                } catch (recaptchaError) {
-                    throw new Error('Turvavarmennus epäonnistui. Päivitä sivu ja yritä uudelleen.');
-                }
-                
                 // Prepare structured service data with prices
                 const serviceData = prepareServiceData();
                 
@@ -2328,78 +2320,141 @@ function initializeBookingSystem() {
                 const msgText = document.getElementById('msgText');
                 const message = (msgCheckbox && msgCheckbox.checked && msgText) ? msgText.value.trim() : '';
                 
-                // Send booking to backend Firebase Function with retry logic
-                const bookingData = {
-                    name, email, phone,
-                    aika: selectedSlot.toISOString(),
-                    services: serviceData.services,
-                    totalPrice: serviceData.totalPrice,
-                    totalNumericPrice: serviceData.totalNumericPrice,
-                    vehicleType: vehicleType,
-                    registrationNumber: registrationNumber,
-                    recaptcha: recaptchaToken
-                };
-                if (message) {
-                    bookingData.message = message;
+                // Submit booking with up to 2 attempts.
+                // IMPORTANT: reCAPTCHA v3 tokens are single-use and expire quickly, so a
+                // fresh token must be obtained for every attempt.  Using fetchWithRetry with
+                // a pre-baked body would re-send the same (already-consumed) token on each
+                // retry, which causes the server to return a 401 "Turvavarmennus epäonnistui"
+                // error that looks like a user error but is really just a stale token.
+                // By generating a new token before each attempt we avoid this false failure.
+                const BOOK_URL = 'https://europe-north1-webbi1.cloudfunctions.net/book';
+                const MAX_BOOK_ATTEMPTS = 2;
+                let result = null;
+                let lastBookingError = null;
+
+                for (let attempt = 1; attempt <= MAX_BOOK_ATTEMPTS; attempt++) {
+                    // Always get a fresh reCAPTCHA token for this attempt.
+                    let recaptchaToken;
+                    try {
+                        recaptchaToken = await executeRecaptcha('booking');
+                    } catch (recaptchaError) {
+                        throw new Error('Turvavarmennus epäonnistui. Päivitä sivu ja yritä uudelleen.');
+                    }
+
+                    const bookingPayload = {
+                        name, email, phone,
+                        aika: selectedSlot.toISOString(),
+                        services: serviceData.services,
+                        totalPrice: serviceData.totalPrice,
+                        totalNumericPrice: serviceData.totalNumericPrice,
+                        vehicleType: vehicleType,
+                        registrationNumber: registrationNumber,
+                        recaptcha: recaptchaToken
+                    };
+                    if (message) {
+                        bookingPayload.message = message;
+                    }
+
+                    try {
+                        const response = await fetch(BOOK_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(bookingPayload)
+                        });
+
+                        if (response.ok) {
+                            result = await response.json();
+                            break;
+                        }
+
+                        // Parse server error message
+                        let errorMessage;
+                        try {
+                            const errorData = await response.json();
+                            errorMessage = errorData.error || errorData.message || `HTTP ${response.status}: ${response.statusText}`;
+                        } catch (_) {
+                            errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+                        }
+                        const responseError = new Error(errorMessage);
+                        responseError.status = response.status;
+
+                        // 4xx errors (except 429) are deterministic — retrying won't help.
+                        if (response.status >= 400 && response.status < 500 && response.status !== 429) {
+                            throw responseError;
+                        }
+
+                        // 5xx / 429: worth retrying once with a fresh token.
+                        lastBookingError = responseError;
+                    } catch (fetchErr) {
+                        const status = fetchErr.status || 0;
+                        const errMsg = fetchErr.message || '';
+                        // Don't retry on deterministic client errors or reCAPTCHA failures.
+                        if ((status >= 400 && status < 500 && status !== 429) ||
+                            errMsg.includes('Turvavarmennus') ||
+                            errMsg.toLowerCase().includes('recaptcha')) {
+                            throw fetchErr;
+                        }
+                        lastBookingError = fetchErr;
+                        // Network error message
+                        if (errMsg.includes('Failed to fetch') ||
+                            errMsg.includes('NetworkError')) {
+                            lastBookingError = new Error('Yhteysongelma palvelimeen. Tarkista, että evästeet ovat sallittuja ja yritä uudelleen.');
+                        }
+                    }
+
+                    // Wait before retry (1 s)
+                    if (attempt < MAX_BOOK_ATTEMPTS) {
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                    }
+                }
+
+                if (!result) {
+                    throw lastBookingError || new Error('Varaus epäonnistui. Yritä uudelleen!');
                 }
                 
-                const result = await fetchWithRetry(
-                    'https://europe-north1-webbi1.cloudfunctions.net/book',
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(bookingData)
-                    },
-                    2 // Max 2 retries
-                );
+                // Hide loading bar and show success bar
+                progressBar.classList.remove('active');
+                successBar.classList.add('active');
                 
-                if (result) {
-                    // Hide loading bar and show success bar
-                    progressBar.classList.remove('active');
-                    successBar.classList.add('active');
-                    
-                    document.getElementById('msg').innerHTML = "Varaus onnistui! <br>Saat varausvahvistuksen sähköpostiisi pian.";
-                    document.getElementById('bookingForm').reset();
-                    document.getElementById('bookingForm').style.display = 'none';
-                    document.getElementById('slot-summary').textContent = '';
-                    document.getElementById('add-service-container').style.display = 'none';
-                    document.getElementById('selected-services-container').style.display = 'none';
-                    document.getElementById('repair-disclaimer').style.display = 'none';
-                    // Reset registration number field
-                    const regNumContainer = document.getElementById('registrationNumberContainer');
-                    if (regNumContainer) {
-                        regNumContainer.style.display = 'none';
-                        regNumContainer.setAttribute('aria-hidden', 'true');
+                document.getElementById('msg').innerHTML = "Varaus onnistui! <br>Saat varausvahvistuksen sähköpostiisi pian.";
+                document.getElementById('bookingForm').reset();
+                document.getElementById('bookingForm').style.display = 'none';
+                document.getElementById('slot-summary').textContent = '';
+                document.getElementById('add-service-container').style.display = 'none';
+                document.getElementById('selected-services-container').style.display = 'none';
+                document.getElementById('repair-disclaimer').style.display = 'none';
+                // Reset registration number field
+                const regNumContainer = document.getElementById('registrationNumberContainer');
+                if (regNumContainer) {
+                    regNumContainer.style.display = 'none';
+                    regNumContainer.setAttribute('aria-hidden', 'true');
+                }
+                if (registrationNumberInput) {
+                    registrationNumberInput.value = '';
+                }
+                // Reset vehicle type select so the registration number field is
+                // properly shown again when the user selects a vehicle type for
+                // their next booking. Without this reset, the select retains its
+                // previous value but the registration number container stays hidden,
+                // causing form validation to fail on the next submission attempt.
+                const vehicleTypeSelectEl = document.getElementById('vehicleTypeSelect');
+                if (vehicleTypeSelectEl) {
+                    vehicleTypeSelectEl.value = '';
+                    // Also hide the "Muu" text input if it was visible
+                    const vehicleTypeOtherContainerEl = document.getElementById('vehicleTypeOtherContainer');
+                    if (vehicleTypeOtherContainerEl) {
+                        vehicleTypeOtherContainerEl.style.display = 'none';
+                        vehicleTypeOtherContainerEl.setAttribute('aria-hidden', 'true');
                     }
-                    if (registrationNumberInput) {
-                        registrationNumberInput.value = '';
-                    }
-                    // Reset vehicle type select so the registration number field is
-                    // properly shown again when the user selects a vehicle type for
-                    // their next booking. Without this reset, the select retains its
-                    // previous value but the registration number container stays hidden,
-                    // causing form validation to fail on the next submission attempt.
-                    const vehicleTypeSelectEl = document.getElementById('vehicleTypeSelect');
-                    if (vehicleTypeSelectEl) {
-                        vehicleTypeSelectEl.value = '';
-                        // Also hide the "Muu" text input if it was visible
-                        const vehicleTypeOtherContainerEl = document.getElementById('vehicleTypeOtherContainer');
-                        if (vehicleTypeOtherContainerEl) {
-                            vehicleTypeOtherContainerEl.style.display = 'none';
-                            vehicleTypeOtherContainerEl.setAttribute('aria-hidden', 'true');
-                        }
-                        const vehicleTypeOtherEl = document.getElementById('vehicleTypeOther');
-                        if (vehicleTypeOtherEl) vehicleTypeOtherEl.value = '';
-                    }
-                    selectedSlot = null;
-                    selectedServices = [];
-                    bookings = await fetchBookings();
-                    
-                    if (calendar && typeof calendar.refetchEvents === 'function') {
-                        calendar.refetchEvents();
-                    }
-                } else {
-                    throw new Error('Varaus epäonnistui. Yritä uudelleen!');
+                    const vehicleTypeOtherEl = document.getElementById('vehicleTypeOther');
+                    if (vehicleTypeOtherEl) vehicleTypeOtherEl.value = '';
+                }
+                selectedSlot = null;
+                selectedServices = [];
+                bookings = await fetchBookings();
+                
+                if (calendar && typeof calendar.refetchEvents === 'function') {
+                    calendar.refetchEvents();
                 }
             } catch (error) {
                 console.error('Booking submission error:', error);
