@@ -1219,18 +1219,19 @@ exports.onBookingCreated = onDocumentCreated({
     return null;
   }
 
-  // Idempotency check: bail out if an email was already sent for this booking.
+  // Idempotency check: bail out if an email was already queued or sent for this booking.
   // Guards against duplicate emails caused by Firebase Function retries.
+  // Checks both the new emailQueued field and the legacy emailSent field for backwards compatibility.
   try {
     const existingDoc = await db.collection(BOOKINGS_COLLECTION).doc(bookingId).get();
-    if (existingDoc.exists && existingDoc.data().emailSent === true) {
-      console.log('[onBookingCreated] Email already sent for booking - skipping duplicate send:', bookingId);
+    if (existingDoc.exists && (existingDoc.data().emailQueued === true || existingDoc.data().emailSent === true)) {
+      console.log('[onBookingCreated] Email already queued/sent for booking - skipping duplicate:', bookingId);
       return null;
     }
-    console.log('[onBookingCreated] Idempotency check passed (emailSent not true) for booking:', bookingId);
+    console.log('[onBookingCreated] Idempotency check passed (emailQueued/emailSent not set) for booking:', bookingId);
   } catch (checkErr) {
     // Log but continue: better to risk a duplicate than to miss the confirmation email
-    console.warn('[onBookingCreated] Could not verify emailSent flag, proceeding with email send:', {
+    console.warn('[onBookingCreated] Could not verify emailQueued flag, proceeding with email send:', {
       bookingId: bookingId,
       error: checkErr.message || checkErr
     });
@@ -1242,22 +1243,22 @@ exports.onBookingCreated = onDocumentCreated({
     customerName: bookingData.nimi
   });
 
-  let emailSent = false;
+  let emailQueued = false;
   let emailMethodUsed = null;
 
   // Primary path: Firebase Email Extension (write to 'mail' collection).
   // The extension reads the document and sends via its own configured SMTP.
-  // This is the preferred path because it avoids the "Error missing credentials
-  // for PLAIN" log that Nodemailer emits when EMAIL_USER / EMAIL_PASSWORD are
-  // absent or mis-configured, while the Extension handles credentials internally.
+  // Writing the document only QUEUES the email – actual delivery state is
+  // tracked separately by the onMailDeliveryUpdated trigger which reads
+  // delivery.state written back by the Extension.
   // createEmailDocument() skips overwriting an existing document so that a
   // function retry cannot cause the Extension to process the same booking twice.
   try {
     const mailDocId = await createEmailDocument(bookingData, bookingId);
     if (mailDocId) {
-      emailSent = true;
+      emailQueued = true;
       emailMethodUsed = 'firebase-extension';
-      console.log('[onBookingCreated] Email document written for Firebase Email Extension:', {
+      console.log('[onBookingCreated] Email document queued for Firebase Email Extension:', {
         bookingId: bookingId,
         mailDocId: mailDocId,
         method: 'firebase-extension'
@@ -1272,14 +1273,14 @@ exports.onBookingCreated = onDocumentCreated({
     });
   }
 
-  // Fallback: SendGrid HTTP API
-  if (!emailSent) {
+  // Fallback: SendGrid HTTP API (used only if Extension path did not queue)
+  if (!emailQueued) {
     try {
       const sgResult = await sendEmailViaSendGrid(bookingData);
       if (sgResult) {
-        emailSent = true;
+        emailQueued = true;
         emailMethodUsed = 'sendgrid';
-        console.log('[onBookingCreated] Email sent via SendGrid:', {
+        console.log('[onBookingCreated] Email sent via SendGrid (fallback):', {
           bookingId: bookingId,
           method: 'sendgrid'
         });
@@ -1294,17 +1295,28 @@ exports.onBookingCreated = onDocumentCreated({
     }
   }
 
-  // Update booking document with email status for tracking
+  // Update booking document with queue status.
+  // NOTE: emailQueued = true means the mail document was written to the 'mail'
+  // collection (or sent directly via SendGrid).  It does NOT mean the email was
+  // actually delivered.  For Firebase Extension deliveries the final delivery
+  // state (SENT / ERROR) is synced back by the onMailDeliveryUpdated trigger.
+  // For SendGrid the send is synchronous so emailSent is also set here.
   try {
     const updateData = {
-      emailSent: emailSent,
-      emailSentAt: emailSent ? admin.firestore.FieldValue.serverTimestamp() : null,
-      emailMethod: emailMethodUsed
+      emailQueued: emailQueued,
+      emailState: emailQueued ? 'QUEUED' : 'FAILED',
+      emailMethod: emailMethodUsed,
+      // For direct SendGrid sends the email was already delivered synchronously
+      ...(emailMethodUsed === 'sendgrid' && emailQueued
+        ? { emailSent: true, emailSentAt: admin.firestore.FieldValue.serverTimestamp() }
+        : {})
     };
     await db.collection(BOOKINGS_COLLECTION).doc(bookingId).update(updateData);
-    console.log('[onBookingCreated] Booking updated with email status:', {
+    console.log('[onBookingCreated] Booking updated with email queue status:', {
       bookingId: bookingId,
-      emailSent: emailSent
+      emailQueued: emailQueued,
+      emailState: updateData.emailState,
+      method: emailMethodUsed
     });
   } catch (updateErr) {
     console.error('[onBookingCreated] Failed to update booking with email status:', {
@@ -1315,9 +1327,95 @@ exports.onBookingCreated = onDocumentCreated({
 
   console.log('[onBookingCreated] Email trigger completed for booking:', {
     bookingId: bookingId,
-    emailSent: emailSent,
+    emailQueued: emailQueued,
     method: emailMethodUsed || 'none'
   });
+
+  return null;
+});
+
+// =======================
+// Mail Delivery State Tracker
+// =======================
+// Watches the 'mail' collection for updates written by the
+// "Trigger Email from Firestore" extension and syncs the delivery
+// result back to the corresponding booking document so that admins
+// can see whether the email was actually delivered (SENT) or failed
+// (ERROR), rather than only knowing it was queued.
+//
+// Fields synced to the booking document:
+//   emailState  – 'QUEUED' | 'PROCESSING' | 'SENT' | 'ERROR'
+//   emailError  – error message string (only when state = ERROR)
+//   emailSentAt – server timestamp (only when state = SENT)
+//   emailSent   – true (only when state = SENT, for backwards compatibility)
+//   emailAttempts – number of delivery attempts so far
+exports.onMailDeliveryUpdated = onDocumentUpdated({
+  document: `${MAIL_COLLECTION}/{mailDocId}`,
+  region: 'europe-north1'
+}, async (event) => {
+  const afterData = event.data.after.data();
+  if (!afterData) return null;
+
+  // The 'bookingId' field is written by createEmailDocument so that we can
+  // look up the corresponding booking here.
+  const bookingId = afterData.bookingId;
+  if (!bookingId) {
+    console.log('[onMailDeliveryUpdated] No bookingId in mail document, skipping:', event.params.mailDocId);
+    return null;
+  }
+
+  const delivery = afterData.delivery;
+  if (!delivery || !delivery.state) {
+    // Extension hasn't written delivery state yet (e.g. just created) – ignore
+    return null;
+  }
+
+  const state = delivery.state;
+  // Firebase "Trigger Email from Firestore" extension delivery states:
+  //   PENDING     – document just picked up, not yet attempted
+  //   PROCESSING  – delivery attempt in progress
+  //   SUCCESS     – email delivered successfully
+  //   ERROR       – delivery failed (see delivery.error)
+  // We normalise SUCCESS → SENT so our booking document uses consistent
+  // human-readable values.  PENDING and PROCESSING pass through unchanged.
+
+  // Normalise extension state names to the values our booking doc uses
+  const emailState = state === 'SUCCESS' ? 'SENT' : state; // SUCCESS → SENT
+
+  console.log('[onMailDeliveryUpdated] Syncing email delivery state to booking:', {
+    bookingId,
+    mailDocId: event.params.mailDocId,
+    state: emailState,
+    attempts: delivery.attempts
+  });
+
+  const updateData = {
+    emailState: emailState,
+    emailAttempts: delivery.attempts || null
+  };
+
+  if (emailState === 'SENT') {
+    updateData.emailSent = true;
+    updateData.emailSentAt = admin.firestore.FieldValue.serverTimestamp();
+    updateData.emailError = null;
+  } else if (emailState === 'ERROR') {
+    updateData.emailSent = false;
+    updateData.emailError = delivery.error || 'Unknown delivery error';
+  }
+
+  try {
+    await db.collection(BOOKINGS_COLLECTION).doc(bookingId).update(updateData);
+    console.log('[onMailDeliveryUpdated] Booking email state updated:', {
+      bookingId,
+      emailState,
+      emailSent: updateData.emailSent
+    });
+  } catch (err) {
+    console.error('[onMailDeliveryUpdated] Failed to update booking email state:', {
+      bookingId,
+      error: err.message || err
+    });
+  }
 
   return null;
 });
