@@ -1250,23 +1250,43 @@ function initializeBookingSystem() {
                     if (step2) {
                         step2.classList.add('visible');
                         step2.style.display = 'block';
-                        
-                        // FIX: Force FullCalendar to recalculate its dimensions now that
-                        // the container is visible, then refetch events so day availability
-                        // indicators render immediately without requiring a manual tap.
-                        // A short delay ensures the container's display:block has been
-                        // applied and the layout engine has processed the change.
-                        setTimeout(() => {
-                            if (calendar && calendar.updateSize) {
-                                calendar.updateSize();
+
+                        // FIX: Force FullCalendar to fully repaint now that the container
+                        // is visible (display:none → block).  A single requestAnimationFrame
+                        // is not reliable because the browser may not have completed the
+                        // layout/paint cycle for the newly-visible element yet.
+                        // Two nested rAFs guarantee we are AFTER the first full paint,
+                        // at which point the container has real pixel dimensions and
+                        // FullCalendar can calculate cell sizes correctly.
+                        // render() is called first in case the calendar was never fully
+                        // painted (e.g. it was initialised while the container was hidden),
+                        // followed by updateSize() to recalculate dimensions, then
+                        // refetchEvents() to ensure day availability indicators are shown.
+                        // A 200 ms setTimeout fallback covers mobile Safari where rAF
+                        // sometimes fires before the browser has completed layout/paint
+                        // for the newly-visible element.
+                        requestAnimationFrame(function() {
+                            requestAnimationFrame(function() {
+                                if (calendar) {
+                                    try {
+                                        if (calendar.render) calendar.render();
+                                        if (calendar.updateSize) calendar.updateSize();
+                                        if (calendar.refetchEvents) calendar.refetchEvents();
+                                    } catch (e) {
+                                        console.error('Calendar re-render after step transition failed:', e);
+                                    }
+                                }
+                                step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            });
+                        });
+
+                        // Mobile Safari fallback: additional updateSize after CSS transition
+                        setTimeout(function() {
+                            if (calendar) {
+                                if (calendar.updateSize) calendar.updateSize();
+                                if (calendar.refetchEvents) calendar.refetchEvents();
                             }
-                            // Refetch calendar events to ensure day availability indicators
-                            // load now that the calendar container is visible.
-                            if (calendar && calendar.refetchEvents) {
-                                calendar.refetchEvents();
-                            }
-                            step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        }, 50);
+                        }, 200);
                     }
                 } else {
                     // Hide booking form if task is deselected
