@@ -1273,9 +1273,11 @@ function initializeBookingSystem() {
                                 if (fc) {
                                     try {
                                         if (fc.updateSize) fc.updateSize();
-                                        // Re-navigate to the same date to force a full grid re-render
-                                        if (fc.getDate && fc.gotoDate) {
-                                            fc.gotoDate(fc.getDate());
+                                        // Re-initialize the current view to force a full grid re-render.
+                                        // gotoDate(same date) is a no-op in FullCalendar; changeView
+                                        // always triggers a complete view rebuild, making day cells visible.
+                                        if (fc.view && fc.changeView) {
+                                            fc.changeView(fc.view.type);
                                         }
                                         if (fc.refetchEvents) fc.refetchEvents();
                                     } catch (e) {
@@ -1297,8 +1299,11 @@ function initializeBookingSystem() {
                             if (fc) {
                                 try {
                                     if (fc.updateSize) fc.updateSize();
-                                    if (fc.getDate && fc.gotoDate) {
-                                        fc.gotoDate(fc.getDate());
+                                    // Re-initialize the current view to force a full grid re-render.
+                                    // gotoDate(same date) is a no-op in FullCalendar; changeView
+                                    // always triggers a complete view rebuild, making day cells visible.
+                                    if (fc.view && fc.changeView) {
+                                        fc.changeView(fc.view.type);
                                     }
                                     if (fc.refetchEvents) fc.refetchEvents();
                                 } catch (e) {
