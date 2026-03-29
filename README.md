@@ -97,7 +97,7 @@ Validation and deployment utilities:
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v18+)
+- Node.js (v18+ suositeltu / recommended)
 - Firebase CLI
 - Google Cloud account (for Firebase, Calendar API)
 
