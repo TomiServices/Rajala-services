@@ -1251,43 +1251,61 @@ function initializeBookingSystem() {
                         step2.classList.add('visible');
                         step2.style.display = 'block';
 
-                        // FIX: Force FullCalendar to fully repaint now that the container
-                        // is visible (display:none → block).
-                        // In FullCalendar v6, render() is a no-op after the first call.
-                        // updateSize() recalculates dimensions but may not trigger a full
-                        // grid re-render when the calendar was initially rendered in a
-                        // hidden container (column widths were 0).
-                        // gotoDate(getDate()) re-navigates to the current date, which
-                        // forces FC6 to fully re-render the day grid with correct
-                        // dimensions — equivalent to the user clicking next then prev.
-                        // Two nested rAFs are required: the first schedules the callback
-                        // before the next browser paint; the second runs after that paint
-                        // completes, ensuring the container has its real pixel width/height.
+                        // AUTO-ACTIVATION: start the calendar in a compact (reduced-height)
+                        // state so that the subsequent expand triggers a browser layout
+                        // recalculation, which forces FullCalendar to repaint its day-grid.
+                        // This is needed because the calendar is rendered while the container
+                        // is hidden (display:none) and column widths were 0 at that point.
+                        calendarEl.classList.remove('expanded');
+                        calendarEl.classList.add('compact');
+
+                        // Fast-path: attempt an immediate re-render via double rAF so the
+                        // calendar looks correct on fast desktop browsers without waiting 1s.
+                        // Uses calendarEl._calendar (set after FullCalendar.render()) so
+                        // the reference is always in scope regardless of closure boundaries.
                         requestAnimationFrame(function() {
                             requestAnimationFrame(function() {
-                                if (calendar) {
+                                // Expand immediately on the fast path; the 1s timer below
+                                // is the belt-and-suspenders fallback for slow devices.
+                                calendarEl.classList.remove('compact');
+                                calendarEl.classList.add('expanded');
+                                var fc = calendarEl._calendar;
+                                if (fc) {
                                     try {
-                                        if (calendar.updateSize) calendar.updateSize();
+                                        if (fc.updateSize) fc.updateSize();
                                         // Re-navigate to the same date to force a full grid re-render
-                                        if (calendar.getDate && calendar.gotoDate) {
-                                            calendar.gotoDate(calendar.getDate());
+                                        if (fc.getDate && fc.gotoDate) {
+                                            fc.gotoDate(fc.getDate());
                                         }
-                                        if (calendar.refetchEvents) calendar.refetchEvents();
+                                        if (fc.refetchEvents) fc.refetchEvents();
                                     } catch (e) {
-                                        console.error('Calendar re-render after step transition failed:', e);
+                                        console.error('Calendar re-render (rAF) failed:', e);
                                     }
                                 }
                                 step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                             });
                         });
 
-                        // Fallback for mobile Safari / slow devices
+                        // Robust 1-second auto-activation: expand the calendar and force a
+                        // full FC re-render. Reliable on mobile Safari and slow devices.
+                        // Idempotent: removing compact / adding expanded is safe to call
+                        // multiple times and does not steal focus or scroll the page.
                         setTimeout(function() {
-                            if (calendar) {
-                                if (calendar.updateSize) calendar.updateSize();
-                                if (calendar.refetchEvents) calendar.refetchEvents();
+                            calendarEl.classList.remove('compact');
+                            calendarEl.classList.add('expanded');
+                            var fc = calendarEl._calendar;
+                            if (fc) {
+                                try {
+                                    if (fc.updateSize) fc.updateSize();
+                                    if (fc.getDate && fc.gotoDate) {
+                                        fc.gotoDate(fc.getDate());
+                                    }
+                                    if (fc.refetchEvents) fc.refetchEvents();
+                                } catch (e) {
+                                    console.error('Calendar auto-activation failed:', e);
+                                }
                             }
-                        }, 200);
+                        }, 1000);
                     }
                 } else {
                     // Hide booking form if task is deselected
@@ -2070,7 +2088,11 @@ function initializeBookingSystem() {
                         if (calendar && calendar.updateSize) {
                             calendar.updateSize();
                         }
-                        
+
+                        // Expose FC instance on the element so setupServiceSelection
+                        // (a different closure scope) can reach it for auto-activation.
+                        calendarEl._calendar = calendar;
+
                         setupDropdownEventListener();
                     });
                     
