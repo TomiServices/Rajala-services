@@ -2309,14 +2309,6 @@ function initializeBookingSystem() {
             }, 10);
             
             try {
-                // Execute reCAPTCHA v3 to get token
-                let recaptchaToken;
-                try {
-                    recaptchaToken = await executeRecaptcha('booking');
-                } catch (recaptchaError) {
-                    throw new Error('Turvavarmennus epäonnistui. Päivitä sivu ja yritä uudelleen.');
-                }
-                
                 // Prepare structured service data with prices
                 const serviceData = prepareServiceData();
                 
@@ -2328,30 +2320,66 @@ function initializeBookingSystem() {
                 const msgText = document.getElementById('msgText');
                 const message = (msgCheckbox && msgCheckbox.checked && msgText) ? msgText.value.trim() : '';
                 
-                // Send booking to backend Firebase Function with retry logic
-                const bookingData = {
-                    name, email, phone,
-                    aika: selectedSlot.toISOString(),
-                    services: serviceData.services,
-                    totalPrice: serviceData.totalPrice,
-                    totalNumericPrice: serviceData.totalNumericPrice,
-                    vehicleType: vehicleType,
-                    registrationNumber: registrationNumber,
-                    recaptcha: recaptchaToken
-                };
-                if (message) {
-                    bookingData.message = message;
+                // Send booking to backend Firebase Function.
+                // reCAPTCHA v3 tokens are single-use, so a fresh token must be
+                // obtained before every attempt — reusing a consumed token always
+                // results in a verification failure on the server side.
+                const MAX_BOOKING_ATTEMPTS = 3;
+                let recaptchaToken;
+                let result = null;
+                let lastBookingError = null;
+                for (let attempt = 1; attempt <= MAX_BOOKING_ATTEMPTS; attempt++) {
+                    // Refresh reCAPTCHA token for this specific attempt
+                    try {
+                        recaptchaToken = await executeRecaptcha('booking');
+                    } catch (recaptchaError) {
+                        throw new Error('Turvavarmennus epäonnistui. Päivitä sivu ja yritä uudelleen.');
+                    }
+
+                    const bookingData = {
+                        name, email, phone,
+                        aika: selectedSlot.toISOString(),
+                        services: serviceData.services,
+                        totalPrice: serviceData.totalPrice,
+                        totalNumericPrice: serviceData.totalNumericPrice,
+                        vehicleType: vehicleType,
+                        registrationNumber: registrationNumber,
+                        recaptcha: recaptchaToken
+                    };
+                    if (message) {
+                        bookingData.message = message;
+                    }
+
+                    try {
+                        result = await fetchWithRetry(
+                            'https://europe-north1-webbi1.cloudfunctions.net/book',
+                            {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(bookingData)
+                            },
+                            0 // No internal retries — this outer loop handles retries
+                        );
+                        // Success — exit the retry loop
+                        break;
+                    } catch (attemptError) {
+                        lastBookingError = attemptError;
+                        // Do not retry on client errors (4xx) or reCAPTCHA/validation errors
+                        const status = attemptError.status || 0;
+                        const isNonRetryable =
+                            (status >= 400 && status < 500 && status !== 429) ||
+                            attemptError.message.includes('Turvavarmennus') ||
+                            attemptError.message.includes('Varmennusvirhe') ||
+                            attemptError.message.toLowerCase().includes('recaptcha');
+                        if (isNonRetryable || attempt === MAX_BOOKING_ATTEMPTS) {
+                            throw attemptError;
+                        }
+                        // Exponential backoff before next attempt (1s, 2s)
+                        const delay = Math.pow(2, attempt - 1) * 1000;
+                        console.log(`Booking attempt ${attempt} failed, retrying in ${delay}ms...`);
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
                 }
-                
-                const result = await fetchWithRetry(
-                    'https://europe-north1-webbi1.cloudfunctions.net/book',
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(bookingData)
-                    },
-                    2 // Max 2 retries
-                );
                 
                 if (result) {
                     // Hide loading bar and show success bar
