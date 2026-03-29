@@ -1252,25 +1252,26 @@ function initializeBookingSystem() {
                         step2.style.display = 'block';
 
                         // FIX: Force FullCalendar to fully repaint now that the container
-                        // is visible (display:none → block).  A single requestAnimationFrame
-                        // is not reliable because the browser may not have completed the
-                        // layout/paint cycle for the newly-visible element yet.
-                        // Two nested rAFs guarantee we are AFTER the first full paint,
-                        // at which point the container has real pixel dimensions and
-                        // FullCalendar can calculate cell sizes correctly.
-                        // render() is called first in case the calendar was never fully
-                        // painted (e.g. it was initialised while the container was hidden),
-                        // followed by updateSize() to recalculate dimensions, then
-                        // refetchEvents() to ensure day availability indicators are shown.
-                        // A 200 ms setTimeout fallback covers mobile Safari where rAF
-                        // sometimes fires before the browser has completed layout/paint
-                        // for the newly-visible element.
+                        // is visible (display:none → block).
+                        // In FullCalendar v6, render() is a no-op after the first call.
+                        // updateSize() recalculates dimensions but may not trigger a full
+                        // grid re-render when the calendar was initially rendered in a
+                        // hidden container (column widths were 0).
+                        // gotoDate(getDate()) re-navigates to the current date, which
+                        // forces FC6 to fully re-render the day grid with correct
+                        // dimensions — equivalent to the user clicking next then prev.
+                        // Two nested rAFs are required: the first schedules the callback
+                        // before the next browser paint; the second runs after that paint
+                        // completes, ensuring the container has its real pixel width/height.
                         requestAnimationFrame(function() {
                             requestAnimationFrame(function() {
                                 if (calendar) {
                                     try {
-                                        if (calendar.render) calendar.render();
                                         if (calendar.updateSize) calendar.updateSize();
+                                        // Re-navigate to the same date to force a full grid re-render
+                                        if (calendar.getDate && calendar.gotoDate) {
+                                            calendar.gotoDate(calendar.getDate());
+                                        }
                                         if (calendar.refetchEvents) calendar.refetchEvents();
                                     } catch (e) {
                                         console.error('Calendar re-render after step transition failed:', e);
@@ -1280,7 +1281,7 @@ function initializeBookingSystem() {
                             });
                         });
 
-                        // Mobile Safari fallback: additional updateSize after CSS transition
+                        // Fallback for mobile Safari / slow devices
                         setTimeout(function() {
                             if (calendar) {
                                 if (calendar.updateSize) calendar.updateSize();
