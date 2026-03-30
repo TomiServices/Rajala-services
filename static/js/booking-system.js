@@ -1288,7 +1288,7 @@ function initializeBookingSystem() {
                             });
                         });
 
-                        // Robust 1-second auto-activation: expand the calendar and force a
+                        // Robust 100ms auto-activation: expand the calendar and force a
                         // full FC re-render. Reliable on mobile Safari and slow devices.
                         // Idempotent: removing compact / adding expanded is safe to call
                         // multiple times and does not steal focus or scroll the page.
@@ -1310,7 +1310,7 @@ function initializeBookingSystem() {
                                     console.error('Calendar auto-activation failed:', e);
                                 }
                             }
-                        }, 1000);
+                        }, 100);
                     }
                 } else {
                     // Hide booking form if task is deselected
@@ -1752,8 +1752,9 @@ function initializeBookingSystem() {
                     requestAnimationFrame(() => {
                         if (calendar && info && info.view) {
                             populateAvailableSlots(calendar, bookings);
-                            // Force calendar to update its size for mobile devices
-                            if (isMobileView && calendar.updateSize) {
+                            // Force calendar to update its size to ensure correct layout
+                            // on all devices (not just mobile) when the view re-mounts
+                            if (calendar.updateSize) {
                                 calendar.updateSize();
                             }
                         }
