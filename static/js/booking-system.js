@@ -1251,66 +1251,55 @@ function initializeBookingSystem() {
                         step2.classList.add('visible');
                         step2.style.display = 'block';
 
-                        // AUTO-ACTIVATION: start the calendar in a compact (reduced-height)
-                        // state so that the subsequent expand triggers a browser layout
-                        // recalculation, which forces FullCalendar to repaint its day-grid.
-                        // This is needed because the calendar is rendered while the container
-                        // is hidden (display:none) and column widths were 0 at that point.
-                        calendarEl.classList.remove('expanded');
-                        calendarEl.classList.add('compact');
+                        // AUTO-ACTIVATION: when the container transitions from display:none
+                        // to display:block FullCalendar needs valid dimensions to render the
+                        // day-grid correctly (it previously rendered with 0-width columns).
+                        // Strategy: use ResizeObserver (fires after layout, before paint, at
+                        // the exact moment the element acquires real dimensions) so we call
+                        // updateSize() and refetchEvents() at precisely the right time without
+                        // any arbitrary delay. A 200ms setTimeout acts as a belt-and-suspenders
+                        // fallback for browsers that do not support ResizeObserver.
+                        calendarEl.classList.remove('compact');
+                        calendarEl.classList.add('expanded');
 
-                        // Fast-path: attempt an immediate re-render via double rAF so the
-                        // calendar looks correct on fast desktop browsers without waiting 1s.
-                        // Uses calendarEl._calendar (set after FullCalendar.render()) so
-                        // the reference is always in scope regardless of closure boundaries.
-                        requestAnimationFrame(function() {
-                            requestAnimationFrame(function() {
-                                // Expand immediately on the fast path; the 1s timer below
-                                // is the belt-and-suspenders fallback for slow devices.
-                                calendarEl.classList.remove('compact');
-                                calendarEl.classList.add('expanded');
-                                var fc = calendarEl._calendar;
-                                if (fc) {
-                                    try {
-                                        if (fc.updateSize) fc.updateSize();
-                                        // Re-initialize the current view to force a full grid re-render.
-                                        // gotoDate(same date) is a no-op in FullCalendar; changeView
-                                        // always triggers a complete view rebuild, making day cells visible.
-                                        if (fc.view && fc.changeView) {
-                                            fc.changeView(fc.view.type);
-                                        }
-                                        if (fc.refetchEvents) fc.refetchEvents();
-                                    } catch (e) {
-                                        console.error('Calendar re-render (rAF) failed:', e);
-                                    }
-                                }
-                                step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                            });
-                        });
-
-                        // Robust 100ms auto-activation: expand the calendar and force a
-                        // full FC re-render. Reliable on mobile Safari and slow devices.
-                        // Idempotent: removing compact / adding expanded is safe to call
-                        // multiple times and does not steal focus or scroll the page.
-                        setTimeout(function() {
-                            calendarEl.classList.remove('compact');
-                            calendarEl.classList.add('expanded');
+                        var activationDone = false;
+                        function activateCalendar(scrollIntoView) {
+                            if (activationDone) return;
+                            activationDone = true;
                             var fc = calendarEl._calendar;
                             if (fc) {
                                 try {
                                     if (fc.updateSize) fc.updateSize();
-                                    // Re-initialize the current view to force a full grid re-render.
-                                    // gotoDate(same date) is a no-op in FullCalendar; changeView
-                                    // always triggers a complete view rebuild, making day cells visible.
-                                    if (fc.view && fc.changeView) {
-                                        fc.changeView(fc.view.type);
-                                    }
                                     if (fc.refetchEvents) fc.refetchEvents();
                                 } catch (e) {
-                                    console.error('Calendar auto-activation failed:', e);
+                                    console.error('Calendar activation failed:', e);
                                 }
                             }
-                        }, 100);
+                            if (scrollIntoView) {
+                                step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+
+                        // Primary: ResizeObserver fires after layout is computed (same frame
+                        // as the display change) giving FullCalendar valid column widths.
+                        if (typeof ResizeObserver !== 'undefined') {
+                            var resizeObserver = new ResizeObserver(function(entries) {
+                                for (var i = 0; i < entries.length; i++) {
+                                    if (entries[i].contentRect.width > 0) {
+                                        resizeObserver.disconnect();
+                                        activateCalendar(true);
+                                        break;
+                                    }
+                                }
+                            });
+                            resizeObserver.observe(calendarEl);
+                        }
+
+                        // Fallback: 200ms timeout covers ResizeObserver-unsupported browsers
+                        // and acts as a safety net if the observer fires with width=0.
+                        setTimeout(function() {
+                            activateCalendar(false);
+                        }, 200);
                     }
                 } else {
                     // Hide booking form if task is deselected
