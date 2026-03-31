@@ -1263,17 +1263,25 @@ function initializeBookingSystem() {
                         calendarEl.classList.add('expanded');
 
                         var activationDone = false;
+                        var activationRetries = 0;
                         function activateCalendar(scrollIntoView) {
                             if (activationDone) return;
-                            activationDone = true;
                             var fc = calendarEl._calendar;
-                            if (fc) {
-                                try {
-                                    if (fc.updateSize) fc.updateSize();
-                                    if (fc.refetchEvents) fc.refetchEvents();
-                                } catch (e) {
-                                    console.error('Calendar activation failed:', e);
+                            if (!fc) {
+                                // Calendar not initialized yet — retry with bounded polling
+                                // (40 attempts × 50 ms = 2 s max) to handle slow network
+                                if (activationRetries < 40) {
+                                    activationRetries++;
+                                    setTimeout(function() { activateCalendar(scrollIntoView); }, 50);
                                 }
+                                return;
+                            }
+                            activationDone = true;
+                            try {
+                                if (fc.updateSize) fc.updateSize();
+                                if (fc.refetchEvents) fc.refetchEvents();
+                            } catch (e) {
+                                console.error('Calendar activation failed:', e);
                             }
                             if (scrollIntoView) {
                                 step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1731,23 +1739,12 @@ function initializeBookingSystem() {
                 return dayNumber;
             },
             viewDidMount: function(info) {
-                // FIX Issue 1: Force calendar re-render on mobile to ensure cells are visible
-                // Double requestAnimationFrame is used because:
-                // 1. First rAF: Browser schedules the callback for the next frame
-                // 2. Second rAF: Ensures DOM layout/paint cycle has completed
-                // This timing pattern is necessary on mobile where the calendar container
-                // may be initially hidden and needs a full layout cycle to render correctly
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        if (calendar && info && info.view) {
-                            populateAvailableSlots(calendar, bookings);
-                            // Force calendar to update its size to ensure correct layout
-                            // on all devices (not just mobile) when the view re-mounts
-                            if (calendar.updateSize) {
-                                calendar.updateSize();
-                            }
-                        }
-                    });
+                // Force calendar to update its size after the view mounts so that
+                // column widths are correct when the container becomes visible.
+                requestAnimationFrame(function() {
+                    if (calendar && info && info.view && calendar.updateSize) {
+                        calendar.updateSize();
+                    }
                 });
             },
             // Mobile-specific improvements
@@ -1987,6 +1984,10 @@ function initializeBookingSystem() {
                 try {
                     calendar.render();
 
+                    // Expose FC instance immediately after render so activateCalendar can
+                    // use it even if the service is selected before the rAF below fires.
+                    calendarEl._calendar = calendar;
+
                     // Start 8-second timer: if calendar days haven't loaded by then, show "Päivitä" button
                     loadingTimer = setTimeout(function() {
                         var refreshBtn = document.getElementById('calendarRefreshBtn');
@@ -2083,10 +2084,6 @@ function initializeBookingSystem() {
                         if (calendar && calendar.updateSize) {
                             calendar.updateSize();
                         }
-
-                        // Expose FC instance on the element so setupServiceSelection
-                        // (a different closure scope) can reach it for auto-activation.
-                        calendarEl._calendar = calendar;
 
                         setupDropdownEventListener();
                     });
