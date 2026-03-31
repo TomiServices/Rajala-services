@@ -1222,6 +1222,14 @@ function initializeBookingSystem() {
                     
                     // Reset task selection
                     taskSelect.value = '';
+
+                    // Pre-warm: trigger events computation now so the calendar is
+                    // ready to paint the moment it becomes visible after task selection.
+                    if (calendarEl._calendar) {
+                        try { calendarEl._calendar.refetchEvents(); } catch(e) {
+                            console.error('Failed to pre-warm calendar events:', e);
+                        }
+                    }
                 } else {
                     // Hide task selection
                     taskSelection.style.display = 'none';
@@ -1288,6 +1296,12 @@ function initializeBookingSystem() {
                             }
                         }
 
+                        // Fast-path: if the calendar instance is already available, activate
+                        // it immediately (forces a synchronous reflow for correct dimensions).
+                        // true = scroll the calendar into view after activation.
+                        // activationDone prevents double-activation if the paths below also fire.
+                        activateCalendar(true);
+
                         // Primary: ResizeObserver fires after layout is computed (same frame
                         // as the display change) giving FullCalendar valid column widths.
                         if (typeof ResizeObserver !== 'undefined') {
@@ -1303,11 +1317,11 @@ function initializeBookingSystem() {
                             resizeObserver.observe(calendarEl);
                         }
 
-                        // Fallback: 200ms timeout covers ResizeObserver-unsupported browsers
+                        // Fallback: 50ms timeout covers ResizeObserver-unsupported browsers
                         // and acts as a safety net if the observer fires with width=0.
                         setTimeout(function() {
                             activateCalendar(false);
-                        }, 200);
+                        }, 50);
                     }
                 } else {
                     // Hide booking form if task is deselected
@@ -2488,7 +2502,7 @@ if (typeof FullCalendar !== 'undefined') {
                 } else {
                     console.error('FullCalendar not available during initialization');
                 }
-            }, { timeout: 2000 });
+            }, { timeout: 500 });
         });
     } else {
         window.addEventListener('load', function() {
