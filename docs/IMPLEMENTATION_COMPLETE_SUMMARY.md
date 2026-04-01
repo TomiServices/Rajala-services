@@ -215,7 +215,7 @@ cp .env.example .env
 # Edit .env and add:
 # - EMAIL_USER=your@gmail.com
 # - EMAIL_PASSWORD=your-app-password
-# - EMAIL_FROM=Rajala Services <noreply@rajala-services.com>
+# - EMAIL_FROM=Rajala Services <noreply@fixnero.fi>
 ```
 
 **Production:**
@@ -223,7 +223,7 @@ cp .env.example .env
 firebase functions:config:set \
   email.user="your@gmail.com" \
   email.password="your-app-password" \
-  email.from="Rajala Services <noreply@rajala-services.com>"
+  email.from="Rajala Services <noreply@fixnero.fi>"
 
 firebase deploy --only functions
 ```

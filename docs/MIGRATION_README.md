@@ -188,7 +188,7 @@ Follow this sequence:
 ## 📞 Contact
 
 **Company Information**:
-- Website: rajala-services.com
+- Website: fixnero.fi
 - Email: info@fixnero.fi
 - Phone: +358401935001
 - Calendar: palvelut@fixnero.fi

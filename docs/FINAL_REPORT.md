@@ -134,7 +134,7 @@ The "invalid key type" error typically indicates one of:
 If "invalid key type" error persists:
 1. Access Google reCAPTCHA Admin Console
 2. Verify site key is configured for "reCAPTCHA v2 Checkbox" (NOT v3)
-3. Ensure domains are registered: rajala-services.com, www.rajala-services.com
+3. Ensure domains are registered: fixnero.fi, www.fixnero.fi
 4. Follow step-by-step guide in `RECAPTCHA_TROUBLESHOOTING.md`
 
 ---

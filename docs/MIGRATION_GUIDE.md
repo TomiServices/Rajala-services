@@ -571,7 +571,7 @@ chmod 600 service-account-*.json
    - Domains:
      * fixnero.fi
      * www.fixnero.fi
-     * rajala-services.com (legacy)
+     * fixnero.fi (legacy)
      * localhost (for testing)
    - Accept terms
    - Submit

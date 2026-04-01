@@ -204,7 +204,7 @@ For issues or questions, refer to:
 
 ## 🌐 Live Site
 
-**Production URL**: https://rajala-services.com
+**Production URL**: https://fixnero.fi
 
 ---
 

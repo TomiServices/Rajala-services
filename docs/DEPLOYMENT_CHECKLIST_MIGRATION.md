@@ -16,8 +16,8 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
   - Type: reCAPTCHA v3
   
 - [ ] **Configure Allowed Domains**
-  - Add: `rajala-services.com`
-  - Add: `www.rajala-services.com`
+  - Add: `fixnero.fi`
+  - Add: `www.fixnero.fi`
   - Add: `fxnr-web.web.app` (for testing)
   - Add: `fxnr-web.firebaseapp.com` (for testing)
 
@@ -220,7 +220,7 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
 ### 9. Functional Testing
 
 - [ ] **Test reCAPTCHA**
-  - Open: https://rajala-services.com
+  - Open: https://fixnero.fi
   - Scroll to booking form
   - Check browser console for reCAPTCHA loading
   - Should see: `grecaptcha` object available
@@ -253,7 +253,7 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
   - Expected: Booking document created with `syncedFromGoogle: true`
 
 - [ ] **Test Google Analytics**
-  - Open: https://rajala-services.com
+  - Open: https://fixnero.fi
   - Accept cookies when prompted
   - Navigate through pages
   - Check: https://analytics.google.com
@@ -333,7 +333,7 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
 - [ ] **Test CORS Configuration**
   - Try accessing functions from unauthorized domain
   - Expected: CORS error
-  - Try from rajala-services.com
+  - Try from fixnero.fi
   - Expected: Success
 
 ## Rollback Plan
