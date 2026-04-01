@@ -227,7 +227,7 @@ if [ -f "functions/.env" ]; then
     fi
     
     print_test "EMAIL_FROM"
-    if grep -q "EMAIL_FROM=" functions/.env && ! grep -q "EMAIL_FROM=Rajala Services <noreply@rajala-services.com>" functions/.env; then
+    if grep -q "EMAIL_FROM=" functions/.env && ! grep -q "EMAIL_FROM=Rajala Services <noreply@fixnero.fi>" functions/.env; then
         EMAIL_FROM=$(grep "EMAIL_FROM=" functions/.env | cut -d'=' -f2)
         print_success "EMAIL_FROM is set: $EMAIL_FROM"
     else

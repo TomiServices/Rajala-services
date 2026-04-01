@@ -87,8 +87,8 @@ Based on the problem statement, the following service accounts need to be create
    ```
 
 4. Verify domains in reCAPTCHA Admin Console:
-   - rajala-services.com
-   - www.rajala-services.com
+   - fixnero.fi
+   - www.fixnero.fi
    - fxnr-web.web.app
    - fxnr-web.firebaseapp.com
 
@@ -330,7 +330,7 @@ If issues occur after migration:
 - **Primary Calendar**: palvelut@fixnero.fi
 - **Company Email**: info@fixnero.fi
 - **Company Phone**: +358401935001
-- **Website**: rajala-services.com
+- **Website**: fixnero.fi
 
 ## References
 

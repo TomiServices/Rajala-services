@@ -89,14 +89,14 @@ RECAPTCHA_SCORE_THRESHOLD=0.5
 ## 🌐 Allowed Domains
 
 ### reCAPTCHA
-- rajala-services.com
-- www.rajala-services.com
+- fixnero.fi
+- www.fixnero.fi
 - fxnr-web.web.app
 - fxnr-web.firebaseapp.com
 
 ### CORS (Firebase Functions)
-- https://www.rajala-services.com
-- https://rajala-services.com
+- https://www.fixnero.fi
+- https://fixnero.fi
 - https://fxnr-web.web.app
 - https://fxnr-web.firebaseapp.com
 
@@ -122,7 +122,7 @@ RECAPTCHA_SCORE_THRESHOLD=0.5
 - **Calendar API Dashboard**: https://console.cloud.google.com/apis/api/calendar-json.googleapis.com?project=fxnr-web
 
 ### Production Website
-- **Main Domain**: https://rajala-services.com
+- **Main Domain**: https://fixnero.fi
 - **Firebase Hosting**: https://fxnr-web.web.app
 
 ### API Endpoints
@@ -136,7 +136,7 @@ RECAPTCHA_SCORE_THRESHOLD=0.5
 - **Email**: info@fixnero.fi
 - **Phone**: +358401935001
 - **Calendar Email**: palvelut@fixnero.fi
-- **Website**: rajala-services.com
+- **Website**: fixnero.fi
 
 ## ⚡ Quick Commands
 

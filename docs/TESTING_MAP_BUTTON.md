@@ -18,7 +18,7 @@ This document provides a comprehensive testing guide for the 'Avaa kartta' (Open
 - Options should include: Apple Maps, Google Maps (if installed), or open in Safari
 
 **Test Steps:**
-1. Open https://rajala-services.com on an iPhone or iPad
+1. Open https://fixnero.fi on an iPhone or iPad
 2. Scroll to the bottom of the page to the map section
 3. Click the "📍 Avaa kartta sovelluksessa" button
 4. Verify that iOS shows a dialog with app choices
@@ -35,7 +35,7 @@ This document provides a comprehensive testing guide for the 'Avaa kartta' (Open
 - Google Maps, Waze, or other navigation apps should be options
 
 **Test Steps:**
-1. Open https://rajala-services.com on an Android device
+1. Open https://fixnero.fi on an Android device
 2. Scroll to the map section
 3. Click the "📍 Avaa kartta sovelluksessa" button
 4. Verify that Android shows app chooser or opens Google Maps
@@ -52,7 +52,7 @@ This document provides a comprehensive testing guide for the 'Avaa kartta' (Open
 - Original tab should remain open
 
 **Test Steps:**
-1. Open https://rajala-services.com in a desktop browser
+1. Open https://fixnero.fi in a desktop browser
 2. Scroll to the map section
 3. Click the "📍 Avaa kartta sovelluksessa" button
 4. Verify a new tab opens with Google Maps
@@ -98,7 +98,7 @@ This document provides a comprehensive testing guide for the 'Avaa kartta' (Open
 
 **Test Steps:**
 1. Disable JavaScript in browser settings
-2. Open https://rajala-services.com
+2. Open https://fixnero.fi
 3. Click the map button
 4. Verify it still opens Google Maps (may not have app chooser)
 

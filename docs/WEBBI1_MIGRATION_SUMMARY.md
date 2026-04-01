@@ -8,7 +8,7 @@
 
 This document summarizes the migration from Firebase project "fxnr-web" to the new Firebase project "Webbi1" with updated service accounts and email configuration.
 
-**Note:** The domain remains www.rajala-services.com. Only the Firebase backend infrastructure is migrated.
+**Note:** The domain remains www.fixnero.fi. Only the Firebase backend infrastructure is migrated.
 
 ## What Changed
 
@@ -22,7 +22,7 @@ This document summarizes the migration from Firebase project "fxnr-web" to the n
 
 ### 2. Domain Configuration
 
-- **Domain:** www.rajala-services.com (unchanged)
+- **Domain:** www.fixnero.fi (unchanged)
 - **Firebase Hosting URLs:** Updated from fxnr-web to webbi1
 - **Files Updated:**
   - `functions/index.js` - Updated ALLOWED_ORIGINS to include webbi1.web.app and webbi1.firebaseapp.com
@@ -66,7 +66,7 @@ Updated all Firebase Cloud Functions endpoints:
 ### 6. CORS and Allowed Origins
 
 Updated CORS configuration to support both the main domain and Firebase hosting:
-- **Main Domain:** www.rajala-services.com (unchanged)
+- **Main Domain:** www.fixnero.fi (unchanged)
 - **Firebase Hosting:** webbi1.web.app and webbi1.firebaseapp.com (updated from fxnr-web)
 
 **Files Updated:**
@@ -189,7 +189,7 @@ Expected checks:
 ### Common Issues
 
 1. **CORS Errors:**
-   - Verify ALLOWED_ORIGINS in `functions/index.js` includes rajala-services.com and webbi1 hosting domains
+   - Verify ALLOWED_ORIGINS in `functions/index.js` includes fixnero.fi and webbi1 hosting domains
    - Redeploy functions
 
 2. **Service Account Permissions:**
@@ -245,5 +245,5 @@ For issues or questions:
 
 **Migration Completed:** 2026-01-13  
 **Project:** Webbi1  
-**Domain:** www.rajala-services.com (unchanged)  
+**Domain:** www.fixnero.fi (unchanged)  
 **Email:** Palvelut@fixnero.fi

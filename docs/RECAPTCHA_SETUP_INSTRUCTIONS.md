@@ -35,8 +35,8 @@ In the reCAPTCHA Admin Console for your site key:
 
 1. Click on the site key to view settings
 2. Verify these domains are listed:
-   - `rajala-services.com`
-   - `www.rajala-services.com`
+   - `fixnero.fi`
+   - `www.fixnero.fi`
    - `fxnr-web.web.app` (optional, for testing)
    - `fxnr-web.firebaseapp.com` (optional, for testing)
    - `localhost` (optional, for local development)
@@ -86,7 +86,7 @@ firebase deploy --only functions
 
 ### 5.1 Browser Test
 
-1. Open https://www.rajala-services.com (or your domain)
+1. Open https://www.fixnero.fi (or your domain)
 2. Open browser DevTools (F12) → Console tab
 3. Navigate to the booking section
 4. Fill out the booking form and submit
@@ -132,8 +132,8 @@ If your current site key is v2, create a new v3 key:
    - **reCAPTCHA type:** Select **"reCAPTCHA v3"**
    - **Domains:**
      ```
-     rajala-services.com
-     www.rajala-services.com
+     fixnero.fi
+     www.fixnero.fi
      fxnr-web.web.app
      fxnr-web.firebaseapp.com
      localhost

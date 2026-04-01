@@ -24,12 +24,12 @@ Tämä kattava tarkastus korjasi kriittiset ongelmat liittyen verkkotunnuksen yh
 ## 1. Korjatut Kriittiset Ongelmat
 
 ### 1.1 Verkkotunnuksen Yhtenäisyys ✅
-**Ongelma:** Sekalainen www.rajala-services.com ja fixnero.fi käyttö koko verkkosivustolla  
+**Ongelma:** Sekalainen www.fixnero.fi ja fixnero.fi käyttö koko verkkosivustolla  
 **Vaikutus:** Sekaannusta SEO:lle, rikkinäisiä linkkejä, epäjohdonmukaista brändäystä
 
 **Tehdyt Korjaukset:**
-- Päivitetty CNAME-tiedosto www.rajala-services.com → fixnero.fi
-- Korvattu kaikki www.rajala-services.com viittaukset 7 HTML-tiedostossa
+- Päivitetty CNAME-tiedosto www.fixnero.fi → fixnero.fi
+- Korvattu kaikki www.fixnero.fi viittaukset 7 HTML-tiedostossa
 - Päivitetty kanonical URL:t kaikilla sivuilla
 - Korjattu Open Graph ja Twitter metatagit
 - Korjattu schema.org strukturoitu data URL:t
