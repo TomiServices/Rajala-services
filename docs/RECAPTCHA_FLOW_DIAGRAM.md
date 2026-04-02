@@ -205,8 +205,8 @@ Script URL:
   Verification: https://www.google.com/recaptcha/api/siteverify
   
 Registered Domains:
-  - rajala-services.com
-  - www.rajala-services.com
+  - fixnero.fi
+  - www.fixnero.fi
   - fxnr-web.web.app (testing)
   - fxnr-web.firebaseapp.com (testing)
 ```
@@ -290,7 +290,7 @@ GOOGLE reCAPTCHA:
 ## Quick Reference
 
 **To test on production:**
-1. Visit: https://www.rajala-services.com
+1. Visit: https://www.fixnero.fi
 2. Scroll to booking section
 3. Fill form and check reCAPTCHA
 4. Submit and verify success

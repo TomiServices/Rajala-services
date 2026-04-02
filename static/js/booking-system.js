@@ -1222,6 +1222,14 @@ function initializeBookingSystem() {
                     
                     // Reset task selection
                     taskSelect.value = '';
+
+                    // Pre-warm: trigger events computation now so the calendar is
+                    // ready to paint the moment it becomes visible after task selection.
+                    if (calendarEl._calendar) {
+                        try { calendarEl._calendar.refetchEvents(); } catch(e) {
+                            console.error('Failed to pre-warm calendar events:', e);
+                        }
+                    }
                 } else {
                     // Hide task selection
                     taskSelection.style.display = 'none';
@@ -1250,22 +1258,69 @@ function initializeBookingSystem() {
                     if (step2) {
                         step2.classList.add('visible');
                         step2.style.display = 'block';
-                        
-                        // FIX: Force FullCalendar to recalculate its dimensions now that
-                        // the container is visible, then refetch events so day availability
-                        // indicators render immediately without requiring a manual tap.
-                        // A short delay ensures the container's display:block has been
-                        // applied and the layout engine has processed the change.
-                        setTimeout(() => {
-                            if (calendar && calendar.updateSize) {
-                                calendar.updateSize();
+
+                        // AUTO-ACTIVATION: when the container transitions from display:none
+                        // to display:block FullCalendar needs valid dimensions to render the
+                        // day-grid correctly (it previously rendered with 0-width columns).
+                        // Strategy: use ResizeObserver (fires after layout, before paint, at
+                        // the exact moment the element acquires real dimensions) so we call
+                        // updateSize() and refetchEvents() at precisely the right time without
+                        // any arbitrary delay. A 200ms setTimeout acts as a belt-and-suspenders
+                        // fallback for browsers that do not support ResizeObserver.
+                        calendarEl.classList.remove('compact');
+                        calendarEl.classList.add('expanded');
+
+                        var activationDone = false;
+                        var activationRetries = 0;
+                        function activateCalendar(scrollIntoView) {
+                            if (activationDone) return;
+                            var fc = calendarEl._calendar;
+                            if (!fc) {
+                                // Calendar not initialized yet — retry with bounded polling
+                                // (40 attempts × 50 ms = 2 s max) to handle slow network
+                                if (activationRetries < 40) {
+                                    activationRetries++;
+                                    setTimeout(function() { activateCalendar(scrollIntoView); }, 50);
+                                }
+                                return;
                             }
-                            // Refetch calendar events to ensure day availability indicators
-                            // load now that the calendar container is visible.
-                            if (calendar && calendar.refetchEvents) {
-                                calendar.refetchEvents();
+                            activationDone = true;
+                            try {
+                                if (fc.updateSize) fc.updateSize();
+                                if (fc.refetchEvents) fc.refetchEvents();
+                            } catch (e) {
+                                console.error('Calendar activation failed:', e);
                             }
-                            step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            if (scrollIntoView) {
+                                step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+
+                        // Fast-path: if the calendar instance is already available, activate
+                        // it immediately (forces a synchronous reflow for correct dimensions).
+                        // true = scroll the calendar into view after activation.
+                        // activationDone prevents double-activation if the paths below also fire.
+                        activateCalendar(true);
+
+                        // Primary: ResizeObserver fires after layout is computed (same frame
+                        // as the display change) giving FullCalendar valid column widths.
+                        if (typeof ResizeObserver !== 'undefined') {
+                            var resizeObserver = new ResizeObserver(function(entries) {
+                                for (var i = 0; i < entries.length; i++) {
+                                    if (entries[i].contentRect.width > 0) {
+                                        resizeObserver.disconnect();
+                                        activateCalendar(true);
+                                        break;
+                                    }
+                                }
+                            });
+                            resizeObserver.observe(calendarEl);
+                        }
+
+                        // Fallback: 50ms timeout covers ResizeObserver-unsupported browsers
+                        // and acts as a safety net if the observer fires with width=0.
+                        setTimeout(function() {
+                            activateCalendar(false);
                         }, 50);
                     }
                 } else {
@@ -1698,22 +1753,12 @@ function initializeBookingSystem() {
                 return dayNumber;
             },
             viewDidMount: function(info) {
-                // FIX Issue 1: Force calendar re-render on mobile to ensure cells are visible
-                // Double requestAnimationFrame is used because:
-                // 1. First rAF: Browser schedules the callback for the next frame
-                // 2. Second rAF: Ensures DOM layout/paint cycle has completed
-                // This timing pattern is necessary on mobile where the calendar container
-                // may be initially hidden and needs a full layout cycle to render correctly
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        if (calendar && info && info.view) {
-                            populateAvailableSlots(calendar, bookings);
-                            // Force calendar to update its size for mobile devices
-                            if (isMobileView && calendar.updateSize) {
-                                calendar.updateSize();
-                            }
-                        }
-                    });
+                // Force calendar to update its size after the view mounts so that
+                // column widths are correct when the container becomes visible.
+                requestAnimationFrame(function() {
+                    if (calendar && info && info.view && calendar.updateSize) {
+                        calendar.updateSize();
+                    }
                 });
             },
             // Mobile-specific improvements
@@ -1953,6 +1998,10 @@ function initializeBookingSystem() {
                 try {
                     calendar.render();
 
+                    // Expose FC instance immediately after render so activateCalendar can
+                    // use it even if the service is selected before the rAF below fires.
+                    calendarEl._calendar = calendar;
+
                     // Start 8-second timer: if calendar days haven't loaded by then, show "Päivitä" button
                     loadingTimer = setTimeout(function() {
                         var refreshBtn = document.getElementById('calendarRefreshBtn');
@@ -2049,7 +2098,7 @@ function initializeBookingSystem() {
                         if (calendar && calendar.updateSize) {
                             calendar.updateSize();
                         }
-                        
+
                         setupDropdownEventListener();
                     });
                     
@@ -2320,28 +2369,23 @@ function initializeBookingSystem() {
                 const msgText = document.getElementById('msgText');
                 const message = (msgCheckbox && msgCheckbox.checked && msgText) ? msgText.value.trim() : '';
                 
-                // Submit booking with up to 2 attempts.
-                // IMPORTANT: reCAPTCHA v3 tokens are single-use and expire quickly, so a
-                // fresh token must be obtained for every attempt.  Using fetchWithRetry with
-                // a pre-baked body would re-send the same (already-consumed) token on each
-                // retry, which causes the server to return a 401 "Turvavarmennus epäonnistui"
-                // error that looks like a user error but is really just a stale token.
-                // By generating a new token before each attempt we avoid this false failure.
-                const BOOK_URL = 'https://europe-north1-webbi1.cloudfunctions.net/book';
-                const MAX_BOOK_ATTEMPTS = 2;
+                // Send booking to backend Firebase Function.
+                // reCAPTCHA v3 tokens are single-use, so a fresh token must be
+                // obtained before every attempt — reusing a consumed token always
+                // results in a verification failure on the server side.
+                const MAX_BOOKING_ATTEMPTS = 3;
+                let recaptchaToken;
                 let result = null;
                 let lastBookingError = null;
-
-                for (let attempt = 1; attempt <= MAX_BOOK_ATTEMPTS; attempt++) {
-                    // Always get a fresh reCAPTCHA token for this attempt.
-                    let recaptchaToken;
+                for (let attempt = 1; attempt <= MAX_BOOKING_ATTEMPTS; attempt++) {
+                    // Refresh reCAPTCHA token for this specific attempt
                     try {
                         recaptchaToken = await executeRecaptcha('booking');
                     } catch (recaptchaError) {
                         throw new Error('Turvavarmennus epäonnistui. Päivitä sivu ja yritä uudelleen.');
                     }
 
-                    const bookingPayload = {
+                    const bookingData = {
                         name, email, phone,
                         aika: selectedSlot.toISOString(),
                         services: serviceData.services,
@@ -2352,109 +2396,87 @@ function initializeBookingSystem() {
                         recaptcha: recaptchaToken
                     };
                     if (message) {
-                        bookingPayload.message = message;
+                        bookingData.message = message;
                     }
 
                     try {
-                        const response = await fetch(BOOK_URL, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(bookingPayload)
-                        });
-
-                        if (response.ok) {
-                            result = await response.json();
-                            break;
+                        result = await fetchWithRetry(
+                            'https://europe-north1-webbi1.cloudfunctions.net/book',
+                            {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(bookingData)
+                            },
+                            0 // No internal retries — this outer loop handles retries
+                        );
+                        // Success — exit the retry loop
+                        break;
+                    } catch (attemptError) {
+                        lastBookingError = attemptError;
+                        // Do not retry on client errors (4xx) or reCAPTCHA/validation errors
+                        const status = attemptError.status || 0;
+                        const isNonRetryable =
+                            (status >= 400 && status < 500 && status !== 429) ||
+                            attemptError.message.includes('Turvavarmennus') ||
+                            attemptError.message.includes('Varmennusvirhe') ||
+                            attemptError.message.toLowerCase().includes('recaptcha');
+                        if (isNonRetryable || attempt === MAX_BOOKING_ATTEMPTS) {
+                            throw attemptError;
                         }
-
-                        // Parse server error message
-                        let errorMessage;
-                        try {
-                            const errorData = await response.json();
-                            errorMessage = errorData.error || errorData.message || `HTTP ${response.status}: ${response.statusText}`;
-                        } catch (_) {
-                            errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-                        }
-                        const responseError = new Error(errorMessage);
-                        responseError.status = response.status;
-
-                        // 4xx errors (except 429) are deterministic — retrying won't help.
-                        if (response.status >= 400 && response.status < 500 && response.status !== 429) {
-                            throw responseError;
-                        }
-
-                        // 5xx / 429: worth retrying once with a fresh token.
-                        lastBookingError = responseError;
-                    } catch (fetchErr) {
-                        const status = fetchErr.status || 0;
-                        const errMsg = fetchErr.message || '';
-                        // Don't retry on deterministic client errors or reCAPTCHA failures.
-                        if ((status >= 400 && status < 500 && status !== 429) ||
-                            errMsg.includes('Turvavarmennus') ||
-                            errMsg.toLowerCase().includes('recaptcha')) {
-                            throw fetchErr;
-                        }
-                        lastBookingError = fetchErr;
-                        // Network error message
-                        if (errMsg.includes('Failed to fetch') ||
-                            errMsg.includes('NetworkError')) {
-                            lastBookingError = new Error('Yhteysongelma palvelimeen. Tarkista, että evästeet ovat sallittuja ja yritä uudelleen.');
-                        }
-                    }
-
-                    // Wait before retry (1 s)
-                    if (attempt < MAX_BOOK_ATTEMPTS) {
-                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        // Exponential backoff before next attempt (1s, 2s)
+                        const delay = Math.pow(2, attempt - 1) * 1000;
+                        console.log(`Booking attempt ${attempt} failed, retrying in ${delay}ms...`);
+                        await new Promise(resolve => setTimeout(resolve, delay));
                     }
                 }
-
-                if (!result) {
-                    throw lastBookingError || new Error('Varaus epäonnistui. Yritä uudelleen!');
-                }
                 
-                // Hide loading bar and show success bar
-                progressBar.classList.remove('active');
-                successBar.classList.add('active');
-                
-                document.getElementById('msg').innerHTML = "Varaus onnistui! <br>Saat varausvahvistuksen sähköpostiisi pian.";
-                document.getElementById('bookingForm').reset();
-                document.getElementById('bookingForm').style.display = 'none';
-                document.getElementById('slot-summary').textContent = '';
-                document.getElementById('add-service-container').style.display = 'none';
-                document.getElementById('selected-services-container').style.display = 'none';
-                document.getElementById('repair-disclaimer').style.display = 'none';
-                // Reset registration number field
-                const regNumContainer = document.getElementById('registrationNumberContainer');
-                if (regNumContainer) {
-                    regNumContainer.style.display = 'none';
-                    regNumContainer.setAttribute('aria-hidden', 'true');
-                }
-                if (registrationNumberInput) {
-                    registrationNumberInput.value = '';
-                }
-                // Reset vehicle type select so the registration number field is
-                // properly shown again when the user selects a vehicle type for
-                // their next booking. Without this reset, the select retains its
-                // previous value but the registration number container stays hidden,
-                // causing form validation to fail on the next submission attempt.
-                const vehicleTypeSelectEl = document.getElementById('vehicleTypeSelect');
-                if (vehicleTypeSelectEl) {
-                    vehicleTypeSelectEl.value = '';
-                    // Also hide the "Muu" text input if it was visible
-                    const vehicleTypeOtherContainerEl = document.getElementById('vehicleTypeOtherContainer');
-                    if (vehicleTypeOtherContainerEl) {
-                        vehicleTypeOtherContainerEl.style.display = 'none';
-                        vehicleTypeOtherContainerEl.setAttribute('aria-hidden', 'true');
+                if (result) {
+                    // Hide loading bar and show success bar
+                    progressBar.classList.remove('active');
+                    successBar.classList.add('active');
+                    
+                    document.getElementById('msg').innerHTML = "Varaus onnistui! <br>Saat varausvahvistuksen sähköpostiisi pian.";
+                    document.getElementById('bookingForm').reset();
+                    document.getElementById('bookingForm').style.display = 'none';
+                    document.getElementById('slot-summary').textContent = '';
+                    document.getElementById('add-service-container').style.display = 'none';
+                    document.getElementById('selected-services-container').style.display = 'none';
+                    document.getElementById('repair-disclaimer').style.display = 'none';
+                    // Reset registration number field
+                    const regNumContainer = document.getElementById('registrationNumberContainer');
+                    if (regNumContainer) {
+                        regNumContainer.style.display = 'none';
+                        regNumContainer.setAttribute('aria-hidden', 'true');
                     }
-                    const vehicleTypeOtherEl = document.getElementById('vehicleTypeOther');
-                    if (vehicleTypeOtherEl) vehicleTypeOtherEl.value = '';
-                }
-                selectedSlot = null;
-                selectedServices = [];
-                bookings = await fetchBookings();
-                
-                if (calendar && typeof calendar.refetchEvents === 'function') {
-                    calendar.refetchEvents();
+                    if (registrationNumberInput) {
+                        registrationNumberInput.value = '';
+                    }
+                    // Reset vehicle type select so the registration number field is
+                    // properly shown again when the user selects a vehicle type for
+                    // their next booking. Without this reset, the select retains its
+                    // previous value but the registration number container stays hidden,
+                    // causing form validation to fail on the next submission attempt.
+                    const vehicleTypeSelectEl = document.getElementById('vehicleTypeSelect');
+                    if (vehicleTypeSelectEl) {
+                        vehicleTypeSelectEl.value = '';
+                        // Also hide the "Muu" text input if it was visible
+                        const vehicleTypeOtherContainerEl = document.getElementById('vehicleTypeOtherContainer');
+                        if (vehicleTypeOtherContainerEl) {
+                            vehicleTypeOtherContainerEl.style.display = 'none';
+                            vehicleTypeOtherContainerEl.setAttribute('aria-hidden', 'true');
+                        }
+                        const vehicleTypeOtherEl = document.getElementById('vehicleTypeOther');
+                        if (vehicleTypeOtherEl) vehicleTypeOtherEl.value = '';
+                    }
+                    selectedSlot = null;
+                    selectedServices = [];
+                    bookings = await fetchBookings();
+                    
+                    if (calendar && typeof calendar.refetchEvents === 'function') {
+                        calendar.refetchEvents();
+                    }
+                } else {
+                    throw new Error('Varaus epäonnistui. Yritä uudelleen!');
                 }
             } catch (error) {
                 console.error('Booking submission error:', error);
@@ -2480,7 +2502,7 @@ if (typeof FullCalendar !== 'undefined') {
                 } else {
                     console.error('FullCalendar not available during initialization');
                 }
-            }, { timeout: 2000 });
+            }, { timeout: 500 });
         });
     } else {
         window.addEventListener('load', function() {

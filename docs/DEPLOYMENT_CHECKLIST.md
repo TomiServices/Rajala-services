@@ -62,12 +62,12 @@ Should return JSON array of bookings (or empty array if no bookings exist).
 
 **Method:** Browser DevTools
 
-1. Open `https://www.rajala-services.com`
+1. Open `https://www.fixnero.fi`
 2. Open DevTools (F12) → Network tab
 3. Scroll to booking calendar
 4. Check Network requests to Firebase Functions
 5. Verify response headers include:
-   - ✅ `Access-Control-Allow-Origin: https://www.rajala-services.com`
+   - ✅ `Access-Control-Allow-Origin: https://www.fixnero.fi`
    - ✅ `Access-Control-Allow-Credentials: true`
 
 **Expected Result:** No CORS errors in console
@@ -78,7 +78,7 @@ Should return JSON array of bookings (or empty array if no bookings exist).
 
 ```bash
 curl -X OPTIONS \
-  -H "Origin: https://www.rajala-services.com" \
+  -H "Origin: https://www.fixnero.fi" \
   -H "Access-Control-Request-Method: GET" \
   -H "Access-Control-Request-Headers: Content-Type" \
   https://europe-north1-fxnr-web.cloudfunctions.net/bookings
@@ -104,7 +104,7 @@ curl https://europe-north1-fxnr-web.cloudfunctions.net/bookings
 
 **Method:** Browser
 
-1. Navigate to `https://www.rajala-services.com`
+1. Navigate to `https://www.fixnero.fi`
 2. Scroll to booking calendar section
 3. Open DevTools Console
 4. Check for reCAPTCHA errors
@@ -119,7 +119,7 @@ curl https://europe-north1-fxnr-web.cloudfunctions.net/bookings
 
 **Method:** Browser DevTools
 
-1. Open `https://www.rajala-services.com`
+1. Open `https://www.fixnero.fi`
 2. Open DevTools → Network tab
 3. Right-click on network request → Block request pattern
 4. Block `*.cloudfunctions.net`
@@ -144,7 +144,7 @@ curl https://europe-north1-fxnr-web.cloudfunctions.net/bookings
 
 **Method:** Manual Testing
 
-1. Navigate to `https://www.rajala-services.com`
+1. Navigate to `https://www.fixnero.fi`
 2. Select a future date (weekday)
 3. Select an available time slot
 4. Choose a service type
@@ -166,7 +166,7 @@ curl https://europe-north1-fxnr-web.cloudfunctions.net/bookings
 
 **Method:** Browser DevTools
 
-1. Open `https://www.rajala-services.com`
+1. Open `https://www.fixnero.fi`
 2. Open DevTools → Network tab
 3. Load booking calendar
 4. Check response headers for bookings endpoint
@@ -274,7 +274,7 @@ Deployment is successful when:
 
 **Check:**
 1. Are functions deployed? `firebase functions:list`
-2. Is the domain exactly correct? (www.rajala-services.com vs rajala-services.com)
+2. Is the domain exactly correct? (www.fixnero.fi vs fixnero.fi)
 3. Clear browser cache
 4. Check Firebase Console logs for CORS middleware errors
 

@@ -52,8 +52,8 @@ The site key in `index.html` is: `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
 1. Go to [Google reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin)
 2. Select the site key: `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
 3. Ensure the following domains are registered:
-   - `rajala-services.com`
-   - `www.rajala-services.com`
+   - `fixnero.fi`
+   - `www.fixnero.fi`
    - `fxnr-web.web.app` (optional, for testing)
    - `fxnr-web.firebaseapp.com` (optional, for testing)
 
@@ -126,7 +126,7 @@ firebase deploy --only hosting
 
 ```bash
 # Test bookings endpoint with CORS
-curl -H "Origin: https://www.rajala-services.com" \
+curl -H "Origin: https://www.fixnero.fi" \
      -H "Access-Control-Request-Method: GET" \
      -H "Access-Control-Request-Headers: Content-Type" \
      -X OPTIONS \
@@ -135,7 +135,7 @@ curl -H "Origin: https://www.rajala-services.com" \
 ```
 
 Expected response headers:
-- `Access-Control-Allow-Origin: https://www.rajala-services.com`
+- `Access-Control-Allow-Origin: https://www.fixnero.fi`
 - `Access-Control-Allow-Credentials: true`
 
 ### Test Bookings Endpoint
@@ -149,7 +149,7 @@ Expected: JSON array of bookings or empty array `[]`
 
 ### Test reCAPTCHA on Production Site
 
-1. Navigate to `https://www.rajala-services.com`
+1. Navigate to `https://www.fixnero.fi`
 2. Open browser DevTools (F12)
 3. Go to the booking calendar section
 4. Select a date and time

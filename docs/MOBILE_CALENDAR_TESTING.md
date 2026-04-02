@@ -14,7 +14,7 @@ This guide helps you verify that the mobile calendar fix is working correctly.
 
 ### Prerequisites
 - Access to mobile devices (iOS and/or Android)
-- Access to the website: https://www.rajala-services.com
+- Access to the website: https://www.fixnero.fi
 - Navigate to the booking calendar section (Ajanvaraus)
 
 ### Test Procedure
