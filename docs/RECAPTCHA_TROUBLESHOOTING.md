@@ -24,8 +24,8 @@ To verify in the [Google reCAPTCHA Admin Console](https://www.google.com/recaptc
 Ensure the site key is registered for the correct domains:
 
 **Required domains:**
-- `rajala-services.com`
-- `www.rajala-services.com`
+- `fixnero.fi`
+- `www.fixnero.fi`
 
 **Optional (for testing):**
 - `localhost`

@@ -64,8 +64,8 @@
 #### 4. CORS Configuration
 - ✅ **Allowed Origins Only**
   ```javascript
-  - https://www.rajala-services.com
-  - https://rajala-services.com
+  - https://www.fixnero.fi
+  - https://fixnero.fi
   - https://fxnr-web.web.app
   - https://fxnr-web.firebaseapp.com
   ```

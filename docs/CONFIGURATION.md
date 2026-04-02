@@ -127,7 +127,7 @@ EMAIL_PASSWORD=your-16-char-app-password
 # This appears as "From" in customer emails
 # Format: Display Name <email@domain.com>
 # Example: Rajala Services <noreply@fixnero.fi>
-EMAIL_FROM=Rajala Services <noreply@rajala-services.com>
+EMAIL_FROM=Rajala Services <noreply@fixnero.fi>
 
 # ============================================
 # GOOGLE CALENDAR CONFIGURATION
@@ -188,7 +188,7 @@ FIREBASE_REGION=europe-north1
 # Allowed origins for CORS (comma-separated)
 # These domains can make requests to your Cloud Functions
 # Format: https://domain1.com,https://domain2.com
-ALLOWED_ORIGINS=https://fixnero.fi,https://www.fixnero.fi,https://rajala-services.com,https://fxnr-web.firebaseapp.com
+ALLOWED_ORIGINS=https://fixnero.fi,https://www.fixnero.fi,https://fixnero.fi,https://fxnr-web.firebaseapp.com
 
 # ============================================
 # BUSINESS CONFIGURATION

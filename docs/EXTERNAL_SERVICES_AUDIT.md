@@ -60,7 +60,7 @@ This document provides a comprehensive audit of all external services and integr
 ##### 1.1 Firebase Hosting
 - **Purpose:** Static website hosting with CDN
 - **Configuration File:** `firebase.json`
-- **Domain:** fixnero.fi (primary), rajala-services.com (secondary)
+- **Domain:** fixnero.fi (primary), fixnero.fi (secondary)
 - **Features Used:**
   - Clean URLs
   - Custom headers (security, caching)
@@ -252,7 +252,7 @@ Sends automated booking confirmation emails to customers when they make a reserv
 ```
 EMAIL_USER=<gmail_address>
 EMAIL_PASSWORD=<app_password>
-EMAIL_FROM=Rajala Services <noreply@rajala-services.com>
+EMAIL_FROM=Rajala Services <noreply@fixnero.fi>
 ```
 
 #### Code Locations

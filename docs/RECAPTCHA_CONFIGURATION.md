@@ -46,8 +46,8 @@ The score ranges from 0.0 (very likely a bot) to 1.0 (very likely a human). A th
 The reCAPTCHA site key must be registered for the following domains in the [Google reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin):
 
 ### Production Domains (Required)
-- ✅ `rajala-services.com`
-- ✅ `www.rajala-services.com`
+- ✅ `fixnero.fi`
+- ✅ `www.fixnero.fi`
 
 ### Development/Testing Domains (Optional but Recommended)
 - `fxnr-web.web.app`
@@ -127,7 +127,7 @@ if (score < RECAPTCHA_SCORE_THRESHOLD) {
 4. Click on the site key to view settings
 5. Verify the following:
    - ✅ reCAPTCHA type: v3 (score-based, invisible)
-   - ✅ Domains include: `rajala-services.com` and `www.rajala-services.com`
+   - ✅ Domains include: `fixnero.fi` and `www.fixnero.fi`
    - ✅ Site key is active (not disabled)
    - ✅ NOT using reCAPTCHA Enterprise
 
@@ -143,7 +143,7 @@ firebase functions:config:get recaptcha.secret
 
 ### 3. Test reCAPTCHA on Production Site
 
-1. Navigate to: `https://www.rajala-services.com`
+1. Navigate to: `https://www.fixnero.fi`
 2. Scroll to the booking calendar section
 3. Select a date and time
 4. Fill in the booking form
@@ -257,8 +257,8 @@ If the current site key is invalid or you need a new one:
    - **Label:** Rajala Services Booking Calendar
    - **reCAPTCHA type:** reCAPTCHA v3
    - **Domains:**
-     - `rajala-services.com`
-     - `www.rajala-services.com`
+     - `fixnero.fi`
+     - `www.fixnero.fi`
      - `fxnr-web.web.app`
      - `fxnr-web.firebaseapp.com`
    - **Owners:** (your Google account email)
@@ -388,8 +388,8 @@ If you continue experiencing issues after following this guide:
 The reCAPTCHA site key must be registered for the following domains in the [Google reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin):
 
 ### Production Domains (Required)
-- ✅ `rajala-services.com`
-- ✅ `www.rajala-services.com`
+- ✅ `fixnero.fi`
+- ✅ `www.fixnero.fi`
 
 ### Development/Testing Domains (Optional but Recommended)
 - `fxnr-web.web.app`
@@ -459,7 +459,7 @@ The server will:
 4. Click on the site key to view settings
 5. Verify the following:
    - ✅ reCAPTCHA type: v2 Checkbox (FREE version)
-   - ✅ Domains include: `rajala-services.com` and `www.rajala-services.com`
+   - ✅ Domains include: `fixnero.fi` and `www.fixnero.fi`
    - ✅ Site key is active (not disabled)
    - ✅ NOT using reCAPTCHA Enterprise
 
@@ -475,7 +475,7 @@ firebase functions:config:get recaptcha.secret
 
 ### 3. Test reCAPTCHA on Production Site
 
-1. Navigate to: `https://www.rajala-services.com`
+1. Navigate to: `https://www.fixnero.fi`
 2. Scroll to the booking calendar section
 3. Select a date and time
 4. Fill in the booking form
@@ -616,8 +616,8 @@ If the current site key is invalid or you need a new one:
    - **Label:** Rajala Services Booking Calendar
    - **reCAPTCHA type:** reCAPTCHA v2 → "I'm not a robot" Checkbox
    - **Domains:**
-     - `rajala-services.com`
-     - `www.rajala-services.com`
+     - `fixnero.fi`
+     - `www.fixnero.fi`
      - `fxnr-web.web.app`
      - `fxnr-web.firebaseapp.com`
    - **Owners:** (your Google account email)

@@ -97,7 +97,7 @@ Validation and deployment utilities:
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v20 LTS)
+- Node.js (v18+ suositeltu / recommended)
 - Firebase CLI
 - Google Cloud account (for Firebase, Calendar API)
 
@@ -176,9 +176,6 @@ Test files are located in `/tests/` directory:
 - HTTPS-only with HSTS
 - Firestore security rules for data protection
 - Environment variables for sensitive configuration
-- **CodeQL** security scanning via GitHub Actions (runs on every push and weekly)
-- **Dependabot** automatic dependency updates for npm packages and GitHub Actions
-- Node.js pinned to **v20 LTS** (`>=20 <23`) for Firebase Functions compatibility
 
 ## 📚 Additional Documentation
 
@@ -188,20 +185,6 @@ For detailed documentation on:
 - **Migration**: See `docs/MIGRATION_GUIDE.md`
 - **External Services**: See `docs/EXTERNAL_SERVICES_AUDIT.md`
 - **Administrator Setup**: See `docs/ADMINISTRATOR_SETUP_GUIDE.md`
-
-## 🤖 CI/CD
-
-This project uses **GitHub Actions** for automated testing and deployment:
-
-- **`nodejs-ci.yml`**: Runs function tests on every push/PR to `main`, then deploys to Firebase on merge.
-- **`codeql.yml`**: Runs CodeQL security analysis on every push/PR to `main` and weekly on a schedule.
-- **`dependabot.yml`**: Automatically opens PRs for outdated npm and GitHub Actions dependencies weekly.
-
-To enable automated deployment, add a `FIREBASE_TOKEN` secret to the repository settings:
-```bash
-firebase login:ci  # generate a CI token
-# Add the output token as a GitHub secret named FIREBASE_TOKEN
-```
 
 ## 🤝 Contributing
 
@@ -221,7 +204,7 @@ For issues or questions, refer to:
 
 ## 🌐 Live Site
 
-**Production URL**: https://rajala-services.com
+**Production URL**: https://fixnero.fi
 
 ---
 

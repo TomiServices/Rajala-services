@@ -40,7 +40,7 @@ Expected results:
 ### Test 1: Verify reCAPTCHA Script Loads
 
 **Steps:**
-1. Open your booking page: `https://www.rajala-services.com`
+1. Open your booking page: `https://www.fixnero.fi`
 2. Open Browser DevTools (F12)
 3. Go to Network tab
 4. Filter by "recaptcha"

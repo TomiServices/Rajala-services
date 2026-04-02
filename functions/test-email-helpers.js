@@ -386,21 +386,28 @@ async function testIdempotencyCheckLogic() {
   console.log('------------------------------------------------------------------------');
 
   // Simulate the idempotency check from onBookingCreated
+  // Updated to check both emailQueued (new) and emailSent (legacy) fields
   async function shouldSkipEmail(bookingId, fakeDb) {
     try {
       const doc = await fakeDb.get(bookingId);
-      if (doc.exists && doc.data().emailSent === true) return true;
+      if (doc.exists && (doc.data().emailQueued === true || doc.data().emailSent === true)) return true;
     } catch (_) {
       // Continue on error (same as production code)
     }
     return false;
   }
 
-  // Case 1: emailSent already true → should skip
+  // Case 1: emailSent already true (legacy) → should skip
   const dbAlreadySent = {
     get: async (_id) => ({ exists: true, data: () => ({ emailSent: true }) })
   };
   assert(await shouldSkipEmail('booking1', dbAlreadySent), 'Skips send when emailSent is already true');
+
+  // Case 1b: emailQueued already true (new field) → should skip
+  const dbAlreadyQueued = {
+    get: async (_id) => ({ exists: true, data: () => ({ emailQueued: true }) })
+  };
+  assert(await shouldSkipEmail('booking1b', dbAlreadyQueued), 'Skips send when emailQueued is already true');
 
   // Case 2: emailSent is false → should proceed
   const dbNotSent = {

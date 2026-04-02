@@ -10,8 +10,8 @@ This document describes the fixes implemented to resolve CORS, Firebase Function
 
 **Solution:**
 - Updated Firebase Cloud Functions CORS configuration to explicitly allow authorized domains:
-  - `https://www.rajala-services.com`
-  - `https://rajala-services.com`
+  - `https://www.fixnero.fi`
+  - `https://fixnero.fi`
   - `https://fxnr-web.web.app`
   - `https://fxnr-web.firebaseapp.com`
 - Added proper OPTIONS preflight request handling
@@ -24,8 +24,8 @@ This document describes the fixes implemented to resolve CORS, Firebase Function
 ```javascript
 const cors = require("cors")({
     origin: [
-        "https://www.rajala-services.com",
-        "https://rajala-services.com",
+        "https://www.fixnero.fi",
+        "https://fixnero.fi",
         "https://fxnr-web.web.app",
         "https://fxnr-web.firebaseapp.com"
     ],
@@ -123,7 +123,7 @@ firebase functions:list
 curl https://europe-north1-fxnr-web.cloudfunctions.net/bookings
 
 # Test from production domain
-curl -H "Origin: https://www.rajala-services.com" \
+curl -H "Origin: https://www.fixnero.fi" \
      -H "Access-Control-Request-Method: GET" \
      -H "Access-Control-Request-Headers: Content-Type" \
      -X OPTIONS \
@@ -205,8 +205,8 @@ curl -H "Origin: https://www.rajala-services.com" \
 - **Site Key:** `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
 - **Type:** reCAPTCHA v2 Checkbox (FREE version)
 - **Domains:** Should include:
-  - `rajala-services.com`
-  - `www.rajala-services.com`
+  - `fixnero.fi`
+  - `www.fixnero.fi`
   - `fxnr-web.web.app`
   - `fxnr-web.firebaseapp.com`
 

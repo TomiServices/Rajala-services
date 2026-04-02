@@ -189,7 +189,7 @@ The site key must be configured as v3:
 2. Find site key: `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
 3. Verify:
    - ✅ Type: reCAPTCHA v3
-   - ✅ Domains: `rajala-services.com`, `www.rajala-services.com`
+   - ✅ Domains: `fixnero.fi`, `www.fixnero.fi`
    - ✅ Status: Active
 
 ### Firebase Functions Configuration
@@ -222,7 +222,7 @@ RECAPTCHA_SECRET=your_v3_secret_key_here
 
 **Test the booking flow:**
 ```
-1. Open https://www.rajala-services.com
+1. Open https://www.fixnero.fi
 2. Navigate to booking section
 3. Select date and time
 4. Fill form and submit
