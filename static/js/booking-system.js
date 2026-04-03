@@ -221,7 +221,9 @@ function initializeBookingSystem() {
     
     let selectedSlot = null;
 
-    // Fetch bookings from backend Firebase Function with retry logic
+    // Fetch bookings from backend Firebase Function with retry logic.
+    // Returns the bookings array on success (may be empty []) or null on failure.
+    // Callers must distinguish null (fetch failed) from [] (no bookings yet).
     async function fetchBookings() {
         try {
             const data = await fetchWithRetry(
@@ -230,25 +232,22 @@ function initializeBookingSystem() {
                 2 // Max 2 retries
             );
             
-            if (data) {
+            if (data !== null && data !== undefined) {
                 console.log(`Successfully fetched ${data.length} bookings from server`);
-                return data;
+                return data; // [] for empty, [...] when bookings exist
             }
         } catch (err) {
             // fetchWithRetry only throws for non-retryable errors on POST requests;
             // for the bookings GET endpoint a failure here is unexpected but should
-            // not break the calendar UI — fall through to the empty-array fallback.
+            // not break the calendar UI — fall through to the null fallback.
             console.error('Failed to fetch bookings from server:', err.message || err);
         }
         
-        // Fallback to empty array instead of mock data for production
-        // Mock data can cause confusion and inconsistent state
-        console.error('Failed to fetch bookings from server - using empty array');
+        // Return null to signal that the fetch failed (vs [] which means "no bookings").
+        // The caller uses this distinction to decide whether to show a warning.
+        console.error('Failed to fetch bookings from server');
         console.warn('Calendar will show all slots as available until server connection is restored');
-        
-        // Return empty array - this means all slots will appear available
-        // which is better than showing false bookings from mock data
-        return [];
+        return null;
     }
 
     // FIX: Define populateAvailableSlots function to prevent ReferenceError
@@ -1652,12 +1651,16 @@ function initializeBookingSystem() {
         return slots;
     }
 
-    fetchBookings().then(bookings => {
-        // Ensure bookings is an array
-        bookings = Array.isArray(bookings) ? bookings : [];
+    fetchBookings().then(fetchResult => {
+        // fetchResult is null when the fetch failed; [] or [...] when it succeeded.
+        const bookingsFetchFailed = fetchResult === null;
+        // Ensure bookings is always a usable array regardless of fetch outcome.
+        let bookings = Array.isArray(fetchResult) ? fetchResult : [];
         
-        // Display warning to user if bookings failed to load
-        if (bookings.length === 0) {
+        // Display warning only when the server request actually failed.
+        // An empty bookings list (no upcoming appointments) is normal and should
+        // not trigger this message.
+        if (bookingsFetchFailed) {
             const errorEl = document.getElementById('error');
             if (errorEl) {
                 errorEl.innerHTML = '<strong>Huomio:</strong> Varaustietoja ei voitu hakea palvelimelta. Kaikki ajat näytetään vapaina. Jos ongelma jatkuu, päivitä sivu tai ota yhteyttä asiakaspalveluun.';
@@ -2470,7 +2473,12 @@ function initializeBookingSystem() {
                     }
                     selectedSlot = null;
                     selectedServices = [];
-                    bookings = await fetchBookings();
+                    const refreshedBookings = await fetchBookings();
+                    // Only update bookings if the refresh succeeded; keep the
+                    // existing array on failure to avoid breaking slot-booked checks.
+                    if (refreshedBookings !== null) {
+                        bookings = refreshedBookings;
+                    }
                     
                     if (calendar && typeof calendar.refetchEvents === 'function') {
                         calendar.refetchEvents();
