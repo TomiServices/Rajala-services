@@ -942,29 +942,21 @@ exports.book = onRequest({
       return res.status(400).json({ error: 'Rekisteritunnus on pakollinen tieto' });
     }
 
-    // reCAPTCHA verification DISABLED to allow Firebase Functions deployment
-    // The verification was causing deployment failures
-    // TODO: Re-enable reCAPTCHA when deployment issues are resolved
-    // SECURITY NOTE: Without reCAPTCHA, this endpoint is vulnerable to automated abuse.
-    // Consider implementing rate limiting or re-enabling reCAPTCHA verification
-    // by uncommenting the verifyRecaptcha call below and configuring RECAPTCHA_SECRET.
-    // 
-    // To re-enable reCAPTCHA:
-    // 1. Set RECAPTCHA_SECRET environment variable in Firebase Functions
-    // 2. Uncomment the recaptchaToken extraction and verification code below:
-    //
-     const recaptchaToken = req.body.recaptcha || req.body.recaptchaToken || req.body['g-recaptcha-response'];
-     const recaptchaResult = await verifyRecaptcha(recaptchaToken, { expectedAction: 'booking' });
-     if (!recaptchaResult.success) {
-       const statusCode = recaptchaResult.error === 'missing recaptcha token' ? 400 : 401;
-       return res.status(statusCode).json({ 
-         error: recaptchaResult.error,
-         message: recaptchaResult.error === 'missing recaptcha token' 
-           ? 'Turvavarmennus puuttuu. Päivitä sivu ja yritä uudelleen.'
-           : 'Turvavarmennus epäonnistui. Yritä uudelleen.',
-         details: recaptchaResult.details
-       });
-     }
+    // reCAPTCHA v3 verification. If RECAPTCHA_SECRET is not configured the
+    // verifyRecaptcha helper returns success:true (see its implementation), so
+    // bookings are still accepted while admins configure the environment.
+    // To configure: firebase functions:secrets:set RECAPTCHA_SECRET
+    const recaptchaToken = req.body.recaptcha || req.body.recaptchaToken || req.body['g-recaptcha-response'];
+    const recaptchaResult = await verifyRecaptcha(recaptchaToken, { expectedAction: 'booking' });
+    if (!recaptchaResult.success) {
+      const statusCode = recaptchaResult.error === 'missing recaptcha token' ? 400 : 401;
+      return res.status(statusCode).json({
+        error: recaptchaResult.error,
+        message: recaptchaResult.error === 'missing recaptcha token'
+          ? 'Turvavarmennus puuttuu. Päivitä sivu ja yritä uudelleen.'
+          : 'Turvavarmennus epäonnistui. Yritä uudelleen.'
+      });
+    }
     console.log('reCAPTCHA verification successful');
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
