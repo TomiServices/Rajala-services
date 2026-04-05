@@ -35,29 +35,3 @@ jobs:
       - name: Run function tests
         working-directory: functions
         run: npm test
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: test
-    # Only deploy when pushing/merging to main, never during pull request workflows
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    permissions:
-      contents: read
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Use Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
-
-      - name: Install function dependencies
-        working-directory: functions
-        run: npm ci
-
-      - name: Deploy to Firebase
-        run: firebase deploy --only hosting,functions --token "${{ secrets.FIREBASE_TOKEN }}" --non-interactive
