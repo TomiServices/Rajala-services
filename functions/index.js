@@ -1537,10 +1537,8 @@ async function registerCalendarWatch(callbackUrl) {
   const calendarIdEnv = safeGetParamValue(googleCalendarId, 'GOOGLE_CALENDAR_ID') || getLegacyConfigValue('google.calendar_id');
   if (!calendarIdEnv) throw new Error('Missing GOOGLE_CALENDAR_ID');
 
-  // Use workload identity / function's SA (ADC) when available
-  const authClient = await google.auth.getClient({
-    scopes: ['https://www.googleapis.com/auth/calendar']
-  });
+  // Use configured service account credentials if available, otherwise fall back to ADC.
+  const authClient = await getGoogleClient(['https://www.googleapis.com/auth/calendar']);
   const calendar = google.calendar({ version: 'v3', auth: authClient });
 
   const channelId = `fxnr-web-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
@@ -1649,18 +1647,22 @@ exports.scheduleWatchRenewal = onSchedule({
   timeZone: 'Europe/Helsinki',
   retryCount: 1
 }, async () => {
-  const callbackUrl = safeGetParamValue(watchCallbackEnv, 'WATCH_CALLBACK_URL') || getLegacyConfigValue('watch.callback_url');
-  if (!callbackUrl) {
-    console.warn('scheduleWatchRenewal: WATCH_CALLBACK_URL not configured — skipping renewal. ' +
-      'Set WATCH_CALLBACK_URL to the calendarWebhook Cloud Function URL to enable auto-renewal.');
-    return;
-  }
+  let callbackUrl = safeGetParamValue(watchCallbackEnv, 'WATCH_CALLBACK_URL') || getLegacyConfigValue('watch.callback_url');
 
-  // Check if existing watch still has more than 2 days remaining; if so, skip.
+  // Query the latest watch doc once — used both to check expiry and to obtain the
+  // last-known callbackUrl when WATCH_CALLBACK_URL is not explicitly configured.
   try {
     const snap = await db.collection(WATCH_COLLECTION).orderBy('createdAt', 'desc').limit(1).get();
     if (!snap.empty) {
       const watchData = snap.docs[0].data();
+
+      // When WATCH_CALLBACK_URL is not set in env, fall back to the callbackUrl stored in
+      // the last watch doc so the scheduled renewal works even without explicit configuration.
+      if (!callbackUrl && watchData.callbackUrl) {
+        callbackUrl = watchData.callbackUrl;
+        console.log('scheduleWatchRenewal: Using last known callbackUrl from watch doc:', callbackUrl);
+      }
+
       const expiration = watchData.expiration ? Number(watchData.expiration) : null;
       const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
       if (expiration && expiration > Date.now() + TWO_DAYS_MS) {
@@ -1681,6 +1683,12 @@ exports.scheduleWatchRenewal = onSchedule({
     }
   } catch (checkErr) {
     console.warn('scheduleWatchRenewal: Could not check existing watch, proceeding with renewal:', checkErr.message || checkErr);
+  }
+
+  if (!callbackUrl) {
+    console.warn('scheduleWatchRenewal: WATCH_CALLBACK_URL not configured and no prior watch found — skipping renewal. ' +
+      'Set WATCH_CALLBACK_URL to the calendarWebhook Cloud Function URL to enable auto-renewal.');
+    return;
   }
 
   try {
@@ -1760,9 +1768,7 @@ exports.calendarWebhook = onRequest({
     // If calendar isn't configured via explicit service account, we will try ADC via getClient
     const calendar = initializeGoogleCalendar() || (await (async () => {
       try {
-        const authClient = await google.auth.getClient({
-          scopes: ['https://www.googleapis.com/auth/calendar']
-        });
+        const authClient = await getGoogleClient(['https://www.googleapis.com/auth/calendar']);
         const calIdEnv = safeGetParamValue(googleCalendarId, 'GOOGLE_CALENDAR_ID') || getLegacyConfigValue('google.calendar_id');
         if (!calIdEnv) return null;
         calendarId = calIdEnv;
