@@ -227,7 +227,7 @@ function initializeBookingSystem() {
     async function fetchBookings() {
         try {
             const data = await fetchWithRetry(
-                'https://europe-north1-webbi1.cloudfunctions.net/bookings',
+                'https://europe-north1-fxnr-web.cloudfunctions.net/bookings',
                 {},
                 2 // Max 2 retries
             );
@@ -2404,7 +2404,7 @@ function initializeBookingSystem() {
 
                     try {
                         result = await fetchWithRetry(
-                            'https://europe-north1-webbi1.cloudfunctions.net/book',
+                            'https://europe-north1-fxnr-web.cloudfunctions.net/book',
                             {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },

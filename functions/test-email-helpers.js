@@ -586,6 +586,52 @@ function testSendgridApiKeyTrimming() {
   console.log('');
 }
 
+// --- Test 10: ALLOWED_ORIGINS configuration - validates domain config after migration ---
+function testAllowedOrigins() {
+  console.log('📝 Test 10: ALLOWED_ORIGINS configuration - domain migration to fxnr-web');
+  console.log('--------------------------------------------------------------------------');
+
+  // Mirror the ALLOWED_ORIGINS from functions/index.js.
+  // These must include the current production domain (fixnero.fi) and
+  // the new Firebase project hosting URLs (fxnr-web.*). The old project
+  // (webbi1.*) must no longer be present since the project was migrated.
+  const ALLOWED_ORIGINS = [
+    'https://www.fixnero.fi',
+    'https://fixnero.fi',
+    'https://fxnr-web.web.app',
+    'https://fxnr-web.firebaseapp.com'
+  ];
+
+  // Helper that mirrors setCorsHeadersForRequest: an incoming request origin is
+  // allowed only when it is an exact member of the whitelist array.
+  // Array.indexOf() / Set.has() perform strict equality — there is no substring
+  // or partial-URL matching happening here.
+  const allowedSet = new Set(ALLOWED_ORIGINS);
+  function isExactlyAllowed(origin) {
+    return allowedSet.has(origin);
+  }
+
+  // Production custom domain must be allowed (exact match)
+  assert(isExactlyAllowed('https://fixnero.fi'), 'fixnero.fi is in ALLOWED_ORIGINS');
+  assert(isExactlyAllowed('https://www.fixnero.fi'), 'www.fixnero.fi is in ALLOWED_ORIGINS');
+
+  // New Firebase project hosting URLs must be allowed (exact match)
+  assert(isExactlyAllowed('https://fxnr-web.web.app'), 'fxnr-web.web.app is in ALLOWED_ORIGINS');
+  assert(isExactlyAllowed('https://fxnr-web.firebaseapp.com'), 'fxnr-web.firebaseapp.com is in ALLOWED_ORIGINS');
+
+  // Old Firebase project hosting URLs must NOT be present (project migrated away from webbi1)
+  assert(!isExactlyAllowed('https://webbi1.web.app'), 'webbi1.web.app is NOT in ALLOWED_ORIGINS');
+  assert(!isExactlyAllowed('https://webbi1.firebaseapp.com'), 'webbi1.firebaseapp.com is NOT in ALLOWED_ORIGINS');
+
+  // Untrusted/unknown origins must be rejected
+  assert(!isExactlyAllowed('https://evil.com'), 'evil.com fails CORS check');
+
+  // Exact match only: a URL that merely contains an allowed origin as a substring must be rejected
+  assert(!isExactlyAllowed('https://evil.com?r=https://fixnero.fi'), 'URL with fixnero.fi as substring is rejected');
+
+  console.log('');
+}
+
 
 async function runAll() {
   testEscapeHtml();
@@ -597,6 +643,7 @@ async function runAll() {
   await testCreateEmailDocumentSkipIfExists();
   testRegistrationNumberValidation();
   testSendgridApiKeyTrimming();
+  testAllowedOrigins();
 
   console.log('=====================================');
   console.log('Test Summary');

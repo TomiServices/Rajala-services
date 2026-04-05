@@ -76,8 +76,8 @@ const WATCH_COLLECTION = 'calendarWatch';
 const ALLOWED_ORIGINS = [
   'https://www.fixnero.fi',
   'https://fixnero.fi',
-  'https://webbi1.web.app',
-  'https://webbi1.firebaseapp.com'
+  'https://fxnr-web.web.app',
+  'https://fxnr-web.firebaseapp.com'
 ];
 
 // Company branding constants - used for emails and notifications

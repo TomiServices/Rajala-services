@@ -40,7 +40,7 @@ fi
 # Check 3: CSP Configuration
 echo ""
 echo "3. Checking Content Security Policy..."
-if grep -q "https://europe-north1-webbi1.cloudfunctions.net" firebase.json; then
+if grep -q "https://europe-north1-fxnr-web.cloudfunctions.net" firebase.json; then
     echo -e "${GREEN}✓${NC} CSP allows Firebase Functions endpoint"
 else
     echo -e "${RED}✗${NC} CSP missing Firebase Functions endpoint"

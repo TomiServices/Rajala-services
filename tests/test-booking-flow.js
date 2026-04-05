@@ -10,7 +10,7 @@
  *   node test-booking-flow.js --test empty-token
  *   node test-booking-flow.js --test invalid-token
  *   node test-booking-flow.js --test mock-valid
- *   node test-booking-flow.js --endpoint http://localhost:5001/webbi1/europe-north1/book
+ *   node test-booking-flow.js --endpoint http://localhost:5001/fxnr-web/europe-north1/book
  */
 
 const https = require('https');
@@ -27,7 +27,7 @@ const testType = testIndex >= 0 ? args[testIndex + 1] : 'missing-token';
 const customEndpoint = endpointIndex >= 0 ? args[endpointIndex + 1] : undefined;
 
 // Default endpoint (production)
-const DEFAULT_ENDPOINT = 'https://europe-north1-webbi1.cloudfunctions.net/book';
+const DEFAULT_ENDPOINT = 'https://europe-north1-fxnr-web.cloudfunctions.net/book';
 const endpoint = customEndpoint || DEFAULT_ENDPOINT;
 
 // Parse endpoint URL
