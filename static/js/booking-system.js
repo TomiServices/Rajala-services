@@ -314,8 +314,9 @@ function initializeBookingSystem() {
             // Check if slot is in the past
             const isPast = slotTime < now;
             
-            // Check if specific slot is booked
+            // Check if specific slot is booked (also blocks all-day Google Calendar events)
             const isSlotBooked = bookings.some(b => {
+                if (b.allDay) return getDateKey(b.aika) === dateKey;
                 const bookingTime = new Date(b.aika);
                 return bookingTime.getTime() === slotTime.getTime();
             });
@@ -447,6 +448,7 @@ function initializeBookingSystem() {
             }
             
             const isBooked = dayBookings.some(b => {
+                if (b.allDay) return true; // all-day block covers every slot on this day
                 const bookingHour = new Date(b.aika).getHours();
                 return bookingHour === hour;
             });
@@ -545,6 +547,7 @@ function initializeBookingSystem() {
             }
             
             const isBooked = dayBookings.some(b => {
+                if (b.allDay) return true; // all-day block covers every slot on this day
                 const bookingHour = new Date(b.aika).getHours();
                 return bookingHour === hour;
             });
@@ -1589,7 +1592,11 @@ function initializeBookingSystem() {
             // Check if this day has available slots
             const dateKey = getDateKey(checkDate);
             if (!dateKey) continue; // Skip invalid dates
-            
+
+            // An all-day block (e.g. manual Google Calendar event) means 0 available slots.
+            const hasAllDayBlock = bookings.some(b => b.allDay && getDateKey(b.aika) === dateKey);
+            if (hasAllDayBlock) continue;
+
             // Count booked slots for this day
             const dayBookingCount = bookings.filter(b => {
                 const bookingDateKey = getDateKey(b.aika);
@@ -1675,13 +1682,20 @@ function initializeBookingSystem() {
         }
         
         function isSlotBooked(slot) {
-            return bookings.some(b => b.aika === slot.start.toISOString());
+            return bookings.some(b => {
+                if (b.allDay) return getDateKey(b.aika) === getDateKey(slot.start);
+                return b.aika === slot.start.toISOString();
+            });
         }
         
         function getBookingsCountForDay(date) {
             const dateKey = getDateKey(date);
             if (!dateKey) return 0;
-            
+
+            // An all-day block (e.g. from Google Calendar) means the entire day is blocked.
+            const hasAllDayBlock = bookings.some(b => b.allDay && getDateKey(b.aika) === dateKey);
+            if (hasAllDayBlock) return 8; // all 8 working slots are blocked
+
             return bookings.filter(b => {
                 const bookingDateKey = getDateKey(b.aika);
                 return bookingDateKey === dateKey;
@@ -1950,18 +1964,23 @@ function initializeBookingSystem() {
                                 // (e.g. 9:00–11:00 viewed at 15:00) are not shown as available
                                 const now = new Date();
                                 const isToday = getDateKey(now) === dateKey;
+
+                                // An all-day block (e.g. manual Google Calendar event) means 0 slots.
+                                const hasAllDayBlock = dayBookings.some(b => b.allDay);
                                 let availableSlots = 0;
-                                for (let h = 9; h < 17; h++) {
-                                    if (isToday) {
-                                        const slotTime = new Date(currentDate);
-                                        slotTime.setHours(h, 0, 0, 0);
-                                        if (slotTime < now) continue;
+                                if (!hasAllDayBlock) {
+                                    for (let h = 9; h < 17; h++) {
+                                        if (isToday) {
+                                            const slotTime = new Date(currentDate);
+                                            slotTime.setHours(h, 0, 0, 0);
+                                            if (slotTime < now) continue;
+                                        }
+                                        const isBooked = dayBookings.some(b => {
+                                            const bt = new Date(b.aika);
+                                            return bt.getHours() === h;
+                                        });
+                                        if (!isBooked) availableSlots++;
                                     }
-                                    const isBooked = dayBookings.some(b => {
-                                        const bt = new Date(b.aika);
-                                        return bt.getHours() === h;
-                                    });
-                                    if (!isBooked) availableSlots++;
                                 }
                                 evs.push({
                                     title: `${availableSlots} paikkaa`,

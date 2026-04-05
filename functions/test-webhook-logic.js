@@ -52,11 +52,29 @@ const testEvents = {
       end: { dateTime: '2026-01-16T11:00:00+02:00' },
       description: 'Asiakas: Asiakas 2'
     }
+  ],
+  // All-day events: manually created blocks in Google Calendar (use start.date, not start.dateTime)
+  allDay: [
+    {
+      id: 'allday1',
+      status: 'confirmed',
+      start: { date: '2026-01-20' },
+      end: { date: '2026-01-21' },
+      description: 'Poissa toimistolta'
+    },
+    {
+      id: 'allday2',
+      status: 'confirmed',
+      start: { date: '2026-01-22' },
+      end: { date: '2026-01-23' }
+      // no description — should default to 'Google Calendar -varaus'
+    }
   ]
 };
 
 /**
- * Simulates the event processing logic from calendarWebhook
+ * Simulates the event processing logic from calendarWebhook (updated to match index.js)
+ * Now handles all-day events (start.date) as well as timed events (start.dateTime).
  */
 function processEvents(events) {
   const results = {
@@ -74,24 +92,36 @@ function processEvents(events) {
       continue;
     }
 
-    // Handle active events - skip if no valid start time
-    if (!eventItem.start || !eventItem.start.dateTime) continue;
-
-    const startTime = new Date(eventItem.start.dateTime);
-    if (Number.isNaN(startTime.getTime())) continue;
+    if (!eventItem.start) continue;
 
     const desc = eventItem.description || '';
     const nameMatch = desc.match(/Asiakas:\s*(.+)/);
-    
-    const parsedData = {
-      eventId: eventItem.id,
-      name: nameMatch ? nameMatch[1].trim() : 'Google Calendar -varaus',
-      startTime: startTime.toISOString()
-    };
+    const baseName = nameMatch ? nameMatch[1].trim() : 'Google Calendar -varaus';
 
-    // In real implementation, would check if exists in Firestore
-    // For testing, just add to created list
-    results.created.push(parsedData);
+    if (eventItem.start.dateTime) {
+      // Timed event
+      const startTime = new Date(eventItem.start.dateTime);
+      if (Number.isNaN(startTime.getTime())) continue;
+
+      results.created.push({
+        eventId: eventItem.id,
+        name: baseName,
+        startTime: startTime.toISOString(),
+        allDay: false
+      });
+    } else if (eventItem.start.date) {
+      // All-day event
+      const allDayStart = new Date(eventItem.start.date + 'T00:00:00.000Z');
+      if (Number.isNaN(allDayStart.getTime())) continue;
+
+      results.created.push({
+        eventId: eventItem.id,
+        name: baseName,
+        startTime: allDayStart.toISOString(),
+        allDay: true
+      });
+    }
+    // Events with neither dateTime nor date are ignored
   }
 
   return results;
@@ -230,15 +260,76 @@ const test2 = testFullSync();
 const test3 = testEdgeCases();
 const test4 = testNoUnintendedDeletions();
 
+/**
+ * Test 5: All-day events (e.g. manual blocks created directly in Google Calendar)
+ * These use start.date instead of start.dateTime and must NOT be silently skipped.
+ * This was a bug introduced when start.dateTime was required — all-day events were ignored.
+ */
+function testAllDayEvents() {
+  console.log('📝 Test 5: All-Day Events (Google Calendar manual blocks)');
+  console.log('---------------------------------------------------------');
+
+  const results = processEvents(testEvents.allDay);
+
+  console.log(`✅ Processed ${testEvents.allDay.length} all-day event(s)`);
+  results.created.forEach(e => {
+    console.log(`   - ${e.name} on ${e.startTime} allDay=${e.allDay}`);
+  });
+
+  const expectedCreated = 2; // allday1 and allday2
+  const allMarkedAllDay = results.created.every(e => e.allDay === true);
+  const firstHasDefaultName = results.created.find(e => e.eventId === 'allday2') &&
+    results.created.find(e => e.eventId === 'allday2').name === 'Google Calendar -varaus';
+
+  if (results.created.length === expectedCreated && allMarkedAllDay && firstHasDefaultName) {
+    console.log('✅ Test PASSED - All-day events are processed with allDay=true\n');
+    return true;
+  } else {
+    console.log(`❌ Test FAILED: created=${results.created.length} (expected ${expectedCreated}), allMarkedAllDay=${allMarkedAllDay}\n`);
+    return false;
+  }
+}
+
+/**
+ * Test 6: Cancelled all-day event is added to deleted list
+ */
+function testCancelledAllDayEvent() {
+  console.log('📝 Test 6: Cancelled All-Day Event');
+  console.log('-----------------------------------');
+
+  const events = [
+    {
+      id: 'allday-cancelled',
+      status: 'cancelled',
+      start: { date: '2026-01-25' },
+      end: { date: '2026-01-26' }
+    }
+  ];
+
+  const results = processEvents(events);
+
+  if (results.deleted.length === 1 && results.deleted[0] === 'allday-cancelled') {
+    console.log('✅ Test PASSED - Cancelled all-day event is marked for deletion\n');
+    return true;
+  } else {
+    console.log('❌ Test FAILED\n');
+    return false;
+  }
+}
+
+const test5 = testAllDayEvents();
+const test6 = testCancelledAllDayEvent();
+
 // Summary
 console.log('=====================================');
 console.log('Test Summary');
 console.log('=====================================');
-console.log(`Total: 4 tests`);
-console.log(`Passed: ${[test1, test2, test3, test4].filter(t => t).length}`);
-console.log(`Failed: ${[test1, test2, test3, test4].filter(t => !t).length}`);
+const allTests = [test1, test2, test3, test4, test5, test6];
+console.log(`Total: ${allTests.length} tests`);
+console.log(`Passed: ${allTests.filter(t => t).length}`);
+console.log(`Failed: ${allTests.filter(t => !t).length}`);
 
-if (test1 && test2 && test3 && test4) {
+if (allTests.every(t => t)) {
   console.log('\n✅ All tests passed!');
   process.exit(0);
 } else {

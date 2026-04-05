@@ -9,6 +9,7 @@ const nodemailer = require('nodemailer');
 const sgMail = require('@sendgrid/mail');
 const { onRequest } = require('firebase-functions/v2/https');
 const { onDocumentCreated, onDocumentUpdated, onDocumentDeleted } = require('firebase-functions/v2/firestore');
+const { onSchedule } = require('firebase-functions/v2/scheduler');
 const { defineString } = require('firebase-functions/params');
 const { getGoogleClient } = require('./lib/auth-client');
 
@@ -866,7 +867,8 @@ exports.bookings = onRequest({
         puhelin: data.puhelin,
         services: data.services || [],
         totalPrice: data.totalPrice,
-        googleEventId: data.googleEventId
+        googleEventId: data.googleEventId,
+        allDay: data.allDay || false
       });
     });
 
@@ -1631,6 +1633,113 @@ exports.renewCalendarWatch = onRequest({
 });
 
 // =======================
+// Scheduled: auto-renew Google Calendar watch channel every 5 days.
+// Google Calendar watch channels expire after at most 7 days.
+// Without renewal, push notifications stop and Google Calendar → website sync breaks.
+//
+// IMPORTANT after a domain/project migration:
+//   Set WATCH_CALLBACK_URL to the correct Cloud Function URL for the current project, e.g.:
+//   https://europe-north1-webbi1.cloudfunctions.net/calendarWebhook
+//   Then call watchRegistrar (POST) once to register the initial watch.
+//   This scheduled function will keep it alive afterwards.
+// =======================
+exports.scheduleWatchRenewal = onSchedule({
+  schedule: '0 6 */5 * *', // Every 5 days at 06:00
+  region: 'europe-north1',
+  timeZone: 'Europe/Helsinki',
+  retryCount: 1
+}, async () => {
+  const callbackUrl = safeGetParamValue(watchCallbackEnv, 'WATCH_CALLBACK_URL') || getLegacyConfigValue('watch.callback_url');
+  if (!callbackUrl) {
+    console.warn('scheduleWatchRenewal: WATCH_CALLBACK_URL not configured — skipping renewal. ' +
+      'Set WATCH_CALLBACK_URL to the calendarWebhook Cloud Function URL to enable auto-renewal.');
+    return;
+  }
+
+  // Check if existing watch still has more than 2 days remaining; if so, skip.
+  try {
+    const snap = await db.collection(WATCH_COLLECTION).orderBy('createdAt', 'desc').limit(1).get();
+    if (!snap.empty) {
+      const watchData = snap.docs[0].data();
+      const expiration = watchData.expiration ? Number(watchData.expiration) : null;
+      const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
+      if (expiration && expiration > Date.now() + TWO_DAYS_MS) {
+        console.log('scheduleWatchRenewal: Watch still valid, skipping renewal.', {
+          expiresAt: new Date(expiration).toISOString(),
+          channelId: watchData.channelId,
+          callbackUrl: watchData.callbackUrl
+        });
+        return;
+      }
+      console.log('scheduleWatchRenewal: Watch expired or expiring soon, renewing.', {
+        expiresAt: expiration ? new Date(expiration).toISOString() : 'unknown',
+        currentCallbackUrl: watchData.callbackUrl,
+        newCallbackUrl: callbackUrl
+      });
+    } else {
+      console.log('scheduleWatchRenewal: No existing watch found, registering new watch.');
+    }
+  } catch (checkErr) {
+    console.warn('scheduleWatchRenewal: Could not check existing watch, proceeding with renewal:', checkErr.message || checkErr);
+  }
+
+  try {
+    const data = await registerCalendarWatch(callbackUrl);
+    console.log('scheduleWatchRenewal: Watch renewed successfully.', {
+      channelId: data.id,
+      expiration: data.expiration ? new Date(Number(data.expiration)).toISOString() : 'none',
+      callbackUrl
+    });
+  } catch (err) {
+    console.error('scheduleWatchRenewal: Failed to renew watch:', err && (err.message || err));
+    throw err; // re-throw so Cloud Scheduler marks this as failed and retries
+  }
+});
+
+// =======================
+// HTTP: watchStatus — diagnostic endpoint to check current watch registration.
+// Returns the latest watch doc and its expiry so you can verify the callback URL
+// is pointing to the correct Cloud Function after a domain/project migration.
+// =======================
+exports.watchStatus = onRequest({
+  region: 'europe-north1',
+  invoker: 'public'
+}, async (req, res) => {
+  try {
+    if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed. Use GET' });
+
+    const snap = await db.collection(WATCH_COLLECTION).orderBy('createdAt', 'desc').limit(1).get();
+    if (snap.empty) {
+      return res.status(200).json({ ok: true, watch: null, message: 'No watch registered. Call watchRegistrar (POST) to register.' });
+    }
+
+    const doc = snap.docs[0];
+    const data = doc.data();
+    const expiration = data.expiration ? Number(data.expiration) : null;
+    const now = Date.now();
+    const isExpired = expiration ? expiration < now : null;
+    const msLeft = expiration ? expiration - now : null;
+
+    return res.status(200).json({
+      ok: true,
+      watch: {
+        channelId: data.channelId,
+        callbackUrl: data.callbackUrl,
+        calendarId: data.calendarId,
+        expiresAt: expiration ? new Date(expiration).toISOString() : null,
+        isExpired,
+        hoursLeft: msLeft !== null ? Math.round(msLeft / 1000 / 3600) : null,
+        createdAt: data.createdAt ? data.createdAt.toDate().toISOString() : null,
+        nextSyncToken: data.nextSyncToken ? '(set)' : '(not set)'
+      }
+    });
+  } catch (err) {
+    console.error('watchStatus error:', err && (err.message || err));
+    return res.status(500).json({ error: err && (err.message || JSON.stringify(err)) });
+  }
+});
+
+// =======================
 // Google Calendar webhook (improved with syncToken handling)
 // FIX: Respond 200 OK AFTER processing completes to avoid premature termination
 // FIX: Enhanced logging for better debugging of sync issues
@@ -1767,68 +1876,111 @@ exports.calendarWebhook = onRequest({
         // When showDeleted: true is used, deleted events are returned with status='cancelled'
         // The 'deleted' property may also be set for some types of deletions
         if (eventItem.status === 'cancelled' || eventItem.deleted) {
+          // Remove ALL bookings for this event (no limit — all-day events may have allDay doc)
           const existingSnapshot = await db.collection(BOOKINGS_COLLECTION)
             .where('googleEventId', '==', eventItem.id)
-            .limit(1)
             .get();
-          
-          if (!existingSnapshot.empty) {
-            const docRef = existingSnapshot.docs[0].ref;
+
+          for (const bookingDoc of existingSnapshot.docs) {
             // Mark as deleted before removing to prevent race conditions with Firestore triggers
-            await docRef.update({ deletedFromGoogle: true });
+            await bookingDoc.ref.update({ deletedFromGoogle: true });
             // Small delay to ensure Firestore acknowledges the update before deletion
             await new Promise(r => setTimeout(r, 100));
-            await docRef.delete();
+            await bookingDoc.ref.delete();
             deletedCount++;
-            console.log('Deleted booking for cancelled calendar event:', eventItem.id);
+            console.log('Deleted booking for cancelled calendar event:', eventItem.id, 'doc:', bookingDoc.id);
           }
           continue;
         }
 
-        // Handle active events - skip if no valid start time
-        if (!eventItem.start || !eventItem.start.dateTime) continue;
-
-        const startTime = new Date(eventItem.start.dateTime);
-        if (Number.isNaN(startTime.getTime())) continue;
-
-        const existingSnapshot = await db.collection(BOOKINGS_COLLECTION)
-          .where('googleEventId', '==', eventItem.id)
-          .limit(1)
-          .get();
+        // Handle active events - support both timed (dateTime) and all-day (date) events.
+        // All-day events (e.g. manual blocks added directly in Google Calendar) use
+        // start.date instead of start.dateTime and must not be silently skipped.
+        if (!eventItem.start) continue;
 
         const desc = eventItem.description || '';
         const nameMatch = desc.match(/Asiakas:\s*(.+)/);
         const phoneMatch = desc.match(/Puhelin:\s*(.+)/);
         const emailMatch = desc.match(/Sähköposti:\s*(.+)/);
+        const baseName = nameMatch ? nameMatch[1].trim() : 'Google Calendar -varaus';
+        const basePhone = phoneMatch ? phoneMatch[1].trim() : '';
+        const baseEmail = emailMatch ? emailMatch[1].trim() : '';
 
-        const upsertData = {
-          nimi: nameMatch ? nameMatch[1].trim() : 'Google Calendar -varaus',
-          puhelin: phoneMatch ? phoneMatch[1].trim() : '',
-          sahkoposti: emailMatch ? emailMatch[1].trim() : '',
-          aika: admin.firestore.Timestamp.fromDate(startTime),
-          services: [], // we don't have service data from Google events
-          totalPrice: 'Hinta sovittaessa',
-          googleEventId: eventItem.id,
-          syncedFromGoogle: true,
-          googleSyncedAt: admin.firestore.FieldValue.serverTimestamp(),
-        };
+        if (eventItem.start.dateTime) {
+          // ── Timed event (specific start time) ─────────────────────────────
+          const startTime = new Date(eventItem.start.dateTime);
+          if (Number.isNaN(startTime.getTime())) continue;
 
-        if (existingSnapshot.empty) {
-          await db.collection(BOOKINGS_COLLECTION).add({
-            ...upsertData,
-            luotu: admin.firestore.FieldValue.serverTimestamp()
-          });
-          createdCount++;
-          console.log('Created booking from calendar event:', eventItem.id);
-        } else {
-          const docRef = existingSnapshot.docs[0].ref;
-          await docRef.update({
-            ...upsertData,
-            // do not overwrite luotu
-          });
-          updatedCount++;
-          console.log('Updated booking from calendar event:', eventItem.id);
+          const existingSnapshot = await db.collection(BOOKINGS_COLLECTION)
+            .where('googleEventId', '==', eventItem.id)
+            .limit(1)
+            .get();
+
+          const upsertData = {
+            nimi: baseName,
+            puhelin: basePhone,
+            sahkoposti: baseEmail,
+            aika: admin.firestore.Timestamp.fromDate(startTime),
+            allDay: false,
+            services: [], // we don't have service data from Google events
+            totalPrice: 'Hinta sovittaessa',
+            googleEventId: eventItem.id,
+            syncedFromGoogle: true,
+            googleSyncedAt: admin.firestore.FieldValue.serverTimestamp(),
+          };
+
+          if (existingSnapshot.empty) {
+            await db.collection(BOOKINGS_COLLECTION).add({
+              ...upsertData,
+              luotu: admin.firestore.FieldValue.serverTimestamp()
+            });
+            createdCount++;
+            console.log('Created booking from timed calendar event:', eventItem.id);
+          } else {
+            await existingSnapshot.docs[0].ref.update(upsertData);
+            updatedCount++;
+            console.log('Updated booking from timed calendar event:', eventItem.id);
+          }
+
+        } else if (eventItem.start.date) {
+          // ── All-day event (e.g. manual block for a whole day in Google Calendar) ──
+          // Store a single booking with allDay: true and aika at midnight UTC of that date.
+          // The website frontend checks b.allDay to block all working-hour slots on that day.
+          const allDayStart = new Date(eventItem.start.date + 'T00:00:00.000Z');
+          if (Number.isNaN(allDayStart.getTime())) continue;
+
+          const existingSnapshot = await db.collection(BOOKINGS_COLLECTION)
+            .where('googleEventId', '==', eventItem.id)
+            .limit(1)
+            .get();
+
+          const upsertData = {
+            nimi: baseName,
+            puhelin: basePhone,
+            sahkoposti: baseEmail,
+            aika: admin.firestore.Timestamp.fromDate(allDayStart),
+            allDay: true,
+            services: [],
+            totalPrice: 'Hinta sovittaessa',
+            googleEventId: eventItem.id,
+            syncedFromGoogle: true,
+            googleSyncedAt: admin.firestore.FieldValue.serverTimestamp(),
+          };
+
+          if (existingSnapshot.empty) {
+            await db.collection(BOOKINGS_COLLECTION).add({
+              ...upsertData,
+              luotu: admin.firestore.FieldValue.serverTimestamp()
+            });
+            createdCount++;
+            console.log('Created booking from all-day calendar event:', eventItem.id, 'date:', eventItem.start.date);
+          } else {
+            await existingSnapshot.docs[0].ref.update(upsertData);
+            updatedCount++;
+            console.log('Updated booking from all-day calendar event:', eventItem.id, 'date:', eventItem.start.date);
+          }
         }
+        // Events with neither dateTime nor date are ignored (malformed)
       } catch (evtErr) {
         console.error('Error processing calendar event:', {
           eventId: eventItem && eventItem.id,
