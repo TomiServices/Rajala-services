@@ -1881,14 +1881,14 @@ exports.calendarWebhook = onRequest({
             .where('googleEventId', '==', eventItem.id)
             .get();
 
-          for (const bookingDoc of existingSnapshot.docs) {
-            // Mark as deleted before removing to prevent race conditions with Firestore triggers
-            await bookingDoc.ref.update({ deletedFromGoogle: true });
-            // Small delay to ensure Firestore acknowledges the update before deletion
+          if (!existingSnapshot.empty) {
+            // Mark all as deletedFromGoogle first (prevents trigger loops), then delete in parallel.
+            await Promise.all(existingSnapshot.docs.map(d => d.ref.update({ deletedFromGoogle: true })));
+            // Brief pause to let Firestore propagate the flag before the delete triggers fire.
             await new Promise(r => setTimeout(r, 100));
-            await bookingDoc.ref.delete();
-            deletedCount++;
-            console.log('Deleted booking for cancelled calendar event:', eventItem.id, 'doc:', bookingDoc.id);
+            await Promise.all(existingSnapshot.docs.map(d => d.ref.delete()));
+            deletedCount += existingSnapshot.docs.length;
+            console.log('Deleted', existingSnapshot.docs.length, 'booking(s) for cancelled calendar event:', eventItem.id);
           }
           continue;
         }

@@ -1694,7 +1694,7 @@ function initializeBookingSystem() {
 
             // An all-day block (e.g. from Google Calendar) means the entire day is blocked.
             const hasAllDayBlock = bookings.some(b => b.allDay && getDateKey(b.aika) === dateKey);
-            if (hasAllDayBlock) return 8; // all 8 working slots are blocked
+            if (hasAllDayBlock) return 17 - 9; // = 8 working slots (09:00–16:00)
 
             return bookings.filter(b => {
                 const bookingDateKey = getDateKey(b.aika);
