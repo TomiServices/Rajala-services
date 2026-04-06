@@ -115,16 +115,17 @@ This checklist helps ensure all steps are completed when deploying the Google Ca
 ### 6. Set Up Webhook (Two-Way Sync)
 
 - [ ] **Get webhook URL**
-  - URL: `https://europe-north1-fxnr-web.cloudfunctions.net/calendarWebhook`
+  - URL: `https://europe-north1-webbi1.cloudfunctions.net/calendarWebhook`
+  - Note: The URL is derived from your Firebase project ID (`webbi1`). If you check `watchStatus` (GET), it will show the currently registered callback URL.
   
 - [ ] **Register webhook with Google Calendar**
-  - Method: Using curl or Google API Explorer
+  - Method: POST to `https://europe-north1-webbi1.cloudfunctions.net/watchRegistrar` (no body needed — URL is auto-detected from the project)
+  - Or with explicit URL: `curl -X POST https://europe-north1-webbi1.cloudfunctions.net/watchRegistrar -H "Content-Type: application/json" -d '{"callbackUrl":"https://europe-north1-webbi1.cloudfunctions.net/calendarWebhook"}'`
   - Calendar ID: (from step 2)
-  - Webhook URL: (from above)
-  - Channel ID: `fixnero-calendar-sync`
   
 - [ ] **Verify webhook registration**
   - Check function logs for verification message
+  - Check watch status: GET `https://europe-north1-webbi1.cloudfunctions.net/watchStatus`
   - Webhook status: _________________
 
 ## Testing
