@@ -1530,6 +1530,20 @@ exports.onBookingDeleted = onDocumentDeleted({
 });
 
 // =======================
+// Helper: derive calendarWebhook URL from current Firebase project environment.
+// Used as fallback when WATCH_CALLBACK_URL is not explicitly configured.
+// Format: https://europe-north1-{projectId}.cloudfunctions.net/calendarWebhook
+// =======================
+function getDefaultCallbackUrl() {
+  let projectId = process.env.GCLOUD_PROJECT;
+  if (!projectId && process.env.FIREBASE_CONFIG) {
+    try { projectId = JSON.parse(process.env.FIREBASE_CONFIG).projectId; } catch (e) { /* ignore */ }
+  }
+  if (!projectId) return null;
+  return `https://europe-north1-${projectId}.cloudfunctions.net/calendarWebhook`;
+}
+
+// =======================
 // Helper: register watch (used by watchRegistrar / renewCalendarWatch)
 // =======================
 async function registerCalendarWatch(callbackUrl) {
@@ -1541,7 +1555,8 @@ async function registerCalendarWatch(callbackUrl) {
   const authClient = await getGoogleClient(['https://www.googleapis.com/auth/calendar']);
   const calendar = google.calendar({ version: 'v3', auth: authClient });
 
-  const channelId = `fxnr-web-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+  const projectId = process.env.GCLOUD_PROJECT || 'webbi1';
+  const channelId = `${projectId}-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
   const requestBody = {
     id: channelId,
     type: 'web_hook',
@@ -1575,6 +1590,7 @@ async function registerCalendarWatch(callbackUrl) {
 // HTTP: watchRegistrar (register Google Calendar watch -> saves to Firestore)
 // Expects POST JSON: { "callbackUrl": "https://.../calendarWebhook" }
 // If WATCH_CALLBACK_URL env var is set, that will be used as default.
+// Falls back to auto-detecting the URL from the current Firebase project environment.
 // =======================
 exports.watchRegistrar = onRequest({
   region: 'europe-north1',
@@ -1587,10 +1603,13 @@ exports.watchRegistrar = onRequest({
 
     const bodyCb = (req.body && req.body.callbackUrl) ? req.body.callbackUrl : null;
     const envCb = safeGetParamValue(watchCallbackEnv, 'WATCH_CALLBACK_URL') || getLegacyConfigValue('watch.callback_url');
-    const callbackUrl = bodyCb || envCb;
+    const callbackUrl = bodyCb || envCb || getDefaultCallbackUrl();
 
     if (!callbackUrl) {
-      return res.status(400).json({ error: 'Missing callbackUrl in request body and no WATCH_CALLBACK_URL configured' });
+      return res.status(400).json({ error: 'Could not determine callback URL from request body, WATCH_CALLBACK_URL env var, or project environment (GCLOUD_PROJECT).' });
+    }
+    if (!bodyCb && !envCb) {
+      console.log('watchRegistrar: Using auto-detected callbackUrl:', callbackUrl);
     }
 
     const data = await registerCalendarWatch(callbackUrl);
@@ -1635,11 +1654,11 @@ exports.renewCalendarWatch = onRequest({
 // Google Calendar watch channels expire after at most 7 days.
 // Without renewal, push notifications stop and Google Calendar → website sync breaks.
 //
-// IMPORTANT after a domain/project migration:
-//   Set WATCH_CALLBACK_URL to the correct Cloud Function URL for the current project, e.g.:
-//   https://europe-north1-webbi1.cloudfunctions.net/calendarWebhook
-//   Then call watchRegistrar (POST) once to register the initial watch.
-//   This scheduled function will keep it alive afterwards.
+// After a domain/project migration, the watch channel must be re-registered.
+// The callback URL is resolved in this priority order:
+//   1. WATCH_CALLBACK_URL env var (explicit configuration)
+//   2. callbackUrl stored in the last Firestore watch doc (from a prior registration)
+//   3. Auto-derived from GCLOUD_PROJECT env var (e.g. https://europe-north1-webbi1.cloudfunctions.net/calendarWebhook)
 // =======================
 exports.scheduleWatchRenewal = onSchedule({
   schedule: '0 6 */5 * *', // Every 5 days at 06:00
@@ -1685,8 +1704,18 @@ exports.scheduleWatchRenewal = onSchedule({
     console.warn('scheduleWatchRenewal: Could not check existing watch, proceeding with renewal:', checkErr.message || checkErr);
   }
 
+  // Last resort: auto-derive callback URL from the current Firebase project environment.
+  // This allows the scheduler to self-register the watch even after a project migration
+  // where WATCH_CALLBACK_URL was not updated.
   if (!callbackUrl) {
-    console.warn('scheduleWatchRenewal: WATCH_CALLBACK_URL not configured and no prior watch found — skipping renewal. ' +
+    callbackUrl = getDefaultCallbackUrl();
+    if (callbackUrl) {
+      console.log('scheduleWatchRenewal: Auto-derived callbackUrl from project environment:', callbackUrl);
+    }
+  }
+
+  if (!callbackUrl) {
+    console.warn('scheduleWatchRenewal: Could not determine callback URL — skipping renewal. ' +
       'Set WATCH_CALLBACK_URL to the calendarWebhook Cloud Function URL to enable auto-renewal.');
     return;
   }
