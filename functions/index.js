@@ -1382,19 +1382,18 @@ exports.onMailDeliveryUpdated = onDocumentUpdated({
 
     // SendGrid fallback: when the Firebase Extension fails, attempt delivery via
     // SendGrid so the customer still receives their confirmation email.
-    // Guard: skip if another path already delivered the email successfully, or if
-    // SendGrid was already attempted (prevents duplicate sends across extension retries).
+    // Guard: skip if the email was already successfully delivered by any path
+    // (emailSent: true).  emailMethod is only set to 'sendgrid' on success, so
+    // the single emailSent guard is sufficient to prevent duplicate deliveries.
     try {
-      const bookingDoc = await db.collection(BOOKINGS_COLLECTION).doc(bookingId).get();
-      const bookingSnap = bookingDoc.exists ? bookingDoc.data() : null;
-      if (bookingSnap && bookingSnap.sahkoposti &&
-          bookingSnap.emailSent !== true &&
-          bookingSnap.emailMethod !== 'sendgrid') {
+      const bookingSnapshot = await db.collection(BOOKINGS_COLLECTION).doc(bookingId).get();
+      const bookingData = bookingSnapshot.exists ? bookingSnapshot.data() : null;
+      if (bookingData && bookingData.sahkoposti && bookingData.emailSent !== true) {
         console.log('[onMailDeliveryUpdated] Extension failed – attempting SendGrid fallback:', {
           bookingId,
           extensionError: delivery.error
         });
-        const sgResult = await sendEmailViaSendGrid(bookingSnap);
+        const sgResult = await sendEmailViaSendGrid(bookingData);
         if (sgResult) {
           updateData.emailSent = true;
           updateData.emailSentAt = admin.firestore.FieldValue.serverTimestamp();
