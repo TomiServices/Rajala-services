@@ -1684,7 +1684,7 @@ function initializeBookingSystem() {
         function isSlotBooked(slot) {
             return bookings.some(b => {
                 if (b.allDay) return getDateKey(b.aika) === getDateKey(slot.start);
-                return b.aika === slot.start.toISOString();
+                return new Date(b.aika).getTime() === slot.start.getTime();
             });
         }
         
