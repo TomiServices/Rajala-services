@@ -40,10 +40,10 @@ async function findLatestWatchDoc(calendarId) {
 
 async function upsertBookingFromEvent(event) {
   const db = admin.firestore();
-  // Try find existing booking by eventId
-  const existingQuery = await db.collection('bookings').where('eventId', '==', event.id).limit(1).get();
+  // Try find existing booking by googleEventId (the field used by the main booking system)
+  const existingQuery = await db.collection('varaukset').where('googleEventId', '==', event.id).limit(1).get();
   const docData = {
-    eventId: event.id,
+    googleEventId: event.id,
     summary: event.summary || '',
     description: event.description || '',
     start: event.start || {},
@@ -51,12 +51,13 @@ async function upsertBookingFromEvent(event) {
     attendees: event.attendees || [],
     status: event.status || '',
     raw: event,
+    syncedFromGoogle: true,
     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
   };
 
   if (existingQuery.empty) {
     // create
-    const ref = await db.collection('bookings').add({
+    const ref = await db.collection('varaukset').add({
       ...docData,
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     });
@@ -72,7 +73,7 @@ async function upsertBookingFromEvent(event) {
 
 async function deleteBookingForEvent(eventId) {
   const db = admin.firestore();
-  const q = await db.collection('bookings').where('eventId', '==', eventId).limit(1).get();
+  const q = await db.collection('varaukset').where('googleEventId', '==', eventId).limit(1).get();
   if (q.empty) {
     console.log('No booking found to delete for event:', eventId);
     return false;
