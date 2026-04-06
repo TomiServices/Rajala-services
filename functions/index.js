@@ -1119,70 +1119,24 @@ async function createEmailDocument(bookingData, bookingId) {
       minute: '2-digit'
     });
 
-    // Escape user input to prevent XSS
-    const escapedName = escapeHtml(bookingData.nimi);
-    const escapedEmail = escapeHtml(bookingData.sahkoposti);
-    const escapedPhone = escapeHtml(bookingData.puhelin);
-    const escapedTotalPrice = escapeHtml(bookingData.totalPrice);
-    const escapedVehicleType = escapeHtml(bookingData.vehicleType || 'Ei määritelty');
-    const escapedRegistrationNumber = escapeHtml(bookingData.registrationNumber || '');
-    const escapedMessage = escapeHtml(bookingData.message || '');
+    // Resolve the FROM address: prefer the configured EMAIL_FROM, then EMAIL_USER,
+    // then fall back to the company email constant.  The 'from' field in the mail
+    // document overrides the extension's "Default FROM address" setting, so
+    // the email is sent correctly even if the extension default is not configured.
+    const fromAddress = safeGetParamValue(emailFrom, 'EMAIL_FROM') ||
+      safeGetParamValue(emailUser, 'EMAIL_USER') ||
+      getLegacyConfigValue('email.from') ||
+      `${COMPANY_NAME} <${COMPANY_EMAIL}>`;
 
-    const servicesHtml = (bookingData.services || [])
-      .map(s => `<li>${escapeHtml(s.serviceName || '')} - ${escapeHtml(s.taskName || '')}${s.price ? ': ' + escapeHtml(s.price) : ''}</li>`)
-      .join('') || '<li>Palvelu ei määritelty</li>';
-
-    const messageSection = escapedMessage
-      ? `<div style="background-color: #fff8e1; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <h3 style="margin-top: 0; color: #333;">Asiakkaan viesti</h3>
-              <p style="white-space: pre-wrap;">${escapedMessage}</p>
-            </div>`
-      : '';
-
-    // Create email document for Firebase Email Extension
-    // The extension reads from 'mail' collection and sends emails via configured SMTP
+    // Create email document for Firebase Email Extension.
+    // The extension reads from 'mail' collection and sends emails via configured SMTP.
+    // Use buildBookingEmailHtml (shared helper) so all email paths render the same template.
     const mailDoc = {
       to: bookingData.sahkoposti,
+      from: fromAddress,
       message: {
         subject: `Varausvahvistus - ${COMPANY_NAME}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #333333;">Varausvahvistus</h2>
-            <p>Hei ${escapedName || 'asiakas'},</p>
-            <p>Kiitos varauksestasi! Olemme vastaanottaneet varauksesi. Tässä varauksen tiedot:</p>
-            
-            <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <h3 style="margin-top: 0; color: #333;">Varauksen tiedot</h3>
-              <p><strong>Aika:</strong> ${formattedDate} klo ${formattedTime}</p>
-              <p><strong>Asiakas:</strong> ${escapedName}</p>
-              <p><strong>Puhelin:</strong> ${escapedPhone}</p>
-              <p><strong>Sähköposti:</strong> ${escapedEmail}</p>
-              <p><strong>Ajoneuvotyyppi:</strong> ${escapedVehicleType}</p>
-              ${escapedRegistrationNumber ? `<p><strong>Rekisteritunnus:</strong> ${escapedRegistrationNumber}</p>` : ''}
-            </div>
-            
-            <div style="background-color: #f0f0f0; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <h3 style="margin-top: 0; color: #333;">Valitut palvelut</h3>
-              <ul style="margin: 0; padding-left: 20px;">${servicesHtml}</ul>
-              <p style="margin-top: 15px;"><strong>Kokonaishinta:</strong> ${escapedTotalPrice || 'Hinta sovittaessa'}</p>
-            </div>
-            
-            ${messageSection}
-            
-            <p>Otamme sinuun yhteyttä tarvittaessa ennen varattua aikaa.</p>
-            <p>Jos sinun täytyy perua tai muuttaa varausta, ota yhteyttä:</p>
-            <ul>
-              <li>Puhelin: <a href="tel:${COMPANY_PHONE}">${COMPANY_PHONE_DISPLAY}</a></li>
-              <li>Sähköposti: <a href="mailto:${COMPANY_EMAIL}">${COMPANY_EMAIL}</a></li>
-            </ul>
-            
-            <p style="margin-top: 30px;">Ystävällisin terveisin,<br><strong>${COMPANY_NAME}</strong></p>
-            <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
-            <p style="font-size: 12px; color: #666;">
-              Tämä on automaattinen vahvistusviesti. Älä vastaa tähän viestiin.
-            </p>
-          </div>
-        `
+        html: buildBookingEmailHtml(bookingData, formattedDate, formattedTime)
       },
       // Metadata for tracking
       bookingId: bookingId,
@@ -1425,13 +1379,45 @@ exports.onMailDeliveryUpdated = onDocumentUpdated({
   } else if (emailState === 'ERROR') {
     updateData.emailSent = false;
     updateData.emailError = delivery.error || 'Unknown delivery error';
+
+    // SendGrid fallback: when the Firebase Extension fails, attempt delivery via
+    // SendGrid so the customer still receives their confirmation email.
+    // Guard: skip if the email was already successfully delivered by any path
+    // (emailSent: true).  emailMethod is only set to 'sendgrid' on success, so
+    // the single emailSent guard is sufficient to prevent duplicate deliveries.
+    try {
+      const bookingSnapshot = await db.collection(BOOKINGS_COLLECTION).doc(bookingId).get();
+      const bookingData = bookingSnapshot.exists ? bookingSnapshot.data() : null;
+      if (bookingData && bookingData.sahkoposti && bookingData.emailSent !== true) {
+        console.log('[onMailDeliveryUpdated] Extension failed – attempting SendGrid fallback:', {
+          bookingId,
+          extensionError: delivery.error
+        });
+        const sgResult = await sendEmailViaSendGrid(bookingData);
+        if (sgResult) {
+          updateData.emailSent = true;
+          updateData.emailSentAt = admin.firestore.FieldValue.serverTimestamp();
+          updateData.emailMethod = 'sendgrid';
+          updateData.emailState = 'SENT';
+          updateData.emailError = null;
+          console.log('[onMailDeliveryUpdated] SendGrid fallback succeeded for booking:', bookingId);
+        } else {
+          console.warn('[onMailDeliveryUpdated] SendGrid fallback also failed for booking:', bookingId);
+        }
+      }
+    } catch (fallbackErr) {
+      console.error('[onMailDeliveryUpdated] SendGrid fallback error:', {
+        bookingId,
+        error: fallbackErr.message || fallbackErr
+      });
+    }
   }
 
   try {
     await db.collection(BOOKINGS_COLLECTION).doc(bookingId).update(updateData);
     console.log('[onMailDeliveryUpdated] Booking email state updated:', {
       bookingId,
-      emailState,
+      emailState: updateData.emailState,
       emailSent: updateData.emailSent
     });
   } catch (err) {

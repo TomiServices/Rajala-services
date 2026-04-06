@@ -15,7 +15,10 @@ When a customer makes a booking, they automatically receive a confirmation email
 The system uses a two-tier email delivery approach:
 
 1. **Primary – Firebase Trigger Email from Firestore extension**: Writes a document to the `mail` collection. The extension picks it up and delivers the email via its configured SMTP server. The booking document is updated with `emailQueued: true` and `emailState: 'QUEUED'` immediately, and the `onMailDeliveryUpdated` Cloud Function trigger syncs the final delivery result (`SENT` / `ERROR`) back to the booking automatically.
-2. **Fallback – SendGrid HTTP API**: Used only when the Firebase Extension path fails to write the mail document. Requires `SENDGRID_API_KEY`. When SendGrid sends the email synchronously, the booking is updated with `emailSent: true` and `emailState: 'SENT'` directly.
+2. **Fallback – SendGrid HTTP API**: Used in two situations:
+   - When the Firebase Extension path fails to write the mail document (`onBookingCreated`).
+   - When the Firebase Extension reports `ERROR` state after attempting delivery (`onMailDeliveryUpdated`). This covers SMTP misconfiguration (e.g. "Missing credentials for PLAIN").
+   Requires `SENDGRID_API_KEY`. When SendGrid sends the email, the booking is updated with `emailSent: true` and `emailState: 'SENT'`.
 
 > **Important**: `emailQueued: true` on a booking means the email was queued for delivery – it does **not** guarantee the email was delivered. Check `emailState` on the booking document to see the actual delivery result (`QUEUED` → `SENT` or `ERROR`).
 
@@ -202,6 +205,14 @@ firebase emulators:start
 **Solution**:
 1. Run `firebase deploy --only functions:onMailDeliveryUpdated` to deploy the trigger
 2. Check that the Extension's *Mail collection* setting matches `MAIL_COLLECTION` in `functions/index.js` (default: `mail`)
+
+### `emailState: 'ERROR'` on booking (extension failed, SendGrid also not configured)
+
+**Cause**: The Firebase Extension reported a delivery error (e.g. "Missing credentials for PLAIN") **and** `SENDGRID_API_KEY` is not configured, so both paths failed.
+
+**Solution** (pick one):
+1. Fix the Extension SMTP URI (see "Configure the Extension SMTP URI" above) — preferred
+2. Set `SENDGRID_API_KEY` in Secret Manager so the automatic fallback in `onMailDeliveryUpdated` can deliver the email
 
 ### "Email not configured" in logs
 

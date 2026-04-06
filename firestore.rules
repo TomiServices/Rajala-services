@@ -31,7 +31,7 @@ service cloud.firestore {
           // 4. Firebase Email Extension service account
           //    Allows the Trigger Email from Firestore extension to read bookings
           //    in order to send confirmation emails
-          request.auth.token.email == "ext-firestore-send-email@Webbi1.iam.gserviceaccount.com" ||
+          request.auth.token.email == "ext-firestore-send-email@webbi1.iam.gserviceaccount.com" ||
           
           // 5. Google Compute Engine default service account
           //    This is used by Firebase Functions for server-side operations
@@ -55,7 +55,7 @@ service cloud.firestore {
           request.auth.token.admin == true ||
           
           // Email extension service account needs full access
-          request.auth.token.email == "ext-firestore-send-email@Webbi1.iam.gserviceaccount.com" ||
+          request.auth.token.email == "ext-firestore-send-email@webbi1.iam.gserviceaccount.com" ||
           
           // Compute service account for Firebase Functions
           request.auth.token.email.matches(".*-compute@developer.gserviceaccount.com")
