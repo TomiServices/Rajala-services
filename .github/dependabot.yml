@@ -1,25 +1,80 @@
 version: 2
 updates:
+  # Root package.json (hosting / tooling dependencies)
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 5
+      day: "monday"
+    open-pull-requests-limit: 10
     labels:
       - "dependencies"
+    groups:
+      npm-root-deps:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # Ignore major version bumps for all packages in root by default
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
+  # functions/ dependencies – split into Firebase-critical and other
   - package-ecosystem: "npm"
     directory: "/functions"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 5
+      day: "monday"
+    open-pull-requests-limit: 10
     labels:
       - "dependencies"
+    groups:
+      # Firebase and Google packages – minor+patch only (no auto-major)
+      firebase-packages:
+        patterns:
+          - "firebase-*"
+          - "google-auth-library"
+          - "googleapis"
+        update-types:
+          - "minor"
+          - "patch"
+      # All other functions dependencies
+      functions-other-deps:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "firebase-*"
+          - "google-auth-library"
+          - "googleapis"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # Never auto-bump major versions for Firebase-critical packages
+      - dependency-name: "firebase-admin"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "firebase-functions"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "googleapis"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "google-auth-library"
+        update-types: ["version-update:semver-major"]
+      # nodemailer is on the critical email path – review major bumps manually
+      - dependency-name: "nodemailer"
+        update-types: ["version-update:semver-major"]
 
+  # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
+    groups:
+      github-actions:
+        patterns:
+          - "*"

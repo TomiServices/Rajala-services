@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20]
+        node-version: [22]
 
     steps:
       - uses: actions/checkout@v4
@@ -35,3 +35,7 @@ jobs:
       - name: Run function tests
         working-directory: functions
         run: npm test
+
+      - name: Audit for vulnerabilities
+        working-directory: functions
+        run: npm audit --audit-level=high

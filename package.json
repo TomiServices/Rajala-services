@@ -4,6 +4,6 @@
     "nodemailer": "^8.0.2"
   },
   "engines": {
-    "node": ">=20 <23"
+    "node": ">=22 <25"
   }
 }
