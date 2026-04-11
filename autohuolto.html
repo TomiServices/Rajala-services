@@ -459,6 +459,39 @@
             }
         }
     </style>
+    <!-- FAQPage Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Mitä autohuolto sisältää Fixnerolla?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Fixnerolla autohuolto kattaa laajan valikoiman palveluita: jousitus- ja alustasäädöt, jarrujärjestelmän huolto, pakoputkiston tarkistukset sekä diagnostiikka ja sähkötyöt. Kaikki korjaukset tehdään takuulla."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Kuinka nopeasti saan autoni huoltoon?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Pyrimme sopimaan huoltoajan mahdollisimman pian. Useimmissa tapauksissa auto voidaan ottaa huoltoon saman viikon aikana. Varaa aika helposti netissä tai soittamalla."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Teettekö katsastuskorjauksia?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Kyllä, teemme kaikki katsastuksessa hylättyjen autojen korjaukset ammattitaidolla. Hoidamme myös katsastuksen jälkeiset tarkastukset nopeasti ja luotettavasti."
+            }
+        }
+        ]
+    }
+    </script>
 </head>
 <body>
     <div class="top-banner">
@@ -543,6 +576,30 @@
             <li><strong>Läpinäkyvä hinnoittelu:</strong> Arvio kustannuksista ennen töiden aloittamista</li>
             <li><strong>Nopea palvelu:</strong> Pyrimme saamaan autosi takaisin tielle mahdollisimman nopeasti</li>
         </ul>
+
+
+        <!-- UKK - Usein Kysytyt Kysymykset -->
+        <section class="ukk-section" itemscope itemtype="https://schema.org/FAQPage">
+            <h2 class="ukk-title">Usein Kysytyt Kysymykset – Autohuolto Espoo</h2>
+    <div class="ukk-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 class="ukk-question" itemprop="name">Mitä autohuolto sisältää Fixnerolla?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="ukk-answer" itemprop="text">Fixnerolla autohuolto kattaa laajan valikoiman palveluita: jousitus- ja alustasäädöt, jarrujärjestelmän huolto, pakoputkiston tarkistukset sekä diagnostiikka ja sähkötyöt. Kaikki korjaukset tehdään takuulla.</p>
+        </div>
+    </div>
+    <div class="ukk-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 class="ukk-question" itemprop="name">Kuinka nopeasti saan autoni huoltoon?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="ukk-answer" itemprop="text">Pyrimme sopimaan huoltoajan mahdollisimman pian. Useimmissa tapauksissa auto voidaan ottaa huoltoon saman viikon aikana. Varaa aika helposti netissä tai soittamalla.</p>
+        </div>
+    </div>
+    <div class="ukk-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 class="ukk-question" itemprop="name">Teettekö katsastuskorjauksia?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="ukk-answer" itemprop="text">Kyllä, teemme kaikki katsastuksessa hylättyjen autojen korjaukset ammattitaidolla. Hoidamme myös katsastuksen jälkeiset tarkastukset nopeasti ja luotettavasti.</p>
+        </div>
+    </div>
+        </section>
 
         <div class="cta-section" style="background: #fff url('static/images/sisapuhdistus.webp') center top/cover; position: relative; overflow: hidden;">
             <div style="position: relative; z-index: 2;">
@@ -643,6 +700,47 @@
     </footer>
 
     <style>
+
+        .ukk-section {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 35px 30px;
+            margin: 40px 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border-left: 4px solid #3FA9F5;
+        }
+        .ukk-section .ukk-title {
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            margin: 0 0 20px 0;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        .ukk-item {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 15px 0;
+        }
+        .ukk-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .ukk-question {
+            font-size: 1.05rem;
+            color: #1a1a1a;
+            margin: 0 0 8px 0;
+            font-weight: 700;
+        }
+        .ukk-answer {
+            color: #555;
+            margin: 0;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+        @media (max-width: 768px) {
+            .ukk-section {
+                padding: 25px 20px;
+            }
+        }
         footer {
             background: #000000;
             color: white;

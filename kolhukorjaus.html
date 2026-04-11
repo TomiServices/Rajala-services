@@ -706,6 +706,39 @@
             }
         }
     </style>
+    <!-- FAQPage Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Paljonko kolhun korjaus maksaa Espoossa?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Kolhun korjaus maksaa Fixnerolla alkaen 100 € pienistä lommoista ja 150 € suuremmista. Lopullinen hinta riippuu vaurion laajuudesta."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Voiko lommon korjata ilman maalausta?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Kyllä, monet lommot voidaan oikaista ilman maalausta (PDR-menetelmä), mikä on nopeampi ja edullisempi vaihtoehto."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Kuinka nopeasti kolhu voidaan korjata?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Useimmat pienet lommot voidaan korjata saman päivän aikana. Isommat korjaukset voivat kestää pidempään."
+            }
+        }
+        ]
+    }
+    </script>
 </head>
 <body>
     <div class="top-banner">
@@ -831,6 +864,30 @@
             <li>Auton ulkonäön kunnostus ennen myyntiä</li>
         </ul>
 
+
+        <!-- UKK - Usein Kysytyt Kysymykset -->
+        <section class="ukk-section" itemscope itemtype="https://schema.org/FAQPage">
+            <h2 class="ukk-title">Usein Kysytyt Kysymykset – Kolhukorjaus Espoo</h2>
+    <div class="ukk-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 class="ukk-question" itemprop="name">Paljonko kolhun korjaus maksaa Espoossa?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="ukk-answer" itemprop="text">Kolhun korjaus maksaa Fixnerolla alkaen 100 € pienistä lommoista ja 150 € suuremmista. Lopullinen hinta riippuu vaurion laajuudesta.</p>
+        </div>
+    </div>
+    <div class="ukk-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 class="ukk-question" itemprop="name">Voiko lommon korjata ilman maalausta?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="ukk-answer" itemprop="text">Kyllä, monet lommot voidaan oikaista ilman maalausta (PDR-menetelmä), mikä on nopeampi ja edullisempi vaihtoehto.</p>
+        </div>
+    </div>
+    <div class="ukk-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 class="ukk-question" itemprop="name">Kuinka nopeasti kolhu voidaan korjata?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="ukk-answer" itemprop="text">Useimmat pienet lommot voidaan korjata saman päivän aikana. Isommat korjaukset voivat kestää pidempään.</p>
+        </div>
+    </div>
+        </section>
+
         <div class="cta-section" style="background: #fff url('static/images/kolhukorjaus.webp') center top/cover; position: relative; overflow: hidden;">
             <div style="position: relative; z-index: 2;">
                 <h2>Tarvitsetko Kolhukorjausta?</h2>
@@ -921,6 +978,47 @@
     </footer>
 
     <style>
+
+        .ukk-section {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 35px 30px;
+            margin: 40px 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border-left: 4px solid #3FA9F5;
+        }
+        .ukk-section .ukk-title {
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            margin: 0 0 20px 0;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        .ukk-item {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 15px 0;
+        }
+        .ukk-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .ukk-question {
+            font-size: 1.05rem;
+            color: #1a1a1a;
+            margin: 0 0 8px 0;
+            font-weight: 700;
+        }
+        .ukk-answer {
+            color: #555;
+            margin: 0;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+        @media (max-width: 768px) {
+            .ukk-section {
+                padding: 25px 20px;
+            }
+        }
         footer {
             background: #000000;
             color: #ffffff;
