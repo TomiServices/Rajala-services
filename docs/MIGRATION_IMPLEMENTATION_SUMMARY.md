@@ -25,7 +25,7 @@ This implementation migrates the Rajala Services website from old Webbi1 Firebas
 ### 2. Google Analytics ✅
 
 **Status**: Already migrated to new account
-- Current Measurement ID: `G-SP5R1MN1H9`
+- Current Measurement ID: `G-1DZ4WCV7ZK`
 - Configured in: `ga-config.js` and `cookie-consent.js`
 - **No changes needed** ✅
 
@@ -135,7 +135,7 @@ RECAPTCHA_SCORE_THRESHOLD=0.5
 
 ✅ **No Changes Needed**:
 - Firebase Project ID: `fxnr-web` (already using)
-- Google Analytics: `G-SP5R1MN1H9` (already configured)
+- Google Analytics: `G-1DZ4WCV7ZK` (already configured)
 - Firebase Functions URLs (same project)
 - Company contact info (already using Fixnero branding)
 - GDPR compliance (cookie consent unchanged)
