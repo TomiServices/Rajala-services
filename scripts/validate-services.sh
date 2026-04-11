@@ -18,7 +18,7 @@ set +e
 
 # Expected configuration values (update these if they change)
 EXPECTED_RECAPTCHA_SITE_KEY="6Lf7wx0sAAAAAK2mvnbNt3V6lINTfu0g9Mw8Flcr"
-EXPECTED_GA_MEASUREMENT_ID="G-SP5R1MN1H9"
+EXPECTED_GA_MEASUREMENT_ID="G-1DZ4WCV7ZK"
 
 # Colors for output
 RED='\033[0;31m'

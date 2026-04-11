@@ -10,7 +10,7 @@ This document contains all the key information for external integrations after m
 - **Region**: europe-north1
 
 ### Google Analytics
-- **Measurement ID**: `G-SP5R1MN1H9`
+- **Measurement ID**: `G-1DZ4WCV7ZK`
 - **Property Name**: (Your Google Analytics property name)
 - **Console**: https://analytics.google.com
 
@@ -192,7 +192,7 @@ gcloud iam service-accounts keys create calendar-key.json \
 ## 📝 Migration Status Checklist
 
 - [ ] Firebase project verified (fxnr-web)
-- [ ] Google Analytics already updated (G-SP5R1MN1H9) ✅
+- [ ] Google Analytics already updated (G-1DZ4WCV7ZK) ✅
 - [ ] reCAPTCHA credentials updated in code
 - [ ] Firestore security rules created
 - [ ] Calendar service account created

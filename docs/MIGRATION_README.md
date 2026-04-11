@@ -61,7 +61,7 @@ The **administrator** needs to complete the following tasks (estimated 60 minute
 
 ### Public (In Code)
 - reCAPTCHA Site Key: `6Lf7wx0sAAAAAK2mvnbNt3V6lINTfu0g9Mw8Flcr`
-- Google Analytics: `G-SP5R1MN1H9`
+- Google Analytics: `G-1DZ4WCV7ZK`
 - Firebase Project: `fxnr-web`
 
 ### Private (Must Configure)

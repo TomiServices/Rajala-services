@@ -149,7 +149,7 @@ WATCH_CALLBACK_URL=https://europe-north1-fxnr-web.cloudfunctions.net/calendarWeb
 **Service Type:** Web Analytics  
 **Provider:** Google Marketing Platform  
 **Criticality:** ⚠️ Optional (but recommended)  
-**Measurement ID:** `G-SP5R1MN1H9`
+**Measurement ID:** `G-1DZ4WCV7ZK`
 
 #### Purpose
 Tracks website visitor behavior, page views, conversions, and user interactions for business intelligence.
@@ -609,7 +609,7 @@ Environment variables are managed through two methods:
 **Public (Safe to Share):**
 - Firebase Project ID: `fxnr-web`
 - reCAPTCHA Site Key: `6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM`
-- Google Analytics ID: `G-SP5R1MN1H9`
+- Google Analytics ID: `G-1DZ4WCV7ZK`
 - Domain: fixnero.fi
 
 **Private (Never Share - Store Securely):**

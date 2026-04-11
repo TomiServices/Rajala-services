@@ -18,7 +18,7 @@
 │                  TO: New Company Setup                          │
 ├─────────────────────────────────────────────────────────────────┤
 │ Firebase Project: fxnr-web ✅                                   │
-│ Google Analytics: G-SP5R1MN1H9 ✅                               │
+│ Google Analytics: G-1DZ4WCV7ZK ✅                               │
 │ reCAPTCHA: 6Lf7wx0sAAAAAK2mvnbNt3V6lINTfu0g9Mw8Flcr ✅         │
 │ Service Accounts: @fxnr-web.iam.gserviceaccount.com ⚠️          │
 │ Calendar Owner: palvelut@fixnero.fi ⚠️                          │
@@ -52,7 +52,7 @@ Files Updated:
 ```
 Status: ✅ ALREADY MIGRATED
 
-Current: G-SP5R1MN1H9
+Current: G-1DZ4WCV7ZK
 Files: ga-config.js, cookie-consent.js
 
 Action Required: NONE
@@ -135,7 +135,7 @@ New Files (6):
 ### Public (In Source Code)
 ```
 ✅ reCAPTCHA Site Key: 6Lf7wx0sAAAAAK2mvnbNt3V6lINTfu0g9Mw8Flcr
-✅ Google Analytics:   G-SP5R1MN1H9
+✅ Google Analytics:   G-1DZ4WCV7ZK
 ✅ Firebase Project:   fxnr-web
 ```
 
