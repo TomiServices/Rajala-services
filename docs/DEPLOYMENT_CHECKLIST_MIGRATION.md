@@ -258,7 +258,7 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
   - Navigate through pages
   - Check: https://analytics.google.com
   - Verify: Real-time data shows your visit
-  - Property ID should be: G-SP5R1MN1H9
+  - Property ID should be: G-1DZ4WCV7ZK
 
 - [ ] **Test Calendar Webhook Registration**
   ```bash
@@ -294,7 +294,7 @@ This checklist guides the migration from old Webbi1 accounts to new company acco
 
 - [ ] **Check Google Analytics Dashboard**
   - Go to: https://analytics.google.com
-  - Select Property: G-SP5R1MN1H9
+  - Select Property: G-1DZ4WCV7ZK
   - Verify: Real-time users
   - Verify: Events being tracked
 

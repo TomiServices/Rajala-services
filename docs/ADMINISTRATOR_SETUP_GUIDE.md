@@ -158,7 +158,7 @@ Create a secure password manager entry with:
 **Google Analytics:**
 - URL: https://analytics.google.com
 - Property: Rajala Services
-- Measurement ID: G-SP5R1MN1H9
+- Measurement ID: G-1DZ4WCV7ZK
 
 **reCAPTCHA:**
 - URL: https://www.google.com/recaptcha/admin

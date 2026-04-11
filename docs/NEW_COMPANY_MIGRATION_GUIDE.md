@@ -14,7 +14,7 @@ This guide documents the migration from the old Webbi1 Firebase project to new c
 
 ### New Configuration
 - **Firebase Project**: fxnr-web (existing, needs verification)
-- **Google Analytics**: G-SP5R1MN1H9 (already configured)
+- **Google Analytics**: G-1DZ4WCV7ZK (already configured)
 - **Calendar Owner**: palvelut@fixnero.fi
 - **reCAPTCHA Site Key**: 6Lf7wx0sAAAAAK2mvnbNt3V6lINTfu0g9Mw8Flcr
 - **reCAPTCHA Secret Key**: 6Lf7wx0sAAAAAIZrJ_IIHzkZUHKO0GCx6moRlf96
@@ -61,7 +61,7 @@ Based on the problem statement, the following service accounts need to be create
 ### Phase 1: Google Analytics Update
 
 ✅ **Status**: Already completed in repository
-- Google Analytics tag already updated to G-SP5R1MN1H9
+- Google Analytics tag already updated to G-1DZ4WCV7ZK
 - Configured in `ga-config.js` and `cookie-consent.js`
 - No action needed
 
@@ -231,7 +231,7 @@ RECAPTCHA_SCORE_THRESHOLD=0.5
 
 **Public Configuration** (in code):
 - reCAPTCHA Site Key: 6Lf7wx0sAAAAAK2mvnbNt3V6lINTfu0g9Mw8Flcr
-- Google Analytics: G-SP5R1MN1H9
+- Google Analytics: G-1DZ4WCV7ZK
 - Firebase Project: fxnr-web
 
 ## Testing Checklist

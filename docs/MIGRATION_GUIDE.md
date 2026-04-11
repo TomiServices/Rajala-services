@@ -178,7 +178,7 @@ GitHub Repository Owner: [username]
 ```
 Firebase Project ID: fxnr-web
 Google Calendar ID: [full calendar email]
-GA4 Measurement ID: G-SP5R1MN1H9
+GA4 Measurement ID: G-1DZ4WCV7ZK
 reCAPTCHA Site Key: 6LdmOggsAAAAABAf1WDZkXGIBazWB3v0WIKNoJGM
 Domain: fixnero.fi
 ```
@@ -532,7 +532,7 @@ chmod 600 service-account-*.json
 ```
 
 **No Code Changes Needed:**
-- Measurement ID remains the same: G-SP5R1MN1H9
+- Measurement ID remains the same: G-1DZ4WCV7ZK
 - Website code unchanged
 - Continue tracking without interruption
 
