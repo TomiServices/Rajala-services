@@ -604,6 +604,39 @@
             }
         }
     </style>
+    <!-- FAQPage Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Paljonko auton sisäpuhdistus maksaa Espoossa?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Auton sisäpuhdistus maksaa Fixnerolla alkaen 50 € henkilöautolle. Laajempi täyssiivous maksaa noin 150 €, ja yksittäiset palvelut kuten tekstiilipesu alkaen 30 € / istuin."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Mitä auton sisäpuhdistus sisältää?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sisäpuhdistukseen kuuluu imurointi, pintojen puhdistus ja tarvittaessa tekstiilien tai nahkapintojen käsittely. Syväpuhdistuksessa poistetaan myös hajut ja lika tehokkaammin."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Poistaako sisäpuhdistus hajut autosta?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Kyllä, erityisesti otsonointi ja syväpuhdistus poistavat tehokkaasti hajuja kuten tupakka, kosteus ja eläinten hajut."
+            }
+        }
+        ]
+    }
+    </script>
 </head>
 <body>
     <div class="top-banner">
@@ -707,6 +740,30 @@
         <h2>Yhdistä sisäpuhdistus muihin palveluihin</h2>
         <p>Voit yhdistää sisäpuhdistuksen myös ulkopesuun tai kiillotukseen kokonaisvaltaista lopputulosta varten. Kun auton sisä ja ulkopuoli ovat molemmat puhtaat, autosi tuntuu taas uudelta. Kysy meiltä yhdistelmäpaketeista ja saat parhaan vastineen rahoillesi.</p>
 
+
+        <!-- UKK - Usein Kysytyt Kysymykset -->
+        <section class="ukk-section" itemscope itemtype="https://schema.org/FAQPage">
+            <h2 class="ukk-title">Usein Kysytyt Kysymykset – Sisäpuhdistus Espoo</h2>
+    <div class="ukk-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 class="ukk-question" itemprop="name">Paljonko auton sisäpuhdistus maksaa Espoossa?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="ukk-answer" itemprop="text">Auton sisäpuhdistus maksaa Fixnerolla alkaen 50 € henkilöautolle. Laajempi täyssiivous maksaa noin 150 €, ja yksittäiset palvelut kuten tekstiilipesu alkaen 30 € / istuin.</p>
+        </div>
+    </div>
+    <div class="ukk-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 class="ukk-question" itemprop="name">Mitä auton sisäpuhdistus sisältää?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="ukk-answer" itemprop="text">Sisäpuhdistukseen kuuluu imurointi, pintojen puhdistus ja tarvittaessa tekstiilien tai nahkapintojen käsittely. Syväpuhdistuksessa poistetaan myös hajut ja lika tehokkaammin.</p>
+        </div>
+    </div>
+    <div class="ukk-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 class="ukk-question" itemprop="name">Poistaako sisäpuhdistus hajut autosta?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="ukk-answer" itemprop="text">Kyllä, erityisesti otsonointi ja syväpuhdistus poistavat tehokkaasti hajuja kuten tupakka, kosteus ja eläinten hajut.</p>
+        </div>
+    </div>
+        </section>
+
         <div class="cta-section" style="background: #fff url('static/images/sisapuhdistus.webp') center top/cover; position: relative; overflow: hidden;">
             <div style="position: relative; z-index: 2;">
                 <h2>Varaa aika sisäpuhdistukseen</h2>
@@ -797,6 +854,47 @@
     </footer>
 
     <style>
+
+        .ukk-section {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 35px 30px;
+            margin: 40px 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border-left: 4px solid #3FA9F5;
+        }
+        .ukk-section .ukk-title {
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            margin: 0 0 20px 0;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        .ukk-item {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 15px 0;
+        }
+        .ukk-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .ukk-question {
+            font-size: 1.05rem;
+            color: #1a1a1a;
+            margin: 0 0 8px 0;
+            font-weight: 700;
+        }
+        .ukk-answer {
+            color: #555;
+            margin: 0;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+        @media (max-width: 768px) {
+            .ukk-section {
+                padding: 25px 20px;
+            }
+        }
         footer {
             background: #000000;
             color: white;

@@ -667,6 +667,39 @@
             }
         }
     </style>
+    <!-- FAQPage Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Paljonko kiveniskemän korjaus maksaa?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Kiveniskemän korjaus maksaa 50 € ensimmäiseltä vauriolta ja 25 € lisävaurioilta. Vakuutuksella korjaus voi olla ilmainen."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Kannattaako kiveniskemä korjata heti?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Kyllä, koska halkeama voi levitä nopeasti. Nopea korjaus estää kalliimman lasinvaihdon."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Kuinka kauan tuulilasin korjaus kestää?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Kiveniskemän korjaus kestää yleensä noin 30–60 minuuttia."
+            }
+        }
+        ]
+    }
+    </script>
 </head>
 <body>
     <div class="top-banner">
@@ -781,19 +814,28 @@
             <li>Saat autosi takaisin uudella, turvallisella tuulilasilla</li>
         </ol>
 
-        <h2>Usein Kysytyt Kysymykset Tuulilasien Vaihdosta</h2>
-        
-        <h3>Kauanko tuulilasin vaihto kestää?</h3>
-        <p>Tuulilasin vaihto kestää yleensä noin 1-2 tuntia riippuen auton mallista. Liiman kuivumiseen kuluu lisäksi aikaa, mutta voit usein hakea auton seuraavana päivänä.</p>
-        
-        <h3>Voiko kiveniskemän aina korjata?</h3>
-        <p>Pienet iskemät voidaan usein korjata, mutta jos iskemä on suuri, sijaitsee kuljettajan näkökentässä tai lasin reunalla, suosittelemme tuulilasin vaihtoa turvallisuuden takaamiseksi.</p>
-        
-        <h3>Toimiiko lasivakuutus kaikissa tilanteissa?</h3>
-        <p>Lasivakuutus kattaa yleensä sekä vaihdot että korjaukset. Tarkista aina oman vakuutuksesi ehdot. Autamme mielellämme selvittämään vakuutusasiat.</p>
-        
-        <h3>Voinko ajaa autolla heti vaihdon jälkeen?</h3>
-        <p>Liiman on annettava kovettua riittävästi ennen ajamista. Ilmoitamme sinulle tarkan odotusajan.</p>
+        <!-- UKK - Usein Kysytyt Kysymykset -->
+        <section class="ukk-section" itemscope itemtype="https://schema.org/FAQPage">
+            <h2 class="ukk-title">Usein Kysytyt Kysymykset – Lasikorjaus Espoo</h2>
+    <div class="ukk-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 class="ukk-question" itemprop="name">Paljonko kiveniskemän korjaus maksaa?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="ukk-answer" itemprop="text">Kiveniskemän korjaus maksaa 50 € ensimmäiseltä vauriolta ja 25 € lisävaurioilta. Vakuutuksella korjaus voi olla ilmainen.</p>
+        </div>
+    </div>
+    <div class="ukk-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 class="ukk-question" itemprop="name">Kannattaako kiveniskemä korjata heti?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="ukk-answer" itemprop="text">Kyllä, koska halkeama voi levitä nopeasti. Nopea korjaus estää kalliimman lasinvaihdon.</p>
+        </div>
+    </div>
+    <div class="ukk-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 class="ukk-question" itemprop="name">Kuinka kauan tuulilasin korjaus kestää?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <p class="ukk-answer" itemprop="text">Kiveniskemän korjaus kestää yleensä noin 30–60 minuuttia.</p>
+        </div>
+    </div>
+        </section>
 
         <p style="margin-top: 30px; text-align: center;">
             <a href="tyonnaytteet" class="btn-read-more">📸 Asiakkaiden ennen ja jälkeen kuvat</a>
@@ -899,6 +941,47 @@
     </footer>
 
     <style>
+
+        .ukk-section {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 35px 30px;
+            margin: 40px 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border-left: 4px solid #3FA9F5;
+        }
+        .ukk-section .ukk-title {
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            margin: 0 0 20px 0;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        .ukk-item {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 15px 0;
+        }
+        .ukk-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .ukk-question {
+            font-size: 1.05rem;
+            color: #1a1a1a;
+            margin: 0 0 8px 0;
+            font-weight: 700;
+        }
+        .ukk-answer {
+            color: #555;
+            margin: 0;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+        @media (max-width: 768px) {
+            .ukk-section {
+                padding: 25px 20px;
+            }
+        }
         footer {
             background: #000000;
             color: white;
