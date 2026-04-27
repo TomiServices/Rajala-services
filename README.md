@@ -177,6 +177,18 @@ Test files are located in `/tests/` directory:
 - Firestore security rules for data protection
 - Environment variables for sensitive configuration
 
+## 📋 FAQ Structured Data (Schema.org)
+
+Each service page contains **one** FAQPage structured data block implemented as a `<script type="application/ld+json">` in the `<head>` section. This is the single authoritative source for FAQ rich results.
+
+**Important**: Do **not** add `itemscope itemtype="https://schema.org/FAQPage"` microdata attributes to the HTML body elements. Having both JSON-LD and microdata on the same page creates duplicate FAQPage structured data, which Google Search Console reports as a "Duplicate field FAQPage" error and rejects for rich results.
+
+**To add or update FAQ questions** on a service page:
+1. Edit the `mainEntity` array inside the `<script type="application/ld+json">` block in the `<head>`.
+2. Mirror the question/answer text in the visible `.ukk-item` HTML section (for user display).
+3. Keep the `.ukk-section` HTML clean — **no** `itemscope`/`itemprop`/`itemtype` attributes.
+4. Verify with [Google Rich Results Test](https://search.google.com/test/rich-results) that only one FAQPage is detected.
+
 ## 📚 Additional Documentation
 
 For detailed documentation on:
