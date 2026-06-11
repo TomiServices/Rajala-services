@@ -1,44 +1,44 @@
 name: Node.js CI
 
 on:
-push:
-branches:
-- main
-pull_request:
-branches:
-- main
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 env:
-FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-test:
-runs-on: ubuntu-latest
-permissions:
-contents: read
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
-strategy:
-  matrix:
-    node-version: [22]
+    strategy:
+      matrix:
+        node-version: [22]
 
-steps:
-  - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-  - name: Use Node.js ${{ matrix.node-version }}
-    uses: actions/setup-node@v4
-    with:
-      node-version: ${{ matrix.node-version }}
-      cache: npm
-      cache-dependency-path: functions/package-lock.json
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: functions/package-lock.json
 
-  - name: Install function dependencies
-    working-directory: functions
-    run: npm ci
+      - name: Install function dependencies
+        working-directory: functions
+        run: npm ci
 
-  - name: Run function tests
-    working-directory: functions
-    run: npm test
+      - name: Run function tests
+        working-directory: functions
+        run: npm test
 
-  - name: Audit for vulnerabilities
-    working-directory: functions
-    run: npm audit --audit-level=high
+      - name: Audit for vulnerabilities
+        working-directory: functions
+        run: npm audit --audit-level=high
