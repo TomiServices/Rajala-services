@@ -4621,7 +4621,7 @@
       <h2>Varaa aika silmäterällesi</h2>
       
       <!-- Step 1: Select Vehicle Type -->
-      <div class="booking-step" id="step-vehicle-type">
+      <div class="booking-step" id="step-vehicle-type" style="display: none;" aria-hidden="true">
         <h3 class="step-title">
           <span class="step-number">1</span>
           Valitse ajoneuvotyyppi
@@ -4715,7 +4715,7 @@
       </div>
       
       <!-- Step 3: Choose Date & Time -->
-      <div class="booking-step" id="step-calendar">
+      <div class="booking-step" id="step-calendar" style="display: none;" aria-hidden="true">
         <h3 class="step-title">
           <span class="step-number">3</span>
           Valitse päivä ja aika
@@ -4796,7 +4796,7 @@
       </div>
       
       <!-- Step 3: Enter Contact Details -->
-      <div class="booking-step" id="step-contact">
+      <div class="booking-step" id="step-contact" style="display: none;" aria-hidden="true">
         <h3 class="step-title">
           <span class="step-number">4</span>
           Yhteystiedot
@@ -4856,7 +4856,7 @@
     </div>
     
     <!-- Temporary closure notice for booking calendar -->
-    <section id="ajanvaraus-closed" style="display: block; background: #fff; margin: 30px auto; padding: 40px 30px; max-width: 850px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 18px; text-align: center;" aria-hidden="false">
+    <section id="ajanvaraus-closed" style="display: block; background: #fff; margin: 30px auto; padding: 40px 30px; max-width: 850px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 18px; text-align: center;">
         <h2 style="color: #333333; margin-bottom: 20px;">📅 Online-ajanvaraus on tilapäisesti suljettu</h2>
         <p style="font-size: 1.1rem; color: #333333; line-height: 1.8; margin-bottom: 25px;">
             Pahoittelemme, mutta online-ajanvarauskalenterimme on väliaikaisesti poissa käytöstä kehitystyön vuoksi.
@@ -6335,7 +6335,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     if (closedSection) {
         closedSection.style.display = 'block';
-        closedSection.setAttribute('aria-hidden', 'false');
+        closedSection.removeAttribute('aria-hidden');
     }
     if (termsCheckbox) {
         termsCheckbox.checked = false;
