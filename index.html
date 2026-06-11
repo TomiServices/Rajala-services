@@ -4855,9 +4855,9 @@
       </div>
     </div>
     
-    <!-- Temporary closure notice for booking calendar - HIDDEN -->
-    <section id="ajanvaraus-closed" style="display: none; background: #fff; margin: 30px auto; padding: 40px 30px; max-width: 850px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 18px; text-align: center;" aria-hidden="true">
-        <h2 style="color: #333333; margin-bottom: 20px;">📅 Ajanvarauskalenteri tilapäisesti suljettu</h2>
+    <!-- Temporary closure notice for booking calendar -->
+    <section id="ajanvaraus-closed" style="display: block; background: #fff; margin: 30px auto; padding: 40px 30px; max-width: 850px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 18px; text-align: center;" aria-hidden="false">
+        <h2 style="color: #333333; margin-bottom: 20px;">📅 Online-ajanvaraus on tilapäisesti suljettu</h2>
         <p style="font-size: 1.1rem; color: #333333; line-height: 1.8; margin-bottom: 25px;">
             Pahoittelemme, mutta online-ajanvarauskalenterimme on väliaikaisesti poissa käytöstä kehitystyön vuoksi.
         </p>
@@ -6324,6 +6324,34 @@ document.addEventListener('DOMContentLoaded', function() {
     var msgCounter = document.getElementById('msgCounter');
     var termsCheckbox = document.getElementById('termsCheckbox');
     var submitBtn = document.querySelector('#bookingForm button[type="submit"]');
+    var bookingForm = document.getElementById('bookingForm');
+    var closedSection = document.getElementById('ajanvaraus-closed');
+    var bookingSteps = document.querySelectorAll('#ajanvaraus .booking-step');
+
+    // Keep online booking flow disabled in production UI
+    bookingSteps.forEach(function(step) {
+        step.style.display = 'none';
+        step.setAttribute('aria-hidden', 'true');
+    });
+    if (closedSection) {
+        closedSection.style.display = 'block';
+        closedSection.setAttribute('aria-hidden', 'false');
+    }
+    if (termsCheckbox) {
+        termsCheckbox.checked = false;
+        termsCheckbox.disabled = true;
+    }
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.setAttribute('aria-disabled', 'true');
+    }
+    if (bookingForm) {
+        bookingForm.style.display = 'none';
+        bookingForm.setAttribute('aria-hidden', 'true');
+        bookingForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+        });
+    }
 
     if (msgCheckbox && msgContainer) {
         msgCheckbox.addEventListener('change', function() {
@@ -6343,24 +6371,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    if (termsCheckbox && submitBtn) {
-        function updateSubmitState() {
-            submitBtn.disabled = !termsCheckbox.checked;
-        }
-        termsCheckbox.addEventListener('change', updateSubmitState);
-        updateSubmitState();
-
-        // Re-disable submit and hide message textarea after form reset
-        var bookingForm = document.getElementById('bookingForm');
-        if (bookingForm) {
-            bookingForm.addEventListener('reset', function() {
-                setTimeout(function() {
-                    if (msgContainer) msgContainer.style.display = 'none';
-                    if (msgCounter) msgCounter.textContent = '0/350';
-                    updateSubmitState();
-                }, 0);
-            });
-        }
+    if (bookingForm) {
+        bookingForm.addEventListener('reset', function() {
+            setTimeout(function() {
+                if (msgContainer) msgContainer.style.display = 'none';
+                if (msgCounter) msgCounter.textContent = '0/350';
+                if (submitBtn) submitBtn.disabled = true;
+            }, 0);
+        });
     }
 });
 </script>
