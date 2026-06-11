@@ -42,4 +42,3 @@ steps:
   - name: Audit for vulnerabilities
     working-directory: functions
     run: npm audit --audit-level=high
-```
