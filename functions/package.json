@@ -3,13 +3,13 @@
   "description": "Firebase Functions for Google API Proxy",
   "dependencies": {
     "@sendgrid/mail": "^8.1.6",
-    "axios": "^1.13.2",
+    "axios": "^1.18.0",
     "cors": "^2.8.5",
     "firebase-admin": "^13.7.0",
     "firebase-functions": "^7.2.2",
     "google-auth-library": "^10.6.2",
     "googleapis": "^171.4.0",
-    "nodemailer": "^8.0.2"
+    "nodemailer": "^8.0.11"
   },
   "engines": {
     "node": ">=22 <25"
